@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { BRANCH_STORAGE_KEY, LANGUAGES, SIDE_EXPAND_COLLAPSED } from '../const';
+import { Component, Inject, OnInit } from '@angular/core';
+import { LANGUAGES } from '../const';
 import { Router } from '@angular/router';
 import { AuthService } from '../helpers/auth.service';
 import { DOCUMENT } from '@angular/common';
@@ -52,8 +52,22 @@ export interface Type {
                 nz-menu-item
                 [nzMatchRouter]="isActive"
             >
+              <span nz-icon nzType="profile" nzTheme="outline"></span>
+              <span>{{ 'MeterRecord' | translate }}</span>
+            </li>
+            <li
+                nz-menu-item
+                [nzMatchRouter]="isActive"
+            >
               <span nz-icon nzType="user" nzTheme="outline"></span>
               <span>{{ 'Member' | translate }}</span>
+            </li>
+            <li
+                nz-menu-item
+                [nzMatchRouter]="isActive"
+            >
+              <span nz-icon nzType="border" nzTheme="outline"></span>
+              <span>{{ 'Room' | translate }}</span>
             </li>
             <li nz-menu-item routerLink="/setting" [nzMatchRouter]="isActive">
               <i nz-icon nzType="setting"></i>
