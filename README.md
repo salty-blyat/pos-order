@@ -1,3 +1,3 @@
-# hotel-ui
+# pbs-ui
 
-Basic Hotel UI
+Basic PBS UI
