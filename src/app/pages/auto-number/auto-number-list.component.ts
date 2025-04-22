@@ -159,7 +159,5 @@ export class AutoNumberListComponent
     });
     super.ngOnInit();
   }
-  ngOnDestroy(): void {
-    this.refreshSub.unsubscribe();
-  }
+  
 }

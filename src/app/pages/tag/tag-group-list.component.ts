@@ -128,9 +128,6 @@ export class TagGroupListComponent extends BaseListComponent<TagGroup> {
     });
     super.ngOnInit();
   }
-  ngOnDestroy(): void {
-    this.refreshSub?.unsubscribe();
-  }
-
+  
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

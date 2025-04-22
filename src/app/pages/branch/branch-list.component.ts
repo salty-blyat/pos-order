@@ -169,8 +169,5 @@ export class BranchListComponent
       this.search();
     });
     super.ngOnInit();
-  }
-  ngOnDestroy(): void {
-    this.refreshSub?.unsubscribe();
-  }
+  } 
 }

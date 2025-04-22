@@ -1,23 +1,23 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { BRANCH_STORAGE_KEY, LANGUAGES, SIDE_EXPAND_COLLAPSED } from '../const';
-import { Router } from '@angular/router';
-import { AuthService } from '../helpers/auth.service';
-import { DOCUMENT } from '@angular/common';
-import { LanguageService } from '../utils/services/language.service';
-import { SettingService } from '../app-setting';
-import { QueryParam } from '../utils/services/base-api.service';
-import { LocalStorageService } from '../utils/services/localStorage.service';
-import { SystemSettingService } from './system-setting/system-setting.service';
-import { TranslateService } from '@ngx-translate/core';
-import {AppVersionService} from "../utils/services/app-version.service";
+import { Component, Inject, OnInit, ViewChild } from "@angular/core";
+import { BRANCH_STORAGE_KEY, LANGUAGES, SIDE_EXPAND_COLLAPSED } from "../const";
+import { Router } from "@angular/router";
+import { AuthService } from "../helpers/auth.service";
+import { DOCUMENT } from "@angular/common";
+import { LanguageService } from "../utils/services/language.service";
+import { SettingService } from "../app-setting";
+import { QueryParam } from "../utils/services/base-api.service";
+import { LocalStorageService } from "../utils/services/localStorage.service";
+import { SystemSettingService } from "./system-setting/system-setting.service";
+import { TranslateService } from "@ngx-translate/core";
+import { AppVersionService } from "../utils/services/app-version.service";
 
 export interface Type {
   sub1: boolean;
   sub3: boolean;
 }
 @Component({
-    selector: 'app-page',
-    template: `
+  selector: "app-page",
+  template: `
     <nz-layout class="app-layout">
       <nz-sider
         class="menu-sidebar"
@@ -43,96 +43,99 @@ export interface Type {
           class="scrollbar"
           style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100vh - 64px);"
         >
-          <ul class="nz-menu-custom" nz-menu nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+          <ul
+            class="nz-menu-custom"
+            nz-menu
+            nzMode="inline"
+            [nzInlineCollapsed]="isCollapsed"
+          >
             <li nz-menu-item routerLink="/home" [nzMatchRouter]="isActive">
               <i nz-icon nzType="home"></i>
-              <span>{{ 'Home' | translate }}</span>
+              <span>{{ "Home" | translate }}</span>
             </li>
-            <li
-                nz-menu-item
-                [nzMatchRouter]="isActive"
-            >
+            <!-- <li nz-menu-item [nzMatchRouter]="isActive">
               <span nz-icon nzType="user" nzTheme="outline"></span>
-              <span>{{ 'Member' | translate }}</span>
-            </li>
+              <span>{{ "Member" | translate }}</span>
+            </li> -->
             <li nz-menu-item routerLink="/setting" [nzMatchRouter]="isActive">
               <i nz-icon nzType="setting"></i>
-              <span>{{ 'Setting' | translate }}</span>
+              <span>{{ "Setting" | translate }}</span>
             </li>
             <li nz-menu-item routerLink="/report" [nzMatchRouter]="isActive">
               <i nz-icon nzType="container"></i>
-              <span>{{ 'Report' | translate }}</span>
+              <span>{{ "Report" | translate }}</span>
             </li>
           </ul>
 
           <div>
-            <div class="user-info-container">
+            <!-- for big screen -->
+            <div *ngIf="!isCollapsed" class="user-info-container">
               <div
-                  style="display: flex; align-items: center; gap: 8px; padding: 8px; justify-content:space-between;  flex-wrap: wrap;"
+                style="display: flex; align-items: center; gap: 8px; padding: 8px; justify-content:space-between; flex-wrap: wrap;"
               >
                 <span class="tenant" style="margin: 0">
                   <img
-                      [src]="authService.tenant?.logo"
-                      alt="tenant"
-                      style="margin-right: 4px;"
+                    [src]="authService.tenant?.logo"
+                    alt="tenant"
+                    style="margin-right: 4px;"
                   />
 
-                  <span *ngIf="!isCollapsed">{{
-                      authService.tenant?.name
-                    }}</span>
+                  <span style="padding-left: 4px;">{{
+                    authService.tenant?.name
+                  }}</span>
                 </span>
 
                 <i
-                    nz-icon
-                    nzType="appstore"
-                    (click)="redirectToMainUrl()"
-                    nzTheme="outline"
-                    style="cursor: pointer;"
+                  nz-icon
+                  nzType="appstore"
+                  (click)="redirectToMainUrl()"
+                  nzTheme="outline"
+                  style="cursor: pointer;"
                 ></i>
                 <i
-                    *ngIf="isCollapsed"
-                    nz-icon
-                    (click)="switchScreen()"
-                    [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"
-                    nzTheme="outline"
-                    class="icon"
-                    style="cursor: pointer;display:flex; justify-content:center; align-items:center;"
+                  *ngIf="isCollapsed"
+                  nz-icon
+                  (click)="switchScreen()"
+                  [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"
+                  nzTheme="outline"
+                  class="icon"
+                  style="cursor: pointer;display:flex; justify-content:center; align-items:center;"
                 ></i>
                 <span
-                    *ngIf="isCollapsed"
-                    nzTrigger="click"
-                    nzPlacement="bottomRight"
-                    nz-dropdown
-                    style="cursor: pointer;"
-                    [nzDropdownMenu]="language"
+                  *ngIf="isCollapsed"
+                  nzTrigger="click"
+                  nzPlacement="bottomRight"
+                  nz-dropdown
+                  style="cursor: pointer;"
+                  [nzDropdownMenu]="language"
                 >
                   <img
-                      class="img-head"
-                      [src]="
+                    class="img-head"
+                    [src]="
                       translateService.currentLang == 'km'
                         ? './assets/image/kh_FLAG.png'
                         : './assets/image/en_FLAG.png'
                     "
-                      alt="language"
+                    alt="language"
                   />
                   <nz-dropdown-menu #language="nzDropdownMenu">
                     <ul nz-menu style="width: 125px;">
                       <li
-                          nz-menu-item
-                          *ngFor="let lang of languages"
-                          (click)="languageService.switchLanguage(lang.key)"
+                        nz-menu-item
+                        *ngFor="let lang of languages"
+                        (click)="languageService.switchLanguage(lang.key)"
                       >
                         <img class="img" [src]="lang.image" alt="language" />
                         <span>{{ lang.label }}</span>
                         <i
-                            style="position: absolute; right: 5px;"
-                            class="primary-color"
-                            *ngIf="
+                          style="position: absolute; right: 5px;"
+                          class="primary-color"
+                          *ngIf="
                             lang.key.localId == translateService.currentLang
                           "
-                            nz-icon
-                            nzType="check"
-                            nzTheme="outline"
+                          nz-icon
+                          nzType="check"
+                          nzTheme="outline"
                         ></i>
                       </li>
                     </ul>
@@ -144,61 +147,60 @@ export interface Type {
               <div class="user-info">
                 <div style="display: flex; align-items: center; gap:4px">
                   <nz-avatar
-                      [nzSrc]="authService.clientInfo.profile"
-                      [nzSize]="32"
-                      style="margin-right: 4px;"
-                      (click)="redirectToViewProfileUrl()"
-                      nzIcon="user"
+                    [nzSrc]="authService.clientInfo.profile"
+                    [nzSize]="32"
+                    style="margin-right: 4px;"
+                    (click)="redirectToViewProfileUrl()"
+                    nzIcon="user"
                   ></nz-avatar>
                   <div
-                      style="display: flex; flex-direction: column; "
-                      *ngIf="!isCollapsed"
-                      (click)="redirectToViewProfileUrl()"
+                    style="display: flex; flex-direction: column; "
+                    *ngIf="!isCollapsed"
+                    (click)="redirectToViewProfileUrl()"
                   >
                     <span style="font-size: 14px">{{
-                        authService.clientInfo.fullName
-                      }}</span>
+                      authService.clientInfo.fullName
+                    }}</span>
                     <span style="font-size: 10px">{{
-                        authService.clientInfo.email ?? '-'
-                      }}</span>
+                      authService.clientInfo.email ?? "-"
+                    }}</span>
                   </div>
                 </div>
 
                 <span
-                    *ngIf="!isCollapsed"
-                    nzTrigger="click"
-                    nzPlacement="bottomRight"
-                    nz-dropdown
-                    style="padding: 0 6px; float: right; cursor: pointer;"
-                    [nzDropdownMenu]="language"
+                  nzTrigger="click"
+                  nzPlacement="bottomRight"
+                  nz-dropdown
+                  style="padding: 0 6px; float: right; cursor: pointer;"
+                  [nzDropdownMenu]="language"
                 >
                   <img
-                      class="img-head"
-                      [src]="
+                    class="img-head"
+                    [src]="
                       translateService.currentLang == 'km'
                         ? './assets/image/kh_FLAG.png'
                         : './assets/image/en_FLAG.png'
                     "
-                      alt="language"
+                    alt="language"
                   />
                   <nz-dropdown-menu #language="nzDropdownMenu">
                     <ul nz-menu style="width: 125px;">
                       <li
-                          nz-menu-item
-                          *ngFor="let lang of languages"
-                          (click)="languageService.switchLanguage(lang.key)"
+                        nz-menu-item
+                        *ngFor="let lang of languages"
+                        (click)="languageService.switchLanguage(lang.key)"
                       >
                         <img class="img" [src]="lang.image" alt="language" />
                         <span>{{ lang.label }}</span>
                         <i
-                            style="position: absolute; right: 5px;"
-                            class="primary-color"
-                            *ngIf="
+                          style="position: absolute; right: 5px;"
+                          class="primary-color"
+                          *ngIf="
                             lang.key.localId == translateService.currentLang
                           "
-                            nz-icon
-                            nzType="check"
-                            nzTheme="outline"
+                          nz-icon
+                          nzType="check"
+                          nzTheme="outline"
                         ></i>
                       </li>
                     </ul>
@@ -206,6 +208,142 @@ export interface Type {
                 </span>
               </div>
             </div>
+
+            <!-- for small screen -->
+            <div *ngIf="isCollapsed" class="user-info-container">
+              <div
+                style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 8px 0;"
+              >
+                <img
+                  [src]="authService.tenant?.logo"
+                  alt="tenant"
+                  style="width: 20px;"
+                />
+                <i
+                  nz-icon
+                  nzType="appstore"
+                  (click)="redirectToMainUrl()"
+                  nzTheme="outline"
+                  style="cursor: pointer;"
+                ></i>
+                <i
+                  *ngIf="isCollapsed"
+                  nz-icon
+                  (click)="switchScreen()"
+                  [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"
+                  nzTheme="outline"
+                  class="icon"
+                  style="cursor: pointer;display:flex; justify-content:center; align-items:center;"
+                ></i>
+                <span
+                  nzTrigger="click"
+                  nzPlacement="bottomRight"
+                  nz-dropdown
+                  style="cursor: pointer;"
+                  [nzDropdownMenu]="language"
+                >
+                  <img
+                    class="img-head"
+                    [src]="
+                      translateService.currentLang == 'km'
+                        ? './assets/image/kh_FLAG.png'
+                        : './assets/image/en_FLAG.png'
+                    "
+                    alt="language"
+                  />
+                  <nz-dropdown-menu #language="nzDropdownMenu">
+                    <ul nz-menu style="width: 125px;">
+                      <li
+                        nz-menu-item
+                        *ngFor="let lang of languages"
+                        (click)="languageService.switchLanguage(lang.key)"
+                      >
+                        <img class="img" [src]="lang.image" alt="language" />
+                        <span>{{ lang.label }}</span>
+                        <i
+                          style="position: absolute; right: 5px;"
+                          class="primary-color"
+                          *ngIf="
+                            lang.key.localId == translateService.currentLang
+                          "
+                          nz-icon
+                          nzType="check"
+                          nzTheme="outline"
+                        ></i>
+                      </li>
+                    </ul>
+                  </nz-dropdown-menu>
+                </span>
+              </div>
+
+              <nz-divider style="margin: 0  0 8px 0;"></nz-divider>
+
+              <div class="user-info">
+                <div style="display: flex; align-items: center; gap:4px">
+                  <nz-avatar
+                    [nzSrc]="authService.clientInfo.profile"
+                    [nzSize]="32"
+                    style="margin-right: 4px;"
+                    (click)="redirectToViewProfileUrl()"
+                    nzIcon="user"
+                  ></nz-avatar>
+                  <div
+                    style="display: flex; flex-direction: column; "
+                    *ngIf="!isCollapsed"
+                    (click)="redirectToViewProfileUrl()"
+                  >
+                    <span style="font-size: 14px">{{
+                      authService.clientInfo.fullName
+                    }}</span>
+                    <span style="font-size: 10px">{{
+                      authService.clientInfo.email ?? "-"
+                    }}</span>
+                  </div>
+                </div>
+
+                <span
+                  *ngIf="!isCollapsed"
+                  nzTrigger="click"
+                  nzPlacement="bottomRight"
+                  nz-dropdown
+                  style="padding: 0 6px; float: right; cursor: pointer;"
+                  [nzDropdownMenu]="language"
+                >
+                  <img
+                    class="img-head"
+                    [src]="
+                      translateService.currentLang == 'km'
+                        ? './assets/image/kh_FLAG.png'
+                        : './assets/image/en_FLAG.png'
+                    "
+                    alt="language"
+                  />
+                  <nz-dropdown-menu #language="nzDropdownMenu">
+                    <ul nz-menu style="width: 125px;">
+                      <li
+                        nz-menu-item
+                        *ngFor="let lang of languages"
+                        (click)="languageService.switchLanguage(lang.key)"
+                      >
+                        <img class="img" [src]="lang.image" alt="language" />
+                        <span>{{ lang.label }}</span>
+                        <i
+                          style="position: absolute; right: 5px;"
+                          class="primary-color"
+                          *ngIf="
+                            lang.key.localId == translateService.currentLang
+                          "
+                          nz-icon
+                          nzType="check"
+                          nzTheme="outline"
+                        ></i>
+                      </li>
+                    </ul>
+                  </nz-dropdown-menu>
+                </span>
+              </div>
+            </div>
+
             <div class="version">
               <span>
                 {{ appVersionService.getVersion()?.version }}
@@ -236,9 +374,9 @@ export interface Type {
       </nz-layout>
     </nz-layout>
   `,
-    styleUrls: [`../../assets/scss/layout-style.scss`],
-    styles: [
-        `
+  styleUrls: [`../../assets/scss/layout-style.scss`],
+  styles: [
+    `
       .modal-header-ellipsis {
         white-space: nowrap;
         overflow: hidden;
@@ -259,9 +397,7 @@ export interface Type {
         align-items: center;
         height: 28px;
         font-size: 17px;
-        padding: 5px 15px;
         border-radius: 5px;
-        background-color: #f0f0f0;
         color: black;
         cursor: default;
 
@@ -323,19 +459,19 @@ export interface Type {
         height: calc(100vh - 64px);
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class PageComponent implements OnInit {
   isActive = true;
-  name: string = '';
+  name: string = "";
   loading = false;
   isCollapsed = false;
   param: QueryParam = {
     pageSize: 9999999,
     pageIndex: 1,
-    sorts: '',
-    filters: '',
+    sorts: "",
+    filters: "",
   };
   branch: any;
   languages = LANGUAGES;
@@ -367,7 +503,7 @@ export class PageComponent implements OnInit {
     this.systemSettingService.initCurrentSetting().subscribe({
       next: (settingList) => {},
       error: (error) => {
-        console.error('Error fetching settings:', error);
+        console.error("Error fetching settings:", error);
       },
     });
 
@@ -378,29 +514,29 @@ export class PageComponent implements OnInit {
       this.router.navigate([`/user-change-password`]).then();
     }
     //OPTION 1 => SUB REMEMBER LAST TOUCH
-    let sub1 = this.localStorageService.getValue('sub1');
-    let sub3 = this.localStorageService.getValue('sub3');
-    let sub4 = this.localStorageService.getValue('sub4');
-    if (sub1 == true && sub1 != null) this.openMap['sub1'] = true;
-    else this.openMap['sub1'] = false;
-    if (sub3 == true && sub3 != null) this.openMap['sub3'] = true;
-    else this.openMap['sub3'] = false;
-    if (sub4 == true && sub4 != null) this.openMap['sub4'] = true;
-    else this.openMap['sub4'] = false;
+    let sub1 = this.localStorageService.getValue("sub1");
+    let sub3 = this.localStorageService.getValue("sub3");
+    let sub4 = this.localStorageService.getValue("sub4");
+    if (sub1 == true && sub1 != null) this.openMap["sub1"] = true;
+    else this.openMap["sub1"] = false;
+    if (sub3 == true && sub3 != null) this.openMap["sub3"] = true;
+    else this.openMap["sub3"] = false;
+    if (sub4 == true && sub4 != null) this.openMap["sub4"] = true;
+    else this.openMap["sub4"] = false;
     //END
   }
 
   eventRouterOpen() {
     let url = this.router.url;
 
-    if (url.includes('sale')) {
-      this.openMap['sub1'] = true;
-    } else if (url.includes('purchase')) {
-      this.openMap['sub2'] = true;
-    } else if (url.includes('product')) {
-      this.openMap['sub3'] = true;
-    } else if (url.includes('stock')) {
-      this.openMap['sub4'] = true;
+    if (url.includes("sale")) {
+      this.openMap["sub1"] = true;
+    } else if (url.includes("purchase")) {
+      this.openMap["sub2"] = true;
+    } else if (url.includes("product")) {
+      this.openMap["sub3"] = true;
+    } else if (url.includes("stock")) {
+      this.openMap["sub4"] = true;
     }
   }
   openHandler(event: any, value: any): void {
@@ -411,7 +547,7 @@ export class PageComponent implements OnInit {
 
   logout() {
     this.authService.logout().subscribe(() => {
-      this.router.navigate(['auth/login']).then();
+      this.router.navigate(["auth/login"]).then();
     });
   }
 
@@ -440,14 +576,14 @@ export class PageComponent implements OnInit {
   redirectToMainUrl() {
     window.open(
       `${this.settingService.setting.AUTH_UI_URL}/appcenter`,
-      'app-center'
+      "app-center"
     );
   }
 
   redirectToViewProfileUrl() {
     window.open(
       `${this.settingService.setting.AUTH_UI_URL}/appcenter/user-view`,
-      'app-center'
+      "app-center"
     );
   }
   // setLastVisited(route: string) {

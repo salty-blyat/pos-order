@@ -1,28 +1,30 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { SessionStorageService } from '../services/sessionStorage.service';
-import { Subscription } from 'rxjs';
-import { PAGE_SIZE_OPTION } from '../../const';
-import { BaseApiService, QueryParam } from '../services/base-api.service';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { SessionStorageService } from "../services/sessionStorage.service";
+import { Subscription } from "rxjs";
+import { PAGE_SIZE_OPTION } from "../../const";
+import { BaseApiService, QueryParam } from "../services/base-api.service";
+import { NzTableQueryParams } from "ng-zorro-antd/table";
 
 interface SharedDomain {
   id?: number;
   name?: string;
 }
 @Component({
-    template: ``,
-    standalone: false
+  template: ``,
+  standalone: false,
 })
-export class BaseListComponent<T extends SharedDomain> implements OnInit {
+export class BaseListComponent<T extends SharedDomain>
+  implements OnInit, OnDestroy
+{
   constructor(
     protected service: BaseApiService<any>,
     protected sessionStorageService: SessionStorageService,
-    @Inject('pageSizeKey') private pageSizeKey: string
+    @Inject("pageSizeKey") private pageSizeKey: string
   ) {}
   pageSizeOptionKey: string = this.pageSizeKey;
   refreshSub!: Subscription;
   loading: boolean = false;
-  searchText: string = '';
+  searchText: string = "";
   pageSizeOption: number[] = PAGE_SIZE_OPTION;
   pageCount: number = 0;
   lists: T[] = [];
@@ -32,8 +34,8 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit {
         this.pageSizeOptionKey
       ) ?? 25,
     pageIndex: 1,
-    sorts: '',
-    filters: '',
+    sorts: "",
+    filters: "",
   };
 
   ngOnInit(): void {
@@ -46,18 +48,14 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit {
     this.loading = true;
     setTimeout(() => {
       const filters: any[] = [
-        { field: 'search', operator: 'contains', value: this.searchText },
+        { field: "search", operator: "contains", value: this.searchText },
       ];
       this.param.filters = JSON.stringify(filters);
       this.service.search(this.param).subscribe({
         next: (result: { results: T[]; param: QueryParam }) => {
           this.loading = true;
           this.lists = result.results;
-
-          //this still an issue we need to fix later on!
-          // this.param = result.param;
-          // this.pageCount = result.param.rowCount ?? 0;
-          // console.log(this.lists);
+ 
           this.param.rowCount = result.param.rowCount;
           this.loading = false;
         },
@@ -73,7 +71,7 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit {
     const sortFound = sort.find((x) => x.value);
     this.param.sorts =
       (sortFound?.key ?? this.param.sorts) +
-      (sortFound?.value === 'descend' ? '-' : '');
+      (sortFound?.value === "descend" ? "-" : "");
     this.param.pageSize = pageSize;
     this.param.pageIndex = pageIndex;
     this.sessionStorageService.setPageSizeOptionKey(
@@ -81,5 +79,9 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit {
       this.pageSizeOptionKey
     );
     this.search();
+  }
+
+  ngOnDestroy(): void {
+    this.refreshSub?.unsubscribe();
   }
 }

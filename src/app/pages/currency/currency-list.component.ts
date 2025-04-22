@@ -181,7 +181,5 @@ export class CurrencyListComponent
     super.ngOnInit();
   }
 
-  ngOnDestroy(): void {
-    this.refreshSub.unsubscribe();
-  }
+  
 }

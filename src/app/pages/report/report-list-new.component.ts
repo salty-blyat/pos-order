@@ -285,7 +285,7 @@ export class ReportNewListComponent
   changeGroupId(id: number) {
     this.reportGroupId = id;
   }
-  ngOnDestroy(): void {
+  override ngOnDestroy(): void {
     this.refreshSub?.unsubscribe();
   }
 }

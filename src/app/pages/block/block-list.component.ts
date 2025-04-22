@@ -185,7 +185,5 @@ export class BlockListComponent
         moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
         if (event.previousIndex !== event.currentIndex) this.draged = true;
     }
-    ngOnDestroy(): void {
-        this.refreshSub?.unsubscribe();
-    }
+    
 }
