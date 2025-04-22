@@ -1,0 +1,77 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+@font-face {
+    font-family: Kantumruy;
+    src: url("./assets/font/Kantumruy.woff2");
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Gilroy;
+    src: url("./assets/font/Gilroy-Medium.woff2");
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --primary-color: #008080;
+    --primary-color-hover: #009191;
+    --danger-color: #dc3545;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --gray-color: #808080;
+}
+*:not(.fas):not(.fab) {
+    font-family: Gilroy, Kantumruy, serif;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+
+body {
+    margin: 0;
+    font-family: Kantumruy, "Helvetica Neue", sans-serif;
+}
+
+.cdk-overlay-dark-backdrop {
+    background-color: inherit;
+}
+
+/* Global Style */
+.text-m {
+    font-family: moul-font, Roboto, monospace !important;
+}
+
+td>span.subtext {
+    font-size: 0.8em;
+}
+
+td>p {
+    margin-bottom: 0px !important;
+}
+.ant-btn-primary, .ant-btn-primary:active, .ant-btn-primary:focus {
+    color: #fff;
+    border-color: var(--ant-primary-color);
+    background: var(--ant-primary-color);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+
+a{
+    color: var(--ant-primary-color);
+}
+
+
+.multi-day-event {
+    position: absolute;
+    width: calc(100% + 100px); /* Adjust width to span across columns */
+    background: orange;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+}

@@ -1,0 +1,16 @@
+#!/bin/zshch
+
+ng build --configuration production
+
+cd .docker
+
+export DOCKER_HOST=tcp://d3.sgx.bz:6060
+export DOCKER_TLS_VERIFY=1
+export DOCKER_CERT_PATH=~/.docker/d3-ssl
+
+docker build .. --file ../.docker/Dockerfile -t dkr.sgx.bz/hotel-ui:latest
+docker push dkr.sgx.bz/hotel-ui
+docker compose -f hotel-ui.yml -p hotel up -d
+
+echo "Hotel UI is builded..."
+exit 0

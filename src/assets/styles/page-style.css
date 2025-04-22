@@ -1,0 +1,48 @@
+html {
+  background-color: #ddd
+}
+
+@page {
+  size: auto;
+}
+
+*{
+  font-family: Kantumruy, sans-serif;
+}
+
+@media print {
+  html {background-color: white !important;}
+  .table .thead-light th {color: #495057 !important;background-color: #e9ecef !important;border-color: #dee2e6 !important;}
+  .table thead th {vertical-align: bottom !important;border-bottom: 2px solid #dee2e6 !important;}
+  .a4.landscape,.a4.portrait,.a5.landscape,.a5.portrait{width: 100% !important;padding: 0;}
+  .a4 #report,.a5 #report{zoom: 125% !important;}
+}
+
+.a4.portrait{width: 21cm;height: 100%;min-height: 29.7cm;padding: 20px;margin: 20px auto;background-color: white;}
+.a4.landscape{width: 29.7cm;height: 100%;min-height: 21cm;margin: 20px auto;padding: 20px;background-color: white;}
+.a3.portrait{width: 29.7cm; height: 100%; min-height: 42cm;padding: 20px;margin: 20px auto; background-color: white}
+.a3.landscape{width: 42cm; height: 100%; min-height: 29.7cm;padding: 20px;margin: 20px auto; background-color: white}
+.a5.portrait{width: 14.8cm; height: 100%; min-height: 21cm;padding: 20px;margin: 20px auto; background-color: white}
+.a5.landscape{width: 21cm; height: 100%; min-height: 14.8cm;padding: 20px;margin: 20px auto; background-color: white}
+
+table {font-size: 14px}
+.report-title{font-size: 18px; font-weight:bold }
+.company-name{font-size: 24px; font-weight:bold }
+.company-info{ font-size:14px}
+.receipt{min-width: 85px}
+.receipt-no{min-width: 170px}
+.receipt-date{min-width: 110px}
+.payment-method{min-width: 140px}
+.note{min-width: 110px}
+.ref-no{min-width: 90px}
+.pay-amount{min-width: 115px}
+.total-amount{min-width: 110px}
+.unit-amount{min-width: 90px}
+.paid-amount{min-width: 120px}
+.due-amount{min-width: 115px}
+.total{min-width: 75px}
+.invoice-no{min-width: 110px}
+.invoice-date{min-width: 115px}
+.decimal{text-align: right}
+.seller{min-width: 120px}
+.customer-type{min-width: 120px}

@@ -1,0 +1,42 @@
+{
+  "results": [
+    {
+      "activityDate": "2025-03-04T23:44:00.495653+07:00",
+      "status": 1,
+      "houseKeepingStatus": 1,
+      "roomId": 9,
+      "roomTypeId": 3,
+      "blockId": 1,
+      "floorId": 4,
+      "roomNumber": "100",
+      "roomTypeName": "Single Room",
+      "blockName": "Block A",
+      "floorName": "First Floor",
+      "statusNameKh": "⚠\uFE0F Out of Order",
+      "statusNameEn": "⚠\uFE0F Out of Order",
+      "houseKeepingStatusNameKh": "\uD83D\uDFE4 Dirty",
+      "houseKeepingStatusNameEn": "\uD83D\uDFE4 Dirty",
+      "note": "Room Decor",
+      "startDate": "2025-03-04T23:44:00.495653+07:00",
+      "endDate": "2025-03-10T23:44:00.495653+07:00",
+      "hkStaffName": "Chhim Kakada"
+    }
+  ],
+  "param": {
+    "pageIndex": 1,
+    "pageSize": 25,
+    "sorts": "RoomNumber",
+    "filters": [
+      {
+        "field": "search",
+        "operator": "contains",
+        "value": "",
+        "logic": null,
+        "manual": true,
+        "filters": null
+      }
+    ],
+    "pageCount": 1,
+    "rowCount": 6
+  }
+}

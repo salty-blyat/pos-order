@@ -1,0 +1,102 @@
+
+// Custom Theming for NG-ZORRO
+// For more information: https://ng.ant.design/docs/customize-theme/en
+@import "../node_modules/ng-zorro-antd/ng-zorro-antd.less";
+
+// Override less variables to here
+// View all variables: https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/style/themes/default.less
+
+@primary-color: #0d4a4d;
+@success-color: #52c41a;
+@warning-color: #faad14;
+@error-color: #ff4d4f;
+// Modify date picker color
+@range-item-hover-bg: fade(@primary-color, 20%);
+@picker-basic-cell-hover-with-range-color: fade(@primary-color, 30%);
+@picker-date-hover-range-border-color: fade(@primary-color, 50%);
+@picker-date-hover-range-color: fade(@primary-color, 15%);
+@picker-time-panel-cell-active-bg: fade(@primary-color, 30%);
+
+// @border-radius-base: 4px; // Default border radius for components
+// @border-radius-sm: 4px; // Small buttons
+// @border-radius-lg: 12px; // Large buttons
+
+@primary-1: #00808025; // replace tint(@primary-color, 90%)
+@primary-2: #00808040; // replace tint(@primary-color, 80%)
+// @primary-3: color(~`colorPalette("@{primary-color}", 3) `); // unused
+// @primary-4: color(~`colorPalette("@{primary-color}", 4) `); // unused
+// @primary-5: color(~`colorPalette("@{primary-color}", 5) `); // color used to control the text color in many active and hover states, replace tint(@primary-color, 20%)
+// @primary-6: @primary-color; // color used to control the text color of active buttons, don't use, use @primary-color
+// @primary-7: color(~`colorPalette("@{primary-color}", 7) `); // replace shade(@primary-color, 5%)
+// @primary-8: color(~`colorPalette("@{primary-color}", 8) `); // unused
+// @primary-9: color(~`colorPalette("@{primary-color}", 9) `); // unused
+// @primary-10: color(~`colorPalette("@{primary-color}", 10) `); // unused
+
+//Tree@tree-bg: @component-background;
+@tree-title-height: 24px;
+@tree-child-padding: 18px;
+@tree-directory-selected-color: #fff;
+@tree-directory-selected-bg: @primary-7;
+@tree-node-hover-bg: @item-hover-bg;
+@tree-node-selected-bg: @primary-1;
+
+// Select
+// ---
+@select-border-color: @border-color-base;
+@select-item-selected-font-weight: 600;
+@select-dropdown-bg: @component-background;
+@select-item-selected-bg: @primary-1;
+@select-item-active-bg: @item-hover-bg;
+@select-dropdown-vertical-padding: @dropdown-vertical-padding;
+@select-dropdown-font-size: @dropdown-font-size;
+@select-dropdown-line-height: @dropdown-line-height;
+@select-dropdown-height: 32px;
+@select-background: @component-background;
+@select-clear-background: @select-background;
+@select-selection-item-bg: @background-color-base;
+@select-selection-item-border-color: @border-color-split;
+@select-single-item-height-lg: 40px;
+@select-multiple-item-height: @input-height-base - @input-padding-vertical-base * 2; // Normal 24px
+@select-multiple-item-height-lg: 32px;
+//@select-multiple-item-spacing-half: ceil(@input-padding-vertical-base / 2);
+
+:root{
+  --ant-primary-color: #0d4a4d;
+  --ant-primary-color-rgb: 13,74,77;
+  --ant-primary-color-contrast: #ffffff;
+  --ant-primary-color-contrast-rgb: 255,255,255;
+  --ant-primary-color-shade: #0b4144;
+  --ant-primary-color-tint: #255c5f;
+
+  --ant-success-color: #52c41a;
+  --ant-success-color-rgb: 82,196,26;
+  --ant-success-color-contrast: #ffffff;
+  --ant-success-color-contrast-rgb: 0,0,0;
+  --ant-success-color-shade: #48ac17;
+  --ant-success-color-tint: #63ca31;
+
+  --ant-warning-color: #faad14;
+  --ant-warning-color-rgb: 250,173,20;
+  --ant-warning-color-contrast: #ffffff;
+  --ant-warning-color-contrast-rgb: 0,0,0;
+  --ant-warning-color-shade: #dc9812;
+  --ant-warning-color-tint: #fbb52c;
+
+  --ant-error-color: #ff4d4f;
+  --ant-error-color-rgb: 255,77,79;
+  --ant-error-color-contrast: #ffffff;
+  --ant-error-color-contrast-rgb: 0,0,0;
+  --ant-error-color-shade: #e04446;
+  --ant-error-color-tint: #ff5f61;
+
+
+  --ant-border-color: #d9d9d9;
+  --ant-disabled-color: #3e3e3e;
+  --ant-default-color: #3e3e3e;
+
+  --ant-border-radius: 5px;
+
+  --ant-dark-color: linear-gradient(195deg, rgb(66, 66, 74), rgb(25, 25, 25));
+  --ant-dark-color-rgb: 255, 255, 255;
+  --ant-dark-color-contrast: 255, 255, 255;
+}

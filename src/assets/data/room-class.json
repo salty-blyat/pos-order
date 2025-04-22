@@ -1,0 +1,72 @@
+
+{
+  "results": [
+    {
+      "id": 1,
+      "name": "Deluxe Room",
+      "note": "Spacious room with a king-size bed and a city view."
+    },
+    {
+      "id": 2,
+      "name": "Standard Room",
+      "note": "A budget-friendly option with essential amenities."
+    },
+    {
+      "id": 3,
+      "name": "Suite",
+      "note": "Luxurious suite with a living area and premium services."
+    },
+    {
+      "id": 4,
+      "name": "Family Room",
+      "note": "Ideal for families, featuring extra beds and a larger space."
+    },
+    {
+      "id": 5,
+      "name": "Single Room",
+      "note": "Perfect for solo travelers, compact and cozy."
+    },
+    {
+      "id": 6,
+      "name": "Double Room",
+      "note": "Fitted with a double bed, great for couples."
+    },
+    {
+      "id": 7,
+      "name": "Twin Room",
+      "note": "Two separate beds, suitable for friends or colleagues."
+    },
+    {
+      "id": 8,
+      "name": "Presidential Suite",
+      "note": "Top-tier luxury with exclusive amenities and services."
+    },
+    {
+      "id": 9,
+      "name": "Penthouse Suite",
+      "note": "High-end suite with breathtaking views and premium furnishings."
+    },
+    {
+      "id": 10,
+      "name": "Business Room",
+      "note": "Designed for business travelers with a dedicated workspace."
+    }
+  ],
+  "param": {
+    "pageIndex": 1,
+    "pageSize": 25,
+    "sorts": "Name",
+    "filters": [
+      {
+        "field": "search",
+        "operator": "contains",
+        "value": "",
+        "logic": null,
+        "manual": true,
+        "filters": null
+      }
+    ],
+    "pageCount": 1,
+    "rowCount": 10
+  }
+}

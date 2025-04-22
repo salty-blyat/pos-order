@@ -1,0 +1,186 @@
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { RedirectComponent } from "./redirect/redirect.component";
+import { RouteGuardService } from "./helpers/route-guard.service";
+import { PageComponent } from "./pages/page.component";
+import { HomeComponent } from "./pages/home/home.component";
+import { SettingComponent } from "./pages/setting/setting.component";
+import { LookupTypeComponent } from "./pages/lookup/lookup-type.component";
+import { LookupItemListComponent } from "./pages/lookup/lookup-item/lookup-item-list.component";
+import { AutoNumberSectionComponent } from "./pages/system-setting/auto-number-section.component";
+import { CompanySectionComponent } from "./pages/system-setting/company-section.component";
+import { SystemSettingComponent } from "./pages/system-setting/system-setting.component";
+import { ReportNewListComponent } from "./pages/report/report-list-new.component";
+import { CurrencyListComponent } from "./pages/currency/currency-list.component";
+import { AutoNumberListComponent } from "./pages/auto-number/auto-number-list.component";
+import { BranchListComponent } from "./pages/branch/branch-list.component";
+import { ReportViewComponent } from "./pages/report/report-view.component";
+import { ReportGroupMenuComponent } from "./pages/report-group/report-group-menu.component";
+import { BlockListComponent } from "./pages/block/block-list.component";
+import { RoomTypeListComponent } from "./pages/room-type/room-type-list.component";
+import { RoomListComponent } from "./pages/room/room-list.component";
+import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
+
+const routes: Routes = [
+  { path: "", pathMatch: "full", redirectTo: "/home" },
+  {
+    path: "",
+    component: PageComponent,
+    canActivate: [RouteGuardService],
+    children: [
+      {
+        path: "home",
+        component: HomeComponent,
+      },
+      {
+        path: "setting",
+        component: SettingComponent,
+      },
+      {
+        path: "setting/lookup",
+        component: LookupTypeComponent,
+        children: [
+          { path: "", pathMatch: "full", redirectTo: "/setting/lookup/1" },
+          {
+            path: ":id",
+            component: LookupItemListComponent,
+          },
+        ],
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Lookup", url: null },
+        ],
+      },
+      {
+        path: "report",
+        component: ReportGroupMenuComponent,
+      },
+      {
+        path: "report/:id",
+        component: ReportViewComponent,
+      },
+      {
+        path: "setting/report",
+        component: ReportNewListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Report", url: null },
+        ],
+      },
+      {
+        path: "setting/currency",
+        component: CurrencyListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Currency", url: null },
+        ],
+      },
+      {
+        path: "setting/branch",
+        component: BranchListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Branch", url: null },
+        ],
+      },
+      {
+        path: "setting/auto-number",
+        component: AutoNumberListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "AutoNumber", url: null },
+        ],
+      },
+      {
+        path: "setting/system-setting",
+
+        redirectTo: "/setting/system-setting/company-section",
+        pathMatch: "full",
+      },
+      {
+        path: "setting/system-setting",
+        component: SystemSettingComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "SystemSetting", url: null },
+        ],
+        children: [
+          {
+            path: "auto-number-section",
+            component: AutoNumberSectionComponent,
+          },
+          {
+            path: "company-section",
+            component: CompanySectionComponent,
+          },
+        ],
+      },
+      {
+        path: "setting/branch",
+        component: BranchListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Branch", url: null },
+        ],
+      },
+      {
+        path: "setting/currency",
+        component: CurrencyListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Currency", url: null },
+        ],
+      },
+      {
+        path: "setting/auto-number",
+        component: AutoNumberListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "AutoNumber", url: null },
+        ],
+      },
+      {
+        path: "setting/room-type",
+        component: RoomTypeListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "RoomType", url: null },
+        ],
+      },
+      {
+        path: "setting/room",
+        component: RoomListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Room", url: null },
+        ],
+      },
+      {
+        path: "setting/tag-group",
+        component: TagGroupListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "TagGroup", url: null },
+        ],
+      },
+      {
+        path: "setting/block",
+        component: BlockListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Block", url: null },
+        ],
+      }
+    ],
+
+  },
+  {
+    path: "redirect/:requestId",
+    component: RedirectComponent,
+  },
+];
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

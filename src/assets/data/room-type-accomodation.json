@@ -1,0 +1,93 @@
+{
+    "results": [
+      {
+        "id": 1,
+        "name": "Deluxe Room",
+        "accommodation": [
+          {
+            "id": 1,
+            "name": "Base Price",
+            "default": 0,
+            "monday": 0,
+            "tuesday": 0,
+            "wednesday": 0,
+            "thursday": 0,
+            "friday": 0,
+            "saturday": 0,
+            "sunday": 0
+          },
+          {
+            "id": 2,
+            "name": "Extra Price",
+            "default": 0,
+            "monday": 0,
+            "tuesday": 0,
+            "wednesday": 0,
+            "thursday": 0,
+            "friday": 0,
+            "saturday": 0,
+            "sunday": 0
+          },
+          {
+            "id": 3,
+            "name": "1 Person",
+            "default": 0,
+            "monday": 0,
+            "tuesday": 0,
+            "wednesday": 0,
+            "thursday": 0,
+            "friday": 0,
+            "saturday": 0,
+            "sunday": 0
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Suite",
+        "accommodation": [
+          {
+            "id": 3,
+            "name": "Base Price",
+            "default": 0,
+            "monday": 0,
+            "tuesday": 0,
+            "wednesday": 0,
+            "thursday": 0,
+            "friday": 0,
+            "saturday": 0,
+            "sunday": 0
+          },
+          {
+            "id": 4,
+            "name": "Extra Price",
+            "default": 0,
+            "monday": 0,
+            "tuesday": 0,
+            "wednesday": 0,
+            "thursday": 0,
+            "friday": 0,
+            "saturday": 0,
+            "sunday": 0
+          }
+        ]
+      }
+    ],
+    "param": {
+      "pageIndex": 1,
+      "pageSize": 25,
+      "sorts": "Name",
+      "filters": [
+        {
+          "field": "search",
+          "operator": "contains",
+          "value": "",
+          "logic": null,
+          "manual": true,
+          "filters": null
+        }
+      ],
+      "pageCount": 1,
+      "rowCount": 5
+    }
+  }

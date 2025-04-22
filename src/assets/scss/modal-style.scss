@@ -1,0 +1,29 @@
+
+::ng-deep .ant-modal-header {
+  padding: 4px 10px;
+  text-align: center;
+
+  .ant-modal-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #000000a6;
+  }
+}
+
+::ng-deep .ant-modal-close-x {
+  font-size: 12px;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+}
+
+::ng-deep .ant-modal {
+  top: 66px;
+}
+
+::ng-deep .ant-modal-body {
+  padding: 0 0 12px 0;
+  overflow-y: auto;
+  max-height: calc(100vh - 174px);
+}
+
