@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { LANGUAGES } from '../const';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { BRANCH_STORAGE_KEY, LANGUAGES, SIDE_EXPAND_COLLAPSED } from '../const';
 import { Router } from '@angular/router';
 import { AuthService } from '../helpers/auth.service';
 import { DOCUMENT } from '@angular/common';

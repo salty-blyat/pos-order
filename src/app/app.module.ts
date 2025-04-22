@@ -1,19 +1,24 @@
-import {
-  inject,
-  LOCALE_ID,
-  NgModule,
-  APP_INITIALIZER,
-} from "@angular/core";
+import { inject, LOCALE_ID, NgModule, APP_INITIALIZER } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import {en_US, km_KH, NZ_I18N, zh_CN} from "ng-zorro-antd/i18n";
-import { CommonModule, CurrencyPipe, DecimalPipe, registerLocaleData } from "@angular/common";
+import { en_US, km_KH, NZ_I18N, zh_CN } from "ng-zorro-antd/i18n";
+import {
+  CommonModule,
+  CurrencyPipe,
+  DecimalPipe,
+  registerLocaleData,
+} from "@angular/common";
 import en from "@angular/common/locales/en";
 import km from "@angular/common/locales/km";
 import zh from "@angular/common/locales/zh";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgZorroAntdModule } from "./ng-zorro-antd.module";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
@@ -120,18 +125,21 @@ import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
 import { TagGroupOperationComponent } from "./pages/tag/tag-group-operation.component";
 import { TagGroupDeleteComponent } from "./pages/tag/tag-group-delete.component";
 import { TagMultiSelectComponent } from "./pages/tag/tag-multi-select.component";
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarModule, DateAdapter } from "angular-calendar";
+import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
 import { RoomAdvancedFilterComponent } from "./pages/room/room-advanced-filter.component";
 import { DateInputComponent } from "./utils/components/date-input.component";
 import { RoomTypeOperationComponent } from "./pages/room-type/room-type-operation.component";
 import { RoomOperationComponent } from "./pages/room/room-operation.component";
 import { RoomSelectComponent } from "./pages/room/room-select.component";
-import {AppVersionService} from "./utils/services/app-version.service";
+import { AppVersionService } from "./utils/services/app-version.service";
 import { BaseListSignalComponent } from "./utils/components/base-list-signal.component";
 import { NzFlexDirective } from "ng-zorro-antd/flex";
 import { InputNumberComponent } from "./utils/components/input-number.component";
 import { RoomOperationAddComponent } from "./pages/room/room-operation-add.component";
+import { BuildingListComponent } from "./pages/building/building-list.component";
+import { BuildingDeleteComponent } from "./pages/building/building-delete.component";
+import { BuildingOperationComponent } from "./pages/building/building-operation.component";
 
 export function app_Init(settingsHttpService: SettingHttpService) {
   return () => settingsHttpService.initializeApp();
@@ -146,7 +154,10 @@ registerLocaleData(en);
 registerLocaleData(zh);
 
 export class CustomTranslate implements TranslateLoader {
-  constructor(private http: HttpClient, private settingService: SettingService) {}
+  constructor(
+    private http: HttpClient,
+    private settingService: SettingService
+  ) {}
   getTranslation(lang: string): Observable<any> {
     // Here we are making http call to our server to get the
     // translation files. lang will be our language for which we are
@@ -276,15 +287,20 @@ export class CustomTranslate implements TranslateLoader {
     TagGroupDeleteComponent,
     TagMultiSelectComponent,
 
-    BaseListSignalComponent
+    //building
+    BuildingListComponent,
+    BuildingOperationComponent,
+    BuildingDeleteComponent,
+    // BuildingSelectComponent,
 
+    BaseListSignalComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: "never"}),
+    ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: "never" }),
     BrowserAnimationsModule,
     NgZorroAntdModule,
     CommonModule,
@@ -339,6 +355,6 @@ export class CustomTranslate implements TranslateLoader {
     DecimalPipe,
     CurrencyPipe,
     provideHttpClient(withInterceptorsFromDi()),
-],
+  ],
 })
 export class AppModule {}

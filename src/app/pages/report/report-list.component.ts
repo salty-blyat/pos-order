@@ -312,7 +312,5 @@ export class ReportListComponent implements OnInit, OnChanges {
     this.search();
   }
 
-  ngOnDestroy(): void {
-    this.refreshSub.unsubscribe();
-  }
+  
 }

@@ -196,9 +196,6 @@ export class FloorListComponent
         if (event.previousIndex !== event.currentIndex) this.draged = true;
     }
 
-    ngOnDestroy(): void {
-        this.refreshSub?.unsubscribe();
-    }
-
+    
     protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

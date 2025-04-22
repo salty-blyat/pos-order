@@ -63,6 +63,7 @@ export class SettingComponent implements OnInit {
   }
 
   isBranchList: boolean = true;
+  isBuildingList: boolean = true;
   isLookupList: boolean = true;
   isCurrencyList: boolean = true;
   isReportList: boolean = true;
@@ -87,6 +88,11 @@ export class SettingComponent implements OnInit {
             url: `${this.urlPart}/branch`,
             label: "Branch",
             isList: this.isBranchList,
+          }, {
+            icon: "container",
+            url: `${this.urlPart}/building`,
+            label: "Building",
+            isList: this.isBuildingList,
           },
           {
             icon: "container",

@@ -20,6 +20,7 @@ import { BlockListComponent } from "./pages/block/block-list.component";
 import { RoomTypeListComponent } from "./pages/room-type/room-type-list.component";
 import { RoomListComponent } from "./pages/room/room-list.component";
 import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
+import { BuildingListComponent } from "./pages/building/building-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -58,6 +59,14 @@ const routes: Routes = [
       {
         path: "report/:id",
         component: ReportViewComponent,
+      },
+      {
+        path: "setting/building",
+        component: BuildingListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Building", url: null },
+        ],
       },
       {
         path: "setting/report",
@@ -170,9 +179,8 @@ const routes: Routes = [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Block", url: null },
         ],
-      }
+      },
     ],
-
   },
   {
     path: "redirect/:requestId",
