@@ -8,9 +8,9 @@ export DOCKER_HOST=tcp://d3.sgx.bz:6060
 export DOCKER_TLS_VERIFY=1
 export DOCKER_CERT_PATH=~/.docker/d3-ssl
 
-docker build .. --file ../.docker/Dockerfile -t dkr.sgx.bz/hotel-ui:latest
-docker push dkr.sgx.bz/hotel-ui
-docker compose -f hotel-ui.yml -p hotel up -d
+docker build .. --file ../.docker/Dockerfile -t dkr.sgx.bz/pbs-ui:latest
+docker push dkr.sgx.bz/pbs-ui
+docker compose -f pbs-ui.yml -p pbs up -d
 
-echo "Hotel UI is builded..."
+echo "PBS UI is build..."
 exit 0
