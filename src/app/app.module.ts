@@ -133,6 +133,8 @@ import { InputNumberComponent } from "./utils/components/input-number.component"
 import { RoomOperationAddComponent } from "./pages/room/room-operation-add.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { MemberOperationComponent } from "./pages/member/member-operation.component";
+import { ItemListComponent } from "./pages/item/item-list.component";
+import { ItemOperationComponent } from "./pages/item/item-operation.component";
 
 export function app_Init(settingsHttpService: SettingHttpService) {
   return () => settingsHttpService.initializeApp();
@@ -280,6 +282,10 @@ export class CustomTranslate implements TranslateLoader {
     //member
     MemberListComponent,
     MemberOperationComponent,
+
+    // Item
+    ItemListComponent,
+    ItemOperationComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

@@ -50,10 +50,10 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-            "Gender" | translate
+            "Sex" | translate
           }}</nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <app-lookup-item-select
+            <app-lookup-item-select formControlName="sexId"
               [lookupType]="this.lookupItemType.GenderId"
             ></app-lookup-item-select>
           </nz-form-control>
@@ -149,7 +149,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   override ngOnInit(): void {
     super.ngOnInit();
   }
-  
+
   override loading = false;
 
   override initControl() {
@@ -158,7 +158,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     this.frm = this.fb.group({
       code: [null, [codeExistValidator(this.service, this.modal?.id)]],
       name: [null, [required, nameMaxLengthValidator]],
-      genderId: [null, [required]],
+      sexId: [null, [required]],
       unit: [null, [required]],
       level: [null, [required]],
       phone: [null],
@@ -170,7 +170,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     this.frm.setValue({
       code: this.model.code,
       name: this.model.name,
-      genderId: this.model.genderId,
+      sexId: this.model.sexId,
       unit: this.model.unit,
       level: this.model.level,
       phone: this.model.phone,

@@ -1,18 +1,24 @@
 import { Component } from "@angular/core";
-import { Member, MemberService } from "./member.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
+import { Item, ItemService } from "./item.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { MemberUiService } from "./member-ui.service";
+import { ItemUiService } from "./item-ui.service";
+import { ActivatedRoute } from "@angular/router";
+import { Observable } from "rxjs";
 
 @Component({
-  selector: "app-member-list",
+  selector: "app-item-list",
   template: `
     <nz-layout>
+      <app-breadcrumb
+        *ngIf="breadcrumbData"
+        [data]="breadcrumbData"
+      ></app-breadcrumb>
       <nz-header>
         <div nz-row>
           <div style="width: 220px; margin-right: 4px;">
             <app-filter-input
-              storageKey="member-list-search"
+              storageKey="item-list-search"
               (filterChanged)="
                 searchText = $event; param.pageIndex = 1; search()
               "
@@ -21,7 +27,7 @@ import { MemberUiService } from "./member-ui.service";
         </div>
         <div>
           <button
-            *ngIf="isMemberAdd"
+            *ngIf="isItemAdd"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -35,6 +41,7 @@ import { MemberUiService } from "./member-ui.service";
         <nz-table
           nzSize="small"
           nzShowSizeChanger
+          #fixedTable
           nzTableLayout="fixed"
           [nzPageSizeOptions]="pageSizeOption"
           [nzData]="lists"
@@ -43,7 +50,7 @@ import { MemberUiService } from "./member-ui.service";
           [nzPageSize]="param.pageSize || 0"
           [nzPageIndex]="param.pageIndex || 0"
           [nzNoResult]="noResult"
-          nzHideOnSinglePage="true"
+          [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
         >
           <ng-template #noResult>
@@ -56,11 +63,9 @@ import { MemberUiService } from "./member-ui.service";
                 {{ "Code" | translate }}
               </th>
               <th>{{ "Name" | translate }}</th>
-              <th>{{ "Gender" | translate }}</th>
-              <th>{{ "Unit" | translate }}</th>
-              <th>{{ "Level" | translate }}</th>
-              <th>{{ "Phone" | translate }}</th>
-              <th>{{ "Nationality" | translate }}</th>
+              <th>{{ "Image" | translate }}</th>
+              <th>{{ "ItemType" | translate }}</th>
+              <th>{{ "IsTrackSerial" | translate }}</th>
               <th class="col-action"></th>
             </tr>
           </thead>
@@ -77,37 +82,44 @@ import { MemberUiService } from "./member-ui.service";
                 }}
               </td>
               <td nzEllipsis>
-                <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
+                <a *ngIf="isItemView" (click)="uiService.showView(data.id!)">{{
+                  data.code
+                }}</a>
+                <span *ngIf="!isItemView">{{ data.code }}</span>
               </td>
-              <td nzEllipsis title="{{ data.name }}">
-                {{ data.name }}
-              </td>
-              <td nzEllipsis title="{{ data.sex }}">{{ data.sex }}</td>
-              <td nzEllipsis title="{{ data.unit }}">{{ data.unit }}</td>
-              <td nzEllipsis title="{{ data.level }}">{{ data.level }}</td>
-              <td nzEllipsis title="{{ data.phone }}">{{ data.phone }}</td>
-              <td nzEllipsis title="{{ data.nationality }}">
-                {{ data.nationality }}
-              </td>
+              <td nzEllipsis>{{ data.name }}</td>
+              <td nzEllipsis>{{ data.image }}</td>
+              <td nzEllipsis>{{ data.itemTypeId }}</td>
+              <td nzEllipsis>{{ data.isTrackSerial }}</td>
               <td>
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isMemberEdit">
+                  <ng-container *ngIf="isItemEdit">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
-                      <i nz-icon nzType="edit" nzTheme="outline"></i>
+                      <i
+                        nz-icon
+                        nzType="edit"
+                        nzTheme="outline"
+                        style="padding-right: 5px"
+                      ></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isMemberRemove">
+                  <ng-container *ngIf="isItemRemove">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
                       nz-typography
                       style="color: #F31313"
                     >
-                      <i nz-icon nzType="delete" nzTheme="outline"></i>
+                      <i
+                        nz-icon
+                        nzType="delete"
+                        nzTheme="outline"
+                        style="padding-right: 5px"
+                      ></i>
                       {{ "Delete" | translate }}
                     </a>
                   </ng-container>
@@ -120,56 +132,25 @@ import { MemberUiService } from "./member-ui.service";
     </nz-layout>
   `,
   styleUrls: ["../../../assets/scss/content_style.scss"],
+  styles: ["button{margin-left: 20px;}"],
   standalone: false,
 })
-export class MemberListComponent extends BaseListComponent<Member> {
+export class ItemListComponent extends BaseListComponent<Item> {
   constructor(
-    service: MemberService,
+    service: ItemService,
     sessionStorageService: SessionStorageService,
-    public uiService: MemberUiService
+    public uiService: ItemUiService,
+    private activated: ActivatedRoute
   ) {
-    super(service, sessionStorageService, "member-list");
+    super(service, sessionStorageService, "item-list");
   }
-  isMemberAdd: boolean = true;
-  isMemberEdit: boolean = true;
-  isMemberRemove: boolean = true;
-  isMemberView: boolean = true;
-
-  override lists = [
-    {
-      id: 1,
-      code: "123",
-      name: "Sok Dara",
-      sexId: 1,
-      sex: "Male",
-      unit: "HR Department",
-      level: "Manager",
-      phone: "012345678",
-      nationality: "Cambodian",
-    },
-    {
-      id: 2,
-      code: "123",
-      name: "Chanthy Mey",
-      sexId: 1,
-      sex: "Male",
-      unit: "Finance",
-      level: "Officer",
-      phone: "098765432",
-      nationality: "Cambodian",
-    },
-    {
-      id: 3,
-      code: "123",
-      name: "Kim Lee",
-      sexId: 1,
-      sex: "Male",
-      unit: "IT",
-      level: "Developer",
-      phone: "087654321",
-      nationality: "Korean",
-    },
-  ];
-
-  override loading = false;
+  breadcrumbData!: Observable<any>;
+  isItemAdd: boolean = true;
+  isItemEdit: boolean = true;
+  isItemRemove: boolean = true;
+  isItemView: boolean = true;
+  override ngOnInit() {
+    super.ngOnInit();
+    this.breadcrumbData = this.activated.data;
+  }
 }

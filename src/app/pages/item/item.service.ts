@@ -3,21 +3,19 @@ import { BaseApiService } from "../../utils/services/base-api.service";
 import { HttpClient } from "@angular/common/http";
 import { SettingService } from "../../app-setting";
 
-export interface Member {
+export interface Item {
   id?: number;
   code?: string;
   name?: string;
-  sexId?: number;
-  unit?: string;
-  level?: string;
-  phone?: string;
-  nationality?: string;
-  sex?: string;
+  image?: string;
+  itemTypeId?: number;
+  isTrackSerial?: boolean;
+  note?: string;
 }
 
 @Injectable({ providedIn: "root" })
-export class MemberService extends BaseApiService<any> {
-  constructor(http: HttpClient, settingService: SettingService) {
-    super("member", http, settingService);
+export class ItemService extends BaseApiService<Item> {
+  constructor(private http: HttpClient, settingService: SettingService) {
+    super("item", http, settingService);
   }
 }

@@ -20,6 +20,7 @@ import { RoomTypeListComponent } from "./pages/room-type/room-type-list.componen
 import { RoomListComponent } from "./pages/room/room-list.component";
 import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
+import { ItemListComponent } from "./pages/item/item-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -153,6 +154,14 @@ const routes: Routes = [
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Block", url: null },
+        ],
+      },
+      {
+        path: "setting/item",
+        component: ItemListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Item", url: null },
         ],
       },
     ],

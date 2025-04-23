@@ -1,14 +1,14 @@
-import { Component, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { SessionStorageService } from '../../utils/services/sessionStorage.service';
-import { BaseListComponent } from '../../utils/components/base-list.component';
-import { Currency, CurrencyService } from './currency.service';
-import { CurrencyUiService } from './currency-ui.service';
+import { Component } from "@angular/core";
+import { Observable } from "rxjs";
+import { ActivatedRoute } from "@angular/router";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { BaseListComponent } from "../../utils/components/base-list.component";
+import { Currency, CurrencyService } from "./currency.service";
+import { CurrencyUiService } from "./currency-ui.service";
 
 @Component({
-    selector: 'app-currency',
-    template: `
+  selector: "app-currency",
+  template: `
     <nz-layout>
       <app-breadcrumb
         *ngIf="breadcrumbData"
@@ -33,7 +33,7 @@ import { CurrencyUiService } from './currency-ui.service';
             (click)="uiService.showAdd()"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
-            {{ 'Add' | translate }}
+            {{ "Add" | translate }}
           </button>
         </div>
       </nz-header>
@@ -60,13 +60,13 @@ import { CurrencyUiService } from './currency-ui.service';
             <tr>
               <th class="col-header col-rowno">#</th>
               <th class="col-code-max" nzColumnKey="code">
-                {{ 'Code' | translate }}
+                {{ "Code" | translate }}
               </th>
-              <th>{{ 'Name' | translate }}</th>
-              <th>{{ 'Symbol' | translate }}</th>
-              <th>{{ 'Format' | translate }}</th>
-              <th>{{ 'Rounding' | translate }}</th>
-              <th>{{ 'ExchangeRate' | translate }}</th>
+              <th>{{ "Name" | translate }}</th>
+              <th>{{ "Symbol" | translate }}</th>
+              <th>{{ "Format" | translate }}</th>
+              <th>{{ "Rounding" | translate }}</th>
+              <th>{{ "ExchangeRate" | translate }}</th>
               <th class="col-action"></th>
             </tr>
           </thead>
@@ -101,17 +101,14 @@ import { CurrencyUiService } from './currency-ui.service';
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
                   <ng-container *ngIf="isCurrencyEdit">
-                    <a
-                      *nzSpaceItem
-                      (click)="uiService.showEdit(data.id || 0)"
-                    >
+                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i
                         nz-icon
                         nzType="edit"
                         nzTheme="outline"
                         style="padding-right: 5px"
                       ></i>
-                      {{ 'Edit' | translate }}
+                      {{ "Edit" | translate }}
                     </a>
                   </ng-container>
                   <ng-container *ngIf="isCurrencyRemove">
@@ -127,7 +124,7 @@ import { CurrencyUiService } from './currency-ui.service';
                         nzTheme="outline"
                         style="padding-right: 5px"
                       ></i>
-                      {{ 'Delete' | translate }}
+                      {{ "Delete" | translate }}
                     </a>
                   </ng-container>
                 </nz-space>
@@ -138,22 +135,18 @@ import { CurrencyUiService } from './currency-ui.service';
       </nz-content>
     </nz-layout>
   `,
-    styleUrls: ['../../../assets/scss/content_style.scss'],
-    styles: ['button{margin-left: 20px;}'],
-    standalone: false
+  styleUrls: ["../../../assets/scss/content_style.scss"],
+  styles: ["button{margin-left: 20px;}"],
+  standalone: false,
 })
-export class CurrencyListComponent
-  extends BaseListComponent<Currency>
-  implements OnDestroy
-{
+export class CurrencyListComponent extends BaseListComponent<Currency> {
   constructor(
     service: CurrencyService,
     sessionStorageService: SessionStorageService,
     public uiService: CurrencyUiService,
     private activated: ActivatedRoute
-  )
-  {
-    super(service, sessionStorageService, 'currency-list');
+  ) {
+    super(service, sessionStorageService, "currency-list");
   }
   breadcrumbData!: Observable<any>;
   isCurrencyAdd: boolean = true;
@@ -180,6 +173,4 @@ export class CurrencyListComponent
     });
     super.ngOnInit();
   }
-
-  
 }
