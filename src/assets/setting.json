@@ -4,6 +4,5 @@
   "AUTH_API_URL": "https://core.sgx.bz/api",
   "AUTH_UI_URL": "https://core.sgx.bz",
   "APP_NAME": "PBS",
-  "APP_ICON": "https://core.sgx.bz/files/22/12/logo_text-black-02_.png",
-  "PDF_URL": "http://s8.sgx.bz:60333/html-to-pdf"
+  "APP_ICON": "https://core.sgx.bz/files/22/12/logo_text-black-02_.png"
 }

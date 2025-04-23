@@ -108,7 +108,7 @@ import { AuthService } from "../../../helpers/auth.service";
                   </ng-container>
                 </nz-space>
               </td>
-            </tr> 
+            </tr>
           </tbody>
         </nz-table>
       </nz-content>

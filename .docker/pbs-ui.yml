@@ -4,7 +4,7 @@ services:
     image: dkr.sgx.bz/pbs-ui
     restart: always
     ports:
-      - 60552:80
+      - "60344:80"
     environment:
       - "LANG_URL=https://core.sgx.bz/files/langs/pbs"
       - "BASE_API_URL=https://latest.sgx.bz/pbs/api"
@@ -12,4 +12,3 @@ services:
       - "AUTH_UI_URL=https://core.sgx.bz"
       - "APP_NAME=PBS"
       - "APP_ICON=https://core.sgx.bz/files/23/01/dt-logo-removebg-preview.png"
-      - "PDF_URL=https://exp.sgx.bz/html-to-pdf"
