@@ -89,12 +89,6 @@ import { CurrencyOperationComponent } from "./pages/currency/currency-operation.
 import { CurrencySelectComponent } from "./pages/currency/currency-select.component";
 import { CurrencyListComponent } from "./pages/currency/currency-list.component";
 import { CompanySectionComponent } from "./pages/system-setting/company-section.component";
-import { BranchListComponent } from "./pages/branch/branch-list.component";
-import { BranchOperationComponent } from "./pages/branch/branch-operation.component";
-import { BranchDeleteComponent } from "./pages/branch/branch-delete.component";
-import { BranchSelectComponent } from "./pages/branch/branch-select.component";
-import { BranchMultipleSelectComponent } from "./pages/branch/branch-multiple-select.component";
-import { BranchPullComponent } from "./pages/branch/branch-pull.component";
 import { ReportGroupDeleteComponent } from "./pages/report-group/report-group-delete.component";
 import { ReportGroupOperationComponent } from "./pages/report-group/report-group-operation.component";
 import { ReportGroupSelectComponent } from "./pages/report-group/report-group-select.component";
@@ -137,9 +131,8 @@ import { BaseListSignalComponent } from "./utils/components/base-list-signal.com
 import { NzFlexDirective } from "ng-zorro-antd/flex";
 import { InputNumberComponent } from "./utils/components/input-number.component";
 import { RoomOperationAddComponent } from "./pages/room/room-operation-add.component";
-import { BuildingListComponent } from "./pages/building/building-list.component";
-import { BuildingDeleteComponent } from "./pages/building/building-delete.component";
-import { BuildingOperationComponent } from "./pages/building/building-operation.component";
+import { MemberListComponent } from "./pages/member/member-list.component";
+import { MemberOperationComponent } from "./pages/member/member-operation.component";
 
 export function app_Init(settingsHttpService: SettingHttpService) {
   return () => settingsHttpService.initializeApp();
@@ -234,12 +227,7 @@ export class CustomTranslate implements TranslateLoader {
     CurrencySelectComponent,
     CurrencySelectComponent,
     CurrencyListComponent,
-    BranchSelectComponent,
-    BranchListComponent,
-    BranchOperationComponent,
-    BranchDeleteComponent,
-    BranchMultipleSelectComponent,
-    BranchPullComponent,
+
     ReportGroupDeleteComponent,
     ReportGroupOperationComponent,
     ReportGroupSelectComponent,
@@ -287,13 +275,11 @@ export class CustomTranslate implements TranslateLoader {
     TagGroupDeleteComponent,
     TagMultiSelectComponent,
 
-    //building
-    BuildingListComponent,
-    BuildingOperationComponent,
-    BuildingDeleteComponent,
-    // BuildingSelectComponent,
-
     BaseListSignalComponent,
+
+    //member
+    MemberListComponent,
+    MemberOperationComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

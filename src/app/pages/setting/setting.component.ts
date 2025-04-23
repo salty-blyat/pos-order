@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { SIDE_EXPAND_COLLAPSED } from "../../const";
-import { AuthService } from "../../helpers/auth.service";
 import { LocalStorageService } from "../../utils/services/localStorage.service";
 
 interface SubName {
@@ -14,10 +13,9 @@ interface Setting {
   groupName: string;
   subName: SubName[];
 }
-
 @Component({
-    selector: "app-setting",
-    template: `
+  selector: "app-setting",
+  template: `
     <nz-layout>
       <nz-header>
         <div nz-row>
@@ -28,16 +26,23 @@ interface Setting {
         </div>
       </nz-header>
       <nz-content>
-        <div nz-row>
+        <div nz-row class="setting-container">
           <ng-container *ngFor="let data of setting">
-            <div nz-col [nzXs]="6" *ngIf="isListGroup(data)">
+            <div *ngIf="isListGroup(data)">
               <div class="content-header">
                 <p nz-typography>{{ data.groupName | translate }}</p>
               </div>
               <ng-container *ngFor="let subData of data.subName">
                 <div class="content-body" *ngIf="subData.isList">
-                  <a routerLink="{{ subData.url }}" (click)="setLastVisited(subData.url!)">
-                    <i nzType="{{ subData.icon }}" nz-icon nzTheme="outline"></i>
+                  <a
+                    routerLink="{{ subData.url }}"
+                    (click)="setLastVisited(subData.url!)"
+                  >
+                    <i
+                      nzType="{{ subData.icon }}"
+                      nz-icon
+                      nzTheme="outline"
+                    ></i>
                     <span>{{ subData.label | translate }}</span>
                   </a>
                 </div>
@@ -48,11 +53,20 @@ interface Setting {
       </nz-content>
     </nz-layout>
   `,
-    styleUrls: ["../../../assets/scss/setting-style.scss"],
-    standalone: false
+  styleUrls: ["../../../assets/scss/setting-style.scss"],
+  styles: [
+    `
+      .setting-container {
+        display: flex;
+        gap: 5rem;
+        flex-wrap: wrap;
+      }
+    `,
+  ],
+  standalone: false,
 })
 export class SettingComponent implements OnInit {
-  constructor(private localStorageService: LocalStorageService, private authService: AuthService) {}
+  constructor(private localStorageService: LocalStorageService) {}
   setting: Setting[] = [];
   urlPart = "/setting";
   setLastVisited(route: string) {
@@ -62,8 +76,6 @@ export class SettingComponent implements OnInit {
     });
   }
 
-  isBranchList: boolean = true;
-  isBuildingList: boolean = true;
   isLookupList: boolean = true;
   isCurrencyList: boolean = true;
   isReportList: boolean = true;
@@ -75,9 +87,9 @@ export class SettingComponent implements OnInit {
   isAmenityGroup: boolean = true;
   isTagGroup: boolean = true;
   isStaffList: boolean = true;
-  isHousekeepingList:boolean = true;
-  isRateOptionList:boolean = true;
-  isCancelPolicyList:boolean = true;
+  isHousekeepingList: boolean = true;
+  isRateOptionList: boolean = true;
+  isCancelPolicyList: boolean = true;
   ngOnInit(): void {
     this.setting = [
       {
@@ -85,14 +97,9 @@ export class SettingComponent implements OnInit {
         subName: [
           {
             icon: "container",
-            url: `${this.urlPart}/branch`,
-            label: "Branch",
-            isList: this.isBranchList,
-          }, {
-            icon: "container",
-            url: `${this.urlPart}/building`,
-            label: "Building",
-            isList: this.isBuildingList,
+            url: `${this.urlPart}/block`,
+            label: "Block",
+            isList: this.isBlockList,
           },
           {
             icon: "container",
@@ -106,12 +113,7 @@ export class SettingComponent implements OnInit {
             label: "Currency",
             isList: this.isCurrencyList,
           },
-          {
-            icon: "container",
-            url: `${this.urlPart}/amenity-group`,
-            label: "Asset",
-            isList: this.isAmenityGroup,
-          },
+
           {
             icon: "container",
             url: `${this.urlPart}/tag-group`,
@@ -123,25 +125,18 @@ export class SettingComponent implements OnInit {
       {
         groupName: "Room",
         subName: [
+          // {
+          //   icon: "container",
+          //   url: `${this.urlPart}/room`,
+          //   label: "Room",
+          //   isList: this.isRoomList,
+          // },
           {
             icon: "container",
             url: `${this.urlPart}/room-type`,
             label: "RoomType",
             isList: this.isRoomTypeList,
           },
-          {
-            icon: "container",
-            url: `${this.urlPart}/room`,
-            label: "Room",
-            isList: this.isRoomList,
-          },
-          {
-            icon: "container",
-            url: `${this.urlPart}/block`,
-            label: "Block",
-            isList: this.isBlockList,
-          },
-          
         ],
       },
       {
@@ -167,11 +162,12 @@ export class SettingComponent implements OnInit {
           },
         ],
       },
-      
     ];
   }
 
   isListGroup(data: any): boolean {
-    return data.subName?.filter((item: { isList: any }) => item.isList).length > 0;
+    return (
+      data.subName?.filter((item: { isList: any }) => item.isList).length > 0
+    );
   }
 }

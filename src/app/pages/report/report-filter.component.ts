@@ -5,18 +5,17 @@ import {
   AfterViewInit,
   Output,
   EventEmitter,
-} from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { ReportParam } from './report.service';
-import { CommonValidators } from '../../utils/services/common-validators';
-import {BRANCH_STORAGE_KEY, ReportParamDisplay } from '../../const';
-import { DatetimeHelper } from '../../helpers/datetime-helper';
-import { Branch } from '../branch/branch.service';
-import { LocalStorageService } from '../../utils/services/localStorage.service';
+} from "@angular/core";
+import { FormGroup, FormBuilder } from "@angular/forms";
+import { ReportParam } from "./report.service";
+import { CommonValidators } from "../../utils/services/common-validators";
+import { BRANCH_STORAGE_KEY, ReportParamDisplay } from "../../const";
+import { DatetimeHelper } from "../../helpers/datetime-helper";
+import { LocalStorageService } from "../../utils/services/localStorage.service";
 
 @Component({
-    selector: 'app-report-filter',
-    template: `
+  selector: "app-report-filter",
+  template: `
     <form nz-form [formGroup]="frm" *ngIf="formItems.length > 0">
       <div nz-row style="display: flex; gap: 4px;">
         <div *ngFor="let item of formItemInline" class="formItemInline">
@@ -64,7 +63,7 @@ import { LocalStorageService } from '../../utils/services/localStorage.service';
         <div *nzModalTitle>
           <div style="text-align: center">
             <h4 style="font-weight: 600">
-              {{ 'Advanced Filter' | translate }}
+              {{ "Advanced Filter" | translate }}
             </h4>
           </div>
         </div>
@@ -80,19 +79,19 @@ import { LocalStorageService } from '../../utils/services/localStorage.service';
           <div nz-row nzJustify="space-between">
             <button nz-button nzType="default" nzDanger (click)="resetForm()">
               <i nz-icon nzType="undo" nzTheme="outline"></i
-              >{{ 'Reset Filter' | translate }}
+              >{{ "Reset Filter" | translate }}
             </button>
             <button nz-button nzType="default" (click)="submit()">
               <i nz-icon nzType="filter" nzTheme="outline"></i
-              >{{ 'Search' | translate }}
+              >{{ "Search" | translate }}
             </button>
           </div>
         </div>
       </nz-modal>
     </form>
   `,
-    styles: [
-        `
+  styles: [
+    `
       [nz-form] {
         .ant-form-item {
           margin-bottom: 0 !important;
@@ -106,14 +105,11 @@ import { LocalStorageService } from '../../utils/services/localStorage.service';
         min-width: 220px !important;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class ReportFilterComponent implements OnInit, AfterViewInit {
-  constructor(
-    private localStorageService: LocalStorageService,
-    private fb: FormBuilder
-  ) {}
+  constructor(private fb: FormBuilder) {}
 
   @Output() onSubmit = new EventEmitter<any>();
   @Input() showFilterButton: boolean = true;
@@ -124,8 +120,6 @@ export class ReportFilterComponent implements OnInit, AfterViewInit {
   frm!: FormGroup;
   dot = false;
   fields: string[] = [];
-  private branch: Branch =
-    this.localStorageService.getValue(BRANCH_STORAGE_KEY);
   ngOnInit(): void {
     this.formItemInline = this.formItems.filter(
       (item) => item.display == ReportParamDisplay.Inline
@@ -142,7 +136,7 @@ export class ReportFilterComponent implements OnInit, AfterViewInit {
     this.frm = this.fb.group({});
     for (let formItem of this.formItems) {
       let defaultValue = formItem.defaultValue;
-      if (typeof defaultValue == 'string') {
+      if (typeof defaultValue == "string") {
         try {
           defaultValue = JSON.parse(defaultValue);
         } catch (e) {}
@@ -165,7 +159,7 @@ export class ReportFilterComponent implements OnInit, AfterViewInit {
       if (Array.isArray(defaultValue)) {
         for (let value of defaultValue) {
           if (!value?.id) {
-            value = { id: '0', label: '' };
+            value = { id: "0", label: "" };
           }
         }
         let ids = defaultValue.map((x) => x.id).join();
@@ -173,13 +167,13 @@ export class ReportFilterComponent implements OnInit, AfterViewInit {
         defaultValue = { id: ids, label: label };
       } else {
         if (!defaultValue?.id) {
-          defaultValue = { id: '0', label: '' };
+          defaultValue = { id: "0", label: "" };
         }
       }
 
       //Initial default value for date if no have in session
-      if (formItem.type == 'Date') {
-        if (defaultValue.id == '0') {
+      if (formItem.type == "Date") {
+        if (defaultValue.id == "0") {
           defaultValue = {
             id: new Date().toISOString(),
             label: DatetimeHelper.toShortDateString(new Date()),
@@ -187,8 +181,8 @@ export class ReportFilterComponent implements OnInit, AfterViewInit {
         }
       }
       //Initial default value for dateRange if no have in session
-      if (formItem.type == 'DateRange') {
-        if (defaultValue.id == '0') {
+      if (formItem.type == "DateRange") {
+        if (defaultValue.id == "0") {
           defaultValue = {
             id: `${new Date().toISOString()},${new Date().toISOString()}`,
             label: `${DatetimeHelper.toShortDateString(
@@ -198,7 +192,7 @@ export class ReportFilterComponent implements OnInit, AfterViewInit {
         }
       }
       //Initial default value for branches if no have in session
-      if (formItem.type == 'Branches') {
+      if (formItem.type == "Branches") {
         // if (
         //   defaultValue.id == '0' &&
         //   !this.authService.isAuthorized(
@@ -213,7 +207,7 @@ export class ReportFilterComponent implements OnInit, AfterViewInit {
       }
 
       this.frm.addControl(
-        formItem.key || '',
+        formItem.key || "",
         this.fb.control(defaultValue, [required])
       );
       this.fields.push(formItem.key!);
@@ -224,7 +218,7 @@ export class ReportFilterComponent implements OnInit, AfterViewInit {
 
     for (let item of this.fields) {
       if (this.formItemModal.find((x) => x.key == item)) {
-        if (this.frm.get(item)?.value.id !== '0') {
+        if (this.frm.get(item)?.value.id !== "0") {
           this.dot = true;
           break;
         }

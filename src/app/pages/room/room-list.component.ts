@@ -12,12 +12,8 @@ import { QueryParam } from "../../utils/services/base-api.service";
   selector: "app-room-list",
   template: `
     <nz-layout>
-      <app-breadcrumb
-        *ngIf="breadcrumbData"
-        [data]="breadcrumbData"
-      ></app-breadcrumb>
       <nz-header>
-        <div nz-row>
+        <div nz-row  >
           <div class="filter-box">
             <app-filter-input
               storageKey="room-list-search"
@@ -45,7 +41,7 @@ import { QueryParam } from "../../utils/services/base-api.service";
               "
             ></app-lookup-item-select>
           </div>
-          <div class="filter-box">
+          <div>
             <nz-badge [nzDot]="hasAdvancedFilter">
               <button
                 nz-button
@@ -199,8 +195,6 @@ export class RoomListComponent extends BaseListComponent<Room> {
     super(service, sessionStorageService, "room-list");
   }
 
-  breadcrumbData!: Observable<any>;
-
   houseKeepingStatusId: number = 0;
   roomTypeId: number = 0;
   floorId: number = 0;
@@ -216,8 +210,6 @@ export class RoomListComponent extends BaseListComponent<Room> {
   hasAdvancedFilter: boolean = false;
 
   override ngOnInit() {
-    this.breadcrumbData = this.activated.data;
-
     this.refreshSub = this.uiService.refresher.subscribe((result) => {
       if (result.key === "advanced-filter-room") {
         this.setAdvancedFilter(result.value);

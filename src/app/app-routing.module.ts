@@ -13,14 +13,13 @@ import { SystemSettingComponent } from "./pages/system-setting/system-setting.co
 import { ReportNewListComponent } from "./pages/report/report-list-new.component";
 import { CurrencyListComponent } from "./pages/currency/currency-list.component";
 import { AutoNumberListComponent } from "./pages/auto-number/auto-number-list.component";
-import { BranchListComponent } from "./pages/branch/branch-list.component";
 import { ReportViewComponent } from "./pages/report/report-view.component";
 import { ReportGroupMenuComponent } from "./pages/report-group/report-group-menu.component";
 import { BlockListComponent } from "./pages/block/block-list.component";
 import { RoomTypeListComponent } from "./pages/room-type/room-type-list.component";
 import { RoomListComponent } from "./pages/room/room-list.component";
 import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
-import { BuildingListComponent } from "./pages/building/building-list.component";
+import { MemberListComponent } from "./pages/member/member-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -32,6 +31,14 @@ const routes: Routes = [
       {
         path: "home",
         component: HomeComponent,
+      },
+      {
+        path: "member",
+        component: MemberListComponent,
+      },
+      {
+        path: "room",
+        component: RoomListComponent,
       },
       {
         path: "setting",
@@ -61,14 +68,6 @@ const routes: Routes = [
         component: ReportViewComponent,
       },
       {
-        path: "setting/building",
-        component: BuildingListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Building", url: null },
-        ],
-      },
-      {
         path: "setting/report",
         component: ReportNewListComponent,
         data: [
@@ -82,14 +81,6 @@ const routes: Routes = [
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Currency", url: null },
-        ],
-      },
-      {
-        path: "setting/branch",
-        component: BranchListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Branch", url: null },
         ],
       },
       {
@@ -125,14 +116,6 @@ const routes: Routes = [
         ],
       },
       {
-        path: "setting/branch",
-        component: BranchListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Branch", url: null },
-        ],
-      },
-      {
         path: "setting/currency",
         component: CurrencyListComponent,
         data: [
@@ -154,14 +137,6 @@ const routes: Routes = [
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "RoomType", url: null },
-        ],
-      },
-      {
-        path: "setting/room",
-        component: RoomListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Room", url: null },
         ],
       },
       {

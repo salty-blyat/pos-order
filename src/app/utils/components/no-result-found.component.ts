@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
-    selector: 'app-no-result-found',
-    template: `
+  selector: "app-no-result-found",
+  template: `
     <div class="container">
       <h5 style="font-size: 36px; margin-bottom: 6px;">
         <i
@@ -14,14 +14,14 @@ import { Component, Input, OnInit } from '@angular/core';
       <h5>
         {{
           branch === 0
-            ? ('Please select branch!' | translate)
-            : ('RowNotFound' | translate)
+            ? ("Please select branch!" | translate)
+            : ("RowNotFound" | translate)
         }}
       </h5>
     </div>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .container {
         text-align: center;
         padding: 24px 0px;
@@ -31,8 +31,8 @@ import { Component, Input, OnInit } from '@angular/core';
         }
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class NoResultFoundComponent implements OnInit {
   @Input() branch?: number;

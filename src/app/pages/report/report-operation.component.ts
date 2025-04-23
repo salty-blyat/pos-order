@@ -20,7 +20,6 @@ import { StaticDropdownMultipleSelectComponent } from './static-dropdown-multipl
 import { StaticDropdownSingleSelectComponent } from './static-dropdown-single-select.component';
 import { DateRangeInputReportComponent } from '../../utils/components/date-range-input-report.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { BranchMultipleSelectComponent } from '../branch/branch-multiple-select.component';
 import { timer } from 'rxjs';
 import { NotificationService } from '../../utils/services/notification.service';
 
@@ -30,7 +29,6 @@ export let ParamSelectComponent = {
   StaticDropdownMultipleSelect: StaticDropdownMultipleSelectComponent,
   StaticDropdownSingleSelect: StaticDropdownSingleSelectComponent,
   DateRange: DateRangeInputReportComponent,
-  Branches: BranchMultipleSelectComponent,
 
 };
 
