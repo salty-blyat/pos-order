@@ -43,7 +43,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
           <nz-form-label [nzSm]="6" [nzXs]="24">{{
             "Note" | translate
           }}</nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
             <textarea
               nz-input
               rows="3"
@@ -121,7 +121,6 @@ export class ItemTypeOperationComponent extends BaseOperationComponent<ItemType>
   override initControl(): void {
     const {
       required,
-      nameMaxLengthValidator,
       nameExistValidator,
       noteMaxLengthValidator,
       codeExistValidator,

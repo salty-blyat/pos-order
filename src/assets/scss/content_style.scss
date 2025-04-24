@@ -36,6 +36,9 @@
     }
   }
 }
+textarea{
+  border-radius: var(--ant-border-radius) !important;
+}
 
 .modal-header-ellipsis {
   white-space: nowrap;

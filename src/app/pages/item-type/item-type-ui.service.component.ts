@@ -11,9 +11,9 @@ export class ItemTypeUiService extends BaseUiService {
       modalService,
       ItemTypeOperationComponent,
       ItemTypeDeleteComponent,
-      "640px",
-      "640px",
-      "640px",
+      "450px",
+      "450px",
+      "450px",
       "450px"
     );
   }

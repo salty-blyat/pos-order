@@ -5,6 +5,7 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { ItemTypeUiService } from "./item-type-ui.service.component";
+import { SIZE_COLUMNS } from "../../const";
 
 @Component({
   selector: "app-item-type-list",
@@ -58,9 +59,15 @@ import { ItemTypeUiService } from "./item-type-ui.service.component";
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
-              <th nzEllipsis>{{ "Name" | translate }}</th>
-              <th nzEllipsis>{{ "Note" | translate }}</th>
+              <th class="col-header col-rowno" [nzWidth]="SIZE_COLUMNS.ID">
+                #
+              </th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
+                {{ "Name" | translate }}
+              </th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NOTE">
+                {{ "Note" | translate }}
+              </th>
               <th class="col-action"></th>
             </tr>
           </thead>
@@ -140,6 +147,7 @@ export class ItemTypeListComponent extends BaseListComponent<ItemType> {
   isItemEdit: boolean = true;
   isItemRemove: boolean = true;
   isItemView: boolean = true;
+  protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
   override ngOnInit() {
     this.refreshSub = this.uiService.refresher.subscribe((result) => {
       this.search();
