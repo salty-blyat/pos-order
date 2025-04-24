@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import {Component, EventEmitter, input, Input, model, OnInit, output, Output} from "@angular/core";
 
 @Component({
   selector: "app-filter-input",
@@ -8,7 +8,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
         nz-input
         [(ngModel)]="value"
         type="text"
-        placeholder="{{ placeholder ? placeholder : ('Search' | translate) }}"
+        placeholder="{{ placeholder() ? placeholder() : ('Search' | translate) }}"
         (keyup.enter)="filterTextChanged()"
       />
     </nz-input-group>
@@ -31,10 +31,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
   standalone: false,
 })
 export class FilterInputComponent implements OnInit {
-  @Input() storageKey: string = "";
-  @Input() value: string = "";
-  @Input() placeholder!: string;
-  @Output() filterChanged: EventEmitter<string> = new EventEmitter<string>();
+  storageKey = model<string>("");
+  value = model<string>("");
+  placeholder = input<string>("");
+  filterChanged = output<any>() ;
 
   constructor() {}
 
@@ -43,19 +43,19 @@ export class FilterInputComponent implements OnInit {
   }
 
   filterTextChanged(): void {
-    if (this.storageKey) {
-      sessionStorage.setItem(this.storageKey, this.value);
+    if (this.storageKey()) {
+      sessionStorage.setItem(this.storageKey(), this.value());
     }
-    this.filterChanged.emit(this.value);
+    this.filterChanged.emit(this.value());
   }
   changeKey() {
-    if (this.storageKey) {
-      this.value = sessionStorage.getItem(this.storageKey) ?? "";
-      this.filterChanged.emit(this.value);
+    if (this.storageKey()) {
+      this.value.set(sessionStorage.getItem(this.storageKey()) ?? "");
+      this.filterChanged.emit(this.value());
     }
   }
   public changeStorageKey(key: string) {
-    this.storageKey = key;
+    this.storageKey.set(key);
     this.changeKey();
   }
 }

@@ -4,7 +4,6 @@ import { Observable } from "rxjs";
 import { RoomType, RoomTypeService } from "./room-type.service";
 import { RoomTypeUiService } from "./room-type-ui.service";
 import { SIZE_COLUMNS } from "../../const";
-import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 
@@ -19,7 +18,9 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
       <nz-header>
         <div nz-row>
           <div class="filter-box">
-            <app-filter-input #filterBox storageKey="room-type-list-search">
+            <app-filter-input 
+                (filterChanged)="searchText.set($event); param().pageIndex = 1; search();" 
+                storageKey="room-type-list-search">
             </app-filter-input>
           </div>
         </div>
@@ -56,12 +57,11 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="120px">{{ "Occupancy" | translate }}</th>
-              <th nzWidth="100px">{{ "Size" | translate }}</th>
-              <th class="col-qty">{{ "Note" | translate }}</th>
-              <th class="col-action"></th>
+              <th nzWidth="120px" class="text-center">{{ "Occupancy" | translate }}</th>
+              <th>{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
@@ -79,10 +79,12 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
               <td nzEllipsis>
                 <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
-              <td nzEllipsis>{{ data.occupancy }}</td>
-              <td nzEllipsis class="col-qty">{{ data.netArea }}</td>
+              <td nzEllipsis class="text-center">
+                {{ data.occupancy }}
+                / {{ data.maxOccupancy }}
+              </td>
               <td nzEllipsis>{{ data.note }}</td>
-              <td>
+              <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -143,5 +145,4 @@ export class RoomTypeListComponent extends BaseListComponent<RoomType> {
   isRoomTypeRemove = signal<boolean>(true);
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
-  protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }

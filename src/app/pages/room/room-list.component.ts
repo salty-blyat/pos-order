@@ -80,7 +80,7 @@ import {Filter, QueryParam} from "../../utils/services/base-api.service";
               <th nzWidth="150px">{{ "HouseKeepingStatus" | translate }}</th>
               <th nzWidth="150px">{{ "Status" | translate }}</th>
               <th>{{ "Tags" | translate }}</th>
-              <th class="col-action"></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

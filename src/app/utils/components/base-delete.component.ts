@@ -1,6 +1,6 @@
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Component, inject } from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { CommonValidators } from '../services/common-validators';
 import { finalize, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -18,7 +18,7 @@ interface SharedDomain {
     template: '',
     standalone: false
 })
-export class BaseDeleteComponent<T extends SharedDomain> {
+export class BaseDeleteComponent<T extends SharedDomain> implements OnInit {
   constructor(
     private service: BaseApiService<T>,
     public uiService: BaseUiService,
@@ -26,27 +26,27 @@ export class BaseDeleteComponent<T extends SharedDomain> {
     protected fb: FormBuilder
   ) {}
   readonly modal: { id: number } = inject(NZ_MODAL_DATA);
-  loading: boolean = false;
-  errMessage: string = '';
+  isLoading = signal<boolean>(false);
+  errMessage = signal<string>('');
   frm!: FormGroup;
   model!: T;
   autoTips: Record<any, any> = CommonValidators.autoTips;
   ngOnInit(): void {
     this.initControl();
     if (this.modal.id) {
-      this.loading = true;
+      this.isLoading.set(true);
       const canRemove$: Observable<any> = this.service.inused(this.modal.id);
       const find$: Observable<any> = canRemove$.pipe(
         switchMap((x: any) => {
           if (!x.can) {
-            this.errMessage = x.message;
+            this.errMessage.set(x.message);
             this.frm.disable();
           }
           return this.service.find(this.modal.id);
         })
       );
       find$
-        .pipe(finalize(() => (this.loading = false)))
+        .pipe(finalize(() => (this.isLoading.set(false))))
         .subscribe((result: T) => {
           this.model = result;
           this.setFormValue();
@@ -55,13 +55,13 @@ export class BaseDeleteComponent<T extends SharedDomain> {
   }
 
   onSubmit(e?: any) {
-    if (this.loading) {
+    if (this.isLoading()) {
       return;
     }
     if (!this.frm.valid) {
       return;
     }
-    this.loading = true;
+    this.isLoading.set(true);
     this.model.id = this.modal?.id;
     if (e.detail == 1) {
       this.service
@@ -69,11 +69,11 @@ export class BaseDeleteComponent<T extends SharedDomain> {
         .subscribe({
           next: () => {
             this.ref.triggerOk().then();
-            this.loading = false;
+            this.isLoading.set(false);
           },
           error: (err: HttpErrorResponse) => {
             console.log(err);
-            this.loading = false;
+              this.isLoading.set(false);
           },
         });
     }
