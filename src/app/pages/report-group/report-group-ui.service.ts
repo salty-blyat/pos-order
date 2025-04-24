@@ -2,20 +2,14 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ReportGroupOperationComponent } from './report-group-operation.component';
 import { ReportGroupDeleteComponent } from './report-group-delete.component';
+import {BaseUiService} from "../../utils/services/base-ui.service";
 
 
 @Injectable({ providedIn: 'root' })
-export class ReportGroupUiService {
-  constructor(private modal: NzModalService) {}
+export class ReportGroupUiService extends BaseUiService {
 
-  refresher = new EventEmitter<{
-    key: string;
-    value?: any;
-    componentId?: any;
-  }>();
-
-  showAdd(componentId: any = ''): void {
-    this.modal.create({
+  override showAdd(componentId: any = ''): void {
+    this.modalService.create({
       nzContent: ReportGroupOperationComponent,
       nzFooter: null,
       nzClosable: true,
@@ -28,8 +22,8 @@ export class ReportGroupUiService {
     });
   }
 
-  showEdit(id: number): void {
-    this.modal.create({
+  override showEdit(id: number): void {
+    this.modalService.create({
       nzContent: ReportGroupOperationComponent,
       nzFooter: null,
       nzClosable: true,
@@ -43,8 +37,8 @@ export class ReportGroupUiService {
     });
   }
 
-  showView(id: number): void {
-    this.modal.create({
+  override showView(id: number): void {
+    this.modalService.create({
       nzContent: ReportGroupOperationComponent,
       nzFooter: null,
       nzClosable: true,
@@ -55,8 +49,8 @@ export class ReportGroupUiService {
     });
   }
 
-  showDelete(id: number) {
-    this.modal.create({
+  override showDelete(id: number) {
+    this.modalService.create({
       nzContent: ReportGroupDeleteComponent,
       nzFooter: null,
       nzClosable: true,

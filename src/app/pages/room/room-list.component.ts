@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {Component, Input, OnInit, signal} from "@angular/core";
 import { ActivatedRoute, Data } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -6,7 +6,7 @@ import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Room, RoomAdvancedFilter, RoomService } from "./room.service";
 import { RoomUiService } from "./room-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
-import { QueryParam } from "../../utils/services/base-api.service";
+import {Filter, QueryParam} from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-room-list",
@@ -18,7 +18,7 @@ import { QueryParam } from "../../utils/services/base-api.service";
             <app-filter-input
               storageKey="room-list-search"
               (filterChanged)="
-                searchText = $event; param.pageIndex = 1; search()
+                searchText.set($event); param().pageIndex = 1; search()
               "
             >
             </app-filter-input>
@@ -27,31 +27,14 @@ import { QueryParam } from "../../utils/services/base-api.service";
             <app-floor-select
               storageKey="room-list-floor-select-filter"
               [showAllOption]="true"
-              (valueChanged)="floorId = $event; param.pageIndex = 1; search()"
+              (valueChanged)="floorId = $event; param().pageIndex = 1; search()"
             ></app-floor-select>
           </div>
-          <div class="filter-box">
-            <app-lookup-item-select
-              [lookupType]="lookupType.HouseKeepingStatus"
-              storageKey="room-list-hk-status-select-filter"
-              [showAllOption]="true"
-              [typeLabelAll]="'AllHouseKeepingStatus' | translate"
-              (valueChanged)="
-                houseKeepingStatusId = $event; param.pageIndex = 1; search()
-              "
-            ></app-lookup-item-select>
-          </div>
           <div>
-            <nz-badge [nzDot]="hasAdvancedFilter">
+            <nz-badge [nzDot]="hasAdvancedFilter()">
               <button
                 nz-button
                 nzType="default"
-                (click)="
-                  uiService.showAdvancedFilter(
-                    'room-list',
-                    this.advancedStoreKey
-                  )
-                "
               >
                 <a nz-icon nzType="align-right" nzTheme="outline"></a>
               </button>
@@ -60,7 +43,7 @@ import { QueryParam } from "../../utils/services/base-api.service";
         </div>
         <div>
           <button
-            *ngIf="isRoomTypeAdd"
+            *ngIf="isRoomTypeAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -76,12 +59,12 @@ import { QueryParam } from "../../utils/services/base-api.service";
           nzShowSizeChanger
           #fixedTable
           nzTableLayout="fixed"
-          [nzPageSizeOptions]="pageSizeOption"
-          [nzData]="lists"
-          [nzLoading]="loading"
-          [nzTotal]="param.rowCount || 0"
-          [nzPageSize]="param.pageSize || 0"
-          [nzPageIndex]="param.pageIndex || 0"
+          [nzPageSizeOptions]="pageSizeOption()"
+          [nzData]="lists()"
+          [nzLoading]="isLoading()"
+          [nzTotal]="param().rowCount || 0"
+          [nzPageSize]="param().pageSize || 0"
+          [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
@@ -102,24 +85,24 @@ import { QueryParam } from "../../utils/services/base-api.service";
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of lists; let i = index">
+            <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
                 {{
                   i
                     | rowNumber
                       : {
-                          index: param.pageIndex || 0,
-                          size: param.pageSize || 0
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
                         }
                 }}
               </td>
               <td nzEllipsis>
-                <ng-container *ngIf="isRoomTypeView">
+                <ng-container *ngIf="isRoomTypeView()">
                   <a (click)="uiService.showView(data.id!)">{{
                     data.roomNumber
                   }}</a>
                 </ng-container>
-                <ng-container *ngIf="!isRoomTypeView">
+                <ng-container *ngIf="!isRoomTypeView()">
                   {{ data.roomNumber }}
                 </ng-container>
               </td>
@@ -140,7 +123,7 @@ import { QueryParam } from "../../utils/services/base-api.service";
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isRoomTypeEdit">
+                  <ng-container *ngIf="isRoomTypeEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i
                         nz-icon
@@ -151,7 +134,7 @@ import { QueryParam } from "../../utils/services/base-api.service";
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isRoomTypeRemove">
+                  <ng-container *ngIf="isRoomTypeRemove()">
                     <a
                       *nzSpaceItem
                       nz-typography
@@ -188,11 +171,11 @@ import { QueryParam } from "../../utils/services/base-api.service";
 export class RoomListComponent extends BaseListComponent<Room> {
   constructor(
     service: RoomService,
+    uiService: RoomUiService,
     sessionStorageService: SessionStorageService,
-    public uiService: RoomUiService,
     private activated: ActivatedRoute
   ) {
-    super(service, sessionStorageService, "room-list");
+    super(service, uiService, sessionStorageService, "room-list");
   }
 
   houseKeepingStatusId: number = 0;
@@ -203,51 +186,34 @@ export class RoomListComponent extends BaseListComponent<Room> {
   lookupType = LOOKUP_TYPE;
   advancedStoreKey = "room-advanced-filter";
 
-  isRoomTypeAdd: boolean = true;
-  isRoomTypeEdit: boolean = true;
-  isRoomTypeRemove: boolean = true;
-  isRoomTypeView: boolean = true;
-  hasAdvancedFilter: boolean = false;
+  isRoomTypeAdd = signal<boolean>(true);
+  isRoomTypeEdit = signal<boolean>(true);
+  isRoomTypeRemove = signal<boolean>(true);
+  isRoomTypeView = signal<boolean>(true);
+  hasAdvancedFilter = signal<boolean>(false);
 
-  override ngOnInit() {
-    this.refreshSub = this.uiService.refresher.subscribe((result) => {
-      if (result.key === "advanced-filter-room") {
-        this.setAdvancedFilter(result.value);
-      }
-      this.getAdvancedFilter();
-      this.search();
-    });
-    this.getAdvancedFilter();
-    if (this.hasAdvancedFilter) {
-      this.setAdvancedFilter(
-        this.sessionStorageService.getValue(this.advancedStoreKey)
-      );
-    }
-    this.search();
-  }
-
-  getAdvancedFilter() {
-    const advancedFilter: RoomAdvancedFilter =
-      this.sessionStorageService.getValue(this.advancedStoreKey);
-    this.hasAdvancedFilter = advancedFilter?.isAdvancedFilter ?? false;
-  }
-  setAdvancedFilter(advancedFilter: RoomAdvancedFilter) {
-    this.roomStatusId = advancedFilter.roomStatusId;
-    this.tagIds = advancedFilter.tagIds.filter((id: number) => id !== 0);
-    this.floorId = advancedFilter.floorId;
-    this.houseKeepingStatusId = advancedFilter.houseKeepingStatusId;
-    this.roomTypeId = advancedFilter.roomTypeId;
-  }
+  // override ngOnInit() {
+  //   this.refreshSub = this.uiService.refresher.subscribe((result) => {
+  //     if (result.key === "advanced-filter-room") {
+  //       this.setAdvancedFilter(result.value);
+  //     }
+  //     this.getAdvancedFilter();
+  //     this.search();
+  //   });
+  //   this.getAdvancedFilter();
+  //   if (this.hasAdvancedFilter) {
+  //     this.setAdvancedFilter(
+  //       this.sessionStorageService.getValue(this.advancedStoreKey)
+  //     );
+  //   }
+  //   this.search();
+  // }
 
   override search() {
-    if (this.loading) {
-      return;
-    }
-    this.loading = true;
-    setTimeout(() => {
-      const filters: any[] = [
-        { field: "search", operator: "contains", value: this.searchText },
-      ];
+      const filters: Filter[] = [];
+      // const filters: any[] = [
+      //   { field: "search", operator: "contains", value: this.searchText() },
+      // ];
       if (this.floorId) {
         filters.push({ field: "floorId", operator: "eq", value: this.floorId });
       }
@@ -282,20 +248,6 @@ export class RoomListComponent extends BaseListComponent<Room> {
           value: this.tagIds.join(","),
         });
       }
-      this.param.filters = JSON.stringify(filters);
-      this.service.search(this.param).subscribe({
-        next: (result: { results: Room[]; param: QueryParam }) => {
-          this.loading = true;
-          this.lists = result.results;
-
-          this.param.rowCount = result.param.rowCount;
-          this.loading = false;
-        },
-        error: (error: any) => {
-          this.loading = false;
-          console.log(error);
-        },
-      });
-    }, 50);
+      super.search(filters);
   }
 }

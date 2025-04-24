@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { SettingService } from '../../app-setting';
 import { FormGroup } from '@angular/forms';
 import { Data } from '@angular/router';
+import {Floor} from "../../pages/floor/floor.service";
 
 export interface QueryParam {
   pageCount?: number;
@@ -16,33 +17,17 @@ export interface SearchResult<T> {
   results: T[];
   param: QueryParam;
 }
+
+export interface Filter {
+  field: string;
+  operator: string;
+  value: any;
+}
 export class SharedDomain {
   id?: number;
 }
 export class SharedDeleteDomain extends SharedDomain {
   note?: string;
-}
-
-export interface DefaultPage<TList> {
-  pageIndex: number;
-  pageSize: number;
-  pageCount: number;
-  loading: boolean;
-  defaultFilter: string;
-  lists: TList[];
-
-  search(): void;
-
-  add(): void;
-
-  //queryParamsChanged(params: NzTableQueryParams): void;
-
-  loadData(
-    pageIndex: number,
-    pageSize: number,
-    sorts?: string,
-    filters?: string
-  ): void;
 }
 
 export interface OperationPage<T> {
@@ -61,8 +46,7 @@ export class BaseApiService<T extends SharedDomain> {
     protected httpClient: HttpClient,
     public settingService: SettingService
   ) {}
-  public getUrl = (): string =>
-    `${this.settingService.setting.BASE_API_URL}/${this.endpoint}`;
+  public getUrl = (): string => `${this.settingService.setting.BASE_API_URL}/${this.endpoint}`;
 
   public getStaticUrl = (): string => `assets/data/${this.endpoint}`;
 
@@ -122,11 +106,7 @@ export class BaseApiService<T extends SharedDomain> {
     );
   }
 
-  public exists(
-    name: string = '',
-    id: number = 0,
-    params: { key: string; val: any }[] = []
-  ): Observable<boolean> {
+  public exists(name: string = '', id: number = 0, params: { key: string; val: any }[] = []): Observable<boolean> {
     if (!params) {
       params = [];
     }
@@ -161,21 +141,11 @@ export class BaseApiService<T extends SharedDomain> {
       .append('filters', `${query.filters === undefined ? '' : query.filters}`);
   }
 
-  getPublicUrl(model: T | any): any {
-    if (!(model && model.uid)) {
-      return null;
-    }
-
-    // debug
-    // if (location.host.includes('localhost')) {
-    //   const tenantUid = this.settingService.setting.TENANT;
-    //   return `${this.getUrl()}/public/preview/${invoice.uid}?tenantId=${tenantUid}`;
-    // }
-    //
-    // return `${location.protocol}//${location.host}/inv/${invoice.uid}`;
-
-    // const tenantUid = this.authService.tenant.code; //this.settingService.setting.TENANT;
-    return `${this.getUrl()}/public/preview/${model.uid}`;
+  public updateOrdering(lists: Floor[]): Observable<Floor[]> {
+    return this.httpClient.put<Floor[]>(
+        `${this.getUrl()}/update-ordering`,
+        lists
+    );
   }
 
   public checkUrlValidity(url: any) {
