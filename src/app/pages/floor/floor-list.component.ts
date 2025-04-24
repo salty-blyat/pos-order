@@ -1,13 +1,10 @@
-import {Component, Input, OnChanges, OnDestroy, signal, SimpleChanges} from '@angular/core';
+import {Component, input} from '@angular/core';
 import { BaseListComponent } from '../../utils/components/base-list.component';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import {Floor, FloorService} from "./floor.service";
 import {FloorUiService} from "./floor-ui.service";
-import {Block} from "../block/block.service";
-import {Filter, QueryParam} from "../../utils/services/base-api.service";
+import {Filter} from "../../utils/services/base-api.service";
 import {SIZE_COLUMNS} from "../../const";
-import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
-import {NotificationService} from "../../utils/services/notification.service";
 
 @Component({
     selector: 'app-floor-list',
@@ -38,7 +35,7 @@ import {NotificationService} from "../../utils/services/notification.service";
           <button
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd(this.blockId!)"
+            (click)="uiService.showAdd(this.blockId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ 'Add' | translate }}
@@ -121,42 +118,25 @@ import {NotificationService} from "../../utils/services/notification.service";
     styles: ['button{margin-left: 20px;}'],
     standalone: false
 })
-export class FloorListComponent
-    extends BaseListComponent<Floor>
-    implements OnDestroy,OnChanges
-{
+export class FloorListComponent extends BaseListComponent<Floor> {
       constructor(
         override  service: FloorService,
         uiService: FloorUiService,
         sessionStorageService: SessionStorageService,
-        private notificationService: NotificationService
     ) {
         super(service, uiService, sessionStorageService, 'floor-list');
     }
-    @Input() blockId:number =0;
-    draged = signal(false);
-    override ngOnInit() {
-        this.refreshSub = this.uiService.refresher.subscribe((result) => {
-            this.search();
-        });
-        super.ngOnInit();
-    }
-    ngOnChanges(): void {
-        this.search();
-    }
+    blockId  = input(0);
+
     override search() {
-        if(this.blockId){
-            if (this.isLoading()) {
-                return;
-            }
-            this.isLoading.set(true);
+        if(this.blockId()){
             setTimeout(() => {
                 const filters: Filter[] = [];
-                if (this.blockId) {
+                if (this.blockId()) {
                     filters.push({
                         field: 'blockId',
                         operator: 'eq',
-                        value: this.blockId,
+                        value: this.blockId(),
                     });
                 }
                 super.search(filters);
@@ -164,25 +144,6 @@ export class FloorListComponent
         }
 
     }
-    saveOrdering() {
-        this.isLoading.set(true);
-        let newLists: Floor[] = [];
-
-        this.lists().forEach((item, i) => {
-            item.ordering = i + 1;
-            newLists.push(item);
-        });
-        this.service.updateOrdering(newLists).subscribe(() => {
-            this.isLoading.set(false);
-            this.draged.set(false);
-            this.notificationService.successNotification('Successfully Saved');
-        });
-    }
-    drop(event: CdkDragDrop<Floor[], any, any>): void {
-        moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
-        if (event.previousIndex !== event.currentIndex) this.draged.set(true);
-    }
-
     
     protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

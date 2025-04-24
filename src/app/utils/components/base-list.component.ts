@@ -5,6 +5,9 @@ import { PAGE_SIZE_OPTION } from "../../const";
 import {BaseApiService, Filter, QueryParam} from "../services/base-api.service";
 import { NzTableQueryParams } from "ng-zorro-antd/table";
 import {BaseUiService} from "../services/base-ui.service";
+import {Floor} from "../../pages/floor/floor.service";
+import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
+import {NotificationService} from "../services/notification.service";
 
 interface SharedDomain {
   id?: number;
@@ -21,7 +24,7 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
     protected uiService: BaseUiService<T>,
     protected sessionStorageService: SessionStorageService,
     @Inject("pageSizeKey") private pageSizeKey: string,
-
+    protected  notificationService?: NotificationService
   ) {}
   pageSizeOptionKey = signal<string>(this.pageSizeKey);
   refreshSub: Subscription = new Subscription();
@@ -38,6 +41,7 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
     sorts: "",
     filters: "",
   });
+  draged = signal(false);
 
   ngOnInit(): void {
     this.refreshSub = this.uiService?.refresher?.subscribe(() => {
@@ -79,6 +83,25 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
     this.param().pageIndex = pageIndex;
     this.sessionStorageService.setPageSizeOptionKey(pageSize, this.pageSizeOptionKey());
     this.search();
+  }
+
+  saveOrdering() {
+    this.isLoading.set(true);
+    let newLists: Floor[] = [];
+
+    this.lists().forEach((item: T | any, i) => {
+      item.ordering = i + 1;
+      newLists.push(item);
+    });
+    this.service.updateOrdering(newLists).subscribe(() => {
+      this.isLoading.set(false);
+      this.draged.set(false);
+      this.notificationService?.successNotification('Successfully Saved');
+    });
+  }
+  drop(event: CdkDragDrop<Floor[], any, any>): void {
+    moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
+    if (event.previousIndex !== event.currentIndex) this.draged.set(true);
   }
 
   ngOnDestroy(): void {
