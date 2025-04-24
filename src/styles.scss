@@ -26,17 +26,24 @@
   font-family: Gilroy, Kantumruy, serif;
 }
 
+.ant-modal-header {
+  border-top-left-radius: var(--ant-border-radius) !important;
+  border-top-right-radius: var(--ant-border-radius) !important;
+}
 .ant-modal-content {
   border-radius: var(--ant-border-radius) !important;
 }
-.ant-modal-header {
-  padding: 0.7rem !important;
-}
+// make header and close button
+// wrong align in modal
+// .ant-modal-header {
+//   padding: 0.7rem !important;
+// }
 
 html,
 body {
   height: 100%;
 }
+
 .ant-select-selector {
   border-radius: var(--ant-border-radius) !important;
 }

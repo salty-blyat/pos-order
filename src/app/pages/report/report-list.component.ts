@@ -4,22 +4,22 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
-} from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
-import { SessionStorageService } from '../../utils/services/sessionStorage.service';
-import { Observable, Subscription } from 'rxjs';
-import { PAGE_SIZE_OPTION } from '../../const';
-import { QueryParam } from '../../utils/services/base-api.service';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { Report, ReportService } from './report.service';
-import { ReportUiService } from './report-ui.service';
-import { AuthService } from '../../helpers/auth.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { NotificationService } from '../../utils/services/notification.service';
+} from "@angular/core";
+import { ActivatedRoute, Data } from "@angular/router";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { Observable, Subscription } from "rxjs";
+import { PAGE_SIZE_OPTION } from "../../const";
+import { QueryParam } from "../../utils/services/base-api.service";
+import { NzTableQueryParams } from "ng-zorro-antd/table";
+import { Report, ReportService } from "./report.service";
+import { ReportUiService } from "./report-ui.service";
+import { AuthService } from "../../helpers/auth.service";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
-    selector: 'app-report-list',
-    template: `
+  selector: "app-report-list",
+  template: `
     <nz-layout>
       <nz-header>
         <div nz-row>
@@ -38,7 +38,7 @@ import { NotificationService } from '../../utils/services/notification.service';
               (click)="saveOrdering()"
               [nzLoading]="loading"
             >
-              {{ 'Save' | translate }}
+              {{ "Save" | translate }}
             </button>
           </div>
         </div>
@@ -50,7 +50,7 @@ import { NotificationService } from '../../utils/services/notification.service';
             (click)="uiService.showAdd(reportGroupId)"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
-            {{ 'Add' | translate }}
+            {{ "Add" | translate }}
           </button>
         </div>
       </nz-header>
@@ -78,12 +78,12 @@ import { NotificationService } from '../../utils/services/notification.service';
               <th class="col-rowno" nzColumnKey="drag"></th>
               <th class="col-header col-rowno">#</th>
               <th nzWidth="25%">
-                {{ 'Name' | translate }}
+                {{ "Name" | translate }}
               </th>
               <th nzWidth="25%">
-                {{ 'DisplayName' | translate }}
+                {{ "DisplayName" | translate }}
               </th>
-              <th>{{ 'Note' | translate }}</th>
+              <th>{{ "Note" | translate }}</th>
               <th nzWidth="30px"></th>
               <th class="col-action"></th>
             </tr>
@@ -140,17 +140,14 @@ import { NotificationService } from '../../utils/services/notification.service';
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
                   <ng-container>
-                    <a
-                      *nzSpaceItem
-                      (click)="uiService.showEdit(data.id || 0)"
-                    >
+                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i
                         nz-icon
                         nzType="edit"
                         nzTheme="outline"
                         style="padding-right: 5px"
                       ></i>
-                      {{ 'Edit' | translate }}
+                      {{ "Edit" | translate }}
                     </a>
                   </ng-container>
                   <ng-container>
@@ -161,7 +158,7 @@ import { NotificationService } from '../../utils/services/notification.service';
                       style="color: #F31313"
                     >
                       <i nz-icon nzType="delete" nzTheme="outline"></i>
-                      {{ 'Delete' | translate }}
+                      {{ "Delete" | translate }}
                     </a>
                   </ng-container>
                 </nz-space>
@@ -172,13 +169,19 @@ import { NotificationService } from '../../utils/services/notification.service';
       </nz-content>
     </nz-layout>
   `,
-    styleUrls: ['../../../assets/scss/content_style.scss'],
-    styles: [
-        `
+  styleUrls: ["../../../assets/scss/content_style.scss"],
+  styles: [
+    `
+      .menu-dropdown {
+        position: absolute;
+        right: 10px;
+        margin-bottom: 4px;
+      }
       ::ng-deep .cdk-drag-preview {
         display: flex;
         background: rgba(0, 0, 0, 0.1);
         gap: 1em;
+
         align-items: center;
         padding: 0 4px;
       }
@@ -186,12 +189,24 @@ import { NotificationService } from '../../utils/services/notification.service';
       ::ng-deep .cdk-drag-placeholder {
         opacity: 0;
       }
-      button {
-        margin-left: 10px;
+      .block-ordering {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        margin: 0;
+      }
+      .block-move {
+        position: absolute;
+        z-index: 1000;
+        width: 35px;
+        cursor: move;
+        padding: 7px;
+        margin-bottom: 5px;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class ReportListComponent implements OnInit, OnChanges {
   constructor(
@@ -207,17 +222,17 @@ export class ReportListComponent implements OnInit, OnChanges {
   refreshSub!: Subscription;
   pageSizeOption = PAGE_SIZE_OPTION;
   loading = false;
-  searchText = '';
+  searchText = "";
   breadcrumbData!: Observable<Data>;
-  pageSizeOptionKey = 'report-list';
+  pageSizeOptionKey = "report-list";
   param: QueryParam = {
     pageSize:
       this.sessionStorageService.getCurrentPageSizeOption(
         this.pageSizeOptionKey
       ) ?? 25,
     pageIndex: 1,
-    sorts: '',
-    filters: '',
+    sorts: "",
+    filters: "",
   };
   draged: boolean = false;
   isReportAdd: boolean = true;
@@ -254,13 +269,13 @@ export class ReportListComponent implements OnInit, OnChanges {
     this.loading = true;
     setTimeout(() => {
       const filters: any[] = [
-        { field: 'name', operator: 'contains', value: this.searchText },
+        { field: "name", operator: "contains", value: this.searchText },
       ];
 
       if (this.reportGroupId) {
         filters.push({
-          field: 'reportGroupId',
-          operator: 'eq',
+          field: "reportGroupId",
+          operator: "eq",
           value: this.reportGroupId,
         });
       }
@@ -294,7 +309,7 @@ export class ReportListComponent implements OnInit, OnChanges {
     this.service.updateOrdering(newLists).subscribe(() => {
       this.loading = false;
       this.draged = false;
-      this.notificationService.successNotification('Successfully Saved');
+      this.notificationService.successNotification("Successfully Saved");
     });
   }
 
@@ -302,7 +317,7 @@ export class ReportListComponent implements OnInit, OnChanges {
     const { pageSize, pageIndex, sort } = param;
     const sortFound = sort.find((x) => x.value);
     this.param.sorts =
-      (sortFound?.key ?? 'name') + (sortFound?.value === 'descend' ? '-' : '');
+      (sortFound?.key ?? "name") + (sortFound?.value === "descend" ? "-" : "");
     this.param.pageSize = pageSize;
     this.param.pageIndex = pageIndex;
     this.sessionStorageService.setPageSizeOptionKey(
@@ -311,6 +326,4 @@ export class ReportListComponent implements OnInit, OnChanges {
     );
     this.search();
   }
-
-  
 }

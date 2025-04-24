@@ -135,6 +135,9 @@ import { MemberListComponent } from "./pages/member/member-list.component";
 import { MemberOperationComponent } from "./pages/member/member-operation.component";
 import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemOperationComponent } from "./pages/item/item-operation.component";
+import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
+import { ItemTypeOperationComponent } from "./pages/item-type/item-type-operation.component";
+import { ItemTypeDeleteComponent } from "./pages/item-type/item-type-delete.component";
 
 export function app_Init(settingsHttpService: SettingHttpService) {
   return () => settingsHttpService.initializeApp();
@@ -286,6 +289,11 @@ export class CustomTranslate implements TranslateLoader {
     // Item
     ItemListComponent,
     ItemOperationComponent,
+    ItemTypeDeleteComponent,
+
+    // Item Type
+    ItemTypeListComponent,
+    ItemTypeOperationComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

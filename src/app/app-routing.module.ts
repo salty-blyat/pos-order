@@ -21,6 +21,7 @@ import { RoomListComponent } from "./pages/room/room-list.component";
 import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { ItemListComponent } from "./pages/item/item-list.component";
+import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -162,6 +163,14 @@ const routes: Routes = [
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Item", url: null },
+        ],
+      },
+      {
+        path: "setting/item-type",
+        component: ItemTypeListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "ItemType", url: null },
         ],
       },
     ],

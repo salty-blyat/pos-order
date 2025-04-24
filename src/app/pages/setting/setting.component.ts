@@ -91,6 +91,7 @@ export class SettingComponent implements OnInit {
   isRateOptionList: boolean = true;
   isCancelPolicyList: boolean = true;
   isItemList: boolean = true;
+  isItemTypeList: boolean = true;
   ngOnInit(): void {
     this.setting = [
       {
@@ -145,11 +146,16 @@ export class SettingComponent implements OnInit {
         subName: [
           {
             icon: "container",
+            url: `${this.urlPart}/item-type`,
+            label: "ItemType",
+            isList: this.isItemTypeList,
+          },
+          {
+            icon: "container",
             url: `${this.urlPart}/item`,
             label: "Item",
             isList: this.isItemList,
           },
-         
         ],
       },
       {

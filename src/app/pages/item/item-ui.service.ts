@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Item } from "./item.service";
 import { BaseUiService } from "../../utils/services/base-ui.service";
 import { NzModalService } from "ng-zorro-antd/modal";
 import { ItemOperationComponent } from "./item-operation.component";
