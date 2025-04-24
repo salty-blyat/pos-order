@@ -1,16 +1,15 @@
-import { Component, computed, effect, inject, signal } from "@angular/core";
+import { Component, computed, signal } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
-import { RoomType } from "./room-type.service";
-import { RoomTypeService } from "./room-type.service";
+import {RoomType, RoomTypeService} from "./room-type.service";
 import { RoomTypeUiService } from "./room-type-ui.service";
 import { SIZE_COLUMNS } from "../../const";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import {
-  BaseListSignalComponent,
   FILTER_OPERATOR,
 } from "../../utils/components/base-list-signal.component";
-import { toSignal } from "@angular/core/rxjs-interop";
+import {BaseListComponent} from "../../utils/components/base-list.component";
+import {SessionStorageService} from "../../utils/services/sessionStorage.service";
 
 @Component({
   selector: "app-room-type-list",
@@ -26,9 +25,6 @@ import { toSignal } from "@angular/core/rxjs-interop";
             <app-filter-input
               #filterBox
               storageKey="room-type-list-search"
-              (filterChanged)="
-                onFilterChanged('search', FILTER_OPERATOR.CONTAINS, $event)
-              "
             >
             </app-filter-input>
           </div>
@@ -38,9 +34,6 @@ import { toSignal } from "@angular/core/rxjs-interop";
               storageKey="room-type-list-roomClass-select-filter"
               [showAllOption]="true"
               [typeLabelAll]="'AllRoomClass' | translate"
-              (valueChanged)="
-                onFilterChanged('roomClass', FILTER_OPERATOR.EQUAL, $event)
-              "
             ></app-lookup-item-select>
           </div>
         </div>
@@ -63,11 +56,11 @@ import { toSignal } from "@angular/core/rxjs-interop";
           #fixedTable
           nzTableLayout="fixed"
           [nzPageSizeOptions]="pageSizeOption()"
-          [nzData]="lists.value()?.results ?? []"
-          [nzLoading]="lists.isLoading()"
-          [nzTotal]="lists.value()?.param?.rowCount || 0"
-          [nzPageSize]="lists.value()?.param?.pageSize || 0"
-          [nzPageIndex]="lists.value()?.param?.pageIndex || 0"
+          [nzData]="lists()"
+          [nzLoading]="isLoading()"
+          [nzTotal]="param().rowCount || 0"
+          [nzPageSize]="param().pageSize || 0"
+          [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
@@ -79,42 +72,32 @@ import { toSignal } from "@angular/core/rxjs-interop";
             <tr>
               <th class="col-header col-rowno">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="120px">{{ "RoomClass" | translate }}</th>
-              <th class="col-basePrice">{{ "BasePrice" | translate }}</th>
-              <th nzWidth="100px">{{ "RoomSize" | translate }}</th>
-              <th class="col-qty">{{ "MaxAdults" | translate }}</th>
-              <th class="col-qty">{{ "MaxChildren" | translate }}</th>
-              <th class="col-qty">{{ "MaxOccupancy" | translate }}</th>
-              <!-- <th>{{ "Description" | translate }}</th> -->
+              <th nzWidth="120px">{{ "Occupancy" | translate }}</th>
+              <th nzWidth="100px">{{ "Size" | translate }}</th>
+              <th class="col-qty">{{ "Note" | translate }}</th>
               <th class="col-action"></th>
             </tr>
           </thead>
           <tbody>
             <tr
-              *ngFor="let data of lists.value()?.results ?? []; let i = index"
+              *ngFor="let data of lists() ?? []; let i = index"
             >
               <td nzEllipsis>
                 {{
                   i
                     | rowNumber
                       : {
-                          index: lists.value()?.param?.pageIndex || 0,
-                          size: lists.value()?.param?.pageSize || 0
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
                         }
                 }}
               </td>
               <td nzEllipsis>
                 <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
-              <td nzEllipsis>{{ data.roomClassNameEn }}</td>
-              <td nzEllipsis class="col-basePrice">
-                {{ data.basePrice | customCurrency }}
-              </td>
-              <td nzEllipsis>{{ data.size }}</td>
-              <td nzEllipsis class="col-qty">{{ data.maxAdults }}</td>
-              <td nzEllipsis class="col-qty">{{ data.maxChildren }}</td>
-              <td nzEllipsis class="col-qty">{{ data.maxOccupancy }}</td>
-              <td nzEllipsis>{{ data.description }}</td>
+              <td nzEllipsis>{{ data.occupancy }}</td>
+              <td nzEllipsis class="col-qty">{{ data.netArea }}</td>
+              <td nzEllipsis>{{ data.note }}</td>
               <td>
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
@@ -172,30 +155,22 @@ import { toSignal } from "@angular/core/rxjs-interop";
   ],
   standalone: false,
 })
-export class RoomTypeListComponent extends BaseListSignalComponent<RoomType> {
-  readonly uiService = inject(RoomTypeUiService);
-  readonly activated = inject(ActivatedRoute);
+export class RoomTypeListComponent extends BaseListComponent<RoomType> {
+  constructor(
+      service: RoomTypeService,
+      sessionStorageService: SessionStorageService,
+      uiService: RoomTypeUiService,
+      private activated: ActivatedRoute,
+  ) {
+    super(service,uiService, sessionStorageService, 'room-type-list');
+  }
 
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
 
   isRoomTypeAdd = signal<boolean>(true);
   isRoomTypeEdit = signal<boolean>(true);
   isRoomTypeRemove = signal<boolean>(true);
-  isRoomTypeView = signal<boolean>(true);
-  refreshSignal = toSignal(this.uiService.refresher);
-
-  constructor() {
-    super(inject(RoomTypeService));
-    effect(() => {
-      const refresh = this.refreshSignal();
-      if (refresh) {
-        this.lists.reload();
-      }
-    });
-    this.pageSizeOptionKey.set("room-type-list");
-  }
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
-  protected readonly FILTER_OPERATOR = FILTER_OPERATOR;
   protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import {Component, computed, OnDestroy, signal} from '@angular/core';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -10,24 +10,22 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
     template: `
     <nz-layout>
       <app-breadcrumb
-        *ngIf="breadcrumbData"
-        [data]="breadcrumbData"
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
           <div>
             <app-filter-input
               storageKey="auto-number-list-search"
-              (filterChanged)="
-                searchText = $event; param.pageIndex = 1; search()
-              "
+              (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
             >
             </app-filter-input>
           </div>
         </div>
         <div>
           <button
-            *ngIf="isAutoNumberAdd"
+            *ngIf="isAutoNumberAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -43,12 +41,12 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
           nzShowSizeChanger
           #fixedTable
           nzTableLayout="fixed"
-          [nzPageSizeOptions]="pageSizeOption"
-          [nzData]="lists"
-          [nzLoading]="loading"
-          [nzTotal]="param.rowCount || 0"
-          [nzPageSize]="param.pageSize || 0"
-          [nzPageIndex]="param.pageIndex || 0"
+          [nzPageSizeOptions]="pageSizeOption()"
+          [nzData]="lists()"
+          [nzLoading]="isLoading()"
+          [nzTotal]="param().rowCount || 0"
+          [nzPageSize]="param().pageSize || 0"
+          [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
@@ -66,24 +64,24 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of lists; let i = index">
+            <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
                 {{
                   i
                     | rowNumber
                       : {
-                          index: param.pageIndex || 0,
-                          size: param.pageSize || 0
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
                         }
                 }}
               </td>
               <td nzEllipsis>
                 <a
-                  *ngIf="isAutoNumberView"
+                  *ngIf="isAutoNumberView()"
                   (click)="uiService.showView(data.id || 0)"
                   >{{ data.name }}</a
                 >
-                <span *ngIf="!isAutoNumberView">{{ data.name }}</span>
+                <span *ngIf="!isAutoNumberView()">{{ data.name }}</span>
               </td>
               <td nzEllipsis>{{ data.format }}</td>
               <td nzEllipsis>{{ data.note }}</td>
@@ -92,7 +90,7 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isAutoNumberEdit">
+                  <ng-container *ngIf="isAutoNumberEdit()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showEdit(data.id || 0)"
@@ -106,7 +104,7 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
                       {{ 'Edit' | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isAutoNumberRemove">
+                  <ng-container *ngIf="isAutoNumberRemove()">
                     <a
                       *nzSpaceItem
                       nz-typography
@@ -133,31 +131,20 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
     styleUrls: ['../../../assets/scss/content_style.scss'],
     standalone: false
 })
-export class AutoNumberListComponent
-  extends BaseListComponent<AutoNumber>
-  implements OnDestroy
-{
+export class AutoNumberListComponent extends BaseListComponent<AutoNumber> {
   constructor(
     service: AutoNumberService,
+    uiService: AutoNumberUiService,
     sessionStorageService: SessionStorageService,
-    public uiService: AutoNumberUiService,
     private activated: ActivatedRoute,
-  
   ) {
-    super(service, sessionStorageService, 'auto-number-list');
+    super(service, uiService, sessionStorageService,'auto-number-list');
   }
-  breadcrumbData!: Observable<any>;
-  isAutoNumberAdd: boolean = true;
-  isAutoNumberEdit: boolean = true;
-  isAutoNumberRemove: boolean = true;
-  isAutoNumberView: boolean = true;
-  override ngOnInit() {
 
-    this.breadcrumbData = this.activated.data;
-    this.refreshSub = this.uiService.refresher.subscribe((result) => {
-      this.search();
-    });
-    super.ngOnInit();
-  }
+  breadcrumbData = computed<Observable<any>>(() => this.activated.data);
+  isAutoNumberAdd = signal<boolean>(true);
+  isAutoNumberEdit =  signal<boolean>(true);
+  isAutoNumberRemove =  signal<boolean>(true);
+  isAutoNumberView =  signal<boolean>(true);
   
 }

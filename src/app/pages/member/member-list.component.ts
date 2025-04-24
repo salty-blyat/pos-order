@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import {Component, signal} from "@angular/core";
 import { Member, MemberService } from "./member.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -14,7 +14,7 @@ import { MemberUiService } from "./member-ui.service";
             <app-filter-input
               storageKey="member-list-search"
               (filterChanged)="
-                searchText = $event; param.pageIndex = 1; search()
+                searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
           </div>
@@ -36,12 +36,12 @@ import { MemberUiService } from "./member-ui.service";
           nzSize="small"
           nzShowSizeChanger
           nzTableLayout="fixed"
-          [nzPageSizeOptions]="pageSizeOption"
-          [nzData]="lists"
-          [nzLoading]="loading"
-          [nzTotal]="param.rowCount || 0"
-          [nzPageSize]="param.pageSize || 0"
-          [nzPageIndex]="param.pageIndex || 0"
+          [nzPageSizeOptions]="pageSizeOption()"
+          [nzData]="lists()"
+          [nzLoading]="isLoading()"
+          [nzTotal]="param().rowCount || 0"
+          [nzPageSize]="param().pageSize || 0"
+          [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
           nzHideOnSinglePage="true"
           (nzQueryParams)="onQueryParamsChange($event)"
@@ -65,14 +65,14 @@ import { MemberUiService } from "./member-ui.service";
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of lists; let i = index">
+            <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
                 {{
                   i
                     | rowNumber
                       : {
-                          index: param.pageIndex || 0,
-                          size: param.pageSize || 0
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
                         }
                 }}
               </td>
@@ -125,17 +125,17 @@ import { MemberUiService } from "./member-ui.service";
 export class MemberListComponent extends BaseListComponent<Member> {
   constructor(
     service: MemberService,
+    uiService: MemberUiService,
     sessionStorageService: SessionStorageService,
-    public uiService: MemberUiService
   ) {
-    super(service, sessionStorageService, "member-list");
+    super(service, uiService, sessionStorageService, "member-list");
   }
   isMemberAdd: boolean = true;
   isMemberEdit: boolean = true;
   isMemberRemove: boolean = true;
   isMemberView: boolean = true;
 
-  override lists = [
+  override lists = signal([
     {
       id: 1,
       code: "123",
@@ -169,7 +169,5 @@ export class MemberListComponent extends BaseListComponent<Member> {
       phone: "087654321",
       nationality: "Korean",
     },
-  ];
-
-  override loading = false;
+  ]);
 }

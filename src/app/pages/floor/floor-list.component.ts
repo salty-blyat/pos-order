@@ -1,10 +1,10 @@
-import {Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, signal, SimpleChanges} from '@angular/core';
 import { BaseListComponent } from '../../utils/components/base-list.component';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import {Floor, FloorService} from "./floor.service";
 import {FloorUiService} from "./floor-ui.service";
 import {Block} from "../block/block.service";
-import {QueryParam} from "../../utils/services/base-api.service";
+import {Filter, QueryParam} from "../../utils/services/base-api.service";
 import {SIZE_COLUMNS} from "../../const";
 import {CdkDragDrop, moveItemInArray} from "@angular/cdk/drag-drop";
 import {NotificationService} from "../../utils/services/notification.service";
@@ -19,7 +19,7 @@ import {NotificationService} from "../../utils/services/notification.service";
             <app-filter-input
               storageKey="floor-list-search"
               (filterChanged)="
-                searchText = $event; param.pageIndex = 1; search()
+                searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
           </div>
@@ -28,7 +28,7 @@ import {NotificationService} from "../../utils/services/notification.service";
                         nz-button
                         nzType="primary"
                         (click)="saveOrdering()"
-                        [nzLoading]="loading"
+                        [nzLoading]="isLoading()"
                 >
                     {{ 'Save' | translate }}
                 </button>
@@ -51,12 +51,12 @@ import {NotificationService} from "../../utils/services/notification.service";
           nzShowSizeChanger
           #fixedTable
           nzTableLayout="fixed"
-          [nzPageSizeOptions]="pageSizeOption"
-          [nzData]="lists"
-          [nzLoading]="loading"
-          [nzTotal]="param.rowCount || 0"
-          [nzPageSize]="param.pageSize || 0"
-          [nzPageIndex]="param.pageIndex || 0"
+          [nzPageSizeOptions]="pageSizeOption()"
+          [nzData]="lists()"
+          [nzLoading]="isLoading()"
+          [nzTotal]="param().rowCount || 0"
+          [nzPageSize]="param().pageSize || 0"
+          [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
@@ -75,11 +75,11 @@ import {NotificationService} from "../../utils/services/notification.service";
           </thead>
           <tbody  cdkDropList
                   (cdkDropListDropped)="drop($event)"
-                  [cdkDropListData]="lists">
-           <tr *ngFor="let data of lists; let i = index" cdkDrag>
+                  [cdkDropListData]="lists()">
+           <tr *ngFor="let data of lists(); let i = index" cdkDrag>
                <td style="align-content: center;text-align: center; cursor: move;" cdkDragHandle ><span nz-icon nzType="holder" nzTheme="outline" ></span></td>
                <td nzEllipsis>
-                   {{i| rowNumber: {index: param.pageIndex || 0, size: param.pageSize || 0} }}
+                   {{i| rowNumber: {index: param().pageIndex || 0, size: param().pageSize || 0} }}
                </td>
                <td nzEllipsis style="flex:2px"><a (click)="uiService.showView(data.id!)" style="color: var( --primary-color)">{{ data.name }}</a></td>
                <td nzEllipsis style="flex:1px"> {{ data.description }}</td>
@@ -127,14 +127,14 @@ export class FloorListComponent
 {
       constructor(
         override  service: FloorService,
-        public uiService: FloorUiService,
+        uiService: FloorUiService,
         sessionStorageService: SessionStorageService,
         private notificationService: NotificationService
     ) {
-        super(service, sessionStorageService, 'floor-list');
+        super(service, uiService, sessionStorageService, 'floor-list');
     }
     @Input() blockId:number =0;
-    draged:boolean = false;
+    draged = signal(false);
     override ngOnInit() {
         this.refreshSub = this.uiService.refresher.subscribe((result) => {
             this.search();
@@ -146,14 +146,12 @@ export class FloorListComponent
     }
     override search() {
         if(this.blockId){
-            if (this.loading) {
+            if (this.isLoading()) {
                 return;
             }
-            this.loading = true;
+            this.isLoading.set(true);
             setTimeout(() => {
-                const filters: any[] = [
-                    { field: 'name', operator: 'contains', value: this.searchText },
-                ];
+                const filters: Filter[] = [];
                 if (this.blockId) {
                     filters.push({
                         field: 'blockId',
@@ -161,39 +159,28 @@ export class FloorListComponent
                         value: this.blockId,
                     });
                 }
-                this.param.filters = JSON.stringify(filters);
-                this.service.search(this.param).subscribe(
-                    (result: { results: Block[]; param: QueryParam }) => {
-                        this.loading = false;
-                        this.lists = result.results;
-                        this.param = result.param;
-                    },
-                    (error: any) => {
-                        this.loading = false;
-                        console.log(error);
-                    }
-                );
+                super.search(filters);
             }, 50);
         }
 
     }
     saveOrdering() {
-        this.loading = true;
+        this.isLoading.set(true);
         let newLists: Floor[] = [];
 
-        this.lists.forEach((item, i) => {
+        this.lists().forEach((item, i) => {
             item.ordering = i + 1;
             newLists.push(item);
         });
         this.service.updateOrdering(newLists).subscribe(() => {
-            this.loading = false;
-            this.draged = false;
+            this.isLoading.set(false);
+            this.draged.set(false);
             this.notificationService.successNotification('Successfully Saved');
         });
     }
     drop(event: CdkDragDrop<Floor[], any, any>): void {
-        moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
-        if (event.previousIndex !== event.currentIndex) this.draged = true;
+        moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
+        if (event.previousIndex !== event.currentIndex) this.draged.set(true);
     }
 
     

@@ -4,36 +4,14 @@ import { SettingService } from "../../app-setting";
 import { HttpClient } from "@angular/common/http";
 
 
-export interface Amenity {
-  id?: number;
-  name?: string;
-  availability?: boolean;
-  note?: string;
-}
-
-export interface AmenityGroup {
-  id?: number;
-  name?: string;
-  amenities?: Amenity[];
-}
-
 export interface RoomType {
   id?: number;
-  name?: string;
-  roomClass?: number;
-  roomClassNameKh?: string;
-  roomClassNameEn?: string;
-  baseAdults?: number;
-  baseChildren?: number;
-  maxAdults?: number;
-  maxChildren?: number;
-  maxOccupancy?: number;
-  basePrice?: number;
-  basePriceAdult?: number;
-  basePriceChild?: number;
-  size?: number;
-  description?: string;
-  amenityGroup?: AmenityGroup[];
+  name?: string
+  occupancy?: number
+  maxOccupancy?: number
+  netArea?: number
+  grossArea?: number
+  note?: string
 }
 
 @Injectable({

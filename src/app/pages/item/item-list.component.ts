@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import {Component, computed, signal} from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Item, ItemService } from "./item.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -11,8 +11,8 @@ import { Observable } from "rxjs";
   template: `
     <nz-layout>
       <app-breadcrumb
-        *ngIf="breadcrumbData"
-        [data]="breadcrumbData"
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
@@ -20,14 +20,14 @@ import { Observable } from "rxjs";
             <app-filter-input
               storageKey="item-list-search"
               (filterChanged)="
-                searchText = $event; param.pageIndex = 1; search()
+                searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
           </div>
         </div>
         <div>
           <button
-            *ngIf="isItemAdd"
+            *ngIf="isItemAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -43,12 +43,12 @@ import { Observable } from "rxjs";
           nzShowSizeChanger
           #fixedTable
           nzTableLayout="fixed"
-          [nzPageSizeOptions]="pageSizeOption"
-          [nzData]="lists"
-          [nzLoading]="loading"
-          [nzTotal]="param.rowCount || 0"
-          [nzPageSize]="param.pageSize || 0"
-          [nzPageIndex]="param.pageIndex || 0"
+          [nzPageSizeOptions]="pageSizeOption()"
+          [nzData]="lists()"
+          [nzLoading]="isLoading()"
+          [nzTotal]="param().rowCount || 0"
+          [nzPageSize]="param().pageSize || 0"
+          [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
@@ -70,22 +70,22 @@ import { Observable } from "rxjs";
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of lists; let i = index">
+            <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
                 {{
                   i
                     | rowNumber
                       : {
-                          index: param.pageIndex || 0,
-                          size: param.pageSize || 0
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
                         }
                 }}
               </td>
               <td nzEllipsis>
-                <a *ngIf="isItemView" (click)="uiService.showView(data.id!)">{{
+                <a *ngIf="isItemView()" (click)="uiService.showView(data.id!)">{{
                   data.code
                 }}</a>
-                <span *ngIf="!isItemView">{{ data.code }}</span>
+                <span *ngIf="!isItemView()">{{ data.code }}</span>
               </td>
               <td nzEllipsis>{{ data.name }}</td>
               <td nzEllipsis>{{ data.image }}</td>
@@ -96,7 +96,7 @@ import { Observable } from "rxjs";
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isItemEdit">
+                  <ng-container *ngIf="isItemEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i
                         nz-icon
@@ -107,7 +107,7 @@ import { Observable } from "rxjs";
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isItemRemove">
+                  <ng-container *ngIf="isItemRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -138,19 +138,15 @@ import { Observable } from "rxjs";
 export class ItemListComponent extends BaseListComponent<Item> {
   constructor(
     service: ItemService,
+    uiService: ItemUiService,
     sessionStorageService: SessionStorageService,
-    public uiService: ItemUiService,
     private activated: ActivatedRoute
   ) {
-    super(service, sessionStorageService, "item-list");
+    super(service, uiService, sessionStorageService, "item-list");
   }
-  breadcrumbData!: Observable<any>;
-  isItemAdd: boolean = true;
-  isItemEdit: boolean = true;
-  isItemRemove: boolean = true;
-  isItemView: boolean = true;
-  override ngOnInit() {
-    super.ngOnInit();
-    this.breadcrumbData = this.activated.data;
-  }
+  breadcrumbData = computed<Observable<any>>(() => this.activated.data);
+  isItemAdd = signal<boolean>(true);
+  isItemEdit = signal<boolean>(true);
+  isItemRemove = signal<boolean>(true);
+  isItemView = signal<boolean>(true);
 }

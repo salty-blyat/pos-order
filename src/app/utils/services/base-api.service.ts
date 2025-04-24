@@ -16,6 +16,12 @@ export interface SearchResult<T> {
   results: T[];
   param: QueryParam;
 }
+
+export interface Filter {
+  field: string;
+  operator: string;
+  value: any;
+}
 export class SharedDomain {
   id?: number;
 }

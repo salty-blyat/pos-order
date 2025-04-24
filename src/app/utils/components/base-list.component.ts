@@ -1,9 +1,10 @@
-import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import {Component, Inject, OnDestroy, OnInit, signal} from "@angular/core";
 import { SessionStorageService } from "../services/sessionStorage.service";
 import { Subscription } from "rxjs";
 import { PAGE_SIZE_OPTION } from "../../const";
-import { BaseApiService, QueryParam } from "../services/base-api.service";
+import {BaseApiService, Filter, QueryParam} from "../services/base-api.service";
 import { NzTableQueryParams } from "ng-zorro-antd/table";
+import {BaseUiService} from "../services/base-ui.service";
 
 interface SharedDomain {
   id?: number;
@@ -13,75 +14,76 @@ interface SharedDomain {
   template: ``,
   standalone: false,
 })
-export class BaseListComponent<T extends SharedDomain>
-  implements OnInit, OnDestroy
+export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDestroy
 {
   constructor(
-    protected service: BaseApiService<any>,
+    protected service: BaseApiService<T>,
+    protected uiService: BaseUiService<T>,
     protected sessionStorageService: SessionStorageService,
-    @Inject("pageSizeKey") private pageSizeKey: string
+    @Inject("pageSizeKey") private pageSizeKey: string,
+
   ) {}
-  pageSizeOptionKey: string = this.pageSizeKey;
-  refreshSub!: Subscription;
-  loading: boolean = false;
-  searchText: string = "";
-  pageSizeOption: number[] = PAGE_SIZE_OPTION;
-  pageCount: number = 0;
-  lists: T[] = [];
-  param: QueryParam = {
+  pageSizeOptionKey = signal<string>(this.pageSizeKey);
+  refreshSub: Subscription = new Subscription();
+  isLoading = signal<boolean>(false);
+  searchText = signal<string>("");
+  pageSizeOption = signal<number[]>(PAGE_SIZE_OPTION);
+  lists = signal<T[]>([]);
+  param = signal<QueryParam>({
     pageSize:
-      this.sessionStorageService.getCurrentPageSizeOption(
-        this.pageSizeOptionKey
-      ) ?? 25,
+        this.sessionStorageService.getCurrentPageSizeOption(
+            this.pageSizeOptionKey()
+        ) ?? 25,
     pageIndex: 1,
     sorts: "",
     filters: "",
-  };
+  });
 
   ngOnInit(): void {
+    this.refreshSub = this.uiService?.refresher?.subscribe(() => {
+      this.search();
+    });
     this.search();
   }
-  search() {
-    if (this.loading) {
-      return;
-    }
-    this.loading = true;
+  search(filters: Filter[] = [{ field: 'search', operator: 'contains', value: this.searchText()}]) {
+    if (this.isLoading()) return;
+    this.isLoading.set(true);
     setTimeout(() => {
-      const filters: any[] = [
-        { field: "search", operator: "contains", value: this.searchText },
-      ];
-      this.param.filters = JSON.stringify(filters);
-      this.service.search(this.param).subscribe({
+      filters.map((filter: Filter) => {
+        return  {field: filter.field, operator: filter.operator, value: filter.value};
+      })
+      this.param().filters = JSON.stringify(filters);
+      this.service.search(this.param()).subscribe({
         next: (result: { results: T[]; param: QueryParam }) => {
-          this.loading = true;
-          this.lists = result.results;
- 
-          this.param.rowCount = result.param.rowCount;
-          this.loading = false;
+          this.isLoading.set(true);
+          this.lists.set(result.results);
+          this.param().rowCount = result.param.rowCount;
+          this.isLoading.set(false);
         },
-        error: (error: any) => {
-          this.loading = false;
-          console.log(error);
+        error: () => {
+          this.isLoading.set(false);
         },
       });
     }, 50);
   }
+
   onQueryParamsChange(param: NzTableQueryParams): void {
     const { pageSize, pageIndex, sort } = param;
-    const sortFound = sort.find((x) => x.value);
-    this.param.sorts =
-      (sortFound?.key ?? this.param.sorts) +
-      (sortFound?.value === "descend" ? "-" : "");
-    this.param.pageSize = pageSize;
-    this.param.pageIndex = pageIndex;
-    this.sessionStorageService.setPageSizeOptionKey(
-      pageSize,
-      this.pageSizeOptionKey
-    );
+    const currentSort = sort.find(item => item.value !== null);
+    const sortField = (currentSort && currentSort.key);
+    const sortOrder = (currentSort && currentSort.value);
+    if (sortField != null) {
+      this.param().sorts = (sortField ) + (sortOrder == 'ascend' ? '' : '-');
+    }
+    this.param().pageSize = pageSize;
+    this.param().pageIndex = pageIndex;
+    this.sessionStorageService.setPageSizeOptionKey(pageSize, this.pageSizeOptionKey());
     this.search();
   }
 
   ngOnDestroy(): void {
-    this.refreshSub?.unsubscribe();
+    if (this.refreshSub){
+      this.refreshSub?.unsubscribe();
+    }
   }
 }

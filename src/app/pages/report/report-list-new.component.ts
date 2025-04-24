@@ -1,8 +1,8 @@
 import {
-  Component,
+  Component, computed,
   EventEmitter,
   OnDestroy,
-  Output,
+  Output, signal,
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { QueryParam } from '../../utils/services/base-api.service';
@@ -24,8 +24,8 @@ import { NotificationService } from '../../utils/services/notification.service';
     template: `
     <nz-layout>
       <app-breadcrumb
-        *ngIf="breadcrumbData"
-        [data]="breadcrumbData"
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-content>
         <nz-layout>
@@ -33,9 +33,7 @@ import { NotificationService } from '../../utils/services/notification.service';
             <div style="margin: 14px 2px 14px 0px;">
               <app-filter-input
                 storageKey="report-new-list-search"
-                (filterChanged)="
-                  searchText = $event; param.pageIndex = 1; search()
-                "
+                (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
               ></app-filter-input>
             </div>
 
@@ -45,10 +43,10 @@ import { NotificationService } from '../../utils/services/notification.service';
               class="sider-menu"
               cdkDropList
               (cdkDropListDropped)="drop($event)"
-              [cdkDropListData]="lists"
+              [cdkDropListData]="lists()"
             >
               <ul
-                *ngFor="let data of lists; let i = index"
+                *ngFor="let data of lists(); let i = index"
                 cdkDrag
                 class="block-ordering"
               >
@@ -62,7 +60,7 @@ import { NotificationService } from '../../utils/services/notification.service';
                 <li
                   nz-menu-item
                   (click)="changeGroupId(data.id!)"
-                  [nzSelected]="reportGroupId === data.id!"
+                  [nzSelected]="reportGroupId() === data.id!"
                   style="padding-left: 36px"
                 >
                   {{ data.name }}
@@ -133,7 +131,7 @@ import { NotificationService } from '../../utils/services/notification.service';
                   nz-button
                   nzType="primary"
                   (click)="saveOrdering()"
-                  [nzLoading]="loading"
+                  [nzLoading]="isLoading()"
                   style="width: 295px;"
                 >
                   {{ 'Save' | translate }}
@@ -142,7 +140,7 @@ import { NotificationService } from '../../utils/services/notification.service';
             </ul>
           </nz-sider>
           <nz-content class="inner-content" style="padding-left: 10px;">
-            <app-report-list [reportGroupId]="reportGroupId"></app-report-list>
+            <app-report-list [reportGroupId]="reportGroupId()"></app-report-list>
           </nz-content>
         </nz-layout>
       </nz-content>
@@ -193,30 +191,27 @@ import { NotificationService } from '../../utils/services/notification.service';
     styleUrls: ['../../../assets/scss/content_style.scss'],
     standalone: false
 })
-export class ReportNewListComponent
-  extends BaseListComponent<Report>
-  implements OnDestroy
+export class ReportNewListComponent extends BaseListComponent<Report>
 {
   constructor(
-    private ReportGroupService: ReportGroupService,
-    sessionStorageService: SessionStorageService,
-    public uiService: ReportGroupUiService,
-    private activated: ActivatedRoute,
-    public translate: TranslateService,
-    private router: Router,
-    private notificationService: NotificationService,
-
+      override service: ReportGroupService,
+      uiService: ReportGroupUiService,
+      sessionStorageService: SessionStorageService,
+      private activated: ActivatedRoute,
+      public translate: TranslateService,
+      private notificationService: NotificationService,
   ) {
-    super(ReportGroupService, sessionStorageService, 'report_group_list');
+    super(service, uiService, sessionStorageService, 'report_group_list');
   }
+
   @Output() reportGroup: EventEmitter<any> = new EventEmitter<any>();
-  isReportGroupAdd: boolean = true;
-  isReportGroupEdit: boolean = true;
-  isReportGroupRemove: boolean = true;
-  isReportGroupView: boolean = true;
-  reportGroupId: number = 0;
-  draged: boolean = false;
-  breadcrumbData!: Observable<any>;
+  isReportGroupAdd= signal<boolean>(true);
+  isReportGroupEdit =  signal<boolean>(true);
+  isReportGroupRemove =  signal<boolean>(true);
+  isReportGroupView =  signal<boolean>(true);
+  reportGroupId =  signal<number>(0);
+  draged = signal<boolean>(false);
+  breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   override ngOnInit() {
     // this.isReportGroupAdd = this.authService.isAuthorized(
     //   AuthKeys.POS_ADM__SETTING__REPORT_GROUP__ADD
@@ -230,62 +225,33 @@ export class ReportNewListComponent
     // this.isReportGroupView = this.authService.isAuthorized(
     //   AuthKeys.POS_ADM__SETTING__REPORT_GROUP__VIEW
     // );
-    this.breadcrumbData = this.activated.data;
     this.refreshSub = this.uiService.refresher.subscribe((result) => {
       this.search();
     });
 
     super.ngOnInit();
   }
-  override search(): void {
-    if (this.loading) {
-      return;
-    }
-    this.loading = true;
-    setTimeout(() => {
-      const filters: any[] = [
-        { field: 'name', operator: 'contains', value: this.searchText },
-      ];
-      this.param.filters = JSON.stringify(filters);
-      this.ReportGroupService.search(this.param).subscribe({
-        next: (result: { results: ReportGroup[]; param: QueryParam }) => {
-          this.loading = false;
-          this.lists = result.results;
-          timer(100).subscribe(() => {
-            this.reportGroupId = this.lists[0].id!;
-          });
-          this.param.rowCount = result.param.rowCount;
-        },
-        error: (error: any) => {
-          console.log(error);
-        },
-      });
-    }, 50);
-  }
 
   saveOrdering() {
-    this.loading = true;
+    this.isLoading.set(true);
     let newLists: Report[] = [];
 
-    this.lists.forEach((item, i) => {
+    this.lists().forEach((item, i) => {
       item.ordering = i + 1;
       newLists.push(item);
     });
-    this.ReportGroupService.updateOrdering(newLists).subscribe(() => {
-      this.loading = false;
-      this.draged = false;
+    this.service.updateOrdering(newLists).subscribe(() => {
+      this.isLoading.set(false);
+      this.draged.set(false);
       this.notificationService.successNotification('Successfully Saved');
     });
   }
 
   drop(event: CdkDragDrop<any, any, any>) {
-    moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
-    if (event.previousIndex !== event.currentIndex) this.draged = true;
+    moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
+    if (event.previousIndex !== event.currentIndex) this.draged.set(true);
   }
   changeGroupId(id: number) {
-    this.reportGroupId = id;
-  }
-  override ngOnDestroy(): void {
-    this.refreshSub?.unsubscribe();
+    this.reportGroupId.set(id);
   }
 }

@@ -1,12 +1,12 @@
 import { Component } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
-import { Amenity, AmenityGroup, RoomType, RoomTypeService } from "./room-type.service";
-import { AbstractControl, FormArray, FormBuilder } from "@angular/forms";
+import { RoomType, RoomTypeService } from "./room-type.service";
+import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { RoomTypeUiService } from "./room-type-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
-import { QueryParam } from "../../utils/services/base-api.service";
+
 @Component({
   selector: "app-room-type-operation",
   template: `
@@ -109,26 +109,6 @@ import { QueryParam } from "../../utils/services/base-api.service";
             </nz-form-item>
           </div>
         </div>
-        <nz-divider nzType="horizontal" />
-          
-        <nz-form-item class="amenity-container">
-          <nz-form-control>
-            <div class="amenity-group" formArrayName="amenityGroup">
-              <div *ngFor="let amenityGroup of amenityGroupFrmArray.controls; let i = index" [formGroupName]="i">
-                <div class="amenity-title">
-                  <label>{{ amenityGroup.value.name }}</label>
-                </div>
-                <div formArrayName="amenities">
-                  <div *ngFor="let amenity of getAmenityControls(amenityGroup); let j = index" [formGroupName]="j">
-                    <label nz-checkbox formControlName="availability">
-                      {{ amenity.value.name }}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </nz-form-control>
-        </nz-form-item>
       </form>
     </div>
     <div *nzModalFooter>
@@ -220,42 +200,11 @@ export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType>
 
   isRoomTypeEdit: boolean = true;
   isRoomTypeRemove: boolean = true;
-  amenityGroup: AmenityGroup[] = [];
 
 
   override ngOnInit(): void {
     if (this.loading) return;
     this.initControl();
-    this.getAmenities(() => {
-      if (this.modal?.isView) {
-        this.frm.disable();
-        this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
-          if (e.key === 'edited') {
-            this.loading = true;
-            this.service.find(this.modal?.id).subscribe({
-              next: (result: RoomType) => {
-                this.model = result;
-                this.setFormValue();
-                this.loading = false;
-              },
-              error: (err: any) => {
-                console.log(err);
-              },
-            });
-          } else {
-            this.ref.triggerCancel().then();
-          }
-        });
-      }
-      if (this.modal?.id) {
-        this.loading = true;
-        this.service.find(this.modal?.id).subscribe((result: RoomType) => {
-          this.model = result;
-          this.setFormValue();
-          this.loading = false;
-        });
-      }
-    });
   }
 
   override initControl(): void {
@@ -279,23 +228,6 @@ export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType>
       amenityGroup: this.fb.array([]),
     });
   }
-  get amenityGroupFrmArray(): FormArray {
-    return this.frm.get('amenityGroup') as FormArray;
-  }
-
-  getAmenityControls(amenityGroup: AbstractControl) {
-    return (amenityGroup.get('amenities') as FormArray).controls;
-  }
-
-  //call back function
-  getAmenities(callback: () => void) {
-    const param: QueryParam = {
-      pageSize: 999,
-      pageIndex: 1,
-      sorts: "",
-      filters: JSON.stringify([{ field: "amenityType", operator: "eq", value: 2 }]),
-    };
-  }
 
   override setFormValue() {
     if (!this.model) {
@@ -304,44 +236,9 @@ export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType>
     this.frm.patchValue({
       id: this.model.id,
       name: this.model.name,
-      roomClass: this.model.roomClass,
       maxOccupancy: this.model.maxOccupancy ?? 0,
-      maxAdults: this.model.maxAdults ?? 0,
-      maxChildren: this.model.maxChildren ?? 0,
-      baseAdults: this.model.baseAdults ?? 0,
-      baseChildren: this.model.baseChildren ?? 0,
-      basePrice: this.model.basePrice ?? 0,
-      basePriceAdult: this.model.basePriceAdult ?? 0,
-      basePriceChild: this.model.basePriceChild ?? 0,
-      size: this.model.size,
-      description: this.model.description,
     });
 
-
-    // Update the amenityGroup FormArray based on the model's data
-    if (this.model.amenityGroup) {
-      this.model.amenityGroup.forEach((modelGroup) => {
-        // Find the corresponding group in the FormArray
-        const groupCtrl = this.amenityGroupFrmArray.controls.find(
-          (ctrl) => ctrl.get('id')?.value === modelGroup.id
-        );
-
-        if (groupCtrl) {
-          const amenitiesFormArray = groupCtrl.get('amenities') as FormArray;
-
-          // Update the availability of amenities in the FormArray
-          modelGroup.amenities?.forEach((modelAmenity) => {
-            const amenityCtrl = amenitiesFormArray.controls.find(
-              (ctrl) => ctrl.get('id')?.value === modelAmenity.id
-            );
-
-            if (amenityCtrl) {
-              amenityCtrl.get('availability')?.setValue(modelAmenity.availability);
-            }
-          });
-        }
-      });
-    }
 
   }
 
