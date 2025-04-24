@@ -37,9 +37,18 @@
                 "glob": "**/*",
                 "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/monaco-editor/min/vs",
+                "output": "/assets/vs/"
               }
             ],
-            "styles": ["src/theme.less", "src/styles.scss"],
+            "styles": [
+              "src/theme.less",
+              "src/styles.scss",
+              "node_modules/highlight.js/styles/default.css"
+            ],
             "scripts": [],
             "baseHref": "/pbs/"
           },

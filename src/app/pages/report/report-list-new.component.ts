@@ -194,7 +194,7 @@ import { NotificationService } from "../../utils/services/notification.service";
       }
     `,
   ],
-  styleUrls: ["../../../assets/scss/content_style.scss"],
+  styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
 })
 export class ReportNewListComponent extends BaseListComponent<Report> {

@@ -135,8 +135,7 @@ import { CurrencyUiService } from "./currency-ui.service";
       </nz-content>
     </nz-layout>
   `,
-  styleUrls: ["../../../assets/scss/content_style.scss"],
-  styles: ["button{margin-left: 20px;}"],
+  styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
 })
 export class CurrencyListComponent extends BaseListComponent<Currency> {

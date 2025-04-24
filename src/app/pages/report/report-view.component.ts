@@ -67,7 +67,7 @@ import { SessionStorageService } from '../../utils/services/sessionStorage.servi
     </nz-layout>
   `,
     styles: [``],
-    styleUrls: ['../../../assets/scss/content_style.scss'],
+    styleUrls: ["../../../assets/scss/list.style.scss"],
     standalone: false
 })
 export class ReportViewComponent implements OnInit {

@@ -25,7 +25,6 @@
 
 .scrollbar {
   overflow-y: auto;
-  overflow-x: hidden;
 }
 
 :host {
@@ -37,7 +36,7 @@
 
 .app-layout {
   height: 100vh;
-  min-width: 1280px;
+  min-width: 900px;
 }
 
 .custom-menu {
@@ -66,10 +65,10 @@
   position: relative;
   z-index: 10;
   overflow-y: auto;
-  background: #fafafa;
+  background: #f1f2f6;
 
   .nz-menu-custom {
-    background: #fafafa;
+    background: #f1f2f6;
     padding-right: 1px;
   }
 }
@@ -120,8 +119,10 @@ nz-header {
   height: 50px;
   line-height: 48px;
   overflow: hidden;
-  background: #fafafa;
+  background: #f1f2f6;
   transition: all 0.3s;
+  display: flex;
+  justify-content: space-between;
 
   #img {
     display: flex;
@@ -129,22 +130,26 @@ nz-header {
     height: 100%;
     align-items: center;
   }
+  > nz-icon {
+    font-size: 18px;
+    color: var(--ant-primary-color);
+    margin-right: 16px;
+  }
 }
 
 .sidebar-logo img {
   display: inline-block;
-  height: 40px;
-  line-height: 26px;
+  height: 28px;
+  line-height: 28px;
   width: auto;
   vertical-align: middle;
 }
 
 .sidebar-logo h1 {
   display: inline-block;
-  margin: 0 0 0 20px;
-  color: var(--ant-primary-color);
+  margin: 0 0 0 10px;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
   font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
   vertical-align: middle;
 }
@@ -182,39 +187,4 @@ nz-content {
 
 .dropdown {
   width: 170px;
-}
-
-::ng-deep .ant-select-item {
-  line-height: unset;
-}
-
-::ng-deep .ant-menu-item-selected {
-  color: var(--ant-primary-color);
-}
-
-::ng-deep .ant-menu-title-content:hover {
-  color: var(--ant-primary-color);
-}
-
-::ng-deep .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-  background-color: rgba(var(--ant-primary-color-rgb), 0.1);
-}
-
-::ng-deep .ant-menu .ant-menu-item-selected:active {
-  background-color: rgba(var(--ant-primary-color-rgb), 0.1);
-}
-
-::ng-deep .ant-menu-inline .ant-menu-item,
-.ant-menu-vertical .ant-menu-item {
-  margin-top: 0 !important;
-}
-
-::ng-deep .ant-menu-item:active {
-  background-color: rgba(var(--ant-primary-color-rgb), 0.1);
-
-}
-::ng-deep .ant-menu-inline,
-.ant-menu-vertical,
-.ant-menu-vertical-left {
-  border-right: 0;
 }

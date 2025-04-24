@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import {Component, ViewEncapsulation} from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { RoomType, RoomTypeService } from "./room-type.service";
 import { FormBuilder } from "@angular/forms";
@@ -21,90 +21,54 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
     <div class="modal-content">
       <nz-spin *ngIf="loading" style="position: absolute; top: 50%; left: 50%"></nz-spin>
       <form nz-form [formGroup]="frm"  [nzAutoTips]="autoTips" class="form-content">
-        
         <div nz-row>
-          <!-- Room Type Information -->
-          <div nz-col nzSpan="10">
-            <h3 class="label">{{ "RoomTypeInformation" | translate }}</h3>
+          <div nz-col nzSpan="24">
             <nz-form-item>
-              <nz-form-label nzSpan="6" nzRequired>{{ "Name" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="18" nzHasFeedback>
+              <nz-form-label nzSpan="5" nzRequired>{{ "Name" | translate }}</nz-form-label>
+              <nz-form-control nzSpan="19" nzHasFeedback>
                 <input nz-input formControlName="name" />
               </nz-form-control>
             </nz-form-item>
+            <nz-row>
+              <nz-col nzSpan="11">
+                <nz-form-item>
+                  <nz-form-label nzSpan="11" nzRequired>{{ "Occupancy" | translate }}</nz-form-label>
+                  <nz-form-control nzSpan="12" nzErrorTip="">
+                    <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="0" formControlName="occupancy" />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="13">
+                <nz-form-item>
+                  <nz-form-label nzSpan="13" nzRequired>{{ "MaxOccupancy" | translate }}</nz-form-label>
+                  <nz-form-control nzSpan="11" nzErrorTip="">
+                    <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="0" formControlName="maxOccupancy" />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
+            <nz-row>
+              <nz-col nzSpan="11">
+                <nz-form-item>
+                  <nz-form-label nzSpan="11">{{ "NetArea" | translate }}</nz-form-label>
+                  <nz-form-control nzSpan="12" nzErrorTip="">
+                    <input nz-input formControlName="netArea" />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+              <nz-col nzSpan="13">
+                <nz-form-item>
+                  <nz-form-label nzSpan="13">{{ "GrossArea" | translate }}</nz-form-label>
+                  <nz-form-control nzSpan="11" nzErrorTip="">
+                    <input nz-input formControlName="grossArea" />
+                  </nz-form-control>
+                </nz-form-item>
+              </nz-col>
+            </nz-row>
             <nz-form-item>
-              <nz-form-label nzSpan="6" nzRequired>{{ "RoomClass" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="18">
-                <app-lookup-item-select formControlName="roomClass" [lookupType]="LOOKUP_TYPE.RoomClass" />
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzSpan="6">{{ "RoomSize" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="18" nzErrorTip="">
-                <input nz-input formControlName="size" />
-              </nz-form-control>
-            </nz-form-item>
-            
-            <nz-form-item>
-              <nz-form-label nzSpan="6">{{ "Description" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="18">
-                <textarea nz-input type="text" formControlName="description" rows="3"></textarea>
-              </nz-form-control>
-            </nz-form-item>
-          </div>
-          <!-- Default -->
-          <div nz-col nzSpan="5" nzOffset="2">
-            <h3 class="label">{{ "Occupancy" | translate }}</h3>
-            <nz-form-item>
-              <nz-form-label nzSpan="10" nzRequired>{{ "BaseAdult" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="14" nzErrorTip="">
-                <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="0" formControlName="baseAdults" />
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzSpan="10" nzRequired>{{ "BaseChild" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="14" nzErrorTip="">
-                <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="0" formControlName="baseChildren" />
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzSpan="10" nzRequired>{{ "MaxAdults" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="14" nzErrorTip="">
-                <nz-input-number c formControlName="maxAdults" />
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzSpan="10" nzRequired>{{ "MaxChildren" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="14" nzErrorTip="">
-                <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="0" formControlName="maxChildren" />
-              </nz-form-control>
-            </nz-form-item>
-            
-            <!-- <nz-form-item>
-              <nz-form-label  nzRequired>{{ "MaxOccupancy" | translate }}</nz-form-label>
-              <nz-form-control  nzErrorTip="">
-                <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="0" formControlName="maxOccupancy" />
-              </nz-form-control>
-            </nz-form-item> -->
-          </div>
-          <div nz-col nzSpan="6" nzOffset="1">
-            <h3 class="label">{{ "DefaultPrice" | translate }}</h3>
-            <nz-form-item>
-              <nz-form-label nzSpan="8" nzRequired>{{ "BasePrice" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="16" nzErrorTip="">
-                <nz-input-number [nzPrecision]="2" [nzMin]="0" formControlName="basePrice" />
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzSpan="8" nzRequired>{{ "AdultPrice" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="16" nzErrorTip="">
-                <nz-input-number [nzPrecision]="2" [nzMin]="0" formControlName="basePriceAdult" />
-              </nz-form-control>
-            </nz-form-item>
-            <nz-form-item>
-              <nz-form-label nzSpan="8" nzRequired>{{ "ChildPrice" | translate }}</nz-form-label>
-              <nz-form-control nzSpan="16" nzErrorTip="">
-                <nz-input-number [nzPrecision]="2" [nzMin]="0" formControlName="basePriceChild" />
+              <nz-form-label nzSpan="5">{{ "Note" | translate }}</nz-form-label>
+              <nz-form-control nzSpan="19">
+                <textarea nz-input type="text" formControlName="note" rows="3"></textarea>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -144,47 +108,8 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
       </div>
     </div>
   `,
-  styleUrls: ["../../../assets/scss/operation_page.scss"],
-  styles: `
-    .modal-content {
-      padding: 10px 50px;
-      height: 100%;
-    }
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      row-gap: 0;
-      column-gap: 32px;
-    }
-    .form-content {
-      height: 100%;  
-      display: flex;
-      flex-direction: column;
-      
-    }
-    .amenity-container {
-      min-height: 350px;
-      overflow-y: auto; 
-    }
-    .amenity-group {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      row-gap: 10px;
-      column-gap: 32px;
-    }
-    .amenity-title {
-      margin-bottom: 10px;
-    }
-    .amenity-title label {
-      font-size: 16px;
-      font-weight: 600;
-    }
-    .label {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-  `,
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
+  encapsulation: ViewEncapsulation.None,
   standalone: false
 })
 
@@ -214,18 +139,11 @@ export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType>
         [required, nameMaxLengthValidator],
         [nameExistValidator(this.service, this.modal?.id)],
       ],
-      roomClass: [null, [required]],
+      occupancy: [null, [required]],
       maxOccupancy: [0, [required]],
-      baseAdults: [0, [required]],
-      baseChildren: [0, [required]],
-      maxAdults: [0, [required]],
-      maxChildren: [0, [required]],
-      basePrice: [0, [required]],
-      basePriceAdult: [0, [required]],
-      basePriceChild: [0, [required]],
-      size: [null],
-      description: [null],
-      amenityGroup: this.fb.array([]),
+      netArea: [0, [required]],
+      grossArea: [0, [required]],
+      note: [null],
     });
   }
 

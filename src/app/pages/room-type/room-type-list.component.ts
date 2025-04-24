@@ -1,4 +1,4 @@
-import { Component, computed, signal } from "@angular/core";
+import {Component, computed, signal, ViewEncapsulation} from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { RoomType, RoomTypeService } from "./room-type.service";
@@ -21,14 +21,6 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
           <div class="filter-box">
             <app-filter-input #filterBox storageKey="room-type-list-search">
             </app-filter-input>
-          </div>
-          <div class="filter-box">
-            <app-lookup-item-select
-              [lookupType]="LOOKUP_TYPE.RoomClass"
-              storageKey="room-type-list-roomClass-select-filter"
-              [showAllOption]="true"
-              [typeLabelAll]="'AllRoomClass' | translate"
-            ></app-lookup-item-select>
           </div>
         </div>
         <div>
@@ -130,22 +122,9 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
       </nz-content>
     </nz-layout>
   `,
-  styleUrls: ["../../../assets/scss/content_style.scss"],
-  styles: [
-    `
-      .center-align {
-        text-align: center;
-      }
-      .right-align {
-        text-align: right;
-      }
-      .col-basePrice {
-        width: 90px;
-        text-align: right;
-      }
-    `,
-  ],
+  styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class RoomTypeListComponent extends BaseListComponent<RoomType> {
   constructor(

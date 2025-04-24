@@ -1,0 +1,50 @@
+.content {
+  min-height: 98vh !important;
+  background: #fff;
+  min-width: 1000px;
+}
+
+.setting-title{
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+nz-layout{
+  background: inherit;
+  nz-header{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: inherit !important;
+    height: 40px !important;
+    line-height: 40px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100%;
+    > span{
+      line-height: 1;
+      padding: 0 6px;
+    }
+  }
+  nz-content.setting-content{
+    margin-top: 6px !important;
+    .content-header{
+      p{
+        margin-bottom: 0;
+        font-weight: bold;
+      }
+    }
+    .content-body{
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 220px;
+      a{
+        span{
+          padding: 0 12px;
+        }
+      }
+    }
+  }
+}

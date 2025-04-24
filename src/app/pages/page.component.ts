@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild } from "@angular/core";
+import {Component, Inject, OnInit, ViewChild, ViewEncapsulation} from "@angular/core";
 import { BRANCH_STORAGE_KEY, LANGUAGES, SIDE_EXPAND_COLLAPSED } from "../const";
 import { Router } from "@angular/router";
 import { AuthService } from "../helpers/auth.service";
@@ -28,20 +28,24 @@ export interface Type {
         [(nzCollapsed)]="isCollapsed"
         [nzTrigger]="null"
       >
-        <div
-          class="sidebar-logo"
-          style="position: sticky; top: 0; z-index: 100;"
-        >
+        <div class="sidebar-logo">
           <a target="_blank" class="logo-link">
             <img [src]="authService.app?.iconUrl" alt="logo" />
-            <h1 *ngIf="!isCollapsed" class="modal-header-ellipsis">
-              {{ appName }}
-            </h1>
+            <h1 *ngIf="!isCollapsed" class="modal-header-ellipsis">{{ appName }}</h1>
           </a>
+          <nz-icon nzType="menu-fold" nzTheme="outline" />
+        </div>
+        <div class="tenant">
+          <div class="tenant-logo">
+            <img [src]="authService.tenant?.logo" alt="tenant" style="margin-right: 4px;"/>
+            <span class="tenant-name" *ngIf="!isCollapsed">{{ authService.tenant?.name }}</span>
+          </div>
+          <div class="app-center-icon">
+            <nz-icon nzType="appstore"  (click)="redirectToMainUrl()" nzTheme="outline"/>
+          </div>
         </div>
         <div
-          class="scrollbar"
-          style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100vh - 64px);"
+          style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100vh - 120px);"
         >
           <ul
             class="nz-menu-custom"
@@ -77,79 +81,60 @@ export interface Type {
 
           <div>
             <div class="user-info-container">
-              <div
-                style="display: flex; align-items: center; gap: 8px; padding: 8px; justify-content:space-between;  flex-wrap: wrap;"
-              >
-                <span class="tenant" style="margin: 0">
-                  <img
-                    [src]="authService.tenant?.logo"
-                    alt="tenant"
-                    style="margin-right: 4px;"
-                  />
-
-                  <span *ngIf="!isCollapsed">{{
-                    authService.tenant?.name
-                  }}</span>
-                </span>
-
-                <i
-                  nz-icon
-                  nzType="appstore"
-                  (click)="redirectToMainUrl()"
-                  nzTheme="outline"
-                  style="cursor: pointer;"
-                ></i>
-                <i
-                  *ngIf="isCollapsed"
-                  nz-icon
-                  (click)="switchScreen()"
-                  [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"
-                  nzTheme="outline"
-                  class="icon"
-                  style="cursor: pointer;display:flex; justify-content:center; align-items:center;"
-                ></i>
-                <span
-                  *ngIf="isCollapsed"
-                  nzTrigger="click"
-                  nzPlacement="bottomRight"
-                  nz-dropdown
-                  style="cursor: pointer;"
-                  [nzDropdownMenu]="language"
-                >
-                  <img
-                    class="img-head"
-                    [src]="
-                      translateService.currentLang == 'km'
-                        ? './assets/image/kh_FLAG.png'
-                        : './assets/image/en_FLAG.png'
-                    "
-                    alt="language"
-                  />
-                  <nz-dropdown-menu #language="nzDropdownMenu">
-                    <ul nz-menu style="width: 125px;">
-                      <li
-                        nz-menu-item
-                        *ngFor="let lang of languages"
-                        (click)="languageService.switchLanguage(lang.key)"
-                      >
-                        <img class="img" [src]="lang.image" alt="language" />
-                        <span>{{ lang.label }}</span>
-                        <i
-                          style="position: absolute; right: 5px;"
-                          class="primary-color"
-                          *ngIf="
-                            lang.key.localId == translateService.currentLang
-                          "
-                          nz-icon
-                          nzType="check"
-                          nzTheme="outline"
-                        ></i>
-                      </li>
-                    </ul>
-                  </nz-dropdown-menu>
-                </span>
-              </div>
-              <nz-divider style="margin: 0  0 8px 0;"></nz-divider>
+<!--              <div-->
+<!--                style="display: flex; align-items: center; gap: 8px; padding: 8px; justify-content:space-between;  flex-wrap: wrap;"-->
+<!--              >-->
+<!--                <i-->
+<!--                  *ngIf="isCollapsed"-->
+<!--                  nz-icon-->
+<!--                  (click)="switchScreen()"-->
+<!--                  [nzType]="isFullScreen ? 'fullscreen-exit' : 'fullscreen'"-->
+<!--                  nzTheme="outline"-->
+<!--                  class="icon"-->
+<!--                  style="cursor: pointer;display:flex; justify-content:center; align-items:center;"-->
+<!--                ></i>-->
+<!--                <span-->
+<!--                  *ngIf="isCollapsed"-->
+<!--                  nzTrigger="click"-->
+<!--                  nzPlacement="bottomRight"-->
+<!--                  nz-dropdown-->
+<!--                  style="cursor: pointer;"-->
+<!--                  [nzDropdownMenu]="language"-->
+<!--                >-->
+<!--                  <img-->
+<!--                    class="img-head"-->
+<!--                    [src]="-->
+<!--                      translateService.currentLang == 'km'-->
+<!--                        ? './assets/image/kh_FLAG.png'-->
+<!--                        : './assets/image/en_FLAG.png'-->
+<!--                    "-->
+<!--                    alt="language"-->
+<!--                  />-->
+<!--                  <nz-dropdown-menu #language="nzDropdownMenu">-->
+<!--                    <ul nz-menu style="width: 125px;">-->
+<!--                      <li-->
+<!--                        nz-menu-item-->
+<!--                        *ngFor="let lang of languages"-->
+<!--                        (click)="languageService.switchLanguage(lang.key)"-->
+<!--                      >-->
+<!--                        <img class="img" [src]="lang.image" alt="language" />-->
+<!--                        <span>{{ lang.label }}</span>-->
+<!--                        <i-->
+<!--                          style="position: absolute; right: 5px;"-->
+<!--                          class="primary-color"-->
+<!--                          *ngIf="-->
+<!--                            lang.key.localId == translateService.currentLang-->
+<!--                          "-->
+<!--                          nz-icon-->
+<!--                          nzType="check"-->
+<!--                          nzTheme="outline"-->
+<!--                        ></i>-->
+<!--                      </li>-->
+<!--                    </ul>-->
+<!--                  </nz-dropdown-menu>-->
+<!--                </span>-->
+<!--              </div>-->
+<!--              <nz-divider style="margin: 0  0 8px 0;"></nz-divider>-->
 
               <div class="user-info">
                 <div style="display: flex; align-items: center; gap:4px">
@@ -246,7 +231,8 @@ export interface Type {
       </nz-layout>
     </nz-layout>
   `,
-  styleUrls: [`../../assets/scss/layout-style.scss`],
+  styleUrls: [`../../assets/scss/layout.style.scss`],
+  encapsulation: ViewEncapsulation.None,
   styles: [
     `
       .modal-header-ellipsis {
@@ -264,34 +250,43 @@ export interface Type {
       }
 
       .tenant {
+        margin: 6px 16px 12px;
+        padding: 4px 8px;
+        border-radius: 8px;
+        background-color: #fff;
+        //border: 1px solid #dcdcdc;
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
-        height: 28px;
-        font-size: 17px;
-        padding: 5px 15px;
-        border-radius: 5px;
-        background-color: #f0f0f0;
+        font-size: 16px;
         color: black;
         cursor: default;
 
-        img {
-          width: 18px;
-          margin-right: 4px;
-        }
-
-        .branch {
-          margin-right: -14px;
-          cursor: pointer;
-          span {
-            font-size: 16px;
-            padding: 4px 14px 4px 6px;
-            border-radius: 2px;
+        .tenant-logo {
+          height: 32px;
+          border-radius: 50%;
+          padding: 6px 6px 6px 0;
+          //border: 1px solid #e0e0e0;
+          display: flex;
+          align-items: center;
+          img {
+            width: 100%;
+            height: 100%;
           }
         }
-        .branch:hover {
-          span {
-            background-color: #e6f7ff;
+        
+        .tenant-name {
+          color: #000000c2;
+          font-size: 16px;
+        }
+        
+        .app-center-icon{
+          display: flex;
+          justify-content: center;
+          nz-icon {
+            background-color: #f1f2f6;
+            border-radius: 5px;
+            padding: 4px;
           }
         }
       }
@@ -324,13 +319,13 @@ export interface Type {
         margin: 0 16px;
         padding: 4px 8px;
         border-radius: 8px;
-        background-color: #e0e0e0;
+        background-color: #fcfafa;
       }
       .sidebar-menu {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: calc(100vh - 64px);
+        height: calc(100vh - 200px);
       }
     `,
   ],

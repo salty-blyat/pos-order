@@ -65,8 +65,8 @@ import { Observable } from 'rxjs';
       }
     `,
     ],
-    styleUrls: ['../../../assets/scss/content_style.scss'],
-    standalone: false
+  styleUrls: ["../../../assets/scss/list.style.scss"],
+  standalone: false
 })
 export class LookupTypeComponent implements OnInit, OnDestroy {
   constructor(

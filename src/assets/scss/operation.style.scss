@@ -1,0 +1,189 @@
+/**
+Style for modal
+ */
+
+.ant-modal-header{
+  padding: 4px 10px;
+  text-align: center;
+  border-radius: 6px !important;
+  height: 30px;
+  line-height: 30px;
+}
+
+.ant-modal-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #000000a6;
+}
+
+
+.ant-modal-close-x {
+  font-size: 12px;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+}
+
+.ant-modal {
+  top: 50px;
+}
+
+.ant-modal-content{
+  border-radius: 6px !important;
+}
+
+.ant-modal-body {
+  padding-bottom: 10px;
+  padding-top: 0;
+  overflow-y: auto;
+  max-height: calc(100vh - 88px);
+  //border-radius: 6px;
+}
+
+.btn-close{
+  color: gray !important;
+}
+
+/**
+  Style for from operation model
+*/
+
+[nz-form] {
+
+  padding-top: 18px;
+  .ant-form-item {
+    margin-bottom: 0.98rem !important;
+
+    > button {
+      margin-right: 8px;
+      font-size: 13px;
+      padding: 0 32px;
+    }
+  }
+
+
+  .text-header {
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    color: #00000073;
+  }
+
+  nz-date-picker {
+    width: 100%;
+  }
+  nz-input-number {
+    width: 100%;
+  }
+
+  .input-number {
+    text-align: right;
+  }
+}
+
+.ant-form-item-extra {
+  font-size: 10px !important;
+}
+
+.ant-form-item-explain-error {
+  font-size: 11px;
+  position: absolute;
+}
+
+.ant-form-item-with-help .ant-form-item-explain {
+  min-height: 0;
+}
+
+.loading{
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+}
+
+.ant-tabs-tab{
+  padding: 6px 0 !important;
+}
+
+.ant-tabs-tab .anticon {
+  margin-right: 4px;
+}
+
+nz-table, tr, th ,td{
+  background: inherit;
+}
+
+th::before{
+  display: none !important;
+}
+
+tbody > tr > td {
+  vertical-align: top;
+}
+
+tbody > tr > td > p {
+  margin-bottom: 0;
+}
+tbody > tr > td > p > span {
+  font-size: 12px;
+}
+tbody > tr > td > span {
+  font-size: 12px;
+}
+
+.form-pt-0{
+  padding-top: 0 !important;
+}
+
+nz-table.table-small-padding{
+  max-height: 188px !important;
+  overflow-y: auto !important;
+  tbody {
+    > tr  {
+      > td{
+        padding: 2px !important;
+      }
+    }
+  }
+  .ant-table-footer{
+    padding: 2px !important;
+  }
+}
+
+
+nz-table {
+  .col-header {
+    font-weight: bold;
+    font-size: 12px;
+    padding: 4px;
+    height: 30px;
+    color: #00000073
+  }
+
+  .col-numeric {
+    text-align: right;
+  }
+  min-height: 100px;
+}
+nz-header.border-header {
+  display: flex;
+  justify-content: center;
+  border-bottom: 2px solid #d9d9d9 !important;
+  button {
+    margin-right: 8px !important;
+  }
+}
+.message-inuse{
+  position: absolute !important;
+  font-size: 12px;
+}
+[nz-form] {
+  .ant-tabs-tab + .ant-tabs-tab {
+    margin: 0 0 0 13px !important;
+  }
+}
+
+.modal-confirm-delete-group{
+  .ant-modal-title {
+    color: #000;
+    font-size: 16px !important;
+  }
+}

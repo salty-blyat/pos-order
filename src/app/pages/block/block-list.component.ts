@@ -135,49 +135,10 @@ import { NotificationService } from "../../utils/services/notification.service";
       </nz-content>
     </nz-layout>
   `,
-  styleUrls: ["../../../assets/scss/content_style.scss"],
-  styles: [
-    `
-      .menu-dropdown {
-        position: absolute;
-        right: 10px;
-        margin-bottom: 4px;
-      }
-      ::ng-deep .cdk-drag-preview {
-        display: flex;
-        background: rgba(0, 0, 0, 0.1);
-        gap: 1em;
-
-        align-items: center;
-        padding: 0 4px;
-      }
-
-      ::ng-deep .cdk-drag-placeholder {
-        opacity: 0;
-      }
-      .block-ordering {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-        margin: 0;
-      }
-      .block-move {
-        position: absolute;
-        z-index: 1000;
-        width: 35px;
-        cursor: move;
-        padding: 7px;
-        margin-bottom: 5px;
-      }
-    `,
-  ],
+  styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
 })
-export class BlockListComponent
-  extends BaseListComponent<Block>
-  implements OnDestroy
-{
+export class BlockListComponent extends BaseListComponent<Block> {
   constructor(
     override service: BlockService,
     sessionStorageService: SessionStorageService,

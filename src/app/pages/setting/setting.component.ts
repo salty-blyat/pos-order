@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import {Component, OnInit, ViewEncapsulation} from "@angular/core";
 import { SIDE_EXPAND_COLLAPSED } from "../../const";
 import { LocalStorageService } from "../../utils/services/localStorage.service";
 
@@ -16,17 +16,18 @@ interface Setting {
 @Component({
   selector: "app-setting",
   template: `
+    <div class="content">
     <nz-layout>
       <nz-header>
         <div nz-row>
-          <div>
+          <div class="setting-title">
             <i nzType="setting" nz-icon nzTheme="outline"></i>
             <span>{{ "Setting" | translate }}</span>
           </div>
         </div>
       </nz-header>
-      <nz-content>
-        <div nz-row class="setting-container">
+      <nz-content  class="setting-content">
+        <div nz-row>
           <ng-container *ngFor="let data of setting">
             <div *ngIf="isListGroup(data)">
               <div class="content-header">
@@ -52,18 +53,11 @@ interface Setting {
         </div>
       </nz-content>
     </nz-layout>
+    </div>
   `,
-  styleUrls: ["../../../assets/scss/setting-style.scss"],
-  styles: [
-    `
-      .setting-container {
-        display: flex;
-        gap: 5rem;
-        flex-wrap: wrap;
-      }
-    `,
-  ],
+  styleUrls: ["../../../assets/scss/setting.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class SettingComponent implements OnInit {
   constructor(private localStorageService: LocalStorageService) {}
