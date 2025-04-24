@@ -79,7 +79,7 @@ import { UUID } from "uuid-generator-ts";
         {{ selected.nzLabel }}
       </ng-template>
       <ng-template #actionItem>
-        <a *ngIf="addOption && isLookupAdd" (click)="uiService.showAdd(lookupType, componentId)" class="item-action">
+        <a *ngIf="addOption && isLookupAdd" (click)="uiService.showAdd(lookupType)" class="item-action">
           <i nz-icon nzType="plus"></i> {{ "Add" | translate }}
         </a>
       </ng-template>

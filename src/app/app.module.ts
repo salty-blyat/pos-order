@@ -105,7 +105,6 @@ import { ReportGroupMenuComponent } from "./pages/report-group/report-group-menu
 import { BlockListComponent } from "./pages/block/block-list.component";
 import { BlockOperationComponent } from "./pages/block/block-operation.component";
 import { FloorListComponent } from "./pages/floor/floor-list.component";
-import { RoomTypeListComponent } from "./pages/room-type/room-type-list.component";
 import { RoomTypeDeleteComponent } from "./pages/room-type/room-type-delete.component";
 import { RoomDeleteComponent } from "./pages/room/room-delete.component";
 import { RoomListComponent } from "./pages/room/room-list.component";
@@ -127,7 +126,6 @@ import { RoomTypeOperationComponent } from "./pages/room-type/room-type-operatio
 import { RoomOperationComponent } from "./pages/room/room-operation.component";
 import { RoomSelectComponent } from "./pages/room/room-select.component";
 import { AppVersionService } from "./utils/services/app-version.service";
-import { BaseListSignalComponent } from "./utils/components/base-list-signal.component";
 import { NzFlexDirective } from "ng-zorro-antd/flex";
 import { InputNumberComponent } from "./utils/components/input-number.component";
 import { RoomOperationAddComponent } from "./pages/room/room-operation-add.component";
@@ -138,6 +136,7 @@ import { ItemOperationComponent } from "./pages/item/item-operation.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
 import { ItemTypeOperationComponent } from "./pages/item-type/item-type-operation.component";
 import { ItemTypeDeleteComponent } from "./pages/item-type/item-type-delete.component";
+import { RoomTypeListComponent } from "./pages/room-type/room-type-list.component";
 
 export function app_Init(settingsHttpService: SettingHttpService) {
   return () => settingsHttpService.initializeApp();
@@ -280,8 +279,6 @@ export class CustomTranslate implements TranslateLoader {
     TagGroupDeleteComponent,
     TagMultiSelectComponent,
 
-    BaseListSignalComponent,
-
     //member
     MemberListComponent,
     MemberOperationComponent,
@@ -296,31 +293,31 @@ export class CustomTranslate implements TranslateLoader {
     ItemTypeOperationComponent,
   ],
   bootstrap: [AppComponent],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        FormsModule,
-        ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: "never"}),
-        BrowserAnimationsModule,
-        NgZorroAntdModule,
-        CommonModule,
-        DragDropModule,
-        ScrollingModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader, // Main provider for loader
-                useClass: CustomTranslate, // Custom Loader
-                deps: [HttpClient, SettingService], // Dependencies which helps serving loader
-            },
-            isolate: false,
-        }),
-        CalendarModule.forRoot({
-            provide: DateAdapter,
-            useFactory: adapterFactory,
-        }),
-        NzFlexDirective,
-        TranslateModule,
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: "never" }),
+    BrowserAnimationsModule,
+    NgZorroAntdModule,
+    CommonModule,
+    DragDropModule,
+    ScrollingModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader, // Main provider for loader
+        useClass: CustomTranslate, // Custom Loader
+        deps: [HttpClient, SettingService], // Dependencies which helps serving loader
+      },
+      isolate: false,
+    }),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
+    NzFlexDirective,
+    TranslateModule,
+  ],
   providers: [
     {
       provide: NZ_I18N,

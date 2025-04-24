@@ -19,10 +19,10 @@ export class ReportGroupService extends BaseApiService<any> {
   constructor(private http: HttpClient, settingService: SettingService) {
     super('reportgroup', http, settingService);
   }
-  public updateOrdering(lists: ReportGroup[]): Observable<ReportGroup[]> {
-    return this.http.put<ReportGroup[]>(
-      `${this.getUrl()}/update-ordering`,
-      lists
-    );
-  }
+  // public updateOrdering(lists: ReportGroup[]): Observable<ReportGroup[]> {
+  //   return this.http.put<ReportGroup[]>(
+  //     `${this.getUrl()}/update-ordering`,
+  //     lists
+  //   );
+  // }
 }

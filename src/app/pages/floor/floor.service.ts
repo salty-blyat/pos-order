@@ -21,10 +21,10 @@ export class FloorService extends BaseApiService<Floor> {
     constructor(private http: HttpClient, settingService: SettingService) {
         super('floor', http, settingService);
     }
-    public updateOrdering(lists: Floor[]): Observable<Floor[]> {
-        return this.http.put<Floor[]>(
-            `${this.getUrl()}/update-ordering`,
-            lists
-        );
-    }
+    // public updateOrdering(lists: Floor[]): Observable<Floor[]> {
+    //     return this.http.put<Floor[]>(
+    //         `${this.getUrl()}/update-ordering`,
+    //         lists
+    //     );
+    // }
 }

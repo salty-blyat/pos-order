@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit } from '@angular/core';
 import { LookupType, LookupTypeService } from './lookup-type.service';
 import { TranslateService } from '@ngx-translate/core';
 import { QueryParam } from '../../utils/services/base-api.service';
@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
     selector: 'app-look-up',
     template: `
       <app-breadcrumb
-        *ngIf="breadcrumbData"
-        [data]="breadcrumbData"
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
       ></app-breadcrumb>
         <div class="content-lookup-type">
           <nz-sider nzWidth="240px" nzTheme="light">
@@ -74,7 +74,7 @@ export class LookupTypeComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private activated: ActivatedRoute
   ) {}
-  breadcrumbData!: Observable<Data>;
+  breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
   isActive = true;
   list: LookupType[] = [];
   subscribe: any;
@@ -83,7 +83,7 @@ export class LookupTypeComponent implements OnInit, OnDestroy {
     pageIndex: 1,
   };
   ngOnInit(): void {
-    this.breadcrumbData = this.activated.data;
+    
     this.subscribe = this.service.search(this.param).subscribe(
       (result: { results: LookupType[] }) => {
         this.list = result.results;

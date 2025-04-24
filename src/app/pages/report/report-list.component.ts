@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   Input,
   OnChanges,
   OnInit,
@@ -223,7 +224,7 @@ export class ReportListComponent implements OnInit, OnChanges {
   pageSizeOption = PAGE_SIZE_OPTION;
   loading = false;
   searchText = "";
-  breadcrumbData!: Observable<Data>;
+  breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
   pageSizeOptionKey = "report-list";
   param: QueryParam = {
     pageSize:
@@ -253,7 +254,7 @@ export class ReportListComponent implements OnInit, OnChanges {
     //   AuthKeys.POS_ADM__SETTING__REPORT__VIEW
     // );
 
-    this.breadcrumbData = this.activated.data;
+    
     this.refreshSub = this.uiService.refresher.subscribe((result) => {
       this.search();
     });

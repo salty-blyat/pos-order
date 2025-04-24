@@ -40,7 +40,7 @@ export interface MultiLanguageInput
         </ng-container>
       </nz-input-group>
       <ng-template #addOnBeforeTemplate>
-        <nz-select select [(ngModel)]="localId"
+        <nz-select nz-select [(ngModel)]="localId"
                    (ngModelChange)="updateCurrentLanguageVal()"
                    [nzCustomTemplate]="defaultTemplate"
                    [nzDropdownMatchSelectWidth]="false"

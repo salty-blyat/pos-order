@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import {ActivatedRoute, Data, Router} from '@angular/router';
 import { AuthService } from '../../helpers/auth.service';
@@ -8,8 +8,8 @@ import { AuthService } from '../../helpers/auth.service';
     template: `
     <nz-layout>
       <app-breadcrumb
-        *ngIf="breadcrumbData"
-        [data]="breadcrumbData"
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-header>
         <div>
@@ -68,9 +68,9 @@ export class SystemSettingComponent implements OnInit {
       private activated: ActivatedRoute,
       private router: Router,
   ) {}
-  breadcrumbData!: Observable<Data>;
+  breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
   ngOnInit(): void {
-    this.breadcrumbData = this.activated.data;
+    
     this.router.navigate(['/','setting','system-setting','company-section']).then();
   }
 }

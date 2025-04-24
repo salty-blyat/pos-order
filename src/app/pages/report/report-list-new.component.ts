@@ -1,27 +1,29 @@
 import {
-  Component, computed,
+  Component,
+  computed,
   EventEmitter,
   OnDestroy,
-  Output, signal,
-} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { QueryParam } from '../../utils/services/base-api.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, timer } from 'rxjs';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import {Report } from './report.service';
+  Output,
+  signal,
+} from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
+import { QueryParam } from "../../utils/services/base-api.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Observable, timer } from "rxjs";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { Report } from "./report.service";
 import {
   ReportGroup,
   ReportGroupService,
-} from '../report-group/report-group.service';
-import { ReportGroupUiService } from '../report-group/report-group-ui.service';
-import { BaseListComponent } from '../../utils/components/base-list.component';
-import { SessionStorageService } from '../../utils/services/sessionStorage.service';
-import { NotificationService } from '../../utils/services/notification.service';
+} from "../report-group/report-group.service";
+import { ReportGroupUiService } from "../report-group/report-group-ui.service";
+import { BaseListComponent } from "../../utils/components/base-list.component";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
-    selector: 'app-report-new-list',
-    template: `
+  selector: "app-report-new-list",
+  template: `
     <nz-layout>
       <app-breadcrumb
         *ngIf="breadcrumbData()"
@@ -33,11 +35,13 @@ import { NotificationService } from '../../utils/services/notification.service';
             <div style="margin: 14px 2px 14px 0px;">
               <app-filter-input
                 storageKey="report-new-list-search"
-                (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
+                (filterChanged)="
+                  searchText.set($event); param().pageIndex = 1; search()
+                "
               ></app-filter-input>
             </div>
 
-            <ul 
+            <ul
               nz-menu
               nzMode="inline"
               class="sider-menu"
@@ -92,7 +96,7 @@ import { NotificationService } from '../../utils/services/notification.service';
                       <span>
                         <i nz-icon nzType="edit"></i>&nbsp;
                         <span class="action-text">
-                          {{ 'Edit' | translate }}</span
+                          {{ "Edit" | translate }}</span
                         >
                       </span>
                     </li>
@@ -106,7 +110,7 @@ import { NotificationService } from '../../utils/services/notification.service';
                       <span>
                         <i nz-icon nzType="delete"></i>&nbsp;
                         <span class="action-text">
-                          {{ 'Delete' | translate }}</span
+                          {{ "Delete" | translate }}</span
                         >
                       </span>
                     </li>
@@ -122,7 +126,7 @@ import { NotificationService } from '../../utils/services/notification.service';
                   (click)="uiService.showAdd(reportGroupId)"
                 >
                   <i nz-icon nzType="plus" nzTheme="outline"></i>
-                  {{ 'Add' | translate }}
+                  {{ "Add" | translate }}
                 </button>
               </div>
               <div *ngIf="draged">
@@ -134,20 +138,22 @@ import { NotificationService } from '../../utils/services/notification.service';
                   [nzLoading]="isLoading()"
                   style="width: 295px;"
                 >
-                  {{ 'Save' | translate }}
+                  {{ "Save" | translate }}
                 </button>
               </div>
             </ul>
           </nz-sider>
           <nz-content class="inner-content" style="padding-left: 10px;">
-            <app-report-list [reportGroupId]="reportGroupId()"></app-report-list>
+            <app-report-list
+              [reportGroupId]="reportGroupId()"
+            ></app-report-list>
           </nz-content>
         </nz-layout>
       </nz-content>
     </nz-layout>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .sider-menu {
         height: 91.7%;
       }
@@ -187,30 +193,28 @@ import { NotificationService } from '../../utils/services/notification.service';
         margin-bottom: 5px;
       }
     `,
-    ],
-    styleUrls: ['../../../assets/scss/content_style.scss'],
-    standalone: false
+  ],
+  styleUrls: ["../../../assets/scss/content_style.scss"],
+  standalone: false,
 })
-export class ReportNewListComponent extends BaseListComponent<Report>
-{
+export class ReportNewListComponent extends BaseListComponent<Report> {
   constructor(
-      override service: ReportGroupService,
-      uiService: ReportGroupUiService,
-      sessionStorageService: SessionStorageService,
-      private activated: ActivatedRoute,
-      public translate: TranslateService,
-      private notificationService: NotificationService,
+    override service: ReportGroupService,
+    uiService: ReportGroupUiService,
+    sessionStorageService: SessionStorageService,
+    private activated: ActivatedRoute,
+    public translate: TranslateService
   ) {
-    super(service, uiService, sessionStorageService, 'report_group_list');
+    super(service, uiService, sessionStorageService, "report_group_list");
   }
 
   @Output() reportGroup: EventEmitter<any> = new EventEmitter<any>();
-  isReportGroupAdd= signal<boolean>(true);
-  isReportGroupEdit =  signal<boolean>(true);
-  isReportGroupRemove =  signal<boolean>(true);
-  isReportGroupView =  signal<boolean>(true);
-  reportGroupId =  signal<number>(0);
-  draged = signal<boolean>(false);
+  isReportGroupAdd = signal<boolean>(true);
+  isReportGroupEdit = signal<boolean>(true);
+  isReportGroupRemove = signal<boolean>(true);
+  isReportGroupView = signal<boolean>(true);
+  reportGroupId = signal<number>(0);
+  // draged = signal<boolean>(false);
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   override ngOnInit() {
     // this.isReportGroupAdd = this.authService.isAuthorized(
@@ -232,25 +236,25 @@ export class ReportNewListComponent extends BaseListComponent<Report>
     super.ngOnInit();
   }
 
-  saveOrdering() {
-    this.isLoading.set(true);
-    let newLists: Report[] = [];
+  // saveOrdering() {
+  //   this.isLoading.set(true);
+  //   let newLists: Report[] = [];
 
-    this.lists().forEach((item, i) => {
-      item.ordering = i + 1;
-      newLists.push(item);
-    });
-    this.service.updateOrdering(newLists).subscribe(() => {
-      this.isLoading.set(false);
-      this.draged.set(false);
-      this.notificationService.successNotification('Successfully Saved');
-    });
-  }
+  //   this.lists().forEach((item, i) => {
+  //     item.ordering = i + 1;
+  //     newLists.push(item);
+  //   });
+  //   this.service.updateOrdering(newLists).subscribe(() => {
+  //     this.isLoading.set(false);
+  //     this.draged.set(false);
+  //     this.notificationService.successNotification('Successfully Saved');
+  //   });
+  // }
 
-  drop(event: CdkDragDrop<any, any, any>) {
-    moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
-    if (event.previousIndex !== event.currentIndex) this.draged.set(true);
-  }
+  // // drop(event: CdkDragDrop<any, any, any>) {
+  // //   moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
+  // //   if (event.previousIndex !== event.currentIndex) this.draged.set(true);
+  // // }
   changeGroupId(id: number) {
     this.reportGroupId.set(id);
   }

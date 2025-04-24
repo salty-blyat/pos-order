@@ -54,9 +54,9 @@ export class ReportService extends BaseApiService<any> {
   constructor(private http: HttpClient, settingService: SettingService) {
     super('report', http, settingService);
   }
-  public updateOrdering(lists: Report[]): Observable<Report[]> {
-    return this.http.put<Report[]>(`${this.getUrl()}/update-ordering`, lists);
-  }
+  // public updateOrdering(lists: Report[]): Observable<Report[]> {
+  //   return this.http.put<Report[]>(`${this.getUrl()}/update-ordering`, lists);
+  // }
   convertDate(date: any): string {
     const dateCon = new Date(date);
     const year = dateCon.getFullYear();

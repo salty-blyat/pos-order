@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Renderer2 } from '@angular/core';
+import { Component, computed, Input, OnInit, Renderer2 } from '@angular/core';
 // @ts-ignore
 import { v4 as uuidv4 } from 'uuid';
 import { ProcessReportModel, Report, ReportService } from './report.service';
@@ -10,8 +10,8 @@ import { SessionStorageService } from '../../utils/services/sessionStorage.servi
     template: `
     <nz-layout>
       <app-breadcrumb
-        *ngIf="breadcrumbData"
-        [data]="breadcrumbData"
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-header style="align-items: center">
         <div nz-row>
@@ -84,7 +84,7 @@ export class ReportViewComponent implements OnInit {
     param: {},
   };
   id: number = +(this.activated.snapshot.paramMap.get('id') || 0);
-  breadcrumbData!: Observable<Data>;
+  breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
   publicUrl!: string;
   model: Report = {};
   ngOnInit(): void {
@@ -93,12 +93,7 @@ export class ReportViewComponent implements OnInit {
       (result: Report) => {
         this.model = result;
         this.generateReportModel.reportName = this.model.name;
-        this.breadcrumbData = new Observable<Data>((observer) => {
-          observer.next([
-            { index: 0, label: 'Report', url: '/report' },
-            { index: 1, label: this.model.label, url: null },
-          ]);
-        });
+        
         this.loading = false;
         this.seedParamsFromSessionStorage();
         this.search();

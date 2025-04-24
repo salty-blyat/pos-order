@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, computed } from "@angular/core";
 import { Observable } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -11,8 +11,8 @@ import { CurrencyUiService } from "./currency-ui.service";
   template: `
     <nz-layout>
       <app-breadcrumb
-        *ngIf="breadcrumbData"
-        [data]="breadcrumbData"
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
@@ -20,7 +20,7 @@ import { CurrencyUiService } from "./currency-ui.service";
             <app-filter-input
               storageKey="currency-list-search"
               (filterChanged)="
-                searchText = $event; param.pageIndex = 1; search()
+                searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
           </div>
@@ -43,12 +43,12 @@ import { CurrencyUiService } from "./currency-ui.service";
           nzShowSizeChanger
           #fixedTable
           nzTableLayout="fixed"
-          [nzPageSizeOptions]="pageSizeOption"
-          [nzData]="lists"
-          [nzLoading]="loading"
-          [nzTotal]="param.rowCount || 0"
-          [nzPageSize]="param.pageSize || 0"
-          [nzPageIndex]="param.pageIndex || 0"
+          [nzPageSizeOptions]="pageSizeOption()"
+          [nzData]="lists()"
+          [nzLoading]="isLoading()"
+          [nzTotal]="param().rowCount || 0"
+          [nzPageSize]="param().pageSize || 0"
+          [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
@@ -71,14 +71,14 @@ import { CurrencyUiService } from "./currency-ui.service";
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of lists; let i = index">
+            <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
                 {{
                   i
                     | rowNumber
                       : {
-                          index: param.pageIndex || 0,
-                          size: param.pageSize || 0
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
                         }
                 }}
               </td>
@@ -143,12 +143,12 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
   constructor(
     service: CurrencyService,
     sessionStorageService: SessionStorageService,
-    public uiService: CurrencyUiService,
+    public override uiService: CurrencyUiService,
     private activated: ActivatedRoute
   ) {
-    super(service, sessionStorageService, "currency-list");
+    super(service, uiService, sessionStorageService, "currency-list");
   }
-  breadcrumbData!: Observable<any>;
+  breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isCurrencyAdd: boolean = true;
   isCurrencyEdit: boolean = true;
   isCurrencyRemove: boolean = true;
@@ -167,7 +167,7 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
     //   AuthKeys.POS_ADM__SETTING__CURRENCY__VIEW
     // );
 
-    this.breadcrumbData = this.activated.data;
+    
     this.refreshSub = this.uiService.refresher.subscribe((result) => {
       this.search();
     });

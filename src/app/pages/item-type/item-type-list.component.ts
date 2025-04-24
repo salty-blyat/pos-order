@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, computed, OnInit } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { ItemType, ItemTypeService } from "./item-type.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -12,17 +12,15 @@ import { SIZE_COLUMNS } from "../../const";
   template: `
     <nz-layout>
       <app-breadcrumb
-        *ngIf="breadcrumbData"
-        [data]="breadcrumbData"
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
           <div style="width: 220px; margin-right: 4px;">
             <app-filter-input
               storageKey="item-list-search"
-              (filterChanged)="
-                searchText = $event; param.pageIndex = 1; search()
-              "
+              (filterChanged)="  searchText.set($event); param().pageIndex = 1; search() "
             ></app-filter-input>
           </div>
         </div>
@@ -44,12 +42,12 @@ import { SIZE_COLUMNS } from "../../const";
           nzShowSizeChanger
           #fixedTable
           nzTableLayout="fixed"
-          [nzPageSizeOptions]="pageSizeOption"
-          [nzData]="lists"
-          [nzLoading]="loading"
-          [nzTotal]="param.rowCount || 0"
-          [nzPageSize]="param.pageSize || 0"
-          [nzPageIndex]="param.pageIndex || 0"
+          [nzPageSizeOptions]="pageSizeOption()"
+          [nzData]="lists()"
+          [nzLoading]="isLoading()"
+          [nzTotal]="param().rowCount || 0"
+          [nzPageSize]="param().pageSize || 0"
+          [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
@@ -72,14 +70,14 @@ import { SIZE_COLUMNS } from "../../const";
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of lists; let i = index">
+            <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
                 {{
                   i
                     | rowNumber
                       : {
-                          index: param.pageIndex || 0,
-                          size: param.pageSize || 0
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
                         }
                 }}
               </td>
@@ -137,12 +135,12 @@ export class ItemTypeListComponent extends BaseListComponent<ItemType> {
   constructor(
     service: ItemTypeService,
     sessionStorageService: SessionStorageService,
-    public uiService: ItemTypeUiService,
+    public override uiService: ItemTypeUiService,
     private activated: ActivatedRoute
   ) {
-    super(service, sessionStorageService, "item-type-list");
+    super(service, uiService, sessionStorageService, "item-type-list");
   }
-  breadcrumbData!: Observable<any>;
+  breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isItemAdd: boolean = true;
   isItemEdit: boolean = true;
   isItemRemove: boolean = true;
@@ -152,6 +150,6 @@ export class ItemTypeListComponent extends BaseListComponent<ItemType> {
     this.refreshSub = this.uiService.refresher.subscribe((result) => {
       this.search();
     });
-    this.breadcrumbData = this.activated.data;
+    
   }
 }

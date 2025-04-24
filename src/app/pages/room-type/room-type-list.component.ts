@@ -1,15 +1,12 @@
 import { Component, computed, signal } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
-import {RoomType, RoomTypeService} from "./room-type.service";
+import { RoomType, RoomTypeService } from "./room-type.service";
 import { RoomTypeUiService } from "./room-type-ui.service";
 import { SIZE_COLUMNS } from "../../const";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
-import {
-  FILTER_OPERATOR,
-} from "../../utils/components/base-list-signal.component";
-import {BaseListComponent} from "../../utils/components/base-list.component";
-import {SessionStorageService} from "../../utils/services/sessionStorage.service";
+import { BaseListComponent } from "../../utils/components/base-list.component";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 
 @Component({
   selector: "app-room-type-list",
@@ -22,10 +19,7 @@ import {SessionStorageService} from "../../utils/services/sessionStorage.service
       <nz-header>
         <div nz-row>
           <div class="filter-box">
-            <app-filter-input
-              #filterBox
-              storageKey="room-type-list-search"
-            >
+            <app-filter-input #filterBox storageKey="room-type-list-search">
             </app-filter-input>
           </div>
           <div class="filter-box">
@@ -79,9 +73,7 @@ import {SessionStorageService} from "../../utils/services/sessionStorage.service
             </tr>
           </thead>
           <tbody>
-            <tr
-              *ngFor="let data of lists() ?? []; let i = index"
-            >
+            <tr *ngFor="let data of lists() ?? []; let i = index">
               <td nzEllipsis>
                 {{
                   i
@@ -157,12 +149,12 @@ import {SessionStorageService} from "../../utils/services/sessionStorage.service
 })
 export class RoomTypeListComponent extends BaseListComponent<RoomType> {
   constructor(
-      service: RoomTypeService,
-      sessionStorageService: SessionStorageService,
-      uiService: RoomTypeUiService,
-      private activated: ActivatedRoute,
+    service: RoomTypeService,
+    sessionStorageService: SessionStorageService,
+    uiService: RoomTypeUiService,
+    private activated: ActivatedRoute
   ) {
-    super(service,uiService, sessionStorageService, 'room-type-list');
+    super(service, uiService, sessionStorageService, "room-type-list");
   }
 
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);

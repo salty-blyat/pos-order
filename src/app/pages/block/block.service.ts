@@ -22,10 +22,10 @@ export class BlockService extends BaseApiService<Block> {
     constructor(private http: HttpClient, settingService: SettingService) {
         super('block', http, settingService);
     }
-    public updateOrdering(lists: Block[]): Observable<Block[]> {
-        return this.http.put<Block[]>(
-            `${this.getUrl()}/update-ordering`,
-            lists
-        );
-    }
+    // public updateOrdering(lists: Block[]): Observable<Block[]> {
+    //     return this.http.put<Block[]>(
+    //         `${this.getUrl()}/update-ordering`,
+    //         lists
+    //     );
+    // }
 }

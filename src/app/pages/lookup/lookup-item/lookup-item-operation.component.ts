@@ -110,7 +110,7 @@ import { SettingService } from "../../../app-setting";
         </button>
       </div>
       <div *ngIf="modal.isView">
-        <a (click)="uiService.showEdit(model.id, modal.lookupTypeId || 0)" *ngIf="!loading && isLookupEdit">
+        <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!loading && isLookupEdit">
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
