@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject, ViewChild } from '@angular/core';
+import {Component, Input, OnInit, inject, ViewChild, ViewEncapsulation} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { CommonValidators } from '../../utils/services/common-validators';
@@ -452,7 +452,7 @@ export let ParamSelectComponent = {
       </div>
     </div>
   `,
-    styleUrls: ['../../../assets/scss/operation_modal.scss'],
+    styleUrls: ['../../../assets/scss/operation.style.scss'],
     styles: [
         `
       :host ::ng-deep .ant-tabs-tab {
@@ -489,7 +489,8 @@ export let ParamSelectComponent = {
       }
     `,
     ],
-    standalone: false
+    standalone: false,
+    encapsulation: ViewEncapsulation.None
 })
 export class ReportOperationComponent implements OnInit {
   constructor(

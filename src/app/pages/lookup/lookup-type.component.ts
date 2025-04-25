@@ -1,9 +1,12 @@
-import { Component, computed, OnDestroy, OnInit } from '@angular/core';
+import {Component, computed, OnDestroy, OnInit, signal, ViewEncapsulation} from '@angular/core';
 import { LookupType, LookupTypeService } from './lookup-type.service';
 import { TranslateService } from '@ngx-translate/core';
 import { QueryParam } from '../../utils/services/base-api.service';
 import { ActivatedRoute, Data } from '@angular/router';
-import { Observable } from 'rxjs';
+import {Observable, single} from 'rxjs';
+import {BaseListComponent} from "../../utils/components/base-list.component";
+import {SessionStorageService} from "../../utils/services/sessionStorage.service";
+import {LookupItemUiService} from "./lookup-item/lookup-item-ui.service";
 
 @Component({
     selector: 'app-look-up',
@@ -13,44 +16,46 @@ import { Observable } from 'rxjs';
         [data]="breadcrumbData()"
       ></app-breadcrumb>
         <div class="content-lookup-type">
-          <nz-sider nzWidth="240px" nzTheme="light">
+          <nz-sider nzWidth="220px" nzTheme="light">
             <ul nz-menu nzMode="inline" class="sider-menu">
-              <li
-                nz-submenu
-                nzOpen
-                nzTitle="{{ 'Lookup' | translate }}"
-                nzIcon="tool"
-              >
-                <ul *ngFor="let data of list">
-                  <li
+              <li nz-menu-item [nzDisabled]="true" class="menu-main">
+                <i nz-icon nzType="tool"></i>
+                <span>{{ 'Lookup' | translate }}</span>
+              </li>
+              @for (data of lists(); track data.id){
+                <li
                     nz-menu-item
                     *ngIf="translate.currentLang == 'en'"
                     [routerLink]="['/setting/lookup', data.id]"
-                    [nzMatchRouter]="isActive"
-                  >
-                    {{ data.nameEn || data.name }}
-                  </li>
-                  <li
+                    [nzMatchRouter]="isActive()"
+                >
+                  {{ data.nameEn || data.name }}
+                </li>
+                <li
                     nz-menu-item
                     *ngIf="translate.currentLang == 'km'"
                     [routerLink]="['/setting/lookup', data.id]"
-                    [nzMatchRouter]="isActive"
-                  >
-                    {{ data.name || data.nameEn }}
-                  </li>
-                </ul>
-              </li>
+                    [nzMatchRouter]="isActive()"
+                >
+                  {{ data.name || data.nameEn }}
+                </li>
+              }
             </ul>
           </nz-sider>
-          <nz-content class="inner-content">
+          <nz-content class="inner-content-lookup-type">
             <router-outlet></router-outlet>
           </nz-content>
         </div>
   `,
     styles: [
         `
-      .inner-content{
-        margin: 0 6px !important;
+      .inner-content-lookup-type{
+        padding: 0 0 0 14px;
+        border-left: 1px solid var(--ant-border-color);
+      }
+      .menu-main{
+        color: #000000d9 !important; 
+        cursor: default;
       }
       .sider-menu {
         height: 100%;
@@ -61,39 +66,25 @@ import { Observable } from 'rxjs';
       }
       .content-lookup-type{
         display: flex;
-        gap: 6px;
+        gap: 1px;
       }
     `,
     ],
   styleUrls: ["../../../assets/scss/list.style.scss"],
-  standalone: false
+  standalone: false,
+  encapsulation: ViewEncapsulation.None
 })
-export class LookupTypeComponent implements OnInit, OnDestroy {
+export class LookupTypeComponent extends BaseListComponent<LookupType>{
   constructor(
-    public service: LookupTypeService,
-    public translate: TranslateService,
-    private activated: ActivatedRoute
-  ) {}
+      service: LookupTypeService,
+      uiService: LookupItemUiService,
+      sessionStorageService: SessionStorageService,
+      public translate: TranslateService,
+      private activated: ActivatedRoute
+  ) {
+    super(service, uiService, sessionStorageService, "lookup-type");
+  }
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
-  isActive = true;
-  list: LookupType[] = [];
-  subscribe: any;
-  param: QueryParam = {
-    pageSize: 99,
-    pageIndex: 1,
-  };
-  ngOnInit(): void {
-    
-    this.subscribe = this.service.search(this.param).subscribe(
-      (result: { results: LookupType[] }) => {
-        this.list = result.results;
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
-  }
-  ngOnDestroy(): void {
-    this.subscribe.unsubscribe();
-  }
+  isActive = signal(true);
+
 }

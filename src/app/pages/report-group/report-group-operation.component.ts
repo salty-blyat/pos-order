@@ -1,10 +1,11 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {Component, inject, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { CommonValidators } from '../../utils/services/common-validators';
 import { ReportGroup, ReportGroupService } from './report-group.service';
 import { ReportGroupUiService } from './report-group-ui.service';
 import { AuthService } from '../../helpers/auth.service';
+import {BaseOperationComponent} from "../../utils/components/base-operation.component";
 
 @Component({
     selector: 'app-report-group-operation',
@@ -101,31 +102,28 @@ import { AuthService } from '../../helpers/auth.service';
       </div>
     </div>
   `,
-    styleUrls: ['../../../assets/scss/operation_modal.scss'],
-    standalone: false
+    styleUrls: ['../../../assets/scss/operation.style.scss'],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None
 })
-export class ReportGroupOperationComponent implements OnInit {
+export class ReportGroupOperationComponent extends BaseOperationComponent<ReportGroup>{
   constructor(
-    private fb: FormBuilder,
-    private ref: NzModalRef<ReportGroupOperationComponent>,
-    private service: ReportGroupService,
-    public uiService: ReportGroupUiService,
+     fb: FormBuilder,
+     ref: NzModalRef<ReportGroupOperationComponent>,
+     service: ReportGroupService,
+     uiService: ReportGroupUiService,
     private authService: AuthService
-  ) {}
+  ) {
+    super(fb, ref, service, uiService)
+  }
 
   @Input() id: number = 0;
   @Input() isView: boolean = false;
-  readonly modal: any = inject(NZ_MODAL_DATA);
-  
-  model: ReportGroup = {};
   loading = false;
-  refreshSub$: any;
-  autoTips = CommonValidators.autoTips;
-  frm!: FormGroup;
   isReportGroupEdit: boolean = true;
   isReportGroupRemove: boolean = true;
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
     // this.isReportGroupEdit = this.authService.isAuthorized(
     //   AuthKeys.POS_ADM__SETTING__REPORT_GROUP__EDIT
     // );
@@ -170,7 +168,7 @@ export class ReportGroupOperationComponent implements OnInit {
     }
   }
 
-  initControl() {
+  override initControl() {
     const {
       nameExistValidator,
       nameMaxLengthValidator,
@@ -187,7 +185,7 @@ export class ReportGroupOperationComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  override onSubmit() {
     if (this.frm.valid && !this.loading) {
       this.loading = true;
       let operation$ = this.service.add(this.frm.value);
@@ -207,11 +205,7 @@ export class ReportGroupOperationComponent implements OnInit {
     }
   }
 
-  cancel() {
-    this.ref.triggerCancel().then();
-  }
-
-  setFormValue() {
+  override setFormValue() {
     this.frm.setValue({
       name: this.model.name,
       note: this.model.note,

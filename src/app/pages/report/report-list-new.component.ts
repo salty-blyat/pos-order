@@ -4,7 +4,7 @@ import {
   EventEmitter,
   OnDestroy,
   Output,
-  signal,
+  signal, ViewEncapsulation,
 } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { QueryParam } from "../../utils/services/base-api.service";
@@ -87,11 +87,10 @@ import { NotificationService } from "../../utils/services/notification.service";
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <ul nz-menu nzSelectable>
                     <li
-                      *ngIf="isReportGroupEdit"
-                      class="menu-item"
+                      *ngIf="isReportGroupEdit()"
+                      class="menu-item edit"
                       nz-menu-item
                       (click)="uiService.showEdit(data.id!)"
-                      style="color: var(--primary-color) ;"
                     >
                       <span>
                         <i nz-icon nzType="edit"></i>&nbsp;
@@ -101,11 +100,10 @@ import { NotificationService } from "../../utils/services/notification.service";
                       </span>
                     </li>
                     <li
-                      *ngIf="isReportGroupRemove"
-                      class="menu-item"
+                      *ngIf="isReportGroupRemove()"
+                      class="menu-item delete"
                       nz-menu-item
                       (click)="uiService.showDelete(data.id!)"
-                      style="color: var(--danger-color);"
                     >
                       <span>
                         <i nz-icon nzType="delete"></i>&nbsp;
@@ -117,21 +115,21 @@ import { NotificationService } from "../../utils/services/notification.service";
                   </ul>
                 </nz-dropdown-menu>
               </ul>
-              <div *ngIf="!draged">
+              <div *ngIf="!draged()">
                 <button
-                  *ngIf="isReportGroupAdd"
+                  *ngIf="isReportGroupAdd()"
                   nz-button
                   nzType="dashed"
                   style="width: 295px;"
-                  (click)="uiService.showAdd(reportGroupId)"
+                  (click)="uiService.showAdd(reportGroupId())"
                 >
                   <i nz-icon nzType="plus" nzTheme="outline"></i>
                   {{ "Add" | translate }}
                 </button>
               </div>
-              <div *ngIf="draged">
+              <div *ngIf="draged()">
                 <button
-                  *ngIf="isReportGroupAdd"
+                  *ngIf="isReportGroupAdd()"
                   nz-button
                   nzType="primary"
                   (click)="saveOrdering()"
@@ -143,7 +141,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               </div>
             </ul>
           </nz-sider>
-          <nz-content class="inner-content" style="padding-left: 10px;">
+          <nz-content class="inner-content-report-list">
             <app-report-list
               [reportGroupId]="reportGroupId()"
             ></app-report-list>
@@ -154,8 +152,13 @@ import { NotificationService } from "../../utils/services/notification.service";
   `,
   styles: [
     `
+      .inner-content-report-list{
+        padding: 0 0 0 14px;
+        border-left: 1px solid var(--ant-border-color);
+      }
       .sider-menu {
         height: 91.7%;
+        background: #fff;
       }
       .ant-layout-content {
         margin: 0 -15px;
@@ -196,6 +199,7 @@ import { NotificationService } from "../../utils/services/notification.service";
   ],
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None
 })
 export class ReportNewListComponent extends BaseListComponent<Report> {
   constructor(
@@ -208,7 +212,7 @@ export class ReportNewListComponent extends BaseListComponent<Report> {
     super(service, uiService, sessionStorageService, "report_group_list");
   }
 
-  @Output() reportGroup: EventEmitter<any> = new EventEmitter<any>();
+  // @Output() reportGroup: EventEmitter<any> = new EventEmitter<any>();
   isReportGroupAdd = signal<boolean>(true);
   isReportGroupEdit = signal<boolean>(true);
   isReportGroupRemove = signal<boolean>(true);
@@ -229,11 +233,11 @@ export class ReportNewListComponent extends BaseListComponent<Report> {
     // this.isReportGroupView = this.authService.isAuthorized(
     //   AuthKeys.POS_ADM__SETTING__REPORT_GROUP__VIEW
     // );
-    this.refreshSub = this.uiService.refresher.subscribe((result) => {
-      this.search();
-    });
-
-    super.ngOnInit();
+    // this.refreshSub = this.uiService.refresher.subscribe((result) => {
+    //   this.search();
+    // });
+    //
+    // super.ngOnInit();
   }
 
   // saveOrdering() {

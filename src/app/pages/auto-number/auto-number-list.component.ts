@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AutoNumber, AutoNumberService } from './auto-number.service';
 import { AutoNumberUiService } from './auto-number-ui.service';
 import { BaseListComponent } from '../../utils/components/base-list.component';
+import {SIZE_COLUMNS} from "../../const";
 @Component({
     selector: 'app-auto-number-list',
     template: `
@@ -56,11 +57,11 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
-              <th width="15%">{{ 'Name' | translate }}</th>
-              <th>{{ 'Format' | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th nzWidth="15%">{{ 'Name' | translate }}</th>
+              <th nzWidth="15%">{{ 'Format' | translate }}</th>
               <th>{{ 'Note' | translate }}</th>
-              <th class="col-action"></th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
@@ -85,7 +86,7 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
               </td>
               <td nzEllipsis>{{ data.format }}</td>
               <td nzEllipsis>{{ data.note }}</td>
-              <td>
+              <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -146,5 +147,6 @@ export class AutoNumberListComponent extends BaseListComponent<AutoNumber> {
   isAutoNumberEdit =  signal<boolean>(true);
   isAutoNumberRemove =  signal<boolean>(true);
   isAutoNumberView =  signal<boolean>(true);
-  
+
+  protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

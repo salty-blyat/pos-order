@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { CommonValidators } from '../../utils/services/common-validators';
@@ -20,10 +20,7 @@ import { BaseOperationComponent } from '../../utils/components/base-operation.co
                 }}</span>
         </div>
         <div class="modal-content">
-            <nz-spin
-                    *ngIf="isLoading"
-                    style="position: absolute; top: 50%; left: 50%"
-            ></nz-spin>
+            <app-loading *ngIf="isLoading()"></app-loading>
             <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
                 <nz-form-item>
                     <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
@@ -68,7 +65,7 @@ import { BaseOperationComponent } from '../../utils/components/base-operation.co
                         [disabled]="!frm.valid"
                         (click)="onSubmit($event)"
                 >
-                    <i *ngIf="isLoading" nz-icon nzType="loading"></i>
+                    <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
                     {{ 'Save' | translate }}
                 </button>
                 <button nz-button nzType="default" (click)="cancel()">
@@ -76,21 +73,21 @@ import { BaseOperationComponent } from '../../utils/components/base-operation.co
                 </button>
             </div>
             <div *ngIf="modal?.isView">
-                <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading && isAutoNumberEdit">
+                <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isAutoNumberEdit">
                     <i nz-icon nzType="edit" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Edit' | translate }}</span>
                 </a>
-                <nz-divider nzType="vertical" *ngIf="!isLoading && isAutoNumberEdit"></nz-divider>
+                <nz-divider nzType="vertical" *ngIf="!isLoading() && isAutoNumberEdit"></nz-divider>
                 <a
                         nz-typography
                         nzType="danger"
                         (click)="uiService.showDelete(model.id || 0)"
-                        *ngIf="!isLoading && isAutoNumberRemove"
+                        *ngIf="!isLoading() && isAutoNumberRemove"
                 >
                     <i nz-icon nzType="delete" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Delete' | translate }}</span>
                 </a>
-                <nz-divider nzType="vertical" *ngIf="!isLoading && isAutoNumberRemove"></nz-divider>
+                <nz-divider nzType="vertical" *ngIf="!isLoading() && isAutoNumberRemove"></nz-divider>
                 <a nz-typography (click)="cancel()" style="color: gray;">
                     <i nz-icon nzType="close" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Close' | translate }}</span>
@@ -98,8 +95,9 @@ import { BaseOperationComponent } from '../../utils/components/base-operation.co
             </div>
         </div>
     `,
-    styleUrls: ['../../../assets/scss/operation_page.scss'],
-    standalone: false
+    styleUrls: ['../../../assets/scss/operation.style.scss'],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None
 })
 export class AutoNumberOperationComponent extends BaseOperationComponent<AutoNumber> {
   constructor(
