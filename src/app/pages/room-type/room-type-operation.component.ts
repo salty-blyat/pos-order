@@ -12,12 +12,14 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
-      <span *ngIf="modal?.id && !modal?.isView">
-        {{ "Edit" | translate }} {{ model?.name || ("Loading" | translate) }}
-      </span>
-      <span *ngIf="modal?.id && modal?.isView">{{ model?.name || ("Loading" | translate) }}</span>
+      <span *ngIf="modal?.id && !modal?.isView"
+        >{{ "Edit" | translate }}
+        {{ model?.name || ("Loading" | translate) }}</span
+      >
+      <span *ngIf="modal?.id && modal?.isView">{{
+        model?.name || ("Loading" | translate)
+      }}</span>
     </div>
-
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips" class="form-content">
@@ -112,7 +114,6 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
   encapsulation: ViewEncapsulation.None,
   standalone: false
 })
-
 export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType> {
   constructor(
     fb: FormBuilder,
@@ -126,7 +127,6 @@ export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType>
   isRoomTypeEdit: boolean = true;
   isRoomTypeRemove: boolean = true;
 
-
   override ngOnInit(): void {
     if (this.isLoading()) return;
     this.initControl();
@@ -134,9 +134,15 @@ export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType>
   }
 
   override initControl(): void {
-    const { nameExistValidator, required, nameMaxLengthValidator } = CommonValidators;
+    const {
+      nameExistValidator,
+      required,
+      nameMaxLengthValidator,
+      integerValidator,
+    } = CommonValidators;
     this.frm = this.fb.group({
-      name: [null,
+      name: [
+        null,
         [required, nameMaxLengthValidator],
         [nameExistValidator(this.service, this.modal?.id)],
       ],
@@ -155,7 +161,11 @@ export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType>
     this.frm.patchValue({
       id: this.model.id,
       name: this.model.name,
-      maxOccupancy: this.model.maxOccupancy ?? 0,
+      maxOccupancy: this.model.maxOccupancy,
+      occupancy: this.model.occupancy,
+      netArea: this.model.netArea,
+      grossArea: this.model.grossArea,
+      note: this.model.note,
     });
   }
 }

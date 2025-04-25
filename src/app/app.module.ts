@@ -137,6 +137,8 @@ import { ItemTypeListComponent } from "./pages/item-type/item-type-list.componen
 import { ItemTypeOperationComponent } from "./pages/item-type/item-type-operation.component";
 import { ItemTypeDeleteComponent } from "./pages/item-type/item-type-delete.component";
 import { RoomTypeListComponent } from "./pages/room-type/room-type-list.component";
+import { ItemTypeSelectComponent } from "./pages/item-type/item-type-select.component";
+import { ItemDeleteComponent } from "./pages/item/item-delete.component";
 
 export function app_Init(settingsHttpService: SettingHttpService) {
   return () => settingsHttpService.initializeApp();
@@ -286,11 +288,13 @@ export class CustomTranslate implements TranslateLoader {
     // Item
     ItemListComponent,
     ItemOperationComponent,
-    ItemTypeDeleteComponent,
+    ItemDeleteComponent,
 
     // Item Type
     ItemTypeListComponent,
     ItemTypeOperationComponent,
+    ItemTypeDeleteComponent,
+    ItemTypeSelectComponent,
   ],
   bootstrap: [AppComponent],
     imports: [

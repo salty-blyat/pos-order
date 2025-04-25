@@ -44,7 +44,7 @@
   "province": "Province",
   "remove": "Remove",
   "report": "Report",
-  "Row is in used!": "Row is in used!",
+  "Row is in used": "Row is in used",
   "row_not_found":  "No Data",
   "save": "Save",
   "search": "Search...",
@@ -369,6 +369,7 @@
   "leaves": "Leave",
   "leave_site": "Leave site ?",
   "are_you_sure_save": "Are you sure to save this?",
-  "Mission & Overtime Report": "Mission & Overtime Report"
+  "Mission & Overtime Report": "Mission & Overtime Report",
+  "Size": "Size"
 }
 
