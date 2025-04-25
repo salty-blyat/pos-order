@@ -66,7 +66,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
                                   <th class="col-header" nzWidth="5%"></th>
                               </tr>
                               </thead>
-                              <tbody formArrayName="tags" cdkDropList (cdkDropListDropped)="onDropped($event)">
+                              <tbody cdkDropListLockAxis="y" formArrayName="tags" cdkDropList (cdkDropListDropped)="onDropped($event)">
                               <ng-container *ngFor="let item of tags?.controls; let i = index">
                                   <tr [formGroupName]="i" cdkDrag cdkDragLockAxis="y"
                                       [cdkDragDisabled]="this.modal?.isView">

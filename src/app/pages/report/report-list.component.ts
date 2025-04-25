@@ -90,7 +90,7 @@ import { NotificationService } from "../../utils/services/notification.service";
             </tr>
           </thead>
           <tbody
-            cdkDropList
+            cdkDropList cdkDropListLockAxis="y"
             (cdkDropListDropped)="drop($event)"
             [cdkDropListData]="list"
           >

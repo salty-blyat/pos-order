@@ -78,7 +78,7 @@ import { UnitUiService } from "./unit-ui.service";
             </tr>
           </thead>
           <tbody
-            cdkDropList
+            cdkDropList cdkDropListLockAxis="y"
             (cdkDropListDropped)="drop($event)"
             [cdkDropListData]="lists()"
           >

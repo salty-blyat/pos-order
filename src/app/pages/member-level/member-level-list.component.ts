@@ -80,7 +80,7 @@ import { SIZE_COLUMNS } from "../../const";
             </tr>
           </thead>
           <tbody
-            cdkDropList
+            cdkDropList cdkDropListLockAxis="y"
             (cdkDropListDropped)="drop($event)"
             [cdkDropListData]="lists()"
           >

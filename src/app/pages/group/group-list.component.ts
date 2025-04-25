@@ -80,6 +80,7 @@ import { GroupUiService } from "./group-ui.service";
           </thead>
           <tbody
             cdkDropList
+            cdkDropListLockAxis="y"
             (cdkDropListDropped)="drop($event)"
             [cdkDropListData]="lists()"
           >

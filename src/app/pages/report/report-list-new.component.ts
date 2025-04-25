@@ -45,7 +45,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               nz-menu
               nzMode="inline"
               class="sider-menu"
-              cdkDropList
+              cdkDropList cdkDropListLockAxis="y"
               (cdkDropListDropped)="drop($event)"
               [cdkDropListData]="lists()"
             >
