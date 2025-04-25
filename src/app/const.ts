@@ -93,7 +93,7 @@ export const LANGUAGES: {
 ];
 
 export const SIZE_COLUMNS = {
-  DRAG: "30px",
+  DRAG: "20px",
   ID: "45px",
   NAME: "200px",
   CODE: "100px",

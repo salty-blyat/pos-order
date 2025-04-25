@@ -292,7 +292,7 @@ export let ParamSelectComponent = {
               [ngStyle]="{ height: isView ? '365px' : 'calc(100vh - 240px)' }"
             >
               <div
-                cdkDropList
+                cdkDropList cdkDropListLockAxis="y"
                 (cdkDropListDropped)="drop($event)"
                 style="margin-right: 5px"
               >
