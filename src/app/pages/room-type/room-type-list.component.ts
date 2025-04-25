@@ -17,14 +17,14 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
-          <div class="filter-box">
+          <div nz-col>
             <app-filter-input 
                 (filterChanged)="searchText.set($event); param().pageIndex = 1; search();" 
                 storageKey="room-type-list-search">
             </app-filter-input>
           </div>
         </div>
-        <div>
+        <div nz-col>
           <button
             *ngIf="isRoomTypeAdd()"
             nz-button
@@ -91,12 +91,7 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
                   </ng-template>
                   <ng-container *ngIf="isRoomTypeEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
-                      <i
-                        nz-icon
-                        nzType="edit"
-                        nzTheme="outline"
-                        style="padding-right: 5px"
-                      ></i>
+                      <i nz-icon nzType="edit" nzTheme="outline"></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
@@ -104,15 +99,10 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
                     <a
                       *nzSpaceItem
                       nz-typography
-                      style="color: #F31313"
+                      class="delete"
                       (click)="uiService.showDelete(data.id || 0)"
                     >
-                      <i
-                        nz-icon
-                        nzType="delete"
-                        nzTheme="outline"
-                        style="padding-right: 5px"
-                      ></i>
+                      <i nz-icon nzType="delete" nzTheme="outline"></i>
                       {{ "Delete" | translate }}
                     </a>
                   </ng-container>
