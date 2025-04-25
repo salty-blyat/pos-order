@@ -88,6 +88,7 @@ export class SettingComponent implements OnInit {
   isCancelPolicyList: boolean = true;
   isItemList: boolean = true;
   isItemTypeList: boolean = true;
+  isGroupList: boolean = true;
   ngOnInit(): void {
     this.setting = [
       {
@@ -128,6 +129,12 @@ export class SettingComponent implements OnInit {
             url: `${this.urlPart}/item-unit`,
             label: "ItemUnit",
             isList: this.isItemUnitList,
+          },
+          {
+            icon: "container",
+            url: `${this.urlPart}/group`,
+            label: "Group",
+            isList: this.isGroupList,
           },
         ],
       },
