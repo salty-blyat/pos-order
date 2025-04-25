@@ -144,6 +144,12 @@ import { MemberLevelDeleteComponent } from "./pages/member-level/member-level-de
 import { UnitListComponent } from "./pages/unit/unit-list.component";
 import { UnitOperationComponent } from "./pages/unit/unit-operation.component";
 import { UnitDeleteComponent } from "./pages/unit/unit-delete.component";
+import { ItemUnitListComponent } from "./pages/item-unit/item-unit-list.component";
+import { ItemUnitOperationComponent } from "./pages/item-unit/item-unit-operation.component";
+import { ItemUnitDeleteComponent } from "./pages/item-unit/item-unit-delete.component";
+import { GroupDeleteComponent } from "./pages/group/group-delete.component";
+import { GroupListComponent } from "./pages/group/group-list.component";
+import { GroupOperationComponent } from "./pages/group/group-operation.component";
 export function app_Init(settingsHttpService: SettingHttpService) {
   return () => settingsHttpService.initializeApp();
 }
@@ -308,6 +314,16 @@ export class CustomTranslate implements TranslateLoader {
     UnitListComponent,
     UnitOperationComponent,
     UnitDeleteComponent,
+
+    // item unit
+    ItemUnitListComponent,
+    ItemUnitOperationComponent,
+    ItemUnitDeleteComponent,
+
+    // group
+    GroupListComponent,
+    GroupOperationComponent,
+    GroupDeleteComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

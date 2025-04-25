@@ -20,7 +20,7 @@ import { SettingService } from "../../../app-setting";
     </div>
     <div class="modal-content">
       <nz-spin *ngIf="loading" style="position: absolute; top: 50%; left: 50%"></nz-spin>
-      <form nz-form [formGroup]="frm" (ngSubmit)="onSubmit()" [nzAutoTips]="autoTips">
+      <form nz-form [formGroup]="frm"  [nzAutoTips]="autoTips">
         <div nz-row>
           <div nz-col [nzSpan]="14">
             <nz-form-item>

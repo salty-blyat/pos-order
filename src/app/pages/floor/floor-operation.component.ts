@@ -24,7 +24,7 @@ import {FloorUiService} from "./floor-ui.service";
             <form
                     nz-form
                     [formGroup]="frm"
-                    (ngSubmit)="onSubmit()"
+                    
                     [nzAutoTips]="autoTips"
             >
                 <nz-form-item>

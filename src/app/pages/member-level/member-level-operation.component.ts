@@ -28,7 +28,7 @@ import { MemberLevelUiService } from "./member-level-ui.component";
       <form
         nz-form
         [formGroup]="frm"
-        (ngSubmit)="onSubmit()"
+        
         [nzAutoTips]="autoTips"
       >
         <nz-form-item>

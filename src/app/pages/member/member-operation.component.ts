@@ -28,7 +28,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
       <form
           nz-form
           [formGroup]="frm"
-          (ngSubmit)="onSubmit()"
+          
           [nzAutoTips]="autoTips"
       >
         <nz-form-item>

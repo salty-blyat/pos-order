@@ -29,7 +29,7 @@ import { Observable } from "rxjs";
       <form
         nz-form
         [formGroup]="frm"
-        (ngSubmit)="onSubmit()"
+        
         [nzAutoTips]="autoTips"
       >
         <div nz-row>

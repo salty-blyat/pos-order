@@ -1,11 +1,12 @@
 import { Component, computed } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
-import { UnitService, Unit } from "./unit.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
 import { SIZE_COLUMNS } from "../../const";
 import { Observable } from "rxjs";
-import { UnitUiService } from "./unit-ui.service";
+import { ItemUnitService } from "./item-unit.service";
+import { ItemUnit } from "./item-unit.service";
+import { ItemUnitUiService } from "./item-unit-ui.service";
 
 @Component({
   selector: "app-unit-list",
@@ -19,7 +20,7 @@ import { UnitUiService } from "./unit-ui.service";
         <div nz-row>
           <div style="width: 220px; margin-right: 4px;">
             <app-filter-input
-              storageKey="unit-list-search"
+              storageKey="item-unit-list-search"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
@@ -38,7 +39,7 @@ import { UnitUiService } from "./unit-ui.service";
         </div>
         <div>
           <button
-            *ngIf="isUnitAdd"
+            *ngIf="isItemUnitAdd"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -107,13 +108,13 @@ import { UnitUiService } from "./unit-ui.service";
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isUnitEdit">
+                  <ng-container *ngIf="isItemUnitEdit">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i nz-icon nzType="edit" nzTheme="outline"></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isUnitRemove">
+                  <ng-container *ngIf="isItemUnitRemove">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -135,19 +136,19 @@ import { UnitUiService } from "./unit-ui.service";
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
 })
-export class UnitListComponent extends BaseListComponent<Unit> {
+export class ItemUnitListComponent extends BaseListComponent<ItemUnit> {
   constructor(
-    service: UnitService,
-    uiService: UnitUiService,
+    service: ItemUnitService,
+    uiService: ItemUnitUiService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute
   ) {
     super(service, uiService, sessionStorageService, "unit-list");
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isUnitAdd: boolean = true;
-  isUnitEdit: boolean = true;
-  isUnitRemove: boolean = true;
-  isUnitView: boolean = true;
+  isItemUnitAdd: boolean = true;
+  isItemUnitEdit: boolean = true;
+  isItemUnitRemove: boolean = true;
+  isItemUnitView: boolean = true;
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

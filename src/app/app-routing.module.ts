@@ -24,6 +24,8 @@ import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
 import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
 import { UnitListComponent } from "./pages/unit/unit-list.component";
+import { ItemUnitListComponent } from "./pages/item-unit/item-unit-list.component";
+import { GroupListComponent } from "./pages/group/group-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -165,6 +167,22 @@ const routes: Routes = [
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Unit", url: null },
+        ],
+      },
+      {
+        path: "setting/group",
+        component: GroupListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Group", url: null },
+        ],
+      },
+      {
+        path: "setting/item-unit",
+        component: ItemUnitListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "ItemUnit", url: null },
         ],
       },
       {
