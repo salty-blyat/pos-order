@@ -66,6 +66,10 @@ body {
     border-radius: $border-radius !important;
   }
 
+  .ant-menu-inline{
+    border-right-width: 0;
+  }
+
   .ant-checkbox-checked::after {
     border-radius: $border-radius !important;
   }

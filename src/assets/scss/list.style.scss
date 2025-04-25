@@ -46,6 +46,19 @@ nz-content{
   }
 }
 
+.edit{
+  color: var(--ant-primary-color);
+}
+.delete{
+  color: var(--ant-error-color);
+}
+.delete:hover{
+  color: var(--ant-error-color);
+}
+.default{
+  color: var(--ant-default-color);
+}
+
 th::before{
   display: none !important;
 }

@@ -128,7 +128,6 @@ import { RoomSelectComponent } from "./pages/room/room-select.component";
 import { AppVersionService } from "./utils/services/app-version.service";
 import { NzFlexDirective } from "ng-zorro-antd/flex";
 import { InputNumberComponent } from "./utils/components/input-number.component";
-import { RoomOperationAddComponent } from "./pages/room/room-operation-add.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { MemberOperationComponent } from "./pages/member/member-operation.component";
 import { ItemListComponent } from "./pages/item/item-list.component";
@@ -278,7 +277,6 @@ export class CustomTranslate implements TranslateLoader {
     RoomDeleteComponent,
     RoomAdvancedFilterComponent,
     RoomSelectComponent,
-    RoomOperationAddComponent,
 
     //tag
     TagGroupListComponent,

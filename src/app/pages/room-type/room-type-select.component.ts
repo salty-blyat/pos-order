@@ -47,7 +47,7 @@ import { RoomType, RoomTypeService } from './room-type.service';
         [nzValue]="item.id"
         [nzLabel]="item?.name + ''"
       >
-        <span class="b-name">{{ item.name }}</span>
+        <span>{{ item.name }}</span>
       </nz-option>
       <nz-option *ngIf="loading" nzDisabled nzCustomContent>
         <i nz-icon nzType="loading" class="loading-icon"></i>
@@ -73,13 +73,6 @@ import { RoomType, RoomTypeService } from './room-type.service';
         flex: 0 0 auto;
         padding: 6px 8px;
         display: block;
-      }
-      .b-code {
-        font-weight: bolder;
-      }
-      .b-name {
-        font-size: 12px;
-        padding-left: 5px;
       }
       ::ng-deep cdk-virtual-scroll-viewport {
         min-height: 34px;

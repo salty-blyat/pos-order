@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {  FormBuilder, } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { BaseOperationComponent } from '../../utils/components/base-operation.component';
@@ -76,7 +76,7 @@ import {SETTING_KEY, SystemSettingService} from "../system-setting/system-settin
                         [disabled]="!frm.valid"
                         (click)="onSubmit($event)"
                 >
-                    <i *ngIf="isLoading" nz-icon nzType="loading"></i>
+                    <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
                     {{ 'Save' | translate }}
                 </button>
                 <button nz-button nzType="default" (click)="cancel()">
@@ -84,20 +84,20 @@ import {SETTING_KEY, SystemSettingService} from "../system-setting/system-settin
                 </button>
             </div>
             <div *ngIf="modal?.isView">
-                <a *ngIf="!isLoading">
+                <a *ngIf="!isLoading()">
                     <i nz-icon nzType="edit" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Edit' | translate }}</span>
                 </a>
-                <nz-divider nzType="vertical" *ngIf="!isLoading"></nz-divider>
+                <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
                 <a
                         nz-typography
                         nzType="danger"
-                        *ngIf="!isLoading"
+                        *ngIf="!isLoading()"
                 >
                     <i nz-icon nzType="delete" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Delete' | translate }}</span>
                 </a>
-                <nz-divider nzType="vertical" *ngIf="!isLoading"></nz-divider>
+                <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
                 <a nz-typography (click)="cancel()" style="color: gray;">
                     <i nz-icon nzType="close" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Close' | translate }}</span>
@@ -105,8 +105,9 @@ import {SETTING_KEY, SystemSettingService} from "../system-setting/system-settin
             </div>
         </div>
     `,
-    styleUrls: ['../../../assets/scss/operation_page.scss'],
-    standalone: false
+    styleUrls: ['../../../assets/scss/operation.style.scss'],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None,
 })
 export class BlockOperationComponent extends BaseOperationComponent<Block> {
     constructor(

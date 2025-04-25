@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, inject, OnInit, ViewEncapsulation} from '@angular/core';
 import { RoomUiService } from './room-ui.service';
 import {NZ_MODAL_DATA, NzModalRef} from 'ng-zorro-antd/modal';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
@@ -24,27 +24,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
             ></app-floor-select>
           </nz-form-control>
         </nz-form-item>
-        <nz-form-item>
-          <nz-form-label>{{ 'RoomType' | translate }}</nz-form-label>
-          <nz-form-control>
-            <app-room-type-select
-                formControlName="roomTypeId"
-                [showAllOption]="true" 
-            ></app-room-type-select>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label>{{ 'HouseKeepingStatus' | translate }}</nz-form-label>
-          <nz-form-control>
-            <app-lookup-item-select
-              [lookupType]="lookupType.HouseKeepingStatus"
-              [showAllOption]="true"
-              [typeLabelAll]="'AllHouseKeepingStatus' | translate"
-              formControlName="houseKeepingStatusId"
-            ></app-lookup-item-select>
-          </nz-form-control>
-        </nz-form-item>
-        
         @if (filterTypes?.roomStatus){
           <nz-form-item>
             <nz-form-label>{{ 'RoomStatus' | translate }}</nz-form-label>
@@ -84,20 +63,15 @@ import { FormBuilder, FormGroup } from '@angular/forms';
     </div>
   `,
     styles: [`
-      .modal-content {
-        padding: 5px 20px;
-      }
-      :host ::ng-deep .ant-form-item {
-        margin-bottom: 12px;
-      }
-
-      :host ::ng-deep .ant-form-item-label > label {
+      .ant-form-item-label > label {
         font-size: 12px;
         font-weight: 700;
         color: rgba(0, 0, 0, 0.45);
       }
   `],
-    standalone: false
+  styleUrls: ['../../../assets/scss/operation.style.scss'],
+  standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class RoomAdvancedFilterComponent implements OnInit {
   constructor(

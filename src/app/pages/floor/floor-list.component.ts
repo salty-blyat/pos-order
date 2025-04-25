@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {Component, input, model} from '@angular/core';
 import { BaseListComponent } from '../../utils/components/base-list.component';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import {Floor, FloorService} from "./floor.service";
@@ -20,7 +20,7 @@ import {SIZE_COLUMNS} from "../../const";
               "
             ></app-filter-input>
           </div>
-            <div *ngIf="draged" >
+            <div *ngIf="draged()" >
                 <button style="margin-left: 5px"
                         nz-button
                         nzType="primary"
@@ -125,7 +125,15 @@ export class FloorListComponent extends BaseListComponent<Floor> {
     ) {
         super(service, uiService, sessionStorageService, 'floor-list');
     }
-    blockId  = input(0);
+    blockId  = model<number>(0);
+
+    override ngOnInit() {
+        super.ngOnInit();
+        setTimeout(() => {
+            console.log(this.blockId())
+        })
+
+    }
 
     override search() {
         if(this.blockId()){
@@ -139,7 +147,7 @@ export class FloorListComponent extends BaseListComponent<Floor> {
                     });
                 }
                 super.search(filters);
-            }, 50);
+            }, 100);
         }
 
     }

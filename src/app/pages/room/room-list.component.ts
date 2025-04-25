@@ -7,40 +7,40 @@ import { Room, RoomAdvancedFilter, RoomService } from "./room.service";
 import { RoomUiService } from "./room-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import {Filter, QueryParam} from "../../utils/services/base-api.service";
+import {SIZE_COLUMNS} from "../../const";
 
 @Component({
   selector: "app-room-list",
   template: `
       <nz-header>
         <div nz-row>
-          <div>
+          <div nz-col>
             <app-filter-input
               storageKey="room-list-search"
-              (filterChanged)="
-                searchText.set($event); param().pageIndex = 1; search()
-              "
+              (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
             >
             </app-filter-input>
           </div>
-          <div>
-            <app-floor-select
-              storageKey="room-list-floor-select-filter"
-              [showAllOption]="true"
-              (valueChanged)="floorId = $event; param().pageIndex = 1; search()"
-            ></app-floor-select>
+          <div nz-col>
+              <app-room-type-select
+                      [showAllOption]="true"
+                      storageKey="room-list-room-type-filter"
+                      (valueChanged)="roomTypeId.set($event); param().pageIndex = 1; search()"
+              ></app-room-type-select>
           </div>
           <div>
             <nz-badge [nzDot]="hasAdvancedFilter()">
               <button
                 nz-button
                 nzType="default"
+                (click)="uiService.showAdvancedFilter(advancedStoreKey)"
               >
                 <a nz-icon nzType="align-right" nzTheme="outline"></a>
               </button>
             </nz-badge>
           </div>
         </div>
-        <div>
+        <div nz-col>
           <button
             *ngIf="isRoomTypeAdd()"
             nz-button
@@ -73,51 +73,34 @@ import {Filter, QueryParam} from "../../utils/services/base-api.service";
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th nzWidth="100px">{{ "RoomNumber" | translate }}</th>
               <th nzWidth="150px">{{ "RoomType" | translate }}</th>
               <th nzWidth="100px">{{ "Floor" | translate }}</th>
-              <th nzWidth="150px">{{ "HouseKeepingStatus" | translate }}</th>
               <th nzWidth="150px">{{ "Status" | translate }}</th>
-              <th>{{ "Tags" | translate }}</th>
-              <th></th>
+              <th>{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
-                {{
-                  i
-                    | rowNumber
-                      : {
-                          index: param().pageIndex || 0,
-                          size: param().pageSize || 0
-                        }
-                }}
+                {{ i | rowNumber: { index: param().pageIndex || 0, size: param().pageSize || 0} }}
               </td>
               <td nzEllipsis>
-                <ng-container *ngIf="isRoomTypeView()">
-                  <a (click)="uiService.showView(data.id!)">{{
-                    data.roomNumber
-                  }}</a>
-                </ng-container>
-                <ng-container *ngIf="!isRoomTypeView()">
-                  {{ data.roomNumber }}
-                </ng-container>
+                  @if (isRoomTypeView()) {
+                      <a (click)="uiService.showView(data.id!)">
+                          {{ data.roomNumber }}
+                      </a> 
+                  } @else {
+                      <span>{{ data.roomNumber }}</span>
+                  }
               </td>
               <td nzEllipsis>{{ data.roomTypeName }}</td>
               <td nzEllipsis>{{ data.floorName }}</td>
-              <td nzEllipsis>{{ data.houseKeepingStatusNameKh }}</td>
-              <td nzEllipsis>{{ data.statusNameKh }}</td>
-              <td nzEllipsis>
-                <div class="show-tag">
-                  <nz-tag *ngFor="let tag of data.tagNames; let last = last"
-                    >{{ tag }}{{ last ? "" : " " }}
-                  </nz-tag>
-                </div>
-              </td>
-
-              <td>
+              <td nzEllipsis>{{ data.status}}</td>
+              <td nzEllipsis>{{ data.note }}</td>
+              <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -163,20 +146,19 @@ import {Filter, QueryParam} from "../../utils/services/base-api.service";
 export class RoomListComponent extends BaseListComponent<Room> {
   constructor(
     service: RoomService,
-    uiService: RoomUiService,
+    override uiService: RoomUiService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute
   ) {
     super(service, uiService, sessionStorageService, "room-list");
   }
 
-  houseKeepingStatusId: number = 0;
-  roomTypeId: number = 0;
+  roomTypeId = signal<number>(0);
   floorId: number = 0;
   roomStatusId: number = 0;
   tagIds: number[] = [];
   lookupType = LOOKUP_TYPE;
-  advancedStoreKey = "room-advanced-filter";
+  readonly advancedStoreKey = "room-list-advanced-filter";
 
   isRoomTypeAdd = signal<boolean>(true);
   isRoomTypeEdit = signal<boolean>(true);
@@ -184,22 +166,33 @@ export class RoomListComponent extends BaseListComponent<Room> {
   isRoomTypeView = signal<boolean>(true);
   hasAdvancedFilter = signal<boolean>(false);
 
-  // override ngOnInit() {
-  //   this.refreshSub = this.uiService.refresher.subscribe((result) => {
-  //     if (result.key === "advanced-filter-room") {
-  //       this.setAdvancedFilter(result.value);
-  //     }
-  //     this.getAdvancedFilter();
-  //     this.search();
-  //   });
-  //   this.getAdvancedFilter();
-  //   if (this.hasAdvancedFilter) {
-  //     this.setAdvancedFilter(
-  //       this.sessionStorageService.getValue(this.advancedStoreKey)
-  //     );
-  //   }
-  //   this.search();
-  // }
+  override ngOnInit() {
+    this.refreshSub = this.uiService.refresher.subscribe((result) => {
+      if (result.key === "advanced-filter-room") {
+        this.setAdvancedFilter(result.value);
+      }
+      this.getAdvancedFilter();
+      this.search();
+    });
+    this.getAdvancedFilter();
+    if (this.hasAdvancedFilter()) {
+      this.setAdvancedFilter(
+        this.sessionStorageService.getValue(this.advancedStoreKey)
+      );
+    }
+    this.search();
+  }
+
+    getAdvancedFilter() {
+        const advancedFilter: RoomAdvancedFilter = this.sessionStorageService.getValue(this.advancedStoreKey);
+        this.hasAdvancedFilter.set(advancedFilter?.isAdvancedFilter ?? false);
+    }
+    setAdvancedFilter(advancedFilter: RoomAdvancedFilter) {
+        this.roomStatusId = advancedFilter.roomStatusId;
+        this.tagIds = advancedFilter.tagIds.filter((id: number) => id !== 0);
+        this.floorId = advancedFilter.floorId;
+        this.roomTypeId.set(advancedFilter.roomTypeId);
+    }
 
   override search() {
       const filters: Filter[] = [];
@@ -209,19 +202,12 @@ export class RoomListComponent extends BaseListComponent<Room> {
       if (this.floorId) {
         filters.push({ field: "floorId", operator: "eq", value: this.floorId });
       }
-      if (this.houseKeepingStatusId) {
-        filters.push({
-          field: "houseKeepingStatus",
-          operator: "eq",
-          value: this.houseKeepingStatusId,
-        });
-      }
 
-      if (this.roomTypeId) {
+      if (this.roomTypeId()) {
         filters.push({
           field: "roomTypeId",
           operator: "eq",
-          value: this.roomTypeId,
+          value: this.roomTypeId(),
         });
       }
 
@@ -242,4 +228,6 @@ export class RoomListComponent extends BaseListComponent<Room> {
       }
       super.search(filters);
   }
+
+    protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

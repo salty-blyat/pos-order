@@ -1,13 +1,12 @@
-import { Component, computed, OnDestroy } from "@angular/core";
-import { Observable, timer } from "rxjs";
+import { Component, computed, signal } from "@angular/core";
+import { Observable } from "rxjs";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
 import { BlockUiService } from "./block-ui.service";
 import { Block, BlockService } from "./block.service";
-import { QueryParam } from "../../utils/services/base-api.service";
-import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { NotificationService } from "../../utils/services/notification.service";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-block-list",
@@ -33,7 +32,7 @@ import { NotificationService } from "../../utils/services/notification.service";
             <ul
               nz-menu
               nzMode="inline"
-              class="sider-menu"
+              class="menu-custom-block"
               cdkDropList
               style="margin-top: 10px"
               (cdkDropListDropped)="drop($event)"
@@ -44,6 +43,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                 cdkDrag
                 class="block-ordering"
                 cdkDragLockAxis="y"
+                nz-flex nzAlign="center"
               >
                 <span
                   nz-icon
@@ -54,9 +54,9 @@ import { NotificationService } from "../../utils/services/notification.service";
                 ></span>
                 <li
                   nz-menu-item
-                  style="padding-left: 36px;height: 30px"
+                  style="padding-left: 36px;height: 40px;margin: 0;"
                   (click)="changeBlockId(data.id!)"
-                  [nzSelected]="blockId === data.id!"
+                  [nzSelected]="blockId() === data.id!"
                 >
                   {{ data.name }}
                 </li>
@@ -77,7 +77,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <ul nz-menu>
                     <li
-                      class="menu-item"
+                      class="menu-item edit"
                       nz-menu-item
                       (click)="uiService.showEdit(data.id!)"
                     >
@@ -89,10 +89,9 @@ import { NotificationService } from "../../utils/services/notification.service";
                       </span>
                     </li>
                     <li
-                      class="menu-item"
+                      class="menu-item delete"
                       nz-menu-item
                       (click)="uiService.showDelete(data.id!)"
-                      style="color: var(--danger-color);"
                     >
                       <span>
                         <i nz-icon nzType="delete"></i>&nbsp;
@@ -104,7 +103,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                   </ul>
                 </nz-dropdown-menu>
               </ul>
-              <div *ngIf="!draged">
+              <div *ngIf="!draged()">
                 <button
                   nz-button
                   nzType="dashed"
@@ -115,7 +114,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                   {{ "Add" | translate }}
                 </button>
               </div>
-              <div *ngIf="draged">
+              <div *ngIf="draged()">
                 <button
                   nz-button
                   nzType="dashed"
@@ -130,13 +129,34 @@ import { NotificationService } from "../../utils/services/notification.service";
           </nz-sider>
         </div>
         <div style="padding-left: 10px;">
-          <app-floor-list [blockId]="this.blockId"></app-floor-list>
+          <app-floor-list *ngIf="blockId()" [blockId]="blockId()"></app-floor-list>
         </div>
       </nz-content>
     </nz-layout>
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  styles: [`
+    .block-move{
+      position: absolute;
+      left: 10px;
+      font-size: 12px;
+    }
+    
+    .menu-dropdown{
+      position: absolute;
+      right: 10px;
+      i[nz-icon]{
+        font-size: 18px !important;
+      }
+    }
+    
+    .menu-custom-block{
+      background: #fff;
+      gap: 6px;
+      display: grid;
+    }
+  `]
 })
 export class BlockListComponent extends BaseListComponent<Block> {
   constructor(
@@ -154,61 +174,44 @@ export class BlockListComponent extends BaseListComponent<Block> {
       notificationService
     );
   }
+  readonly blockSelectedKey = 'block-selected-key';
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  blockId: number = 0;
-  // draged:boolean = false;
+  blockId = signal(parseInt(this.sessionStorageService.getValue(this.blockSelectedKey) ?? 0) ?? 0);
+
 
   override ngOnInit() {
-    this.refreshSub = this.uiService.refresher.subscribe((result) => {
-      this.search();
-    });
     super.ngOnInit();
   }
-  // override search(): void {
-  //     if (this.loading) {
-  //         return;
-  //     }
-  //     this.loading = true;
-  //     setTimeout(() => {
-  //         const filters: any[] = [
-  //             { field: 'name', operator: 'contains', value: this.searchText },
-  //         ];
-  //         this.param.filters = JSON.stringify(filters);
-  //         this.service.search(this.param).subscribe({
-  //             next: (result: { results: Block[]; param: QueryParam }) => {
-  //                 this.loading = false;
-  //                 this.lists = result.results;
-  //                 timer(100).subscribe(() => {
-  //                     this.blockId = this.lists[0].id!;
-  //                 });
-  //                 this.param.rowCount = result.param.rowCount;
-  //             },
-  //             error: (error: any) => {
-  //                 console.log(error);
-  //             },
-  //         });
-  //     }, 50);
-  // }
+
+  override search() {
+    if (this.isLoading()) return;
+    this.isLoading.set(true);
+    setTimeout(() => {
+      const filters: Filter[] = [{
+        field: "search",
+        operator: "contains",
+        value: this.searchText(),
+      }];
+      this.param().filters = JSON.stringify(filters);
+      this.service.search(this.param()).subscribe({
+        next: (result: { results: Block[]; param: QueryParam }) => {
+          this.isLoading.set(true);
+          this.lists.set(result.results);
+          if (!this.blockId()){
+            this.blockId.set(result.results[0].id!);
+          }
+          this.param().rowCount = result.param.rowCount;
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+        },
+      });
+    }, 50);
+  }
 
   changeBlockId(id: number) {
-    this.blockId = id;
+    this.sessionStorageService.setValue({key: this.blockSelectedKey, value: id});
+    this.blockId.set(id);
   }
-  // saveOrdering() {
-  //     this.loading = true;
-  //     let newLists: Block[] = [];
-
-  //     this.lists.forEach((item, i) => {
-  //         item.ordering = i + 1;
-  //         newLists.push(item);
-  //     });
-  //     this.service.updateOrdering(newLists).subscribe(() => {
-  //         this.loading = false;
-  //         this.draged = false;
-  //         this.notificationService.successNotification('Successfully Saved');
-  //     });
-  // }
-  // drop(event: CdkDragDrop<Block[], any, any>): void {
-  //     moveItemInArray(this.lists, event.previousIndex, event.currentIndex);
-  //     if (event.previousIndex !== event.currentIndex) this.draged = true;
-  // }
 }

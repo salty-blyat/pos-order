@@ -182,12 +182,14 @@ nz-header {
     img {
       width: 100%;
       height: 100%;
+      object-fit: scale-down;
     }
   }
 
   .tenant-name {
     color: #000000c2;
     font-size: 12px;
+    white-space: nowrap;
   }
 
   .app-center-icon{

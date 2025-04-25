@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {  FormBuilder, } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { BaseOperationComponent } from '../../utils/components/base-operation.component';
@@ -64,7 +64,7 @@ import {FloorUiService} from "./floor-ui.service";
                         [disabled]="!frm.valid"
                         (click)="onSubmit($event)"
                 >
-                    <i *ngIf="isLoading" nz-icon nzType="loading"></i>
+                    <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
                     {{ 'Save' | translate }}
                 </button>
                 <button nz-button nzType="default" (click)="cancel()">
@@ -72,21 +72,21 @@ import {FloorUiService} from "./floor-ui.service";
                 </button>
             </div>
             <div *ngIf="modal?.isView">
-                <a *ngIf="!isLoading" (click)="uiService.showEdit(model.id!)">
+                <a *ngIf="!isLoading()" (click)="uiService.showEdit(model.id!)">
                     <i nz-icon nzType="edit" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Edit' | translate }}</span>
                 </a>
-                <nz-divider nzType="vertical" *ngIf="!isLoading"></nz-divider>
+                <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
                 <a
                         nz-typography
                         nzType="danger"
-                        *ngIf="!isLoading"
+                        *ngIf="!isLoading()"
                         (click)="uiService.showDelete(model.id!)"
                 >
                     <i nz-icon nzType="delete" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Delete' | translate }}</span>
                 </a>
-                <nz-divider nzType="vertical" *ngIf="!isLoading"></nz-divider>
+                <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
                 <a nz-typography (click)="cancel()" style="color: gray;">
                     <i nz-icon nzType="close" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Close' | translate }}</span>
@@ -94,8 +94,9 @@ import {FloorUiService} from "./floor-ui.service";
             </div>
         </div>
     `,
-    styleUrls: ['../../../assets/scss/operation_page.scss'],
-    standalone: false
+    styleUrls: ['../../../assets/scss/operation.style.scss'],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None,
 })
 export class FloorOperationComponent extends BaseOperationComponent<Floor> {
     constructor(

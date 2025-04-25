@@ -54,7 +54,7 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
     if (this.isLoading()) return;
     this.isLoading.set(true);
     setTimeout(() => {
-      filters?.push({
+      filters?.unshift({
         field: "search",
         operator: "contains",
         value: this.searchText(),

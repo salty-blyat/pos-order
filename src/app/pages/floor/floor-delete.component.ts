@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, ViewEncapsulation} from "@angular/core";
 import {FormBuilder, Validators} from "@angular/forms";
 import {NzModalRef} from "ng-zorro-antd/modal";
 import {BaseDeleteComponent} from "../../utils/components/base-delete.component";
@@ -55,8 +55,9 @@ import {FloorUiService} from "./floor-ui.service";
             </button>
         </div>
     `,
-    styleUrls: ['../../../assets/scss/operation_modal.scss'],
-    standalone: false
+    styleUrls: ['../../../assets/scss/operation.style.scss'],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None,
 })
 export class FloorDeleteComponent extends BaseDeleteComponent<Floor>{
 
