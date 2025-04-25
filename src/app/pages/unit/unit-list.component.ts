@@ -1,15 +1,14 @@
-import { Component, computed, signal } from "@angular/core";
+import { Component, computed } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
+import { UnitService, Unit } from "./unit.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-
-import { MemberLevel, MemberLevelService } from "./member-level.service";
-import { MemberLevelUiService } from "./member-level-ui.component";
 import { ActivatedRoute } from "@angular/router";
-import { Observable } from "rxjs";
 import { SIZE_COLUMNS } from "../../const";
+import { Observable } from "rxjs";
+import { UnitUiService } from "./unit-ui.service";
 
 @Component({
-  selector: "app-member-level-list",
+  selector: "app-unit-list",
   template: `
     <nz-layout>
       <app-breadcrumb
@@ -74,7 +73,6 @@ import { SIZE_COLUMNS } from "../../const";
                 #
               </th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="100px">{{ "LevelStay" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th class="col-action" [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
@@ -100,9 +98,6 @@ import { SIZE_COLUMNS } from "../../const";
               </td>
               <td nzEllipsis style="flex: 3;" title="{{ data.name }}">
                 {{ data.name }}
-              </td>
-              <td nzWidth="100" nzEllipsis style="flex: 2;" title="{{ data.levelStay }}">
-                {{ data.levelStay }}
               </td>
               <td nzEllipsis style="flex: 2;" title="{{ data.note }}">
                 {{ data.note }}
@@ -140,14 +135,14 @@ import { SIZE_COLUMNS } from "../../const";
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
 })
-export class MemberLevelListComponent extends BaseListComponent<MemberLevel> {
+export class UnitListComponent extends BaseListComponent<Unit> {
   constructor(
-    service: MemberLevelService,
-    uiService: MemberLevelUiService,
+    service: UnitService,
+    uiService: UnitUiService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute
   ) {
-    super(service, uiService, sessionStorageService, "member-level-list");
+    super(service, uiService, sessionStorageService, "unit-list");
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isMemberLevelAdd: boolean = true;

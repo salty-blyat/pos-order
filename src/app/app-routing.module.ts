@@ -23,6 +23,7 @@ import { MemberListComponent } from "./pages/member/member-list.component";
 import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
 import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
+import { UnitListComponent } from "./pages/unit/unit-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -156,6 +157,14 @@ const routes: Routes = [
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "MemberLevel", url: null },
+        ],
+      },
+      {
+        path: "setting/unit",
+        component: UnitListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Unit", url: null },
         ],
       },
       {

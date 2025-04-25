@@ -74,6 +74,7 @@ export class SettingComponent implements OnInit {
   isCurrencyList: boolean = true;
   isReportList: boolean = true;
   isMemberLevelList: boolean = true;
+  isUnitList: boolean = true;
   isSystemSettingList: boolean = true;
   isAutoNumberList: boolean = true;
   isBlockList: boolean = true;
@@ -114,6 +115,12 @@ export class SettingComponent implements OnInit {
             url: `${this.urlPart}/member-level`,
             label: "MemberLevel",
             isList: this.isMemberLevelList,
+          },
+          {
+            icon: "container",
+            url: `${this.urlPart}/unit`,
+            label: "Unit",
+            isList: this.isUnitList,
           },
         ],
       },
