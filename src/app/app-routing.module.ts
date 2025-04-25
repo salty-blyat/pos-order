@@ -22,6 +22,7 @@ import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
+import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -142,19 +143,19 @@ const routes: Routes = [
         ],
       },
       {
-        path: "setting/tag-group",
-        component: TagGroupListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "TagGroup", url: null },
-        ],
-      },
-      {
         path: "setting/block",
         component: BlockListComponent,
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Block", url: null },
+        ],
+      },
+      {
+        path: "setting/member-level",
+        component: MemberLevelListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "MemberLevel", url: null },
         ],
       },
       {

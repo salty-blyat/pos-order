@@ -139,6 +139,9 @@ import { ItemTypeDeleteComponent } from "./pages/item-type/item-type-delete.comp
 import { RoomTypeListComponent } from "./pages/room-type/room-type-list.component";
 import { ItemTypeSelectComponent } from "./pages/item-type/item-type-select.component";
 import { ItemDeleteComponent } from "./pages/item/item-delete.component";
+import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
+import { MemberLevelOperationComponent } from "./pages/member-level/member-level-operation.component";
+import { MemberLevelDeleteComponent } from "./pages/member-level/member-level-delete.component";
 
 export function app_Init(settingsHttpService: SettingHttpService) {
   return () => settingsHttpService.initializeApp();
@@ -285,6 +288,11 @@ export class CustomTranslate implements TranslateLoader {
     MemberListComponent,
     MemberOperationComponent,
 
+    // member level
+    MemberLevelListComponent,
+    MemberLevelOperationComponent,
+    MemberLevelDeleteComponent,
+
     // Item
     ItemListComponent,
     ItemOperationComponent,
@@ -297,32 +305,32 @@ export class CustomTranslate implements TranslateLoader {
     ItemTypeSelectComponent,
   ],
   bootstrap: [AppComponent],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        FormsModule,
-        ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: "never"}),
-        BrowserAnimationsModule,
-        NgZorroAntdModule,
-        CommonModule,
-        DragDropModule,
-        ScrollingModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader, // Main provider for loader
-                useClass: CustomTranslate, // Custom Loader
-                deps: [HttpClient, SettingService], // Dependencies which helps serving loader
-            },
-            isolate: false,
-        }),
-        CalendarModule.forRoot({
-            provide: DateAdapter,
-            useFactory: adapterFactory,
-        }),
-        NzFlexDirective,
-        TranslateModule,
-        ReactiveFormsModule,
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: "never" }),
+    BrowserAnimationsModule,
+    NgZorroAntdModule,
+    CommonModule,
+    DragDropModule,
+    ScrollingModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader, // Main provider for loader
+        useClass: CustomTranslate, // Custom Loader
+        deps: [HttpClient, SettingService], // Dependencies which helps serving loader
+      },
+      isolate: false,
+    }),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
+    NzFlexDirective,
+    TranslateModule,
+    ReactiveFormsModule,
+  ],
   providers: [
     {
       provide: NZ_I18N,

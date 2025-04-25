@@ -1,14 +1,14 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
-import { ItemType, ItemTypeService } from "./item-type.service";
 import { FormBuilder } from "@angular/forms";
-import { NzModalRef } from "ng-zorro-antd/modal";
-import { ItemTypeUiService } from "./item-type-ui.service.component";
-import { SettingService } from "../../app-setting";
 import { CommonValidators } from "../../utils/services/common-validators";
+import { NzModalRef } from "ng-zorro-antd/modal";
+import { MemberLevelService } from "./member-level.service";
+import { MemberLevel } from "./member-level.service";
+import { MemberLevelUiService } from "./member-level-ui.component";
 
 @Component({
-  selector: "app-item-type-operation",
+  selector: "app-member-level-operation",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
@@ -37,6 +37,14 @@ import { CommonValidators } from "../../utils/services/common-validators";
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
             <input nz-input formControlName="name" />
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "LevelStay" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+            <input nz-input formControlName="levelStay" />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -72,27 +80,27 @@ import { CommonValidators } from "../../utils/services/common-validators";
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading && isItemTypeEdit"
+          *ngIf="!isLoading && isMemberLevelEdit"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isItemTypeEdit"
+          *ngIf="!isLoading() && isMemberLevelEdit"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isItemTypeRemove"
+          *ngIf="!isLoading() && isMemberLevelRemove"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isItemTypeRemove"
+          *ngIf="!isLoading() && isMemberLevelRemove"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -104,40 +112,40 @@ import { CommonValidators } from "../../utils/services/common-validators";
   styleUrls: ["../../../assets/scss/operation_page.scss"],
   standalone: false,
 })
-export class ItemTypeOperationComponent extends BaseOperationComponent<ItemType> {
+export class MemberLevelOperationComponent extends BaseOperationComponent<MemberLevel> {
   constructor(
     fb: FormBuilder,
-    ref: NzModalRef<ItemTypeOperationComponent>,
-    override service: ItemTypeService,
-    override uiService: ItemTypeUiService,
-    private settingService: SettingService
+    ref: NzModalRef<MemberLevelOperationComponent>,
+    service: MemberLevelService,
+    uiService: MemberLevelUiService
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isItemTypeEdit: boolean = true;
-  isItemTypeRemove: boolean = true;
+  isMemberLevelEdit: boolean = true;
+  isMemberLevelRemove: boolean = true;
 
   override initControl(): void {
     const {
       required,
-      nameExistValidator,
       noteMaxLengthValidator,
-      codeExistValidator,
+      nameExistValidator,
+      integerValidator,
     } = CommonValidators;
-
     this.frm = this.fb.group({
       name: [
         null,
         [required, noteMaxLengthValidator()],
         [nameExistValidator(this.service, this.modal?.id)],
       ],
-      note: [null, [noteMaxLengthValidator()]],
+      levelStay: [null, [required, integerValidator]],
+      note: [null],
     });
   }
 
   override setFormValue() {
     this.frm.setValue({
+      levelStay: this.model.levelStay,
       name: this.model.name,
       note: this.model.note,
     });

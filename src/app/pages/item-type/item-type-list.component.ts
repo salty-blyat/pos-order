@@ -87,7 +87,7 @@ import { SIZE_COLUMNS } from "../../const";
                 }}</a>
               </td>
               <td nzEllipsis>{{ data.note }}</td>
-              <td>
+              <td nzAlign="right">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>

@@ -1,13 +1,21 @@
-import {Component, signal} from "@angular/core";
-import { Member, MemberService } from "./member.service";
+import { Component, computed, signal } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { MemberUiService } from "./member-ui.service";
+
+import { MemberLevel, MemberLevelService } from "./member-level.service";
+import { MemberLevelUiService } from "./member-level-ui.component";
+import { ActivatedRoute } from "@angular/router";
+import { Observable } from "rxjs";
+import { SIZE_COLUMNS } from "../../const";
 
 @Component({
-  selector: "app-member-list",
+  selector: "app-member-level-list",
   template: `
     <nz-layout>
+      <app-breadcrumb
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
+      ></app-breadcrumb>
       <nz-header>
         <div nz-row>
           <div style="width: 220px; margin-right: 4px;">
@@ -18,10 +26,20 @@ import { MemberUiService } from "./member-ui.service";
               "
             ></app-filter-input>
           </div>
+          <div *ngIf="draged()">
+            <button
+              nz-button
+              nzType="primary"
+              (click)="saveOrdering()"
+              [nzLoading]="isLoading()"
+            >
+              {{ "Save" | translate }}
+            </button>
+          </div>
         </div>
         <div>
           <button
-            *ngIf="isMemberAdd"
+            *ngIf="isMemberLevelAdd"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -51,22 +69,24 @@ import { MemberUiService } from "./member-ui.service";
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
-              <th class="col-code-max" nzColumnKey="code">
-                {{ "Code" | translate }}
-              </th>
-              <th>{{ "Name" | translate }}</th>
-              <th>{{ "Sex" | translate }}</th>
-              <th>{{ "Unit" | translate }}</th>
-              <th>{{ "Level" | translate }}</th>
-              <th>{{ "Phone" | translate }}</th>
-              <th>{{ "Nationality" | translate }}</th>
+              <th nzColumnKey="drag" [nzWidth]="SIZE_COLUMNS.DRAG"></th>
+              <th class="col-header col-rowno" >#</th>
+              <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
+              <th>{{ "LevelStay" | translate }}</th>
+              <th>{{ "Note" | translate }}</th>
               <th class="col-action"></th>
             </tr>
           </thead>
-          <tbody>
-            <tr *ngFor="let data of lists(); let i = index">
-              <td nzEllipsis>
+          <tbody
+            cdkDropList
+            (cdkDropListDropped)="drop($event)"
+            [cdkDropListData]="lists()"
+          >
+            <tr *ngFor="let data of lists(); let i = index" cdkDrag>
+              <td style=" cursor: move;" cdkDragHandle>
+                <span nz-icon nzType="holder" nzTheme="outline"></span>
+              </td>
+              <td nzEllipsis style="flex: 1;">
                 {{
                   i
                     | rowNumber
@@ -76,31 +96,25 @@ import { MemberUiService } from "./member-ui.service";
                         }
                 }}
               </td>
-              <td nzEllipsis>
-                <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
-              </td>
-              <td nzEllipsis title="{{ data.name }}">
+              <td nzEllipsis style="flex: 3;" title="{{ data.name }}">
                 {{ data.name }}
               </td>
-              <td nzEllipsis title="{{ data.sex }}">{{ data.sex }}</td>
-              <td nzEllipsis title="{{ data.unit }}">{{ data.unit }}</td>
-              <td nzEllipsis title="{{ data.level }}">{{ data.level }}</td>
-              <td nzEllipsis title="{{ data.phone }}">{{ data.phone }}</td>
-              <td nzEllipsis title="{{ data.nationality }}">
-                {{ data.nationality }}
+              <td nzEllipsis style="flex: 2;" title="{{ data.levelStay }}">
+                {{ data.levelStay }}
               </td>
-              <td>
+              <td nzEllipsis style="flex: 2;" title="{{ data.note }}">{{ data.note }}</td>
+              <td nzAlign="right">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isMemberEdit">
+                  <ng-container *ngIf="isMemberLevelEdit">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i nz-icon nzType="edit" nzTheme="outline"></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isMemberRemove">
+                  <ng-container *ngIf="isMemberLevelRemove">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -122,52 +136,20 @@ import { MemberUiService } from "./member-ui.service";
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
 })
-export class MemberListComponent extends BaseListComponent<Member> {
+export class MemberLevelListComponent extends BaseListComponent<MemberLevel> {
   constructor(
-    service: MemberService,
-    uiService: MemberUiService,
+    service: MemberLevelService,
+    uiService: MemberLevelUiService,
     sessionStorageService: SessionStorageService,
+    private activated: ActivatedRoute
   ) {
-    super(service, uiService, sessionStorageService, "member-list");
+    super(service, uiService, sessionStorageService, "member-level-list");
   }
-  isMemberAdd: boolean = true;
-  isMemberEdit: boolean = true;
-  isMemberRemove: boolean = true;
-  isMemberView: boolean = true;
+  breadcrumbData = computed<Observable<any>>(() => this.activated.data);
+  isMemberLevelAdd: boolean = true;
+  isMemberLevelEdit: boolean = true;
+  isMemberLevelRemove: boolean = true;
+  isMemberLevelView: boolean = true;
+  readonly SIZE_COLUMNS = SIZE_COLUMNS;
 
-  override lists = signal([
-    {
-      id: 1,
-      code: "123",
-      name: "Sok Dara",
-      sexId: 1,
-      sex: "Male",
-      unit: "HR Department",
-      level: "Manager",
-      phone: "012345678",
-      nationality: "Cambodian",
-    },
-    {
-      id: 2,
-      code: "123",
-      name: "Chanthy Mey",
-      sexId: 1,
-      sex: "Male",
-      unit: "Finance",
-      level: "Officer",
-      phone: "098765432",
-      nationality: "Cambodian",
-    },
-    {
-      id: 3,
-      code: "123",
-      name: "Kim Lee",
-      sexId: 1,
-      sex: "Male",
-      unit: "IT",
-      level: "Developer",
-      phone: "087654321",
-      nationality: "Korean",
-    },
-  ]);
 }

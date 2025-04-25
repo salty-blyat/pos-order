@@ -10,7 +10,7 @@ import { SettingService } from "../../app-setting";
 import { Image } from "../lookup/lookup-item/lookup-item.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { Observable } from "rxjs";
-
+import { ItemTypeSelectComponent } from "../item-type/item-type-select.component";
 @Component({
   selector: "app-item-operation",
   template: `
@@ -57,9 +57,11 @@ import { Observable } from "rxjs";
                 "ItemType" | translate
               }}</nz-form-label>
               <nz-form-control [nzSpan]="14" nzHasFeedback>
-                <!-- <nz-select formControlName="itemTypeId">
-                                <nz-option *ngFor="let type of itemTypes" [nzValue]="type.id" [nzLabel]="type.name"></nz-option>
-                              </nz-select> -->
+                <app-item-type-select
+                  [storageKey]="'item-type-filter'"
+                  formControlName="itemTypeId"
+                  [addOption]="true"
+                ></app-item-type-select>
               </nz-form-control>
             </nz-form-item>
 
@@ -84,6 +86,7 @@ import { Observable } from "rxjs";
                   (nzChange)="handleUploadProfile($event)"
                   [nzShowUploadList]="nzShowIconList"
                   [nzShowButton]="file.length < 1"
+                  [nzDisabled]="modal?.isView"
                 >
                   <div>
                     <span nz-icon nzType="plus"></span>
@@ -111,7 +114,7 @@ import { Observable } from "rxjs";
           [disabled]="!frm.valid"
           (click)="onSubmit($event)"
         >
-          <i *ngIf="isLoading" nz-icon nzType="loading"></i>
+          <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
           {{ "Save" | translate }}
         </button>
         <button nz-button nzType="default" (click)="cancel()">
@@ -119,16 +122,16 @@ import { Observable } from "rxjs";
         </button>
       </div>
       <div *ngIf="modal?.isView">
-        <a *ngIf="!isLoading">
+        <a *ngIf="!isLoading()">
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading"></nz-divider>
-        <a nz-typography nzType="danger" *ngIf="!isLoading">
+        <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
+        <a nz-typography nzType="danger" *ngIf="!isLoading()">
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading"></nz-divider>
+        <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
           <span class="action-text"> {{ "Close" | translate }}</span>

@@ -38,7 +38,7 @@ import { ItemTypeUiService } from "./item-type-ui.service.component";
       <nz-option
         *ngIf="showAllOption"
         [nzValue]="0"
-        [nzLabel]="'AllItemType' | translate"
+        [nzLabel]="'AllItemTypes' | translate"
       ></nz-option>
       <nz-option
         *ngFor="let item of lists"

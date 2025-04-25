@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { SIDE_EXPAND_COLLAPSED } from "../../const";
 import { LocalStorageService } from "../../utils/services/localStorage.service";
 
@@ -17,42 +17,42 @@ interface Setting {
   selector: "app-setting",
   template: `
     <div class="content">
-    <nz-layout>
-      <nz-header>
-        <div nz-row>
-          <div class="setting-title">
-            <i nzType="setting" nz-icon nzTheme="outline"></i>
-            <span>{{ "Setting" | translate }}</span>
-          </div>
-        </div>
-      </nz-header>
-      <nz-content  class="setting-content">
-        <div nz-row>
-          <ng-container *ngFor="let data of setting">
-            <div *ngIf="isListGroup(data)">
-              <div class="content-header">
-                <p nz-typography>{{ data.groupName | translate }}</p>
-              </div>
-              <ng-container *ngFor="let subData of data.subName">
-                <div class="content-body" *ngIf="subData.isList">
-                  <a
-                    routerLink="{{ subData.url }}"
-                    (click)="setLastVisited(subData.url!)"
-                  >
-                    <i
-                      nzType="{{ subData.icon }}"
-                      nz-icon
-                      nzTheme="outline"
-                    ></i>
-                    <span>{{ subData.label | translate }}</span>
-                  </a>
-                </div>
-              </ng-container>
+      <nz-layout>
+        <nz-header>
+          <div nz-row>
+            <div class="setting-title">
+              <i nzType="setting" nz-icon nzTheme="outline"></i>
+              <span>{{ "Setting" | translate }}</span>
             </div>
-          </ng-container>
-        </div>
-      </nz-content>
-    </nz-layout>
+          </div>
+        </nz-header>
+        <nz-content class="setting-content">
+          <div nz-row>
+            <ng-container *ngFor="let data of setting">
+              <div *ngIf="isListGroup(data)">
+                <div class="content-header">
+                  <p nz-typography>{{ data.groupName | translate }}</p>
+                </div>
+                <ng-container *ngFor="let subData of data.subName">
+                  <div class="content-body" *ngIf="subData.isList">
+                    <a
+                      routerLink="{{ subData.url }}"
+                      (click)="setLastVisited(subData.url!)"
+                    >
+                      <i
+                        nzType="{{ subData.icon }}"
+                        nz-icon
+                        nzTheme="outline"
+                      ></i>
+                      <span>{{ subData.label | translate }}</span>
+                    </a>
+                  </div>
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
+        </nz-content>
+      </nz-layout>
     </div>
   `,
   styleUrls: ["../../../assets/scss/setting.style.scss"],
@@ -73,13 +73,13 @@ export class SettingComponent implements OnInit {
   isLookupList: boolean = true;
   isCurrencyList: boolean = true;
   isReportList: boolean = true;
+  isMemberLevelList: boolean = true;
   isSystemSettingList: boolean = true;
   isAutoNumberList: boolean = true;
   isBlockList: boolean = true;
   isRoomTypeList: boolean = true;
   isRoomList: boolean = true;
   isAmenityGroup: boolean = true;
-  isTagGroup: boolean = true;
   isStaffList: boolean = true;
   isHousekeepingList: boolean = true;
   isRateOptionList: boolean = true;
@@ -109,26 +109,19 @@ export class SettingComponent implements OnInit {
             label: "Currency",
             isList: this.isCurrencyList,
           },
-
           {
             icon: "container",
-            url: `${this.urlPart}/tag-group`,
-            label: "TagGroup",
-            isList: this.isTagGroup,
+            url: `${this.urlPart}/member-level`,
+            label: "MemberLevel",
+            isList: this.isMemberLevelList,
           },
         ],
       },
       {
         groupName: "Room",
         subName: [
-          // {
-          //   icon: "container",
-          //   url: `${this.urlPart}/room`,
-          //   label: "Room",
-          //   isList: this.isRoomList,
-          // },
           {
-            icon: "container",
+            icon: "con  tainer",
             url: `${this.urlPart}/room-type`,
             label: "RoomType",
             isList: this.isRoomTypeList,

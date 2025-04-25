@@ -102,7 +102,7 @@ import { SIZE_COLUMNS } from "../../const";
                 ></nz-avatar>
               </td>
               <td nzEllipsis>{{ data.itemTypeId }}</td>
-              <td nzAlign="center">
+              <td>
                 <label
                   nz-checkbox
                   [ngModel]="data.isTrackSerial"
@@ -110,7 +110,7 @@ import { SIZE_COLUMNS } from "../../const";
                 ></label>
               </td>
               <td nzEllipsis>{{ data.note }}</td>
-              <td>
+              <td nzAlign="right">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
