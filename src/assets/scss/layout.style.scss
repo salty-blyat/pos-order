@@ -116,24 +116,20 @@ nz-header {
 
 .sidebar-logo {
   position: relative;
-  height: 50px;
-  line-height: 48px;
+  //height: 50px;
+  //line-height: 48px;
   overflow: hidden;
-  background: #f1f2f6;
+  //background: #f1f2f6;
   transition: all 0.3s;
   display: flex;
+  width: 100%;
   justify-content: space-between;
 
-  #img {
-    display: flex;
-    justify-content: center;
-    height: 100%;
-    align-items: center;
-  }
   > nz-icon {
-    font-size: 18px;
+    font-size: 14px;
+    cursor: pointer;
     color: var(--ant-primary-color);
-    margin-right: 16px;
+    //margin-right: 16px;
   }
 }
 

@@ -28,21 +28,29 @@ export interface Type {
         [(nzCollapsed)]="isCollapsed"
         [nzTrigger]="null"
       >
-        <div class="sidebar-logo">
-          <a target="_blank" class="logo-link">
-            <img [src]="authService.app?.iconUrl" alt="logo" />
-            <h1 *ngIf="!isCollapsed" class="modal-header-ellipsis">{{ appName }}</h1>
-          </a>
-          <nz-icon nzType="menu-fold" nzTheme="outline" />
-        </div>
-        <div class="tenant">
-          <div class="tenant-logo">
-            <img [src]="authService.tenant?.logo" alt="tenant" style="margin-right: 4px;"/>
-            <span class="tenant-name" *ngIf="!isCollapsed">{{ authService.tenant?.name }}</span>
+        <div class="header-content">
+          <div class="sidebar-logo">
+            <a target="_blank" class="logo-link">
+              <img [src]="authService.app?.iconUrl" alt="logo" />
+              <h1 *ngIf="!isCollapsed" class="modal-header-ellipsis">{{ appName }}</h1>
+            </a>
+            <nz-icon nzType="down" nzPlacement="bottomRight" nz-dropdown nzTrigger="click"  [nzDropdownMenu]="menu"/>
           </div>
-          <div class="app-center-icon">
-            <nz-icon nzType="appstore"  (click)="redirectToMainUrl()" nzTheme="outline"/>
-          </div>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item>
+                <div class="tenant">
+                  <div class="tenant-logo">
+                    <img [src]="authService.tenant?.logo" alt="tenant" style="margin-right: 4px;"/>
+                    <span class="tenant-name" *ngIf="!isCollapsed">{{ authService.tenant?.name }}</span>
+                  </div>
+                  <div class="app-center-icon">
+                    <nz-icon nzType="appstore"  (click)="redirectToMainUrl()" nzTheme="outline"/>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </nz-dropdown-menu>
         </div>
         <div
           style="display: flex; flex-direction: column; justify-content: space-between; height: calc(100vh - 120px);"
@@ -248,10 +256,10 @@ export interface Type {
         font-size: 12px;
         margin-top: 8px;
       }
-
-      .tenant {
-        margin: 6px 16px 12px;
-        padding: 4px 8px;
+      
+      .header-content{
+        margin: 6px 12px 12px;
+        padding: 8px 8px;
         border-radius: 8px;
         background-color: #fff;
         //border: 1px solid #dcdcdc;
@@ -261,9 +269,24 @@ export interface Type {
         font-size: 16px;
         color: black;
         cursor: default;
+      }
+
+      .tenant {
+        //margin: 6px 16px 12px;
+        //padding: 4px 8px;
+        border-radius: 8px;
+        background-color: #fff;
+        //border: 1px solid #dcdcdc;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 16px;
+        color: black;
+        cursor: default;
+        width: 190px;
 
         .tenant-logo {
-          height: 32px;
+          height: 28px;
           border-radius: 50%;
           padding: 6px 6px 6px 0;
           //border: 1px solid #e0e0e0;
@@ -299,9 +322,6 @@ export interface Type {
         position: fixed;
         width: 100%;
         overflow-y: auto;
-      }
-      .logo-link {
-        margin: 0 20.5px;
       }
       .sider {
         background-color: #f3f3f3;
