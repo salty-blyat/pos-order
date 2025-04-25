@@ -40,6 +40,7 @@ export class BaseDeleteComponent<T extends SharedDomain> {
         switchMap((x: any) => {
           if (!x.can) {
             this.errMessage = x.message;
+            console.log(this.errMessage)
             this.frm.disable();
           }
           return this.service.find(this.modal.id);

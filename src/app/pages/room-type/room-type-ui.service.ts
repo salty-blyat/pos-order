@@ -9,50 +9,15 @@ import { RoomTypeOperationComponent } from "./room-type-operation.component";
   providedIn: "root",
 })
 export class RoomTypeUiService extends BaseUiService {
-  constructor(modalService: NzModalService, private mainPage: MainPageService) {
-    super(modalService, RoomTypeOperationComponent, RoomTypeDeleteComponent, "580px", "580px", "580px", "450px");
-  }
-  override showAdd(componentId: any = ''): void {
-    this.modalService.create({
-      nzContent: RoomTypeOperationComponent,
-      nzFooter: null,
-      nzClosable: true,
-      nzWidth: '100%',
-      nzBodyStyle: { ...this.mainPage.getModalBodyStyle() },
-      nzStyle: this.mainPage.getModalFullPageSize(),
-      nzMaskClosable: false,
-      nzOnOk: (e: any) => {
-        this.refresher.emit({ key: 'added', value: e.model, componentId });
-      }
-    });
-  }
-
-  override showEdit(id: number): void {
-    this.modalService.create({
-      nzContent: RoomTypeOperationComponent,
-      nzData: { id },
-      nzFooter: null,
-      nzClosable: true,
-      nzWidth: '100%',
-      nzBodyStyle: { ...this.mainPage.getModalBodyStyle() },
-      nzStyle: this.mainPage.getModalFullPageSize(),
-      nzMaskClosable: false,
-      nzOnOk: (e: any) => {
-        this.refresher.emit({ key: 'edited', value: e.model });
-      }
-    });
-  }
-
-  override showView(id: number): any {
-    this.modalService.create({
-      nzContent: RoomTypeOperationComponent,
-      nzData: { id, isView: true },
-      nzClosable: true,
-      nzFooter: null,
-      nzWidth: '100%',
-      nzBodyStyle: { ...this.mainPage.getModalBodyStyle() },
-      nzStyle: this.mainPage.getModalFullPageSize(),
-      nzMaskClosable: false,
-    });
+  constructor(modalService: NzModalService) {
+    super(
+      modalService,
+      RoomTypeOperationComponent,
+      RoomTypeDeleteComponent,
+      "540px",
+      "540px",
+      "540px",
+      "450px"
+    );
   }
 }

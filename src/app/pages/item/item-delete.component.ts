@@ -1,10 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { ItemType, ItemTypeService } from "./item-type.service";
-import { ItemTypeUiService } from "./item-type-ui.service.component";
 import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
+import { ItemService } from "./item.service";
+import { Item } from "./item.service";
+import { ItemUiService } from "./item-ui.service";
 
 @Component({
   selector: "app-item-type-delete",
@@ -70,11 +71,11 @@ import { BaseDeleteComponent } from "../../utils/components/base-delete.componen
   styleUrls: ["../../../assets/scss/operation_modal.scss"],
   standalone: false,
 })
-export class ItemTypeDeleteComponent extends BaseDeleteComponent<ItemType> {
+export class ItemDeleteComponent extends BaseDeleteComponent<Item> {
   constructor(
-    service: ItemTypeService,
-    uiService: ItemTypeUiService,
-    ref: NzModalRef<ItemTypeDeleteComponent>,
+    service: ItemService,
+    uiService: ItemUiService,
+    ref: NzModalRef<ItemDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);

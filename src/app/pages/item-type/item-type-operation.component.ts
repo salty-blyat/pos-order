@@ -25,12 +25,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
         *ngIf="loading"
         style="position: absolute; top: 50%; left: 50%"
       ></nz-spin>
-      <form
-        nz-form
-        [formGroup]="frm"
-        (ngSubmit)="onSubmit()"
-        [nzAutoTips]="autoTips"
-      >
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
             "Name" | translate

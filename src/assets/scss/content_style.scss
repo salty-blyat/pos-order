@@ -4,6 +4,11 @@
 .scrollbar::-webkit-scrollbar {
   width: 5px;
 }
+
+// * {
+//   border: 1px solid red; for debugging
+// }
+
 .scrollbar::-webkit-scrollbar-track {
   background: #e2e2e2;
   border-radius: 10px;
@@ -26,17 +31,19 @@
   overflow-x: hidden;
 }
 
-.filter-container{
-  div{
+
+
+.filter-container {
+  div {
     width: 190px;
-    nz-badge{
-      button{
+    nz-badge {
+      button {
         vertical-align: -4px !important;
       }
     }
   }
 }
-textarea{
+textarea {
   border-radius: var(--ant-border-radius) !important;
 }
 
@@ -47,8 +54,8 @@ textarea{
 }
 
 nz-layout {
-  height: 100%;
-  min-height: 350px;
+  // height: 100%;
+  // min-height: 350px;
   background-color: inherit;
   // padding: 0px 24px;
   .ant-breadcrumb .anticon {
@@ -116,14 +123,20 @@ nz-layout {
         box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
         margin-right: 20px;
         border: unset;
-        ::ng-deep .ant-card-actions > li {
-          margin: 4px 0;
-        }
+        // ::ng-deep .ant-card-actions > li {
+        //   margin: 4px 0;
+        // }
       }
     }
   }
 
   nz-table {
+    border: 1px solid var(--ant-table-border-color);
+    border-radius: var(--ant-border-radius);
+    ::ng-deep .ant-pagination {
+      padding-right: 0.5rem !important;
+    }
+
     .col-header {
       font-weight: bold;
       font-size: 13px;
@@ -134,6 +147,9 @@ nz-layout {
       font-weight: bold;
       font-size: 13px;
       color: rgba(0, 0, 0, 0.6);
+    }
+    tbody > tr > td:last-child {
+      text-align: right;
     }
     .action-row {
       .action-text {
@@ -152,7 +168,7 @@ nz-layout {
       }
     }
 
-    max-height:calc(100vh - 150px) ;
+    max-height: calc(100vh - 150px);
     overflow-y: auto;
 
     th {
@@ -164,7 +180,7 @@ nz-layout {
     .col-numeric {
       text-align: right;
     }
-    .col-center{
+    .col-center {
       text-align: center;
     }
   }
@@ -207,7 +223,9 @@ nz-layout {
 ::ng-deep
   .ant-table-thead
   > tr
-  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+  > th:not(:last-child):not(.ant-table-selection-column):not(
+    .ant-table-row-expand-icon-cell
+  ):not([colspan])::before {
   width: 0 !important;
 }
 input[type="number"]::-webkit-inner-spin-button,
@@ -238,11 +256,11 @@ input[type="number"]::-webkit-outer-spin-button {
   height: calc(100vh - 290px) !important;
 }
 
-.show-tag{
+.show-tag {
   display: flex;
   flex-wrap: wrap;
   gap: 2px;
 }
 ::ng-deep .ant-tag {
-  margin: 0 ;
+  margin: 0;
 }

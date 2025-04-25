@@ -9,6 +9,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
 import { SettingService } from "../../app-setting";
 import { Image } from "../lookup/lookup-item/lookup-item.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-item-operation",
@@ -34,30 +35,38 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
         <div nz-row>
           <div nz-col [nzSpan]="16">
             <nz-form-item>
-              <nz-form-label [nzSpan]="7" nzRequired>{{ "Code" | translate }}</nz-form-label>
+              <nz-form-label [nzSpan]="7" nzRequired>{{
+                "Code" | translate
+              }}</nz-form-label>
               <nz-form-control [nzSpan]="14" nzHasFeedback>
                 <input nz-input formControlName="code" />
               </nz-form-control>
             </nz-form-item>
 
             <nz-form-item>
-              <nz-form-label [nzSpan]="7" nzRequired>{{ "Name" | translate }}</nz-form-label>
+              <nz-form-label [nzSpan]="7" nzRequired>{{
+                "Name" | translate
+              }}</nz-form-label>
               <nz-form-control [nzSpan]="14" nzHasFeedback>
                 <input nz-input formControlName="name" />
               </nz-form-control>
             </nz-form-item>
 
             <nz-form-item>
-              <nz-form-label [nzSpan]="7" nzRequired>{{ "ItemType" | translate }}</nz-form-label>
+              <nz-form-label [nzSpan]="7" nzRequired>{{
+                "ItemType" | translate
+              }}</nz-form-label>
               <nz-form-control [nzSpan]="14" nzHasFeedback>
-                <!-- <nz-select formControlName="itemTypeId">
-                  <nz-option *ngFor="let type of itemTypes" [nzValue]="type.id" [nzLabel]="type.name"></nz-option>
-                </nz-select> -->
+                <app-item-type-select
+                  formControlName="itemTypeId"
+                ></app-item-type-select>
               </nz-form-control>
             </nz-form-item>
 
             <nz-form-item>
-              <nz-form-label [nzSpan]="7">{{ "Note" | translate }}</nz-form-label>
+              <nz-form-label [nzSpan]="7">{{
+                "Note" | translate
+              }}</nz-form-label>
               <nz-form-control [nzSpan]="14">
                 <textarea nz-input formControlName="note" rows="3"></textarea>
               </nz-form-control>
@@ -71,9 +80,8 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
                 <nz-upload
                   [nzAction]="uploadUrl"
                   [(nzFileList)]="file"
-                  nzListType="picture-card"
+                  nzListType="picture-card" 
                   (nzChange)="handleUploadProfile($event)"
-                  [nzShowUploadList]="nzShowIconList"
                   [nzShowButton]="file.length < 1"
                 >
                   <div>
@@ -143,15 +151,6 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   image!: Image;
-  nzShowUploadList = {
-    showPreviewIcon: true,
-    showRemoveIcon: false,
-  };
-  nzShowIconList = {
-    showPreviewIcon: true,
-    showRemoveIcon: true,
-    showDownloadIcon: false,
-  };
 
   override initControl(): void {
     const {
@@ -175,7 +174,7 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
       ],
       image: [null],
       itemTypeId: [null],
-      isTrackSerial: [null],
+      isTrackSerial: [false],
       note: [null, [noteMaxLengthValidator()]],
     });
   }
@@ -207,5 +206,39 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
       return file;
     });
     this.file = fileList;
+  }
+
+  override onSubmit(e?: any) {
+    if (this.frm.valid && !this.loading) {
+      this.loading = true;
+      this.frm.patchValue({
+        image: this.file[0].url,
+      }); 
+      let operation$: Observable<Item> = this.service.add(
+        this.frm.getRawValue()
+      );
+      if (this.modal?.id) {
+        operation$ = this.service.edit({
+          ...this.frm.getRawValue(),
+          id: this.modal?.id,
+        });
+      }
+      if (e.detail === 1 || e.detail === 0) {
+        operation$.subscribe({
+          next: (result: Item) => {
+            this.model = result;
+            this.loading = false;
+            this.ref.triggerOk().then();
+          },
+          error: (error: any) => {
+            console.log(error);
+            this.loading = false;
+          },
+          complete: () => {
+            this.loading = false;
+          },
+        });
+      }
+    }
   }
 }

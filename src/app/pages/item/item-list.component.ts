@@ -1,10 +1,11 @@
-import {Component, computed, signal} from "@angular/core";
+import { Component, computed, signal } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Item, ItemService } from "./item.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ItemUiService } from "./item-ui.service";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
+import { SIZE_COLUMNS } from "../../const";
 
 @Component({
   selector: "app-item-list",
@@ -59,13 +60,16 @@ import { Observable } from "rxjs";
           <thead>
             <tr>
               <th class="col-header col-rowno">#</th>
-              <th class="col-code-max" nzColumnKey="code">
+              <th nzWidth="SIZE_COLUMNS.CODE" nzColumnKey="code">
                 {{ "Code" | translate }}
               </th>
-              <th>{{ "Name" | translate }}</th>
+              <th nzWidth="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th>{{ "Image" | translate }}</th>
               <th>{{ "ItemType" | translate }}</th>
-              <th>{{ "IsTrackSerial" | translate }}</th>
+              <th>
+                {{ "IsTrackSerial" | translate }}
+              </th>
+              <th nzWidth="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th class="col-action"></th>
             </tr>
           </thead>
@@ -82,15 +86,30 @@ import { Observable } from "rxjs";
                 }}
               </td>
               <td nzEllipsis>
-                <a *ngIf="isItemView()" (click)="uiService.showView(data.id!)">{{
-                  data.code
-                }}</a>
+                <a
+                  *ngIf="isItemView()"
+                  (click)="uiService.showView(data.id!)"
+                  >{{ data.code }}</a
+                >
                 <span *ngIf="!isItemView()">{{ data.code }}</span>
               </td>
               <td nzEllipsis>{{ data.name }}</td>
-              <td nzEllipsis>{{ data.image }}</td>
+              <td nzEllipsis>
+                <nz-avatar
+                  nzShape="square"
+                  [nzSize]="64"
+                  [nzSrc]="data.image"
+                ></nz-avatar>
+              </td>
               <td nzEllipsis>{{ data.itemTypeId }}</td>
-              <td nzEllipsis>{{ data.isTrackSerial }}</td>
+              <td nzAlign="center">
+                <label
+                  nz-checkbox
+                  [ngModel]="data.isTrackSerial"
+                  [nzDisabled]="true"
+                ></label>
+              </td>
+              <td nzEllipsis>{{ data.note }}</td>
               <td>
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
@@ -144,6 +163,7 @@ export class ItemListComponent extends BaseListComponent<Item> {
   ) {
     super(service, uiService, sessionStorageService, "item-list");
   }
+  protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isItemAdd = signal<boolean>(true);
   isItemEdit = signal<boolean>(true);
