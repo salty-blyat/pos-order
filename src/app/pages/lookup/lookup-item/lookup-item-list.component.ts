@@ -166,7 +166,7 @@ import { BaseListComponent } from "../../../utils/components/base-list.component
       </nz-content>
     </nz-layout>
   `,
-  styleUrls: ["../../../../assets/scss/content_style.scss"],
+  styleUrls: ["../../../../assets/scss/list.style.scss"],
   styles: [
     `
       ::ng-deep .ant-menu-light .ant-menu-submenu-active,

@@ -23,7 +23,6 @@ export class BaseUiService<T = NzSafeAny> {
       nzFooter: null,
       nzClosable: true,
       nzWidth: this.widthAdd,
-      // nzBodyStyle: { paddingBottom: '10px' },
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: 'added', value: e.model, componentId });
@@ -38,7 +37,6 @@ export class BaseUiService<T = NzSafeAny> {
       nzFooter: null,
       nzClosable: true,
       nzWidth: this.widthEdit,
-      // nzBodyStyle: { paddingBottom: '10px' },
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: 'edited', value: e.model });
@@ -53,7 +51,6 @@ export class BaseUiService<T = NzSafeAny> {
       nzClosable: true,
       nzFooter: null,
       nzWidth: this.widthView,
-      // nzBodyStyle: { paddingBottom: '10px' },
       nzMaskClosable: false,
     });
   }
@@ -65,7 +62,6 @@ export class BaseUiService<T = NzSafeAny> {
       nzClosable: true,
       nzFooter: null,
       nzWidth: this.widthDelete,
-      // nzBodyStyle: { paddingBottom: '10px' },
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: 'deleted', value: e.model });

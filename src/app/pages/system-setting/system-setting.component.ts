@@ -50,7 +50,7 @@ import { AuthService } from '../../helpers/auth.service';
       </nz-content>
     </nz-layout>
   `,
-    styleUrls: ['../../../assets/scss/content_style.scss'],
+    styleUrls: ["../../../assets/scss/list.style.scss"],
     styles: [
         `
       .inner-content {

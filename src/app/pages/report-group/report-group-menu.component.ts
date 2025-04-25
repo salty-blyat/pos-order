@@ -39,7 +39,7 @@ import { QueryParam } from '../../utils/services/base-api.service';
       </nz-content>
     </nz-layout>
   `,
-    styleUrls: ['../../../assets/scss/setting-style.scss'],
+    styleUrls: ['../../../assets/scss/setting.style.scss'],
     standalone: false
 })
 export class ReportGroupMenuComponent implements OnInit {

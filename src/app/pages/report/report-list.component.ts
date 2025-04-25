@@ -170,7 +170,7 @@ import { NotificationService } from "../../utils/services/notification.service";
       </nz-content>
     </nz-layout>
   `,
-  styleUrls: ["../../../assets/scss/content_style.scss"],
+  styleUrls: ["../../../assets/scss/list.style.scss"],
   styles: [
     `
       .menu-dropdown {

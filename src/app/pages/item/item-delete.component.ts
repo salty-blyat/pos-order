@@ -18,12 +18,12 @@ import { ItemUiService } from "./item-ui.service";
     </div>
     <div class="modal-content">
       <nz-spin
-        *ngIf="loading"
+        *ngIf="isLoading()"
         style="position: absolute; top: 50%; left: 50%"
       ></nz-spin>
 
-      <div *ngIf="errMessage && !loading" class="delete-error-message ">
-        <span nz-typography nzType="danger">{{ errMessage | translate }}</span>
+      <div *ngIf="errMessage() && !isLoading()" class="delete-error-message ">
+        <span nz-typography nzType="danger">{{ errMessage() | translate }}</span>
       </div>
 
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
@@ -60,7 +60,7 @@ import { ItemUiService } from "./item-ui.service";
         [disabled]="!frm.valid"
         (click)="onSubmit($event)"
       >
-        <i *ngIf="loading" nz-icon nzType="loading"></i>
+        <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
         {{ "Delete" | translate }}
       </button>
       <button nz-button nzType="default" (click)="cancel()">

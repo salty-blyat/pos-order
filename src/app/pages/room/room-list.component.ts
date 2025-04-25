@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, signal} from "@angular/core";
+import {Component, Input, OnInit, signal, ViewEncapsulation} from "@angular/core";
 import { ActivatedRoute, Data } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -11,10 +11,9 @@ import {Filter, QueryParam} from "../../utils/services/base-api.service";
 @Component({
   selector: "app-room-list",
   template: `
-    <nz-layout>
       <nz-header>
-        <div nz-row  >
-          <div class="filter-box">
+        <div nz-row>
+          <div>
             <app-filter-input
               storageKey="room-list-search"
               (filterChanged)="
@@ -23,7 +22,7 @@ import {Filter, QueryParam} from "../../utils/services/base-api.service";
             >
             </app-filter-input>
           </div>
-          <div class="filter-box">
+          <div>
             <app-floor-select
               storageKey="room-list-floor-select-filter"
               [showAllOption]="true"
@@ -81,7 +80,7 @@ import {Filter, QueryParam} from "../../utils/services/base-api.service";
               <th nzWidth="150px">{{ "HouseKeepingStatus" | translate }}</th>
               <th nzWidth="150px">{{ "Status" | translate }}</th>
               <th>{{ "Tags" | translate }}</th>
-              <th class="col-action"></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -156,17 +155,10 @@ import {Filter, QueryParam} from "../../utils/services/base-api.service";
           </tbody>
         </nz-table>
       </nz-content>
-    </nz-layout>
   `,
-  styleUrls: ["../../../assets/scss/content_style.scss"],
-  styles: [
-    `
-      :host ::ng-deep .ant-btn-icon-only {
-        vertical-align: middle;
-      }
-    `,
-  ],
-  standalone: false,
+    styleUrls: ["../../../assets/scss/list.style.scss"],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None,
 })
 export class RoomListComponent extends BaseListComponent<Room> {
   constructor(

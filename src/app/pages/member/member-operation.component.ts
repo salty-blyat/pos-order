@@ -13,73 +13,79 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
       <span *ngIf="modal?.id && !modal?.isView"
-        >{{ "Edit" | translate }}
+      >{{ "Edit" | translate }}
         {{ model?.code || ("Loading" | translate) }}</span
       >
       <span *ngIf="modal?.id && modal?.isView">{{
-        model?.code || ("Loading" | translate)
-      }}</span>
+          model?.code || ("Loading" | translate)
+        }}</span>
     </div>
     <div class="modal-content">
       <nz-spin
-        *ngIf="loading"
-        style="position: absolute; top: 50%; left: 50%"
+          *ngIf="isLoading"
+          style="position: absolute; top: 50%; left: 50%"
       ></nz-spin>
       <form
-        nz-form
-        [formGroup]="frm"
-        (ngSubmit)="onSubmit()"
-        [nzAutoTips]="autoTips"
+          nz-form
+          [formGroup]="frm"
+          (ngSubmit)="onSubmit()"
+          [nzAutoTips]="autoTips"
       >
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-            "Code" | translate
-          }}</nz-form-label>
+              "Code" | translate
+            }}
+          </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="code" />
+            <input nz-input formControlName="code"/>
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-            "Name" | translate
-          }}</nz-form-label>
+              "Name" | translate
+            }}
+          </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="name" />
+            <input nz-input formControlName="name"/>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-            "Sex" | translate
-          }}</nz-form-label>
+              "Sex" | translate
+            }}
+          </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
             <app-lookup-item-select formControlName="sexId"
-              [lookupType]="this.lookupItemType.GenderId"
+                                    [lookupType]="this.lookupItemType.GenderId"
             ></app-lookup-item-select>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-            "Unit" | translate
-          }}</nz-form-label>
+              "Unit" | translate
+            }}
+          </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
-            <input nz-input formControlName="unit" />
+            <input nz-input formControlName="unit"/>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-            "Level" | translate
-          }}</nz-form-label>
+              "Level" | translate
+            }}
+          </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="level" />
+            <input nz-input formControlName="level"/>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-            "Phone" | translate
-          }}</nz-form-label>
+              "Phone" | translate
+            }}
+          </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="phone" />
+            <input nz-input formControlName="phone"/>
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -87,12 +93,12 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
     <div *nzModalFooter>
       <div *ngIf="!modal?.isView">
         <button
-          nz-button
-          nzType="primary"
-          [disabled]="!frm.valid"
-          (click)="onSubmit($event)"
+            nz-button
+            nzType="primary"
+            [disabled]="!frm.valid"
+            (click)="onSubmit($event)"
         >
-          <i *ngIf="loading" nz-icon nzType="loading"></i>
+          <i *ngIf="isLoading" nz-icon nzType="loading"></i>
           {{ "Save" | translate }}
         </button>
         <button nz-button nzType="default" (click)="cancel()">
@@ -101,28 +107,28 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
       </div>
       <div *ngIf="modal?.isView">
         <a
-          (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!loading && isMemberEdit"
+            (click)="uiService.showEdit(model.id || 0)"
+            *ngIf="!isLoading && isMemberEdit"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
-          nzType="vertical"
-          *ngIf="!loading && isMemberEdit"
+            nzType="vertical"
+            *ngIf="!isLoading && isMemberEdit"
         ></nz-divider>
         <a
-          nz-typography
-          nzType="danger"
-          (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!loading && isMemberRemove"
+            nz-typography
+            nzType="danger"
+            (click)="uiService.showDelete(model.id || 0)"
+            *ngIf="!isLoading && isMemberRemove"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
-          nzType="vertical"
-          *ngIf="!loading && isMemberRemove"
+            nzType="vertical"
+            *ngIf="!isLoading && isMemberRemove"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -149,8 +155,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   override ngOnInit(): void {
     super.ngOnInit();
   }
-
-  override loading = false;
 
   override initControl() {
     const { codeExistValidator, nameMaxLengthValidator, required } =

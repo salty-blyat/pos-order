@@ -119,7 +119,7 @@ import { MemberUiService } from "./member-ui.service";
       </nz-content>
     </nz-layout>
   `,
-  styleUrls: ["../../../assets/scss/content_style.scss"],
+  styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
 })
 export class MemberListComponent extends BaseListComponent<Member> {

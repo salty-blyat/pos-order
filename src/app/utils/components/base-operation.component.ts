@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
 import { CommonValidators } from '../services/common-validators';
@@ -14,7 +14,7 @@ interface SharedDomain {
   template: '',
   standalone: false
 })
-export class BaseOperationComponent<T extends SharedDomain> implements OnInit {
+export class BaseOperationComponent<T extends SharedDomain> implements OnInit , OnDestroy{
   constructor(
     protected fb: FormBuilder,
     protected ref: NzModalRef<any>,
@@ -22,25 +22,25 @@ export class BaseOperationComponent<T extends SharedDomain> implements OnInit {
     protected uiService: BaseUiService
   ) { }
   readonly modal: any = inject(NZ_MODAL_DATA);
-  loading = false;
+  isLoading = signal<boolean>(false);
   frm!: FormGroup;
   model!: T;
   autoTips: Record<any, any> = CommonValidators.autoTips;
   refreshSub$: any;
 
   ngOnInit(): void {
-    if (this.loading) return;
+    if (this.isLoading()) return;
     this.initControl();
     if (this.modal?.isView) {
       this.frm.disable();
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
         if (e.key === 'edited') {
-          this.loading = true;
+          this.isLoading.set(true);
           this.service.find(this.modal?.id).subscribe({
             next: (result: T) => {
               this.model = result;
               this.setFormValue();
-              this.loading = false;
+              this.isLoading.set(false);
             },
             error: (err: any) => {
               console.log(err);
@@ -52,18 +52,18 @@ export class BaseOperationComponent<T extends SharedDomain> implements OnInit {
       });
     }
     if (this.modal?.id) {
-      this.loading = true;
+      this.isLoading.set(true);
       this.service.find(this.modal?.id).subscribe((result: T) => {
         this.model = result;
         this.setFormValue();
-        this.loading = false;
+        this.isLoading.set(false);
       });
     }
   }
 
   onSubmit(e?: any) {
-    if (this.frm.valid && !this.loading) {
-      this.loading = true;
+    if (this.frm.valid && !this.isLoading()) {
+      this.isLoading.set(true);
       let operation$: Observable<T> = this.service.add(this.frm.getRawValue());
       if (this.modal?.id) {
         operation$ = this.service.edit({
@@ -75,15 +75,15 @@ export class BaseOperationComponent<T extends SharedDomain> implements OnInit {
         operation$.subscribe({
           next: (result: T) => {
             this.model = result;
-            this.loading = false;
+            this.isLoading.set(false);
             this.ref.triggerOk().then();
           },
           error: (error: any) => {
             console.log(error);
-            this.loading = false;
+            this.isLoading.set(false);
           },
           complete: () => {
-            this.loading = false;
+            this.isLoading.set(false);
           },
         });
       }

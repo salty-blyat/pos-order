@@ -297,31 +297,32 @@ export class CustomTranslate implements TranslateLoader {
     ItemTypeSelectComponent,
   ],
   bootstrap: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule.withConfig({ warnOnNgModelWithFormControl: "never" }),
-    BrowserAnimationsModule,
-    NgZorroAntdModule,
-    CommonModule,
-    DragDropModule,
-    ScrollingModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader, // Main provider for loader
-        useClass: CustomTranslate, // Custom Loader
-        deps: [HttpClient, SettingService], // Dependencies which helps serving loader
-      },
-      isolate: false,
-    }),
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory,
-    }),
-    NzFlexDirective,
-    TranslateModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: "never"}),
+        BrowserAnimationsModule,
+        NgZorroAntdModule,
+        CommonModule,
+        DragDropModule,
+        ScrollingModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader, // Main provider for loader
+                useClass: CustomTranslate, // Custom Loader
+                deps: [HttpClient, SettingService], // Dependencies which helps serving loader
+            },
+            isolate: false,
+        }),
+        CalendarModule.forRoot({
+            provide: DateAdapter,
+            useFactory: adapterFactory,
+        }),
+        NzFlexDirective,
+        TranslateModule,
+        ReactiveFormsModule,
+    ],
   providers: [
     {
       provide: NZ_I18N,

@@ -48,14 +48,20 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
       this.search();
     });
     this.search();
+
   }
-  search(filters: Filter[] = [{ field: 'search', operator: 'contains', value: this.searchText()}]) {
+  search(filters: Filter[] = [], delay: number = 50,  ) {
     if (this.isLoading()) return;
     this.isLoading.set(true);
     setTimeout(() => {
-      filters.map((filter: Filter) => {
+      filters?.push({
+        field: "search",
+        operator: "contains",
+        value: this.searchText(),
+      });
+      filters?.map((filter: Filter) => {
         return  {field: filter.field, operator: filter.operator, value: filter.value};
-      })
+      });
       this.param().filters = JSON.stringify(filters);
       this.service.search(this.param()).subscribe({
         next: (result: { results: T[]; param: QueryParam }) => {
@@ -68,7 +74,7 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
           this.isLoading.set(false);
         },
       });
-    }, 50);
+    }, delay);
   }
 
   onQueryParamsChange(param: NzTableQueryParams): void {

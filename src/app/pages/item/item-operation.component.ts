@@ -25,7 +25,7 @@ import { Observable } from "rxjs";
       }}</span>
     </div>
     <div class="modal-content" style="padding: 0 24px;">
-      <app-loading [loading]="loading" />
+      <app-loading *ngIf="isLoading()" />
       <form
         nz-form
         [formGroup]="frm"
@@ -57,9 +57,9 @@ import { Observable } from "rxjs";
                 "ItemType" | translate
               }}</nz-form-label>
               <nz-form-control [nzSpan]="14" nzHasFeedback>
-                <app-item-type-select
-                  formControlName="itemTypeId"
-                ></app-item-type-select>
+                <!-- <nz-select formControlName="itemTypeId">
+                                <nz-option *ngFor="let type of itemTypes" [nzValue]="type.id" [nzLabel]="type.name"></nz-option>
+                              </nz-select> -->
               </nz-form-control>
             </nz-form-item>
 
@@ -80,8 +80,9 @@ import { Observable } from "rxjs";
                 <nz-upload
                   [nzAction]="uploadUrl"
                   [(nzFileList)]="file"
-                  nzListType="picture-card" 
+                  nzListType="picture-card"
                   (nzChange)="handleUploadProfile($event)"
+                  [nzShowUploadList]="nzShowIconList"
                   [nzShowButton]="file.length < 1"
                 >
                   <div>
@@ -110,7 +111,7 @@ import { Observable } from "rxjs";
           [disabled]="!frm.valid"
           (click)="onSubmit($event)"
         >
-          <i *ngIf="loading" nz-icon nzType="loading"></i>
+          <i *ngIf="isLoading" nz-icon nzType="loading"></i>
           {{ "Save" | translate }}
         </button>
         <button nz-button nzType="default" (click)="cancel()">
@@ -118,16 +119,16 @@ import { Observable } from "rxjs";
         </button>
       </div>
       <div *ngIf="modal?.isView">
-        <a *ngIf="!loading">
+        <a *ngIf="!isLoading">
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!loading"></nz-divider>
-        <a nz-typography nzType="danger" *ngIf="!loading">
+        <nz-divider nzType="vertical" *ngIf="!isLoading"></nz-divider>
+        <a nz-typography nzType="danger" *ngIf="!isLoading">
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!loading"></nz-divider>
+        <nz-divider nzType="vertical" *ngIf="!isLoading"></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
           <span class="action-text"> {{ "Close" | translate }}</span>
@@ -151,7 +152,7 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   image!: Image;
-
+  nzShowIconList = false;
   override initControl(): void {
     const {
       required,
@@ -209,11 +210,11 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
   }
 
   override onSubmit(e?: any) {
-    if (this.frm.valid && !this.loading) {
-      this.loading = true;
+    if (this.frm.valid && !this.isLoading()) {
+      this.isLoading.set(true);
       this.frm.patchValue({
         image: this.file[0].url,
-      }); 
+      });
       let operation$: Observable<Item> = this.service.add(
         this.frm.getRawValue()
       );
@@ -227,15 +228,15 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
         operation$.subscribe({
           next: (result: Item) => {
             this.model = result;
-            this.loading = false;
+            this.isLoading.set(false);
             this.ref.triggerOk().then();
           },
           error: (error: any) => {
             console.log(error);
-            this.loading = false;
+            this.isLoading.set(false);
           },
           complete: () => {
-            this.loading = false;
+            this.isLoading.set(false);
           },
         });
       }

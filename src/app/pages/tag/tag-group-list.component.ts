@@ -101,8 +101,8 @@ import { SIZE_COLUMNS } from '../../const';
       </nz-content>
     </nz-layout>
   `,
-    styleUrls: ["../../../assets/scss/content_style.scss"],
-    standalone: false
+  styleUrls: ["../../../assets/scss/list.style.scss"],
+  standalone: false
 })
 export class TagGroupListComponent extends BaseListComponent<TagGroup> {
   constructor(
