@@ -25,7 +25,6 @@ import {SETTING_KEY, SystemSettingService} from "../system-setting/system-settin
             <form
                     nz-form
                     [formGroup]="frm"
-                    (ngSubmit)="onSubmit()"
                     [nzAutoTips]="autoTips"
             >
                 <nz-form-item>

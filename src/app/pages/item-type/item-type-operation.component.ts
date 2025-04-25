@@ -28,7 +28,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
       <form
         nz-form
         [formGroup]="frm"
-        (ngSubmit)="onSubmit()"
+        
         [nzAutoTips]="autoTips"
       >
         <nz-form-item>

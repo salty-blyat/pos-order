@@ -27,7 +27,7 @@ import { AuthService } from '../../helpers/auth.service';
       <form
         nz-form
         [formGroup]="frm"
-        (ngSubmit)="onSubmit()"
+        
         [nzAutoTips]="autoTips"
       >
         <nz-form-item>

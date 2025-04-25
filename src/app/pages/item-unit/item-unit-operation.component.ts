@@ -3,11 +3,11 @@ import { BaseOperationComponent } from "../../utils/components/base-operation.co
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { NzModalRef } from "ng-zorro-antd/modal";
-import { UnitUiService } from "./unit-ui.service";
-import { Unit, UnitService } from "./unit.service";
+import { ItemUnitUiService } from "./item-unit-ui.service";
+import { ItemUnit, ItemUnitService } from "./item-unit.service";
 
 @Component({
-  selector: "app-unit-operation",
+  selector: "app-item-unit-operation",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
@@ -27,8 +27,7 @@ import { Unit, UnitService } from "./unit.service";
       <form
         nz-form
         [formGroup]="frm"
-        
-        [nzAutoTips]="autoTips"
+        [nzAutoTips]="autoTips" 
       >
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
@@ -71,27 +70,27 @@ import { Unit, UnitService } from "./unit.service";
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading && isUnitEdit"
+          *ngIf="!isLoading && isItemUnitEdit"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isUnitEdit"
+          *ngIf="!isLoading() && isItemUnitEdit"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isUnitRemove"
+          *ngIf="!isLoading() && isItemUnitRemove"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isUnitRemove"
+          *ngIf="!isLoading() && isItemUnitRemove"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -104,18 +103,18 @@ import { Unit, UnitService } from "./unit.service";
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class UnitOperationComponent extends BaseOperationComponent<Unit> {
+export class ItemUnitOperationComponent extends BaseOperationComponent<ItemUnit> {
   constructor(
     fb: FormBuilder,
-    ref: NzModalRef<UnitOperationComponent>,
-    service: UnitService,
-    uiService: UnitUiService
+    ref: NzModalRef<ItemUnitOperationComponent>,
+    service: ItemUnitService,
+    uiService: ItemUnitUiService
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isUnitEdit: boolean = true;
-  isUnitRemove: boolean = true;
+  isItemUnitEdit: boolean = true;
+  isItemUnitRemove: boolean = true;
 
   override initControl(): void {
     const { required, noteMaxLengthValidator, nameExistValidator } =
