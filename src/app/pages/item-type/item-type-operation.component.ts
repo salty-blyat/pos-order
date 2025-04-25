@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { ItemType, ItemTypeService } from "./item-type.service";
 import { FormBuilder } from "@angular/forms";
@@ -101,7 +101,8 @@ import { CommonValidators } from "../../utils/services/common-validators";
       </div>
     </div>
   `,
-  styleUrls: ["../../../assets/scss/operation_page.scss"],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
+  encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
 export class ItemTypeOperationComponent extends BaseOperationComponent<ItemType> {
@@ -110,7 +111,6 @@ export class ItemTypeOperationComponent extends BaseOperationComponent<ItemType>
     ref: NzModalRef<ItemTypeOperationComponent>,
     override service: ItemTypeService,
     override uiService: ItemTypeUiService,
-    private settingService: SettingService
   ) {
     super(fb, ref, service, uiService);
   }

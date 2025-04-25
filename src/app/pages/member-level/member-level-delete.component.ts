@@ -28,7 +28,7 @@ import { MemberLevelUiService } from "./member-level-ui.component";
         <span
           nz-typography
           nzType="danger"
-          style="position: absolute; z-index: 1; top: 17%"
+          style="position: absolute; z-index: 1; top: 18%"
           >{{ errMessage() | translate }}</span
         >
       </div>

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -109,7 +109,8 @@ import { MemberLevelUiService } from "./member-level-ui.component";
       </div>
     </div>
   `,
-  styleUrls: ["../../../assets/scss/operation_page.scss"],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
+  encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
 export class MemberLevelOperationComponent extends BaseOperationComponent<MemberLevel> {

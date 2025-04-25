@@ -1,11 +1,10 @@
-import {Component, ViewEncapsulation} from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { RoomType, RoomTypeService } from "./room-type.service";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { RoomTypeUiService } from "./room-type-ui.service";
-import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 
 @Component({
   selector: "app-room-type-operation",
@@ -22,29 +21,50 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips" class="form-content">
+      <form
+        nz-form
+        [formGroup]="frm"
+        [nzAutoTips]="autoTips"
+        class="form-content"
+      >
         <div nz-row>
           <div nz-col nzSpan="24">
             <nz-form-item>
-              <nz-form-label nzSpan="5" nzRequired>{{ "Name" | translate }}</nz-form-label>
+              <nz-form-label nzSpan="5" nzRequired>{{
+                "Name" | translate
+              }}</nz-form-label>
               <nz-form-control nzSpan="19" nzHasFeedback>
-                <input nz-input formControlName="name"/>
+                <input nz-input formControlName="name" />
               </nz-form-control>
             </nz-form-item>
             <nz-row>
               <nz-col nzSpan="11">
                 <nz-form-item>
-                  <nz-form-label nzSpan="11" nzRequired>{{ "Occupancy" | translate }}</nz-form-label>
+                  <nz-form-label nzSpan="11" nzRequired>{{
+                    "Occupancy" | translate
+                  }}</nz-form-label>
                   <nz-form-control nzSpan="12" nzErrorTip="">
-                    <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="0" formControlName="occupancy"/>
+                    <nz-input-number
+                      [nzMin]="0"
+                      [nzStep]="1"
+                      [nzPrecision]="0"
+                      formControlName="occupancy"
+                    />
                   </nz-form-control>
                 </nz-form-item>
               </nz-col>
               <nz-col nzSpan="13">
                 <nz-form-item>
-                  <nz-form-label nzSpan="13" nzRequired>{{ "MaxOccupancy" | translate }}</nz-form-label>
+                  <nz-form-label nzSpan="13" nzRequired>{{
+                    "MaxOccupancy" | translate
+                  }}</nz-form-label>
                   <nz-form-control nzSpan="11" nzErrorTip="">
-                    <nz-input-number [nzMin]="0" [nzStep]="1" [nzPrecision]="0" formControlName="maxOccupancy"/>
+                    <nz-input-number
+                      [nzMin]="0"
+                      [nzStep]="1"
+                      [nzPrecision]="0"
+                      formControlName="maxOccupancy"
+                    />
                   </nz-form-control>
                 </nz-form-item>
               </nz-col>
@@ -52,17 +72,21 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
             <nz-row>
               <nz-col nzSpan="11">
                 <nz-form-item>
-                  <nz-form-label nzSpan="11">{{ "NetArea" | translate }}</nz-form-label>
+                  <nz-form-label nzSpan="11">{{
+                    "NetArea" | translate
+                  }}</nz-form-label>
                   <nz-form-control nzSpan="12" nzErrorTip="">
-                    <input nz-input formControlName="netArea"/>
+                    <input nz-input formControlName="netArea" />
                   </nz-form-control>
                 </nz-form-item>
               </nz-col>
               <nz-col nzSpan="13">
                 <nz-form-item>
-                  <nz-form-label nzSpan="13">{{ "GrossArea" | translate }}</nz-form-label>
+                  <nz-form-label nzSpan="13">{{
+                    "GrossArea" | translate
+                  }}</nz-form-label>
                   <nz-form-control nzSpan="11" nzErrorTip="">
-                    <input nz-input formControlName="grossArea"/>
+                    <input nz-input formControlName="grossArea" />
                   </nz-form-control>
                 </nz-form-item>
               </nz-col>
@@ -70,7 +94,12 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
             <nz-form-item>
               <nz-form-label nzSpan="5">{{ "Note" | translate }}</nz-form-label>
               <nz-form-control nzSpan="19">
-                <textarea nz-input type="text" formControlName="note" rows="3"></textarea>
+                <textarea
+                  nz-input
+                  type="text"
+                  formControlName="note"
+                  rows="3"
+                ></textarea>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -79,7 +108,12 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
     </div>
     <div *nzModalFooter>
       <div *ngIf="!modal?.isView">
-        <button nz-button nzType="primary" [disabled]="!frm.valid" (click)="onSubmit($event)">
+        <button
+          nz-button
+          nzType="primary"
+          [disabled]="!frm.valid"
+          (click)="onSubmit($event)"
+        >
           <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
           {{ "Save" | translate }}
         </button>
@@ -88,21 +122,30 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
         </button>
       </div>
       <div *ngIf="modal?.isView">
-        <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isRoomTypeEdit">
+        <a
+          (click)="uiService.showEdit(model.id || 0)"
+          *ngIf="!isLoading() && isRoomTypeEdit"
+        >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading() && isRoomTypeEdit"></nz-divider>
+        <nz-divider
+          nzType="vertical"
+          *ngIf="!isLoading() && isRoomTypeEdit"
+        ></nz-divider>
         <a
-            nz-typography
-            nzType="danger"
-            (click)="uiService.showDelete(model.id || 0)"
-            *ngIf="!isLoading() && isRoomTypeRemove"
+          nz-typography
+          nzType="danger"
+          (click)="uiService.showDelete(model.id || 0)"
+          *ngIf="!isLoading() && isRoomTypeRemove"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading() && isRoomTypeRemove"></nz-divider>
+        <nz-divider
+          nzType="vertical"
+          *ngIf="!isLoading() && isRoomTypeRemove"
+        ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
           <span class="action-text"> {{ "Close" | translate }}</span>
@@ -112,7 +155,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   encapsulation: ViewEncapsulation.None,
-  standalone: false
+  standalone: false,
 })
 export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType> {
   constructor(
@@ -134,12 +177,8 @@ export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType>
   }
 
   override initControl(): void {
-    const {
-      nameExistValidator,
-      required,
-      nameMaxLengthValidator,
-      integerValidator,
-    } = CommonValidators;
+    const { nameExistValidator, required, nameMaxLengthValidator } =
+      CommonValidators;
     this.frm = this.fb.group({
       name: [
         null,

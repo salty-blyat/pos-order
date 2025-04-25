@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { Item } from "./item.service";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
@@ -9,8 +9,8 @@ import { CommonValidators } from "../../utils/services/common-validators";
 import { SettingService } from "../../app-setting";
 import { Image } from "../lookup/lookup-item/lookup-item.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
-import { Observable } from "rxjs";
-import { ItemTypeSelectComponent } from "../item-type/item-type-select.component";
+import { Observable } from "rxjs"; 
+
 @Component({
   selector: "app-item-operation",
   template: `
@@ -139,7 +139,8 @@ import { ItemTypeSelectComponent } from "../item-type/item-type-select.component
       </div>
     </div>
   `,
-  styleUrls: ["../../../assets/scss/operation_page.scss"],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
+  encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
 export class ItemOperationComponent extends BaseOperationComponent<Item> {

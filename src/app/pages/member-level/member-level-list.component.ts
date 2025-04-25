@@ -70,11 +70,13 @@ import { SIZE_COLUMNS } from "../../const";
           <thead>
             <tr>
               <th nzColumnKey="drag" [nzWidth]="SIZE_COLUMNS.DRAG"></th>
-              <th class="col-header col-rowno" >#</th>
+              <th class="col-header col-rowno" [nzWidth]="SIZE_COLUMNS.ID">
+                #
+              </th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th>{{ "LevelStay" | translate }}</th>
-              <th>{{ "Note" | translate }}</th>
-              <th class="col-action"></th>
+              <th nzWidth="100">{{ "LevelStay" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+              <th class="col-action" [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody
@@ -102,7 +104,9 @@ import { SIZE_COLUMNS } from "../../const";
               <td nzEllipsis style="flex: 2;" title="{{ data.levelStay }}">
                 {{ data.levelStay }}
               </td>
-              <td nzEllipsis style="flex: 2;" title="{{ data.note }}">{{ data.note }}</td>
+              <td nzEllipsis style="flex: 2;" title="{{ data.note }}">
+                {{ data.note }}
+              </td>
               <td nzAlign="right">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
@@ -151,5 +155,4 @@ export class MemberLevelListComponent extends BaseListComponent<MemberLevel> {
   isMemberLevelRemove: boolean = true;
   isMemberLevelView: boolean = true;
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
-
 }
