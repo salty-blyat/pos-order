@@ -3,11 +3,15 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { ReportGroupOperationComponent } from './report-group-operation.component';
 import { ReportGroupDeleteComponent } from './report-group-delete.component';
 import {BaseUiService} from "../../utils/services/base-ui.service";
+import {ReportGroup} from "./report-group.service";
 
 
 @Injectable({ providedIn: 'root' })
 export class ReportGroupUiService extends BaseUiService {
 
+  constructor(modalService: NzModalService) {
+    super(modalService,ReportGroupOperationComponent, ReportGroupDeleteComponent, "", "", "", "450px" );
+  }
   override showAdd(componentId: any = ''): void {
     this.modalService.create({
       nzContent: ReportGroupOperationComponent,

@@ -8,7 +8,7 @@ import {
 import { NzModalService } from "ng-zorro-antd/modal";
 import { NzSafeAny } from "ng-zorro-antd/core/types";
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: "root"})
 export class BaseUiService<T = NzSafeAny> {
   constructor(
     protected modalService: NzModalService,

@@ -54,7 +54,7 @@ import { ItemTypeUiService } from "./item-type-ui.service.component";
       </nz-option>
       <ng-template #actionItem>
         <a
-          *ngIf="addOption && isBlockAdd"
+          *ngIf="addOption && isItemTypeAdd"
           (click)="uiService.showAdd(componentId)"
           class="item-action"
         >
@@ -114,7 +114,7 @@ export class ItemTypeSelectComponent
     sorts: "",
     filters: "",
   };
-  isBlockAdd: boolean = true;
+  isItemTypeAdd: boolean = true;
 
   onChangeCallback: any = () => {};
   onTouchedCallback: any = () => {};

@@ -1,4 +1,10 @@
-import { Component, computed, OnInit, signal } from "@angular/core";
+import {
+  Component,
+  computed,
+  OnInit,
+  signal,
+  ViewEncapsulation,
+} from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Item, ItemService } from "./item.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -28,7 +34,7 @@ import { Filter } from "../../utils/services/base-api.service";
           </div>
           <div nz-col>
             <app-item-type-select
-              storageKey="item-list-filter"
+              storageKey="item-type-filter"
               [showAllOption]="true"
               (valueChanged)="
                 itemTypeId.set($event); param().pageIndex = 1; search()
@@ -72,11 +78,11 @@ import { Filter } from "../../utils/services/base-api.service";
               <th class="col-header col-rowno" [nzWidth]="SIZE_COLUMNS.ID">
                 #
               </th>
+              <th nzWidth="80px" nzAlign="center">{{ "Image" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.CODE" nzColumnKey="code">
                 {{ "Code" | translate }}
               </th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="70px">{{ "Image" | translate }}</th>
               <th nzWidth="150px">{{ "ItemType" | translate }}</th>
               <th nzWidth="150px" nzAlign="center">
                 {{ "IsTrackSerial" | translate }}
@@ -97,6 +103,22 @@ import { Filter } from "../../utils/services/base-api.service";
                         }
                 }}
               </td>
+              <td nzEllipsis class="image" nzAlign="center">
+                <img
+                  *ngIf="data.image"
+                  class="image-list"
+                  height="42"
+                  [src]="data.image"
+                  alt=""
+                />
+                <img
+                  *ngIf="!data.image"
+                  class="image-list"
+                  height="42"
+                  src="./assets/image/img-not-found.jpg"
+                  alt=""
+                />
+              </td>
               <td nzEllipsis>
                 <a
                   *ngIf="isItemView()"
@@ -106,13 +128,6 @@ import { Filter } from "../../utils/services/base-api.service";
                 <span *ngIf="!isItemView()">{{ data.code }}</span>
               </td>
               <td nzEllipsis>{{ data.name }}</td>
-              <td nzEllipsis>
-                <nz-avatar
-                  nzShape="square"
-                  [nzSize]="40"
-                  [nzSrc]="data.image"
-                ></nz-avatar>
-              </td>
               <td nzEllipsis>{{ data.itemTypeId }}</td>
               <td nzAlign="center">
                 <label
@@ -164,9 +179,20 @@ import { Filter } from "../../utils/services/base-api.service";
     </nz-layout>
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
+  styles: [
+    `
+      .image {
+        padding: 0 !important;
+      }
+    `,
+  ],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
-export class ItemListComponent extends BaseListComponent<Item> implements OnInit{
+export class ItemListComponent
+  extends BaseListComponent<Item>
+  implements OnInit
+{
   constructor(
     service: ItemService,
     uiService: ItemUiService,
@@ -180,12 +206,12 @@ export class ItemListComponent extends BaseListComponent<Item> implements OnInit
   isItemAdd = signal<boolean>(true);
   isItemEdit = signal<boolean>(true);
   isItemRemove = signal<boolean>(true);
-  isItemView = signal<boolean>(true); 
+  isItemView = signal<boolean>(true);
   readonly itemSelectedKey = "item-list-filter";
   itemTypeId = signal(
     parseInt(this.sessionStorageService.getValue(this.itemSelectedKey) ?? 0) ??
       0
-  ); 
+  );
   override search() {
     const filters: Filter[] = [];
     if (this.itemTypeId()) {
@@ -194,10 +220,8 @@ export class ItemListComponent extends BaseListComponent<Item> implements OnInit
         operator: "eq",
         value: this.itemTypeId(),
       });
+      super.search(filters);
     }
-    super.search(filters);
-  }
-  override ngOnInit(): void {
-    this.search(); 
+    super.search();
   }
 }

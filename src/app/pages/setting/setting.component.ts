@@ -142,7 +142,7 @@ export class SettingComponent implements OnInit {
         groupName: "Room",
         subName: [
           {
-            icon: "con  tainer",
+            icon: "container",
             url: `${this.urlPart}/room-type`,
             label: "RoomType",
             isList: this.isRoomTypeList,

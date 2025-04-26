@@ -77,7 +77,7 @@ export interface LookupType {
   providedIn: 'root',
 })
 export class LookupTypeService extends BaseApiService<any> {
-  constructor(private http: HttpClient, settingService: SettingService) {
+  constructor(http: HttpClient, settingService: SettingService) {
     super('lookuptype', http, settingService);
   }
 }

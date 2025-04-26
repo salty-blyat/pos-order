@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnDestroy, OnInit } from "@angular/core";
+import {Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation} from "@angular/core";
 import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { CommonValidators, control } from "../../../utils/services/common-validators";
@@ -181,8 +181,9 @@ import { SettingService } from "../../../app-setting";
 
     `,
   ],
-  styleUrls: ["../../../../assets/scss/operation_modal.scss"],
+  styleUrls: ["../../../../assets/scss/operation.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None
 })
 export class LookupItemOperationComponent implements OnInit, OnDestroy {
   constructor(
