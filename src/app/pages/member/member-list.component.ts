@@ -1,8 +1,9 @@
-import {Component, signal} from "@angular/core";
+import { Component, signal } from "@angular/core";
 import { Member, MemberService } from "./member.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { MemberUiService } from "./member-ui.service";
+import { SIZE_COLUMNS } from "../../const";
 
 @Component({
   selector: "app-member-list",
@@ -51,17 +52,23 @@ import { MemberUiService } from "./member-ui.service";
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
-              <th class="col-code-max" nzColumnKey="code">
+              <th [nzWidth]="SIZE_COLUMNS.ID" class="col-header col-rowno">
+                #
+              </th>
+              <th
+                class="col-code-max"
+                nzColumnKey="code"
+                [nzWidth]="SIZE_COLUMNS.CODE"
+              >
                 {{ "Code" | translate }}
               </th>
-              <th>{{ "Name" | translate }}</th>
-              <th>{{ "Sex" | translate }}</th>
-              <th>{{ "Unit" | translate }}</th>
-              <th>{{ "Level" | translate }}</th>
-              <th>{{ "Phone" | translate }}</th>
-              <th>{{ "Nationality" | translate }}</th>
-              <th class="col-action"></th>
+              <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.GENDER">{{ "Sex" | translate }}</th>
+              <th nzWidth="100px">{{ "Unit" | translate }}</th>
+              <th nzWidth="100px">{{ "Level" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.PHONE">{{ "Phone" | translate }}</th>
+              <th nzWidth="100px">{{ "Nationality" | translate }}</th>
+              <th class="col-action" [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
@@ -82,9 +89,9 @@ import { MemberUiService } from "./member-ui.service";
               <td nzEllipsis title="{{ data.name }}">
                 {{ data.name }}
               </td>
-              <td nzEllipsis title="{{ data.sex }}">{{ data.sex }}</td>
-              <td nzEllipsis title="{{ data.unit }}">{{ data.unit }}</td>
-              <td nzEllipsis title="{{ data.level }}">{{ data.level }}</td>
+              <td nzEllipsis title="{{ data.sexId }}">{{ data.sexId }}</td>
+              <td nzEllipsis title="{{ data.unitId }}">{{ data.unitId }}</td>
+              <td nzEllipsis title="{{ data.memberLevelId }}">{{ data.memberLevelId }}</td>
               <td nzEllipsis title="{{ data.phone }}">{{ data.phone }}</td>
               <td nzEllipsis title="{{ data.nationality }}">
                 {{ data.nationality }}
@@ -126,48 +133,15 @@ export class MemberListComponent extends BaseListComponent<Member> {
   constructor(
     service: MemberService,
     uiService: MemberUiService,
-    sessionStorageService: SessionStorageService,
+    sessionStorageService: SessionStorageService
   ) {
     super(service, uiService, sessionStorageService, "member-list");
   }
+
   isMemberAdd: boolean = true;
   isMemberEdit: boolean = true;
   isMemberRemove: boolean = true;
   isMemberView: boolean = true;
 
-  override lists = signal([
-    {
-      id: 1,
-      code: "123",
-      name: "Sok Dara",
-      sexId: 1,
-      sex: "Male",
-      unit: "HR Department",
-      level: "Manager",
-      phone: "012345678",
-      nationality: "Cambodian",
-    },
-    {
-      id: 2,
-      code: "123",
-      name: "Chanthy Mey",
-      sexId: 1,
-      sex: "Male",
-      unit: "Finance",
-      level: "Officer",
-      phone: "098765432",
-      nationality: "Cambodian",
-    },
-    {
-      id: 3,
-      code: "123",
-      name: "Kim Lee",
-      sexId: 1,
-      sex: "Male",
-      unit: "IT",
-      level: "Developer",
-      phone: "087654321",
-      nationality: "Korean",
-    },
-  ]);
+  protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

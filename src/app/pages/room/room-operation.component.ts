@@ -26,7 +26,7 @@ import {single} from "rxjs";
             <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
                 <nz-form-item>
                     <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{ "RoomNumber" | translate }}</nz-form-label>
-                    <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <nz-form-control [nzSm]="14" [nzXs]="24">
                         <input nz-input formControlName="roomNumber"/>
                     </nz-form-control>
                 </nz-form-item>

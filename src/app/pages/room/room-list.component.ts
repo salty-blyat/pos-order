@@ -78,7 +78,7 @@ import {SIZE_COLUMNS} from "../../const";
               <th nzWidth="150px">{{ "RoomType" | translate }}</th>
               <th nzWidth="100px">{{ "Floor" | translate }}</th>
               <th nzWidth="150px">{{ "Status" | translate }}</th>
-              <th>{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>

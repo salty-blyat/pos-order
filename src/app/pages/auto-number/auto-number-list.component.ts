@@ -1,13 +1,14 @@
-import {Component, computed, OnDestroy, signal} from '@angular/core';
-import { SessionStorageService } from '../../utils/services/sessionStorage.service';
-import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { AutoNumber, AutoNumberService } from './auto-number.service';
-import { AutoNumberUiService } from './auto-number-ui.service';
-import { BaseListComponent } from '../../utils/components/base-list.component';
+import { Component, computed, OnDestroy, signal } from "@angular/core";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { Observable } from "rxjs";
+import { ActivatedRoute } from "@angular/router";
+import { AutoNumber, AutoNumberService } from "./auto-number.service";
+import { AutoNumberUiService } from "./auto-number-ui.service";
+import { BaseListComponent } from "../../utils/components/base-list.component";
+import { SIZE_COLUMNS } from "../../const";
 @Component({
-    selector: 'app-auto-number-list',
-    template: `
+  selector: "app-auto-number-list",
+  template: `
     <nz-layout>
       <app-breadcrumb
         *ngIf="breadcrumbData()"
@@ -18,7 +19,9 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
           <div>
             <app-filter-input
               storageKey="auto-number-list-search"
-              (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
+              (filterChanged)="
+                searchText.set($event); param().pageIndex = 1; search()
+              "
             >
             </app-filter-input>
           </div>
@@ -31,7 +34,7 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
             (click)="uiService.showAdd()"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i
-            >{{ 'Add' | translate }}
+            >{{ "Add" | translate }}
           </button>
         </div>
       </nz-header>
@@ -56,11 +59,15 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
-              <th width="15%">{{ 'Name' | translate }}</th>
-              <th>{{ 'Format' | translate }}</th>
-              <th>{{ 'Note' | translate }}</th>
-              <th class="col-action"></th>
+              <th [nzWidth]="SIZE_COLUMNS.ID" class="col-header col-rowno">
+                #
+              </th>
+              <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.FORMAT">
+                {{ "Format" | translate }}
+              </th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION" class="col-action" nzAlign="right"></th>
             </tr>
           </thead>
           <tbody>
@@ -91,17 +98,14 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
                   <ng-container *ngIf="isAutoNumberEdit()">
-                    <a
-                      *nzSpaceItem
-                      (click)="uiService.showEdit(data.id || 0)"
-                    >
+                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i
                         nz-icon
                         nzType="edit"
                         nzTheme="outline"
                         style="padding-right: 5px"
                       ></i>
-                      {{ 'Edit' | translate }}
+                      {{ "Edit" | translate }}
                     </a>
                   </ng-container>
                   <ng-container *ngIf="isAutoNumberRemove()">
@@ -117,7 +121,7 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
                         nzTheme="outline"
                         style="padding-right: 5px"
                       ></i>
-                      {{ 'Delete' | translate }}
+                      {{ "Delete" | translate }}
                     </a>
                   </ng-container>
                 </nz-space>
@@ -128,23 +132,23 @@ import { BaseListComponent } from '../../utils/components/base-list.component';
       </nz-content>
     </nz-layout>
   `,
-    styleUrls: ['../../../assets/scss/list.style.scss'],
-    standalone: false
+  styleUrls: ["../../../assets/scss/list.style.scss"],
+  standalone: false,
 })
 export class AutoNumberListComponent extends BaseListComponent<AutoNumber> {
   constructor(
     service: AutoNumberService,
     uiService: AutoNumberUiService,
     sessionStorageService: SessionStorageService,
-    private activated: ActivatedRoute,
+    private activated: ActivatedRoute
   ) {
-    super(service, uiService, sessionStorageService,'auto-number-list');
+    super(service, uiService, sessionStorageService, "auto-number-list");
   }
 
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isAutoNumberAdd = signal<boolean>(true);
-  isAutoNumberEdit =  signal<boolean>(true);
-  isAutoNumberRemove =  signal<boolean>(true);
-  isAutoNumberView =  signal<boolean>(true);
-  
+  isAutoNumberEdit = signal<boolean>(true);
+  isAutoNumberRemove = signal<boolean>(true);
+  isAutoNumberView = signal<boolean>(true);
+  protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

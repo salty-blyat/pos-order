@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
@@ -6,86 +6,85 @@ import { CommonValidators } from "../../utils/services/common-validators";
 import { Member, MemberService } from "./member.service";
 import { MemberUiService } from "./member-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
-
+import { UnitSelectComponent } from "../unit/unit-select.component";
 @Component({
   selector: "app-member-operation",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
       <span *ngIf="modal?.id && !modal?.isView"
-      >{{ "Edit" | translate }}
+        >{{ "Edit" | translate }}
         {{ model?.code || ("Loading" | translate) }}</span
       >
       <span *ngIf="modal?.id && modal?.isView">{{
-          model?.code || ("Loading" | translate)
-        }}</span>
+        model?.code || ("Loading" | translate)
+      }}</span>
     </div>
     <div class="modal-content">
       <nz-spin
-          *ngIf="isLoading"
-          style="position: absolute; top: 50%; left: 50%"
+        *ngIf="isLoading()"
+        style="position: absolute; top: 50%; left: 50%"
       ></nz-spin>
-      <form
-          nz-form
-          [formGroup]="frm"
-          
-          [nzAutoTips]="autoTips"
-      >
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-              "Code" | translate
-            }}
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Code" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="code"/>
+            <input nz-input formControlName="code" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-              "Name" | translate
-            }}
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Name" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="name"/>
+            <input nz-input formControlName="name" />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-              "Sex" | translate
-            }}
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Sex" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <app-lookup-item-select formControlName="sexId"
-                                    [lookupType]="this.lookupItemType.GenderId"
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            <app-lookup-item-select
+              formControlName="sexId"
+              [lookupType]="this.lookupItemType.GenderId"
             ></app-lookup-item-select>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-              "Unit" | translate
-            }}
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Unit" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
-            <input nz-input formControlName="unit"/>
+            <app-unit-select
+              formControlName="unitId"
+              [storageKey]="'unitId'"
+              [addOption]="true"
+            ></app-unit-select>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-              "Level" | translate
-            }}
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "MemberLevel" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="level"/>
+          <!-- // later rename this to member level in the formcontrolname  -->
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            <app-member-level-select
+              formControlName="memberLevelId"
+              [storageKey]="'memberLevelId'"
+              [addOption]="true"
+            ></app-member-level-select>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-              "Phone" | translate
-            }}
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Phone" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="phone"/>
+            <input nz-input formControlName="phone" />
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -93,12 +92,12 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
     <div *nzModalFooter>
       <div *ngIf="!modal?.isView">
         <button
-            nz-button
-            nzType="primary"
-            [disabled]="!frm.valid"
-            (click)="onSubmit($event)"
+          nz-button
+          nzType="primary"
+          [disabled]="!frm.valid"
+          (click)="onSubmit($event)"
         >
-          <i *ngIf="isLoading" nz-icon nzType="loading"></i>
+          <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
           {{ "Save" | translate }}
         </button>
         <button nz-button nzType="default" (click)="cancel()">
@@ -107,28 +106,28 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
       </div>
       <div *ngIf="modal?.isView">
         <a
-            (click)="uiService.showEdit(model.id || 0)"
-            *ngIf="!isLoading && isMemberEdit"
+          (click)="uiService.showEdit(model.id || 0)"
+          *ngIf="!isLoading() && isMemberEdit"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
-            nzType="vertical"
-            *ngIf="!isLoading && isMemberEdit"
+          nzType="vertical"
+          *ngIf="!isLoading() && isMemberEdit"
         ></nz-divider>
         <a
-            nz-typography
-            nzType="danger"
-            (click)="uiService.showDelete(model.id || 0)"
-            *ngIf="!isLoading && isMemberRemove"
+          nz-typography
+          nzType="danger"
+          (click)="uiService.showDelete(model.id || 0)"
+          *ngIf="!isLoading() && isMemberRemove"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
-            nzType="vertical"
-            *ngIf="!isLoading && isMemberRemove"
+          nzType="vertical"
+          *ngIf="!isLoading() && isMemberRemove"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -137,7 +136,8 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
       </div>
     </div>
   `,
-  styleUrls: ["../../../assets/scss/operation_page.scss"],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
+  encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
 export class MemberOperationComponent extends BaseOperationComponent<Member> {
@@ -157,15 +157,29 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   }
 
   override initControl() {
-    const { codeExistValidator, nameMaxLengthValidator, required } =
-      CommonValidators;
+    const {
+      codeExistValidator,
+      nameMaxLengthValidator,
+      required,
+      singlePhoneValidator,
+      phoneExistValidator,
+    } = CommonValidators;
     this.frm = this.fb.group({
-      code: [null, [codeExistValidator(this.service, this.modal?.id)]],
+      code: [
+        null,
+        [required, nameMaxLengthValidator],
+        [codeExistValidator(this.service, this.modal?.id)],
+      ],
       name: [null, [required, nameMaxLengthValidator]],
       sexId: [null, [required]],
-      unit: [null, [required]],
-      level: [null, [required]],
-      phone: [null],
+      unitId: [null, [required]],
+      memberLevelId: [null, [required]],
+      nationalityId: [null, [required]],
+      phone: [
+        null,
+        [required, singlePhoneValidator], // sync validators
+        [phoneExistValidator(this.service, this.modal?.id)], // async validator
+      ], 
       nationality: [null],
     });
   }
@@ -175,8 +189,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       code: this.model.code,
       name: this.model.name,
       sexId: this.model.sexId,
-      unit: this.model.unit,
-      level: this.model.level,
+      unitId: this.model.unitId,
+      memberLevelId: this.model.memberLevelId,
       phone: this.model.phone,
       nationality: this.model.nationality,
     });

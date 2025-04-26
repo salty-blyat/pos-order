@@ -1,12 +1,4 @@
-import {
-  Component,
-  input,
-  model,
-  OnChanges,
-  output,
-  Output,
-  SimpleChanges,
-} from "@angular/core";
+import { Component, input, OnChanges, SimpleChanges } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Floor, FloorService } from "./floor.service";
@@ -77,8 +69,8 @@ import { SIZE_COLUMNS } from "../../const";
                 #
               </th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th>{{ "Description" | translate }}</th>
-              <th class="col-action"></th>
+              <th [nzWidth]="SIZE_COLUMNS.DESCRIPTION">{{ "Description" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION" class="col-action"></th>
             </tr>
           </thead>
           <tbody
@@ -112,7 +104,7 @@ import { SIZE_COLUMNS } from "../../const";
                 >
               </td>
               <td nzEllipsis style="flex:1px">{{ data.description }}</td>
-              <td>
+              <td nzAlign="right">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -166,19 +158,37 @@ export class FloorListComponent
   ) {
     super(service, uiService, sessionStorageService, "floor-list");
   }
-
   blockId = input<number>(0);
+  filters: Filter[] = [
+    {
+      field: "blockId",
+      operator: "eq",
+      value: this.blockId(),
+    },
+  ];
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["blockId"] && !changes["blockId"].firstChange) {
-      const filters: Filter[] = [
+      this.filters = [
         {
           field: "blockId",
           operator: "eq",
           value: this.blockId(),
         },
-      ]; 
-      super.search(filters);
+      ];
+      super.search(this.filters);
     }
-  } 
+  }
+
+  override ngOnInit() {
+    this.filters = [
+      {
+        field: "blockId",
+        operator: "eq",
+        value: this.blockId(),
+      },
+    ];
+    super.search(this.filters);
+  }
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

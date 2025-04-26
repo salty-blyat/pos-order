@@ -150,6 +150,8 @@ import { ItemUnitDeleteComponent } from "./pages/item-unit/item-unit-delete.comp
 import { GroupDeleteComponent } from "./pages/group/group-delete.component";
 import { GroupListComponent } from "./pages/group/group-list.component";
 import { GroupOperationComponent } from "./pages/group/group-operation.component";
+import { UnitSelectComponent } from "./pages/unit/unit-select.component";
+import { MemberLevelSelectComponent } from "./pages/member-level/member-level-select.component";
 export function app_Init(settingsHttpService: SettingHttpService) {
   return () => settingsHttpService.initializeApp();
 }
@@ -298,6 +300,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberLevelListComponent,
     MemberLevelOperationComponent,
     MemberLevelDeleteComponent,
+    MemberLevelSelectComponent,
 
     // Item
     ItemListComponent,
@@ -314,6 +317,7 @@ export class CustomTranslate implements TranslateLoader {
     UnitListComponent,
     UnitOperationComponent,
     UnitDeleteComponent,
+    UnitSelectComponent,
 
     // item unit
     ItemUnitListComponent,

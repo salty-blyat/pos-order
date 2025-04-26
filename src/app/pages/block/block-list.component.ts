@@ -193,40 +193,10 @@ export class BlockListComponent extends BaseListComponent<Block> {
   );
 
   override ngOnInit() {
-    super.ngOnInit();
+    super.ngOnInit(); 
   }
 
-  // override search() {
-  //   if (this.isLoading()) return;
-  //   this.isLoading.set(true);
-  //   setTimeout(() => {
-  //     const filters: Filter[] = [
-  //       {
-  //         field: "search",
-  //         operator: "contains",
-  //         value: this.searchText(),
-  //       },
-  //     ];
-  //     this.param().filters = JSON.stringify(filters);
-  //     this.service.search(this.param()).subscribe({
-  //       next: (result: { results: Block[]; param: QueryParam }) => {
-  //         this.isLoading.set(true);
-  //         this.lists.set(result.results);
-  //         if (!this.blockId()) {
-  //           this.blockId.set(result.results[0].id!);
-  //         }
-  //         this.param().rowCount = result.param.rowCount;
-  //         this.isLoading.set(false);
-  //       },
-  //       error: () => {
-  //         this.isLoading.set(false);
-  //       },
-  //     });
-  //   }, 50);
-  // }
-
   changeBlockId(id: number) {
-    console.log(id);
     this.sessionStorageService.setValue({
       key: this.blockSelectedKey,
       value: id,

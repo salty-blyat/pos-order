@@ -8,11 +8,12 @@ export interface Member {
   code?: string;
   name?: string;
   sexId?: number;
-  unit?: string;
-  level?: string;
+  unitId?: number;
+  groupId?: number;
+  nationality?: number;
   phone?: string;
-  nationality?: string;
-  sex?: string;
+  memberLevelId?: number;
+  note?: string;
 }
 
 @Injectable({ providedIn: "root" })

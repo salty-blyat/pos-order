@@ -1,4 +1,4 @@
-import { Component, computed, signal } from "@angular/core";
+import { Component, computed, OnInit, signal } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Item, ItemService } from "./item.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -6,6 +6,7 @@ import { ItemUiService } from "./item-ui.service";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { SIZE_COLUMNS } from "../../const";
+import { Filter } from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-item-list",
@@ -17,13 +18,22 @@ import { SIZE_COLUMNS } from "../../const";
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
-          <div style="width: 220px; margin-right: 4px;">
+          <div nz-col>
             <app-filter-input
               storageKey="item-list-search"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
+          </div>
+          <div nz-col>
+            <app-item-type-select
+              storageKey="item-list-filter"
+              [showAllOption]="true"
+              (valueChanged)="
+                itemTypeId.set($event); param().pageIndex = 1; search()
+              "
+            ></app-item-type-select>
           </div>
         </div>
         <div>
@@ -59,18 +69,20 @@ import { SIZE_COLUMNS } from "../../const";
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
-              <th nzWidth="SIZE_COLUMNS.CODE" nzColumnKey="code">
+              <th class="col-header col-rowno" [nzWidth]="SIZE_COLUMNS.ID">
+                #
+              </th>
+              <th [nzWidth]="SIZE_COLUMNS.CODE" nzColumnKey="code">
                 {{ "Code" | translate }}
               </th>
-              <th nzWidth="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th>{{ "Image" | translate }}</th>
-              <th>{{ "ItemType" | translate }}</th>
-              <th>
+              <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
+              <th nzWidth="70px">{{ "Image" | translate }}</th>
+              <th nzWidth="150px">{{ "ItemType" | translate }}</th>
+              <th nzWidth="150px" nzAlign="center">
                 {{ "IsTrackSerial" | translate }}
               </th>
-              <th nzWidth="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-              <th class="col-action"></th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION" class="col-action"></th>
             </tr>
           </thead>
           <tbody>
@@ -97,16 +109,17 @@ import { SIZE_COLUMNS } from "../../const";
               <td nzEllipsis>
                 <nz-avatar
                   nzShape="square"
-                  [nzSize]="64"
+                  [nzSize]="40"
                   [nzSrc]="data.image"
                 ></nz-avatar>
               </td>
               <td nzEllipsis>{{ data.itemTypeId }}</td>
-              <td>
+              <td nzAlign="center">
                 <label
                   nz-checkbox
                   [ngModel]="data.isTrackSerial"
                   [nzDisabled]="true"
+                  style="margin: auto;"
                 ></label>
               </td>
               <td nzEllipsis>{{ data.note }}</td>
@@ -153,7 +166,7 @@ import { SIZE_COLUMNS } from "../../const";
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
 })
-export class ItemListComponent extends BaseListComponent<Item> {
+export class ItemListComponent extends BaseListComponent<Item> implements OnInit{
   constructor(
     service: ItemService,
     uiService: ItemUiService,
@@ -167,5 +180,24 @@ export class ItemListComponent extends BaseListComponent<Item> {
   isItemAdd = signal<boolean>(true);
   isItemEdit = signal<boolean>(true);
   isItemRemove = signal<boolean>(true);
-  isItemView = signal<boolean>(true);
+  isItemView = signal<boolean>(true); 
+  readonly itemSelectedKey = "item-list-filter";
+  itemTypeId = signal(
+    parseInt(this.sessionStorageService.getValue(this.itemSelectedKey) ?? 0) ??
+      0
+  ); 
+  override search() {
+    const filters: Filter[] = [];
+    if (this.itemTypeId()) {
+      filters.push({
+        field: "itemTypeId",
+        operator: "eq",
+        value: this.itemTypeId(),
+      });
+    }
+    super.search(filters);
+  }
+  override ngOnInit(): void {
+    this.search(); 
+  }
 }
