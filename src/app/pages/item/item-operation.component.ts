@@ -29,11 +29,10 @@ import { Observable } from "rxjs";
       <form
         nz-form
         [formGroup]="frm"
-        
         [nzAutoTips]="autoTips"
       >
         <div nz-row>
-          <div nz-col [nzSpan]="16">
+          <div nz-col [nzSpan]="17">
             <nz-form-item>
               <nz-form-label [nzSpan]="7" nzRequired>{{
                 "Code" | translate
@@ -73,12 +72,18 @@ import { Observable } from "rxjs";
                 <textarea nz-input formControlName="note" rows="3"></textarea>
               </nz-form-control>
             </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzNoColon></nz-form-label>
+                <nz-form-control>
+                    <label nz-checkbox formControlName="isTrackSerial">{{ "IsTrackSerial" | translate }}</label>
+                </nz-form-control>
+            </nz-form-item>
           </div>
 
-          <div nz-col [nzSpan]="8">
+          <div nz-col [nzSpan]="7">
             <nz-form-item>
-              <nz-form-label>{{ "Image" | translate }}</nz-form-label>
-              <nz-form-control>
+              <nz-form-label [nzSpan]="8">{{ "Image" | translate }}</nz-form-label>
+              <nz-form-control [nzSpan]="12">
                 <nz-upload
                   [nzAction]="uploadUrl"
                   [(nzFileList)]="file"
@@ -93,13 +98,6 @@ import { Observable } from "rxjs";
                     <div class="upload-text">{{ "Upload" | translate }}</div>
                   </div>
                 </nz-upload>
-              </nz-form-control>
-            </nz-form-item>
-
-            <nz-form-item>
-              <nz-form-label>{{ "IsTrackSerial" | translate }}</nz-form-label>
-              <nz-form-control>
-                <label nz-checkbox formControlName="isTrackSerial"></label>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -156,7 +154,19 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   image!: Image;
-  nzShowIconList = false;
+  nzShowIconList:any = false;
+
+  override ngOnInit() {
+    super.ngOnInit();
+    setTimeout(() => {
+      if (this.modal?.isView) {
+        this.nzShowIconList = {showPreviewIcon: true};
+      }else {
+        this.nzShowIconList = true;
+      }
+    }, 10)
+  }
+
   override initControl(): void {
     const {
       required,
@@ -193,6 +203,14 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
       isTrackSerial: this.model.isTrackSerial,
       note: this.model.note,
     });
+    if (this.model.image) {
+      this.file = [];
+      this.file.push({
+        uid: "",
+        name: this.model.name!,
+        url: this.model.image,
+      });
+    }
   }
 
   handleUploadProfile(info: NzUploadChangeParam): void {

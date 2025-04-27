@@ -70,7 +70,7 @@ import { Group, GroupService } from "./group.service";
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading && isGroupEdit"
+          *ngIf="!isLoading() && isGroupEdit"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>

@@ -1,7 +1,6 @@
-import { Component, computed, signal } from "@angular/core";
+import {Component, computed, ViewEncapsulation} from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-
 import { MemberLevel, MemberLevelService } from "./member-level.service";
 import { MemberLevelUiService } from "./member-level-ui.component";
 import { ActivatedRoute } from "@angular/router";
@@ -69,14 +68,12 @@ import { SIZE_COLUMNS } from "../../const";
           </ng-template>
           <thead>
             <tr>
-              <th nzColumnKey="drag" [nzWidth]="SIZE_COLUMNS.DRAG"></th>
-              <th class="col-header col-rowno" [nzWidth]="SIZE_COLUMNS.ID">
-                #
-              </th>
+              <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th nzWidth="100px">{{ "LevelStay" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-              <th class="col-action" [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+              <th>{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody
@@ -88,26 +85,19 @@ import { SIZE_COLUMNS } from "../../const";
               <td style=" cursor: move;" cdkDragHandle>
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
-              <td nzEllipsis style="flex: 1;">
-                {{
-                  i
-                    | rowNumber
-                      : {
-                          index: param().pageIndex || 0,
-                          size: param().pageSize || 0
-                        }
-                }}
+              <td nzEllipsis>
+                {{ i| rowNumber : { index: param().pageIndex || 0, size: param().pageSize || 0} }}
               </td>
-              <td nzEllipsis style="flex: 3;" title="{{ data.name }}">
-                {{ data.name }}
+              <td nzEllipsis title="{{ data.name }}">
+                  <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
-              <td nzWidth="100" nzEllipsis style="flex: 2;" title="{{ data.levelStay }}">
+              <td nzEllipsis title="{{ data.levelStay }}">
                 {{ data.levelStay }}
               </td>
-              <td nzEllipsis style="flex: 2;" title="{{ data.note }}">
+              <td nzEllipsis title="{{ data.note }}">
                 {{ data.note }}
               </td>
-              <td nzAlign="right">
+              <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -139,6 +129,7 @@ import { SIZE_COLUMNS } from "../../const";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MemberLevelListComponent extends BaseListComponent<MemberLevel> {
   constructor(

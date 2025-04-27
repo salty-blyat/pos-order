@@ -9,6 +9,7 @@ export interface Item {
   name?: string;
   image?: string;
   itemTypeId?: number;
+  itemTypeName?: string;
   isTrackSerial?: boolean;
   note?: string;
 }

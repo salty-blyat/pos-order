@@ -191,3 +191,20 @@ nz-sider.group-sider{
   margin-right: 4px;
   margin-bottom: 1px;
 }
+
+.cdk-drag-preview{
+  display: table;
+  vertical-align: middle;
+
+  tfoot > tr > td {
+    padding: 8px 8px;
+  }
+  .cdk-drag-handle{
+    width: 20px !important;
+  }
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
