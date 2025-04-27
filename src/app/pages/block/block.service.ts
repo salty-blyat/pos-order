@@ -11,7 +11,7 @@ export interface Block {
     code?: string;
     name?: string;
     address?: string;
-    description?: string;
+    note?: string;
     ordering?:number
 }
 
@@ -19,13 +19,7 @@ export interface Block {
     providedIn: 'root',
 })
 export class BlockService extends BaseApiService<Block> {
-    constructor(private http: HttpClient, settingService: SettingService) {
+    constructor(http: HttpClient, settingService: SettingService) {
         super('block', http, settingService);
     }
-    // public updateOrdering(lists: Block[]): Observable<Block[]> {
-    //     return this.http.put<Block[]>(
-    //         `${this.getUrl()}/update-ordering`,
-    //         lists
-    //     );
-    // }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { SETTING_KEY, SystemSettingService } from './system-setting.service';
 import { BaseSettingSectionComponent } from '../../utils/components/base-setting-section.component';
@@ -79,7 +79,7 @@ import { AuthService } from '../../helpers/auth.service';
       </nz-form-item>
     </form>
   `,
-    styleUrls: ['../../../assets/scss/operation_modal.scss'],
+    styleUrls: ['../../../assets/scss/operation.style.scss'],
     styles: [
         `
       .system-setting-form {
@@ -90,6 +90,7 @@ import { AuthService } from '../../helpers/auth.service';
       }
       .sub-section h5 {border-bottom: 1px solid #f0f0f0;
         margin-bottom: 20px;
+        font-size: 14px;
       }
       .loading-bar {
         position: relative;
@@ -97,7 +98,8 @@ import { AuthService } from '../../helpers/auth.service';
       }
     `,
     ],
-    standalone: false
+    standalone: false,
+    encapsulation: ViewEncapsulation.None
 })
 export class AutoNumberSectionComponent extends BaseSettingSectionComponent {
   constructor(

@@ -13,6 +13,7 @@ import { Floor, FloorService } from "./floor.service";
 import { FloorUiService } from "./floor-ui.service";
 import { Filter } from "../../utils/services/base-api.service";
 import { SIZE_COLUMNS } from "../../const";
+import {delay} from "rxjs";
 
 @Component({
   selector: "app-floor-list",
@@ -20,7 +21,7 @@ import { SIZE_COLUMNS } from "../../const";
     <nz-layout>
       <nz-header>
         <div nz-row>
-          <div class="filter-box">
+          <div nz-col>
             <app-filter-input
               storageKey="floor-list-search"
               (filterChanged)="
@@ -30,7 +31,6 @@ import { SIZE_COLUMNS } from "../../const";
           </div>
           <div *ngIf="draged()">
             <button
-              style="margin-left: 5px"
               nz-button
               nzType="primary"
               (click)="saveOrdering()"
@@ -73,12 +73,10 @@ import { SIZE_COLUMNS } from "../../const";
           <thead>
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
-              <th class="col-header col-rowno" [nzWidth]="SIZE_COLUMNS.ID">
-                #
-              </th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th>{{ "Description" | translate }}</th>
-              <th class="col-action"></th>
+              <th>{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody
@@ -107,12 +105,11 @@ import { SIZE_COLUMNS } from "../../const";
               <td nzEllipsis style="flex:2px">
                 <a
                   (click)="uiService.showView(data.id!)"
-                  style="color: var( --primary-color)"
                   >{{ data.name }}</a
                 >
               </td>
-              <td nzEllipsis style="flex:1px">{{ data.description }}</td>
-              <td>
+              <td nzEllipsis>{{ data.note }}</td>
+              <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -155,9 +152,7 @@ import { SIZE_COLUMNS } from "../../const";
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
 })
-export class FloorListComponent
-  extends BaseListComponent<Floor>
-  implements OnChanges
+export class FloorListComponent extends BaseListComponent<Floor> implements OnChanges
 {
   constructor(
     override service: FloorService,
@@ -179,6 +174,17 @@ export class FloorListComponent
       ]; 
       super.search(filters);
     }
-  } 
+  }
+  override search() {
+    if (this.blockId()) {
+      const filters =[{
+        field: "blockId",
+        operator: "eq",
+        value: this.blockId(),
+      }];
+      super.search(filters);
+    }
+  }
+
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

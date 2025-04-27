@@ -32,7 +32,7 @@ import { NotificationService } from "../../utils/services/notification.service";
       <nz-content>
         <nz-layout>
           <nz-sider nzWidth="300px" nzTheme="light">
-            <div style="margin: 14px 2px 14px 0px;">
+            <div style="margin: 14px 8px 8px 0px;">
               <app-filter-input
                 storageKey="report-new-list-search"
                 (filterChanged)="
@@ -52,6 +52,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               <ul
                 *ngFor="let data of lists(); let i = index"
                 cdkDrag
+                style="margin-right: 8px;"
                 class="block-ordering"
               >
                 <span
@@ -120,7 +121,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                   *ngIf="isReportGroupAdd()"
                   nz-button
                   nzType="dashed"
-                  style="width: 295px;"
+                  style="width: 292px;"
                   (click)="uiService.showAdd(reportGroupId())"
                 >
                   <i nz-icon nzType="plus" nzTheme="outline"></i>
@@ -134,7 +135,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                   nzType="primary"
                   (click)="saveOrdering()"
                   [nzLoading]="isLoading()"
-                  style="width: 295px;"
+                  style="width: 292px;"
                 >
                   {{ "Save" | translate }}
                 </button>

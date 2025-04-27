@@ -83,6 +83,16 @@ export class BaseDeleteComponent<T extends SharedDomain> implements OnInit {
     this.ref.triggerCancel().then();
   }
 
-  initControl(): void {}
-  setFormValue(): void {}
+  initControl(): void {
+    const { required } = CommonValidators;
+    this.frm = this.fb.group({
+      name: [{value:null, disabled: true}, required],
+      note: [null],
+    });
+  }
+  setFormValue(): void {
+    this.frm.patchValue({
+      name: this.model?.name
+    })
+  }
 }

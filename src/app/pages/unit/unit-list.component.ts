@@ -17,7 +17,7 @@ import { UnitUiService } from "./unit-ui.service";
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
-          <div style="width: 220px; margin-right: 4px;">
+          <div nz-col>
             <app-filter-input
               storageKey="unit-list-search"
               (filterChanged)="

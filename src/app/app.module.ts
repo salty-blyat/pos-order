@@ -150,6 +150,14 @@ import { ItemUnitDeleteComponent } from "./pages/item-unit/item-unit-delete.comp
 import { GroupDeleteComponent } from "./pages/group/group-delete.component";
 import { GroupListComponent } from "./pages/group/group-list.component";
 import { GroupOperationComponent } from "./pages/group/group-operation.component";
+import {NzCodeEditorModule} from "ng-zorro-antd/code-editor";
+
+self.MonacoEnvironment = {
+  getWorkerUrl: function () {
+    return `assets/vs/base/worker/workerMain.js`;
+  }
+};
+
 export function app_Init(settingsHttpService: SettingHttpService) {
   return () => settingsHttpService.initializeApp();
 }
@@ -351,6 +359,7 @@ export class CustomTranslate implements TranslateLoader {
     NzFlexDirective,
     TranslateModule,
     ReactiveFormsModule,
+    NzCodeEditorModule,
   ],
   providers: [
     {

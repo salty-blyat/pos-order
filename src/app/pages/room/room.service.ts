@@ -14,6 +14,8 @@ export interface Room {
   tagIds?: number[];
   tagNames?: string[];
   status?: number;
+  statusName?: string
+  statusNameEn?: string
 }
 
 export interface RoomAdvancedFilter {

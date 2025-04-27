@@ -47,11 +47,11 @@ import {FloorUiService} from "./floor-ui.service";
                 </nz-form-item>
                 <nz-form-item>
                     <nz-form-label [nzSm]="5" [nzXs]="24">{{
-                            'Description' | translate
+                            'Note' | translate
                         }}
                     </nz-form-label>
                     <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="">
-                        <textarea nz-input formControlName="description" rows="3"></textarea>
+                        <textarea nz-input formControlName="note" rows="3"></textarea>
                     </nz-form-control>
                 </nz-form-item>
             </form>
@@ -107,10 +107,6 @@ export class FloorOperationComponent extends BaseOperationComponent<Floor> {
     ) {
         super(fb, ref, service, uiService);
     }
-    override ngOnInit(): void {
-        super.ngOnInit();
-    }
-
 
     override initControl(): void {
         const {
@@ -124,12 +120,10 @@ export class FloorOperationComponent extends BaseOperationComponent<Floor> {
                 null,
                 [required, nameMaxLengthValidator],
                 [nameExistValidator(this.service, this.modal?.id, 'name', this.modal?.blockId)],
-
             ],
             blockId: [{ value: this.modal?.blockId, disabled: false }],
-            description: [null],
+            note: [null],
         });
-
     }
 
 
@@ -138,7 +132,7 @@ export class FloorOperationComponent extends BaseOperationComponent<Floor> {
         this.frm.setValue({
             name:this.model.name,
             blockId:this.model.blockId,
-            description:this.model.description,
+            note:this.model.note,
         })
     }
 }

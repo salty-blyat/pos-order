@@ -8,6 +8,7 @@ import { RoomUiService } from "./room-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import {Filter, QueryParam} from "../../utils/services/base-api.service";
 import {SIZE_COLUMNS} from "../../const";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: "app-room-list",
@@ -22,11 +23,13 @@ import {SIZE_COLUMNS} from "../../const";
             </app-filter-input>
           </div>
           <div nz-col>
-              <app-room-type-select
+              <app-lookup-item-select
+                      [lookupType]="lookupType.Status"
                       [showAllOption]="true"
                       storageKey="room-list-room-type-filter"
-                      (valueChanged)="roomTypeId.set($event); param().pageIndex = 1; search()"
-              ></app-room-type-select>
+                      [typeLabelAll]="'AllRoomStatus' | translate"
+                      (valueChanged)="roomStatusId.set($event); param().pageIndex = 1; search()"
+              ></app-lookup-item-select>
           </div>
           <div>
             <nz-badge [nzDot]="hasAdvancedFilter()">
@@ -76,7 +79,7 @@ import {SIZE_COLUMNS} from "../../const";
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th nzWidth="100px">{{ "RoomNumber" | translate }}</th>
               <th nzWidth="150px">{{ "RoomType" | translate }}</th>
-              <th nzWidth="100px">{{ "Floor" | translate }}</th>
+              <th nzWidth="150px">{{ "Floor" | translate }}</th>
               <th nzWidth="150px">{{ "Status" | translate }}</th>
               <th>{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
@@ -98,7 +101,13 @@ import {SIZE_COLUMNS} from "../../const";
               </td>
               <td nzEllipsis>{{ data.roomTypeName }}</td>
               <td nzEllipsis>{{ data.floorName }}</td>
-              <td nzEllipsis>{{ data.status}}</td>
+              <td nzEllipsis>
+                  @if (translate.currentLang == 'en') {
+                      {{  data.statusNameEn ?? data.statusName  }}
+                  }@else {
+                      {{  data.statusName ?? data.statusNameEn  }}
+                  }
+              </td>
               <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
@@ -148,14 +157,14 @@ export class RoomListComponent extends BaseListComponent<Room> {
     service: RoomService,
     override uiService: RoomUiService,
     sessionStorageService: SessionStorageService,
-    private activated: ActivatedRoute
+    protected translate: TranslateService
   ) {
     super(service, uiService, sessionStorageService, "room-list");
   }
 
   roomTypeId = signal<number>(0);
   floorId: number = 0;
-  roomStatusId: number = 0;
+  roomStatusId = signal<number>(0);
   tagIds: number[] = [];
   lookupType = LOOKUP_TYPE;
   readonly advancedStoreKey = "room-list-advanced-filter";
@@ -188,7 +197,7 @@ export class RoomListComponent extends BaseListComponent<Room> {
         this.hasAdvancedFilter.set(advancedFilter?.isAdvancedFilter ?? false);
     }
     setAdvancedFilter(advancedFilter: RoomAdvancedFilter) {
-        this.roomStatusId = advancedFilter.roomStatusId;
+        this.roomStatusId.set(advancedFilter.roomStatusId);
         this.tagIds = advancedFilter.tagIds.filter((id: number) => id !== 0);
         this.floorId = advancedFilter.floorId;
         this.roomTypeId.set(advancedFilter.roomTypeId);
@@ -211,11 +220,11 @@ export class RoomListComponent extends BaseListComponent<Room> {
         });
       }
 
-      if (this.roomStatusId) {
+      if (this.roomStatusId()) {
         filters.push({
           field: "status",
           operator: "eq",
-          value: this.roomStatusId,
+          value: this.roomStatusId(),
         });
       }
 

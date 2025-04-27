@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import {Component, OnInit, ViewEncapsulation} from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -50,8 +50,9 @@ import { AutoNumberUiService } from "./auto-number-ui.service";
             </button>
         </div>
     `,
-    styleUrls: ["../../../assets/scss/operation_modal.scss"],
-    standalone: false
+    styleUrls: ["../../../assets/scss/operation.style.scss"],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None,
 })
 export class AutoNumberDeleteComponent extends BaseDeleteComponent<AutoNumber> implements OnInit {
   constructor(

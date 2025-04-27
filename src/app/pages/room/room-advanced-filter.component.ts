@@ -24,20 +24,15 @@ import { FormBuilder, FormGroup } from '@angular/forms';
             ></app-floor-select>
           </nz-form-control>
         </nz-form-item>
-        @if (filterTypes?.roomStatus){
-          <nz-form-item>
-            <nz-form-label>{{ 'RoomStatus' | translate }}</nz-form-label>
-            <nz-form-control>
-              <app-lookup-item-select
-                  [lookupType]="lookupType.Status"
-                  [showAllOption]="true"
-                  [typeLabelAll]="'AllRoomStatus' | translate"
-                  formControlName="roomStatusId"
-              ></app-lookup-item-select>
-            </nz-form-control>
-          </nz-form-item>
-        }
-        
+        <nz-form-item>
+          <nz-form-label>{{ 'RoomStatus' | translate }}</nz-form-label>
+          <nz-form-control>
+            <app-room-type-select
+                [showAllOption]="true"
+                formControlName="roomStatusId"
+            ></app-room-type-select>
+          </nz-form-control>
+        </nz-form-item>
         <nz-form-item>
           <nz-form-label >{{ 'Tags' | translate }}</nz-form-label>
           <nz-form-control>
@@ -83,15 +78,12 @@ export class RoomAdvancedFilterComponent implements OnInit {
 
 
   frm!: FormGroup;
-  lookupType = LOOKUP_TYPE;
   readonly modal = inject(NZ_MODAL_DATA);
-  filterTypes: { roomStatus: boolean} = this.modal?.filterTypes;
   storageKey:string = this.modal?.storageKey;
 
 
   ngOnInit() {
     let advancedFilter = this.sessionStorageService.getValue(this.storageKey);
-    console.log(this.filterTypes)
     this.initControl();
     this.setFormValue(advancedFilter);
   }

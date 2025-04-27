@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { SETTING_KEY, SystemSettingService } from './system-setting.service';
 import { BaseSettingSectionComponent } from '../../utils/components/base-setting-section.component';
@@ -23,7 +23,7 @@ import { SettingService } from '../../app-setting';
       [nzAutoTips]="autoTips"
     >
       <div class="sub-section">
-        <h5>{{ 'Company' | translate }}</h5>
+        <h5 >{{ 'Company' | translate }}</h5>
       </div>
 
       <nz-form-item style="margin-bottom: 15px !important;">
@@ -176,7 +176,7 @@ import { SettingService } from '../../app-setting';
       </nz-form-item>
     </form>
   `,
-    styleUrls: ['../../../assets/scss/operation_modal.scss'],
+    styleUrls: ['../../../assets/scss/operation.style.scss'],
     styles: [
         `
       .system-setting-form {
@@ -190,6 +190,7 @@ import { SettingService } from '../../app-setting';
       .sub-section h5 {
         border-bottom: 1px solid #f0f0f0;
         margin-bottom: 20px;
+        font-size: 14px;
       }
       .loading-bar {
         position: relative;
@@ -197,7 +198,8 @@ import { SettingService } from '../../app-setting';
       }
     `,
     ],
-    standalone: false
+    standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class CompanySectionComponent extends BaseSettingSectionComponent {
   constructor(
