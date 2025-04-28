@@ -1,4 +1,4 @@
-import {Component, computed, signal} from "@angular/core";
+import {Component, computed, signal, ViewEncapsulation} from "@angular/core";
 import {Observable} from "rxjs";
 import {BaseListComponent} from "../../utils/components/base-list.component";
 import {SessionStorageService} from "../../utils/services/sessionStorage.service";
@@ -7,6 +7,7 @@ import {BlockUiService} from "./block-ui.service";
 import {Block, BlockService} from "./block.service";
 import {NotificationService} from "../../utils/services/notification.service";
 import {SIZE_COLUMNS} from "../../const";
+import {QueryParam} from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-block-list",
@@ -28,7 +29,7 @@ import {SIZE_COLUMNS} from "../../const";
                       cdkDropListLockAxis="y"
                       (cdkDropListDropped)="drop($event)"
                       [cdkDropListData]="lists()">
-                      <ul *ngFor="let data of lists(); let i = index" class="block-ordering">
+                      <ul *ngFor="let data of lists(); let i = index">
                           <li [nzSelected]="blockId() == data.id"
                               nz-menu-item cdkDrag
                               (click)="changeBlockId(data.id!)">
@@ -97,6 +98,7 @@ import {SIZE_COLUMNS} from "../../const";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
   styles: [
     `
       .drag-handle {
@@ -122,9 +124,13 @@ import {SIZE_COLUMNS} from "../../const";
         display: grid;
 
         > ul {
+          height: 44px;
           > li {
             margin: 0;
           }
+        }
+        > ul:last-of-type {
+          margin-bottom: 4px;
         }
       }
 
@@ -168,6 +174,34 @@ export class BlockListComponent extends BaseListComponent<Block> {
     });
     this.blockId.set(id);
   }
+
+  override search() {
+    if (this.isLoading()) return;
+    this.isLoading.set(true);
+    setTimeout(() => {
+      let filters: any[] = [{
+        field: "search",
+        operator: "contains",
+        value: this.searchText(),
+      }];
+      this.param().filters = JSON.stringify(filters);
+      this.service.search(this.param()).subscribe({
+        next: (result: { results: Block[]; param: QueryParam }) => {
+          this.isLoading.set(true);
+          this.lists.set(result.results);
+          if (!this.blockId() && result.results.length > 0){
+            this.changeBlockId(result.results[0].id!);
+          }
+          this.param().rowCount = result.param.rowCount;
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+        },
+      });
+    }, 50);
+  }
+
 
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

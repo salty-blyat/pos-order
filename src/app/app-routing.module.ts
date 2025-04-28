@@ -10,7 +10,7 @@ import { LookupItemListComponent } from "./pages/lookup/lookup-item/lookup-item-
 import { AutoNumberSectionComponent } from "./pages/system-setting/auto-number-section.component";
 import { CompanySectionComponent } from "./pages/system-setting/company-section.component";
 import { SystemSettingComponent } from "./pages/system-setting/system-setting.component";
-import { ReportNewListComponent } from "./pages/report/report-list-new.component";
+import { ReportGroupListComponent } from "./pages/report-group/report-group-list.component";
 import { CurrencyListComponent } from "./pages/currency/currency-list.component";
 import { AutoNumberListComponent } from "./pages/auto-number/auto-number-list.component";
 import { ReportViewComponent } from "./pages/report/report-view.component";
@@ -77,7 +77,7 @@ const routes: Routes = [
       },
       {
         path: "setting/report",
-        component: ReportNewListComponent,
+        component: ReportGroupListComponent,
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Report", url: null },

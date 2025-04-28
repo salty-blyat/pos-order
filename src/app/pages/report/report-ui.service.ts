@@ -3,23 +3,20 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { ReportOperationComponent } from './report-operation.component';
 import { ReportDeleteComponent } from './report-delete.component';
 import { MainPageService } from '../../utils/services/main-page.service';
+import {BaseUiService} from "../../utils/services/base-ui.service";
 
 
 @Injectable({ providedIn: 'root' })
-export class ReportUiService {
+export class ReportUiService  extends BaseUiService{
   constructor(
-    private modal: NzModalService,
+     modalService: NzModalService,
     private mainPageService: MainPageService
-  ) {}
+  ) {
+    super(modalService, ReportOperationComponent, ReportDeleteComponent, '580px', '500px', '500px', '450px');
+  }
 
-  refresher = new EventEmitter<{
-    key: string;
-    value?: any;
-    componentId?: any;
-  }>();
-
-  showAdd(reportGroupId: number, componentId: any = ''): void {
-    this.modal.create({
+  override showAdd(reportGroupId: number, componentId: any = ''): void {
+    this.modalService.create({
       nzContent: ReportOperationComponent,
       nzData: { reportGroupId: reportGroupId },
       nzFooter: null,
@@ -34,8 +31,8 @@ export class ReportUiService {
     });
   }
 
-  showEdit(id: number): void {
-    this.modal.create({
+  override showEdit(id: number): void {
+    this.modalService.create({
       nzContent: ReportOperationComponent,
       nzFooter: null,
       nzClosable: true,
@@ -50,8 +47,8 @@ export class ReportUiService {
     });
   }
 
-  showView(id: number): void {
-    this.modal.create({
+  override showView(id: number): void {
+    this.modalService.create({
       nzContent: ReportOperationComponent,
       nzFooter: null,
       nzClosable: true,
@@ -60,21 +57,6 @@ export class ReportUiService {
       nzBodyStyle: this.mainPageService.getModalBodyStyle(),
       nzMaskClosable: false,
       nzData: { id, isView: true },
-    });
-  }
-
-  showDelete(id: number) {
-    this.modal.create({
-      nzContent: ReportDeleteComponent,
-      nzFooter: null,
-      nzClosable: true,
-      nzWidth: '450px',
-      nzBodyStyle: { height: '210px' },
-      nzMaskClosable: false,
-      nzData: { id },
-      nzOnOk: (e) => {
-        this.refresher.emit({ key: 'deleted', value: e.model });
-      },
     });
   }
 }

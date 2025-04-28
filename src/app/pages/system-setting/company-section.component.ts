@@ -12,170 +12,170 @@ import { SettingService } from '../../app-setting';
 @Component({
     selector: 'app-company-section',
     template: `
-    <app-indeterminate-bar
-      class="loading-bar"
-      *ngIf="loading"
-    ></app-indeterminate-bar>
-    <form
-      nz-form
-      class="system-setting-form"
-      [formGroup]="frm"
-      [nzAutoTips]="autoTips"
-    >
-      <div class="sub-section">
-        <h5 >{{ 'Company' | translate }}</h5>
-      </div>
+        <app-indeterminate-bar
+                class="loading-bar"
+                *ngIf="loading"
+        ></app-indeterminate-bar>
+        <form
+                nz-form
+                class="system-setting-form"
+                [formGroup]="frm"
+                [nzAutoTips]="autoTips"
+        >
+            <div class="sub-section">
+                <h5>{{ 'Company' | translate }}</h5>
+            </div>
 
-      <nz-form-item style="margin-bottom: 15px !important;">
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ 'Logo' | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="">
-          <div class="photo">
-            <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="">
-              <nz-upload
-                [nzAction]="uploadUrl"
-                [(nzFileList)]="fileProfile"
-                [nzBeforeUpload]="beforeUpload"
-                (nzChange)="handleUploadProfile($event)"
-                nzListType="picture-card"
-                [nzShowButton]="fileProfile.length < 1"
-                style="width: 100px; height: 100px"
-              >
-                <div>
-                  <img
-                    [src]="companyLogoUrl"
-                    alt=""
-                    style="width: 100px; height: 100px"
-                  />
+            <nz-form-item style="margin-bottom: 15px !important;">
+                <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                    {{ 'Logo' | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="">
+                    <div class="photo">
+                        <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="">
+                            <nz-upload
+                                    [nzAction]="uploadUrl"
+                                    [(nzFileList)]="fileCompany"
+                                    [nzBeforeUpload]="beforeUpload"
+                                    (nzChange)="handleUploadCompany($event)"
+                                    nzListType="picture-card"
+                                    [nzShowButton]="fileCompany.length < 1"
+                                    style="width: 100px; height: 100px"
+                            >
+                                <div>
+                                    <img
+                                            [src]="companyLogoUrl"
+                                            alt=""
+                                            style="width: 100px; height: 100px"
+                                    />
+                                </div>
+                            </nz-upload>
+                        </nz-form-control>
+                    </div>
+                    <input
+                            hidden
+                            [(ngModel)]="companyLogoUrl"
+                            nz-input
+                            formControlName="{{ SettingKey.CompanyLogo }}"
+                    />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item style="margin-bottom: 10px !important;">
+                <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                    {{ 'Name' | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="8" [nzXs]="24">
+                    <input nz-input formControlName="{{ SettingKey.CompanyNameEn }}"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item style="margin-bottom: 10px !important;">
+                <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                    {{ 'NameKh' | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="8" [nzXs]="24">
+                    <input nz-input formControlName="{{ SettingKey.CompanyName }}"/>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item style="margin-bottom: 10px !important;">
+                <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                    {{ 'Phone' | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="8" [nzXs]="24">
+                    <input nz-input formControlName="{{ SettingKey.CompanyPhone }}"/>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item style="margin-bottom: 10px !important;">
+                <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                    {{ 'Email' | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="8" [nzXs]="24">
+                    <input nz-input formControlName="{{ SettingKey.CompanyEmail }}"/>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item style="margin-bottom: 10px !important;">
+                <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                    {{ 'Website' | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="8" [nzXs]="24">
+                    <input nz-input formControlName="{{ SettingKey.CompanyWebsite }}"/>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item style="margin-bottom: 10px !important;">
+                <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                    {{ 'Address' | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="">
+          <textarea
+                  nz-input
+                  type="text"
+                  formControlName="{{ SettingKey.CompanyAddressEn }}"
+                  rows="2"
+          ></textarea>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item style="margin-bottom: 10px !important;">
+                <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                    {{ 'AddressKh' | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="">
+          <textarea
+                  nz-input
+                  type="text"
+                  formControlName="{{ SettingKey.CompanyAddress }}"
+                  rows="2"
+          ></textarea>
+                </nz-form-control>
+            </nz-form-item>
+
+            <ng-container *ngIf="isAdvancedSetting">
+                <div class="sub-section">
+                    <h5>{{ 'Currency' | translate }}</h5>
                 </div>
-              </nz-upload>
-            </nz-form-control>
-          </div>
-          <input
-            hidden
-            [(ngModel)]="companyLogoUrl"
-            nz-input
-            formControlName="{{ SettingKey.CompanyLogo }}"
-          />
-        </nz-form-control>
-      </nz-form-item>
 
-      <nz-form-item style="margin-bottom: 10px !important;">
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ 'Name' | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <input nz-input formControlName="{{ SettingKey.CompanyNameEn }}" />
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item style="margin-bottom: 10px !important;">
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ 'NameKh' | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <input nz-input formControlName="{{ SettingKey.CompanyName }}" />
-        </nz-form-control>
-      </nz-form-item>
+                <nz-form-item style="margin-bottom: 10px !important;">
+                    <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                        {{ 'MainCurrency' | translate }}
+                    </nz-form-label>
+                    <nz-form-control [nzSm]="8" [nzXs]="24">
+                        <app-currency-select
+                                formControlName="{{ SettingKey.MainCurrency }}"
+                        ></app-currency-select>
+                    </nz-form-control>
+                </nz-form-item>
 
-      <nz-form-item style="margin-bottom: 10px !important;">
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ 'Phone' | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <input nz-input formControlName="{{ SettingKey.CompanyPhone }}" />
-        </nz-form-control>
-      </nz-form-item>
+                <nz-form-item style="margin-bottom: 10px !important;">
+                    <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                        {{ 'SecondCurrency' | translate }}
+                    </nz-form-label>
+                    <nz-form-control [nzSm]="8" [nzXs]="24">
+                        <app-currency-select
+                                formControlName="{{ SettingKey.SecondCurrency }}"
+                        ></app-currency-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </ng-container>
 
-      <nz-form-item style="margin-bottom: 10px !important;">
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ 'Email' | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <input nz-input formControlName="{{ SettingKey.CompanyEmail }}" />
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item style="margin-bottom: 10px !important;">
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ 'Website' | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <input nz-input formControlName="{{ SettingKey.CompanyWebsite }}" />
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item style="margin-bottom: 10px !important;">
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ 'Address' | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="">
-          <textarea
-            nz-input
-            type="text"
-            formControlName="{{ SettingKey.CompanyAddressEn }}"
-            rows="2"
-          ></textarea>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item style="margin-bottom: 10px !important;">
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ 'AddressKh' | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24" nzErrorTip="">
-          <textarea
-            nz-input
-            type="text"
-            formControlName="{{ SettingKey.CompanyAddress }}"
-            rows="2"
-          ></textarea>
-        </nz-form-control>
-      </nz-form-item>
-
-      <ng-container *ngIf="isAdvancedSetting">
-        <div class="sub-section">
-          <h5>{{ 'Currency' | translate }}</h5>
-        </div>
-
-        <nz-form-item style="margin-bottom: 10px !important;">
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-            {{ 'MainCurrency' | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="8" [nzXs]="24">
-            <app-currency-select
-              formControlName="{{ SettingKey.MainCurrency }}"
-            ></app-currency-select>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item style="margin-bottom: 10px !important;">
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-            {{ 'SecondCurrency' | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="8" [nzXs]="24">
-            <app-currency-select
-              formControlName="{{ SettingKey.SecondCurrency }}"
-            ></app-currency-select>
-          </nz-form-control>
-        </nz-form-item>
-      </ng-container>
-
-      <nz-form-item>
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzNoColon> </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24" style="text-align: right">
-          <button
-            nz-button
-            nzType="primary"
-            [disabled]="!frm.valid"
-            (click)="submit()"
-            style="margin: 0"
-          >
-            <i *ngIf="loading" nz-icon nzType="loading"></i>
-            {{ 'Save' | translate }}
-          </button>
-        </nz-form-control>
-      </nz-form-item>
-    </form>
-  `,
+            <nz-form-item>
+                <nz-form-label [nzSm]="7" [nzXs]="24" nzNoColon></nz-form-label>
+                <nz-form-control [nzSm]="8" [nzXs]="24" style="text-align: right">
+                    <button
+                            nz-button
+                            nzType="primary"
+                            [disabled]="!frm.valid"
+                            (click)="submit()"
+                            style="margin: 0"
+                    >
+                        <i *ngIf="loading" nz-icon nzType="loading"></i>
+                        {{ 'Save' | translate }}
+                    </button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    `,
     styleUrls: ['../../../assets/scss/operation.style.scss'],
     styles: [
         `
@@ -226,7 +226,7 @@ export class CompanySectionComponent extends BaseSettingSectionComponent {
     // SETTING_KEY.SecondCurrency,
   ];
 
-  fileProfile: NzUploadFile[] = [];
+  fileCompany: NzUploadFile[] = [];
   // image: Image = {};
   companyLogoUrl: string = '';
   override ngOnInit(): void {
@@ -258,14 +258,14 @@ export class CompanySectionComponent extends BaseSettingSectionComponent {
       observer.complete();
     });
 
-  handleUploadProfile(info: NzUploadChangeParam): void {
-    let fileList = [...info.fileList];
+  handleUploadCompany(info: NzUploadChangeParam): void {
+    let fileCompanies = [...info.fileList];
 
     // 1. Limit 5 number of uploaded files
-    fileList = fileList.slice(-5);
+    fileCompanies = fileCompanies.slice(-5);
 
     // 2. Read from response and show file link
-    fileList = fileList.map((file) => {
+    fileCompanies = fileCompanies.map((file) => {
       if (file.response) {
         // Component will show file.url as link
         file.url = file.response.url;
@@ -275,7 +275,7 @@ export class CompanySectionComponent extends BaseSettingSectionComponent {
       }
       return file;
     });
-    this.fileProfile = fileList;
-    this.companyLogoUrl = this.fileProfile[0]?.url!;
+    this.fileCompany = fileCompanies;
+    this.companyLogoUrl = this.fileCompany[0]?.url!;
   }
 }

@@ -98,7 +98,7 @@ export const SIZE_COLUMNS = {
   NAME: "200px",
   CODE: "100px",
   DESCRIPTION: "150px",
-  ACTION: "200px",
+  ACTION: "180px",
   STATUS: "140px",
   DATE: "180px",
   DATE_RANGE: "220px",

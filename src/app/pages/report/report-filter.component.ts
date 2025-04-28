@@ -4,14 +4,13 @@ import {
   OnInit,
   AfterViewInit,
   Output,
-  EventEmitter,
+  EventEmitter, ViewEncapsulation,
 } from "@angular/core";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ReportParam } from "./report.service";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { BRANCH_STORAGE_KEY, ReportParamDisplay } from "../../const";
+import { ReportParamDisplay } from "../../const";
 import { DatetimeHelper } from "../../helpers/datetime-helper";
-import { LocalStorageService } from "../../utils/services/localStorage.service";
 
 @Component({
   selector: "app-report-filter",
@@ -107,6 +106,7 @@ import { LocalStorageService } from "../../utils/services/localStorage.service";
     `,
   ],
   standalone: false,
+  encapsulation: ViewEncapsulation.None
 })
 export class ReportFilterComponent implements OnInit, AfterViewInit {
   constructor(private fb: FormBuilder) {}

@@ -8,10 +8,7 @@ export interface Member {
   code?: string;
   name?: string;
   sexId?: number;
-  unit?: string;
-  level?: string;
   phone?: string;
-  sex?: string;
   nameEn?: string
   photo?: string
   email?: string
@@ -41,6 +38,13 @@ export interface Attachment {
   type?: string
   date?: Date
   by?: string
+}
+
+export interface MemberAdvancedFilter {
+  sexId: number;
+  groupId: number;
+  nationalityId: number;
+  isAdvancedFilter: boolean;
 }
 
 @Injectable({ providedIn: "root" })

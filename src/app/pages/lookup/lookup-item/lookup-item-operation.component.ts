@@ -52,7 +52,7 @@ import {BaseOperationComponent} from "../../../utils/components/base-operation.c
                                       [nzAction]="uploadUrl"
                                       nzListType="picture-card"
                                       [(nzFileList)]="file"
-                                      (nzChange)="handleUploadProfile($event)"
+                                      (nzChange)="handleUploadLookupItem($event)"
                                       [nzShowUploadList]="nzShowIconList"
                                       [nzShowButton]="file.length < 1"
                               >
@@ -67,7 +67,7 @@ import {BaseOperationComponent} from "../../../utils/components/base-operation.c
                                       [nzAction]="uploadUrl"
                                       nzListType="picture-card"
                                       [(nzFileList)]="file"
-                                      (nzChange)="handleUploadProfile($event)"
+                                      (nzChange)="handleUploadLookupItem($event)"
                                       [nzShowButton]="file.length < 1"
                                       [nzShowUploadList]="nzShowUploadList"
                                       [nzDisabled]="true"
@@ -195,12 +195,12 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     });
   }
 
-  handleUploadProfile(info: NzUploadChangeParam): void {
-    let fileList = [...info.fileList];
+  handleUploadLookupItem(info: NzUploadChangeParam): void {
+    let fileListLookupItems = [...info.fileList];
     // 1. Limit 5 number of uploaded files
-    fileList = fileList.slice(-5);
+    fileListLookupItems = fileListLookupItems.slice(-5);
     // 2. Read from response and show file link
-    fileList = fileList.map((file) => {
+    fileListLookupItems = fileListLookupItems.map((file) => {
       if (file.response) {
         // Component will show file.url as link
         file.url = file.response.url;
@@ -210,7 +210,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
       }
       return file;
     });
-    this.file = fileList;
+    this.file = fileListLookupItems;
   }
 
   override onSubmit(e: any): void {

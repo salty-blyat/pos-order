@@ -58,9 +58,6 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
         nz-select {
           width: 100%;
         }
-        cdk-virtual-scroll-viewport {
-          min-height: 34px;
-        }
       `,
     ],
     encapsulation: ViewEncapsulation.None,
@@ -71,7 +68,7 @@ export class BlockSelectComponent extends BaseSelectComponent<Block>{
          service: BlockService,
          uiService: BlockUiService,
          sessionStorageService: SessionStorageService,
-        private authService: AuthService
+         private authService: AuthService
     ) {
         super(service, uiService, sessionStorageService, 'block-filter', 'all-block')
     }

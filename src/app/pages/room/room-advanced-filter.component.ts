@@ -2,19 +2,18 @@ import {Component, inject, OnInit, ViewEncapsulation} from '@angular/core';
 import { RoomUiService } from './room-ui.service';
 import {NZ_MODAL_DATA, NzModalRef} from 'ng-zorro-antd/modal';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
-import { LOOKUP_TYPE } from '../lookup/lookup-type.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'app-room-advanced-filter',
     template: `
    <div *nzModalTitle>
-      <div style="text-align: center">
-        <h4 style="font-weight: 600">{{ 'Advanced Filter' | translate }}</h4>
+      <div>
+        <h4>{{ 'Advanced Filter' | translate }}</h4>
       </div>
     </div>
     <div class="modal-content">
-      <form nzLayout="vertical" nz-form [formGroup]="frm">
+      <form nzLayout="vertical" style="padding-top: 4px;" nz-form [formGroup]="frm">
         <nz-form-item>
           <nz-form-label>{{ 'Floor' | translate }}</nz-form-label>
           <nz-form-control>
@@ -58,11 +57,14 @@ import { FormBuilder, FormGroup } from '@angular/forms';
     </div>
   `,
     styles: [`
-      .ant-form-item-label > label {
-        font-size: 12px;
-        font-weight: 700;
-        color: rgba(0, 0, 0, 0.45);
-      }
+      .ant-form-item-label{
+        padding-bottom: 2px !important;
+        > label {
+          font-size: 13px;
+          font-weight: 700;
+          color: rgba(0, 0, 0, 0.45);
+        }
+      } 
   `],
   styleUrls: ['../../../assets/scss/operation.style.scss'],
   standalone: false,
@@ -87,7 +89,7 @@ export class RoomAdvancedFilterComponent implements OnInit {
     this.initControl();
     this.setFormValue(advancedFilter);
   }
-  private initControl() {
+  initControl() {
     this.frm = this.fb.group({
       roomTypeId: [0],
       roomStatusId: [0],

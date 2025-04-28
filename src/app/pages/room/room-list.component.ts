@@ -184,7 +184,6 @@ export class RoomListComponent extends BaseListComponent<Room> {
   hasAdvancedFilter = signal<boolean>(false);
 
   override ngOnInit() {
-    console.log(this.sessionStorageService.getValue(this.roomTypeIdKey));
     this.refreshSub = this.uiService.refresher.subscribe((result) => {
       if (result.key === "advanced-filter-room") {
         this.setAdvancedFilter(result.value);

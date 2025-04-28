@@ -113,15 +113,6 @@ export class AutoNumberOperationComponent extends BaseOperationComponent<AutoNum
   isAutoNumberEdit: boolean = true;
   isAutoNumberRemove: boolean = true;
 
-  override ngOnInit(): void {
-    // this.isAutoNumberEdit = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__AUTO_NUMBER__EDIT
-    // );
-    // this.isAutoNumberRemove = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__AUTO_NUMBER__REMOVE
-    // );
-    super.ngOnInit();
-  }
   override initControl(): void {
     const {
       nameMaxLengthValidator,

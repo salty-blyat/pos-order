@@ -154,33 +154,21 @@ export class FloorListComponent extends BaseListComponent<Floor> implements OnCh
     super(service, uiService, sessionStorageService, "floor-list");
   }
   blockId = input<number>(0);
-  filters: Filter[] = [
-    {
-      field: "blockId",
-      operator: "eq",
-      value: this.blockId(),
-    },
-  ];
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["blockId"] && !changes["blockId"].firstChange) {
-      this.filters = [
+    if (changes["blockId"]) {
+      this.search(changes["blockId"]?.currentValue);
+    }
+  }
+  override search(blockId?: any): void {
+    if (blockId) {
+      let filters = [
         {
           field: "blockId",
           operator: "eq",
-          value: this.blockId(),
+          value: blockId,
         },
-      ];
-      super.search(this.filters);
-    }
-  }
-  override search() {
-    if (this.blockId()) {
-      const filters =[{
-        field: "blockId",
-        operator: "eq",
-        value: this.blockId(),
-      }];
+      ]
       super.search(filters);
     }
   }

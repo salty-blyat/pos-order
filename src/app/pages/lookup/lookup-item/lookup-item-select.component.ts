@@ -132,7 +132,7 @@ export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem>{
     super(service, uiService, sessionStorageService, 'lookup-item-filter', 'all-lookup-item')
   }
 
-  showAll = input<string>('allLookupItem');
+  showAll = input<string>('All');
   allowClear = input<boolean>(false);
   lookupType = input<LOOKUP_TYPE>(LOOKUP_TYPE.ChargeType);
   statuses = input<number[]>([]);

@@ -95,7 +95,7 @@ import { ReportGroupSelectComponent } from "./pages/report-group/report-group-se
 import { ReportDeleteComponent } from "./pages/report/report-delete.component";
 import { ReportDynamicInputComponent } from "./pages/report/report-dynamic-input.component";
 import { ReportFilterComponent } from "./pages/report/report-filter.component";
-import { ReportNewListComponent } from "./pages/report/report-list-new.component";
+import { ReportGroupListComponent } from "./pages/report-group/report-group-list.component";
 import { ReportListComponent } from "./pages/report/report-list.component";
 import { ReportViewComponent } from "./pages/report/report-view.component";
 import { StaticDropdownMultipleSelectComponent } from "./pages/report/static-dropdown-multiple-select.component";
@@ -160,6 +160,7 @@ import { ChargeListComponent } from "./pages/charge/charge-list.component";
 import { ChargeOperationComponent } from "./pages/charge/charge-operation.component";
 import { RoomChargeTypeSelectComponent } from "./pages/room-charge-type/room-charge-type-select.component";
 import { GroupSelectComponent } from "./pages/group/group-select.component";
+import {MemberAdvancedFilterComponent} from "./pages/member/member-advanced-filter.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -268,7 +269,7 @@ export class CustomTranslate implements TranslateLoader {
     ReportDeleteComponent,
     ReportDynamicInputComponent,
     ReportFilterComponent,
-    ReportNewListComponent,
+    ReportGroupListComponent,
     ReportListComponent,
     ReportViewComponent,
     ReportOperationComponent,
@@ -310,6 +311,7 @@ export class CustomTranslate implements TranslateLoader {
     //member
     MemberListComponent,
     MemberOperationComponent,
+    MemberAdvancedFilterComponent,
 
     // member level
     MemberLevelListComponent,

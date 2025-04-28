@@ -1,4 +1,4 @@
-import { Component, computed, OnDestroy, signal } from "@angular/core";
+import {Component, computed, signal, ViewEncapsulation} from "@angular/core";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Observable } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
@@ -66,8 +66,8 @@ import { SIZE_COLUMNS } from "../../const";
               <th [nzWidth]="SIZE_COLUMNS.FORMAT">
                 {{ "Format" | translate }}
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.ACTION" class="col-action" nzAlign="right"></th>
+              <th>{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
@@ -134,6 +134,7 @@ import { SIZE_COLUMNS } from "../../const";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class AutoNumberListComponent extends BaseListComponent<AutoNumber> {
   constructor(

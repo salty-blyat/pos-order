@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from "@angular/core";
+import {Component, ViewEncapsulation} from "@angular/core";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
 import { RoomType, RoomTypeService } from "./room-type.service";
 import { FormBuilder } from "@angular/forms";
@@ -55,7 +55,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
     standalone: false
 
 })
-export class RoomTypeDeleteComponent extends BaseDeleteComponent<RoomType> implements OnInit {
+export class RoomTypeDeleteComponent extends BaseDeleteComponent<RoomType>{
   constructor(
     service: RoomTypeService,
     uiService: RoomTypeUiService,

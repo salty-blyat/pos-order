@@ -1,25 +1,14 @@
-import {
-  Component,
-  computed,
-  EventEmitter,
-  OnDestroy,
-  Output,
-  signal, ViewEncapsulation,
-} from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation,} from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import { QueryParam } from "../../utils/services/base-api.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Observable, timer } from "rxjs";
-import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
-import { Report } from "./report.service";
-import {
-  ReportGroup,
-  ReportGroupService,
-} from "../report-group/report-group.service";
-import { ReportGroupUiService } from "../report-group/report-group-ui.service";
+import { ActivatedRoute } from "@angular/router";
+import { Observable } from "rxjs";
+import { Report } from "../report/report.service";
+import { ReportGroupService } from "./report-group.service";
+import { ReportGroupUiService } from "./report-group-ui.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { NotificationService } from "../../utils/services/notification.service";
+import {Block} from "../block/block.service";
+import {QueryParam} from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-report-new-list",
@@ -31,8 +20,8 @@ import { NotificationService } from "../../utils/services/notification.service";
       ></app-breadcrumb>
       <nz-content>
         <nz-layout>
-          <nz-sider nzWidth="300px" nzTheme="light">
-            <div style="margin: 14px 8px 8px 0px;">
+          <nz-sider nzWidth="280px" nzTheme="light">
+            <div style="margin: 10px 8px 0 0;">
               <app-filter-input
                 storageKey="report-new-list-search"
                 (filterChanged)="
@@ -44,47 +33,46 @@ import { NotificationService } from "../../utils/services/notification.service";
             <ul
               nz-menu
               nzMode="inline"
-              class="sider-menu"
-              cdkDropList cdkDropListLockAxis="y"
+              class="menu-custom-report-group"
+              cdkDropList 
+              cdkDropListLockAxis="y"
               (cdkDropListDropped)="drop($event)"
               [cdkDropListData]="lists()"
             >
               <ul
                 *ngFor="let data of lists(); let i = index"
-                cdkDrag
                 style="margin-right: 8px;"
-                class="block-ordering"
               >
-                <span
-                  nz-icon
-                  nzType="holder"
-                  nzTheme="outline"
-                  class="block-move"
-                  cdkDragHandle
-                ></span>
                 <li
                   nz-menu-item
+                  cdkDrag
                   (click)="changeGroupId(data.id!)"
                   [nzSelected]="reportGroupId() === data.id!"
                   style="padding-left: 36px"
                 >
+                    <span
+                            nz-icon
+                            nzType="holder"
+                            nzTheme="outline"
+                            class="drag-handle"
+                            cdkDragHandle
+                    ></span>
                   {{ data.name }}
+                    <a
+                            [nzDropdownMenu]="menu"
+                            class="action-button menu-dropdown"
+                            nz-dropdown
+                            nzTrigger="click"
+                            nzPlacement="bottomRight"
+                    >
+                        <i
+                                nz-icon
+                                nzType="ellipsis"
+                                nzTheme="outline"
+                                style="font-size: 22px"
+                        ></i>
+                    </a>
                 </li>
-
-                <a
-                  [nzDropdownMenu]="menu"
-                  class="action-button menu-dropdown"
-                  nz-dropdown
-                  nzTrigger="click"
-                  nzPlacement="bottomRight"
-                >
-                  <i
-                    nz-icon
-                    nzType="ellipsis"
-                    nzTheme="outline"
-                    style="font-size: 22px"
-                  ></i>
-                </a>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <ul nz-menu nzSelectable>
                     <li
@@ -121,7 +109,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                   *ngIf="isReportGroupAdd()"
                   nz-button
                   nzType="dashed"
-                  style="width: 292px;"
+                  style="width: 272px;"
                   (click)="uiService.showAdd(reportGroupId())"
                 >
                   <i nz-icon nzType="plus" nzTheme="outline"></i>
@@ -135,7 +123,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                   nzType="primary"
                   (click)="saveOrdering()"
                   [nzLoading]="isLoading()"
-                  style="width: 292px;"
+                  style="width: 272px;"
                 >
                   {{ "Save" | translate }}
                 </button>
@@ -151,58 +139,56 @@ import { NotificationService } from "../../utils/services/notification.service";
       </nz-content>
     </nz-layout>
   `,
+  styleUrls: ["../../../assets/scss/list.style.scss"],
+  standalone: false,
+  encapsulation: ViewEncapsulation.None,
   styles: [
     `
       .inner-content-report-list{
         padding: 0 0 0 14px;
         border-left: 1px solid var(--ant-border-color);
       }
+      .drag-handle {
+        cursor: move;
+        position: absolute;
+        left: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
       .sider-menu {
         height: 91.7%;
         background: #fff;
       }
-      .ant-layout-content {
-        margin: 0 -15px;
-      }
+      
       .menu-dropdown {
         position: absolute;
         right: 10px;
-        margin-bottom: 4px;
-      }
-      ::ng-deep .cdk-drag-preview {
-        display: flex;
-        background: rgba(0, 0, 0, 0.1);
-        gap: 1em;
 
-        align-items: center;
-        padding: 0 4px;
+        i[nz-icon] {
+          font-size: 18px !important;
+        }
       }
 
-      ::ng-deep .cdk-drag-placeholder {
-        opacity: 0;
-      }
-      .block-ordering {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
-        margin-top: -8px;
-      }
-      .block-move {
-        position: absolute;
-        z-index: 1000;
-        width: 35px;
-        cursor: move;
-        padding: 7px;
-        margin-bottom: 5px;
+      .menu-custom-report-group {
+        background: #fff;
+        gap: 6px;
+        display: grid;
+
+        > ul {
+          height: 44px;
+           li {
+            margin: 0;
+          }
+        }
+
+        > ul:last-of-type {
+          margin-bottom: 4px;
+        }
       }
     `,
   ],
-  styleUrls: ["../../../assets/scss/list.style.scss"],
-  standalone: false,
-  encapsulation: ViewEncapsulation.None
 })
-export class ReportNewListComponent extends BaseListComponent<Report> {
+export class ReportGroupListComponent extends BaseListComponent<Report> {
   constructor(
     override service: ReportGroupService,
     uiService: ReportGroupUiService,
@@ -212,55 +198,47 @@ export class ReportNewListComponent extends BaseListComponent<Report> {
   ) {
     super(service, uiService, sessionStorageService, "report_group_list");
   }
+  readonly reportGroupSelectedKey = "report-group-selected-key";
 
-  // @Output() reportGroup: EventEmitter<any> = new EventEmitter<any>();
   isReportGroupAdd = signal<boolean>(true);
   isReportGroupEdit = signal<boolean>(true);
   isReportGroupRemove = signal<boolean>(true);
   isReportGroupView = signal<boolean>(true);
-  reportGroupId = signal<number>(0);
-  // draged = signal<boolean>(false);
+  reportGroupId = signal<number>(parseInt(this.sessionStorageService.getValue(this.reportGroupSelectedKey) ?? 0) ?? 0);
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  override ngOnInit() {
-    // this.isReportGroupAdd = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__REPORT_GROUP__ADD
-    // );
-    // this.isReportGroupEdit = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__REPORT_GROUP__EDIT
-    // );
-    // this.isReportGroupRemove = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__REPORT_GROUP__REMOVE
-    // );
-    // this.isReportGroupView = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__REPORT_GROUP__VIEW
-    // );
-    // this.refreshSub = this.uiService.refresher.subscribe((result) => {
-    //   this.search();
-    // });
-    //
-    // super.ngOnInit();
+
+  changeGroupId(id: number) {
+    this.sessionStorageService.setValue({
+      key: this.reportGroupSelectedKey,
+      value: id,
+    });
+    this.reportGroupId.set(id);
   }
 
-  // saveOrdering() {
-  //   this.isLoading.set(true);
-  //   let newLists: Report[] = [];
-
-  //   this.lists().forEach((item, i) => {
-  //     item.ordering = i + 1;
-  //     newLists.push(item);
-  //   });
-  //   this.service.updateOrdering(newLists).subscribe(() => {
-  //     this.isLoading.set(false);
-  //     this.draged.set(false);
-  //     this.notificationService.successNotification('Successfully Saved');
-  //   });
-  // }
-
-  // // drop(event: CdkDragDrop<any, any, any>) {
-  // //   moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
-  // //   if (event.previousIndex !== event.currentIndex) this.draged.set(true);
-  // // }
-  changeGroupId(id: number) {
-    this.reportGroupId.set(id);
+  override search() {
+    if (this.isLoading()) return;
+    this.isLoading.set(true);
+    setTimeout(() => {
+      let filters: any[] = [{
+        field: "search",
+        operator: "contains",
+        value: this.searchText(),
+      }];
+      this.param().filters = JSON.stringify(filters);
+      this.service.search(this.param()).subscribe({
+        next: (result: { results: Block[]; param: QueryParam }) => {
+          this.isLoading.set(true);
+          this.lists.set(result.results);
+          if (!this.reportGroupId() && result.results.length > 0){
+            this.changeGroupId(result.results[0].id!);
+          }
+          this.param().rowCount = result.param.rowCount;
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+        },
+      });
+    }, 50);
   }
 }

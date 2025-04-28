@@ -349,10 +349,12 @@ export class CommonValidators extends Validators {
     function isInteger(value: any): boolean {
       return typeof value === 'string' && /^\d+$/.test(value);
     }
+
     if (isEmptyInputValue(control.value)) {
       return null;
     }
-    return isInteger(control.value)
+
+    return isInteger(control.value?.toString())
       ? null
       : {
         integerValidator: {

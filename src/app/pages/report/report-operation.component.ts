@@ -1,6 +1,6 @@
-import {Component, Input, OnInit, inject, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 import { CommonValidators } from '../../utils/services/common-validators';
 import {
   Report,
@@ -22,6 +22,7 @@ import { DateRangeInputReportComponent } from '../../utils/components/date-range
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { timer } from 'rxjs';
 import { NotificationService } from '../../utils/services/notification.service';
+import {BaseOperationComponent} from "../../utils/components/base-operation.component";
 
 
 export let ParamSelectComponent = {
@@ -36,20 +37,17 @@ export let ParamSelectComponent = {
     selector: 'app-report-operation',
     template: `
     <div *nzModalTitle class="modal-header-ellipsis">
-      <span *ngIf="!modal.id">{{ 'Add' | translate }}</span>
-      <span *ngIf="modal.id && !modal.isView"
+      <span *ngIf="!modal?.id">{{ 'Add' | translate }}</span>
+      <span *ngIf="modal.id && !modal?.isView"
         >{{ 'Edit' | translate }}
-        {{ model.name || ('loading' | translate) }}</span
+        {{ model?.name || ('loading' | translate) }}</span
       >
-      <span *ngIf="modal.id && modal.isView">{{
-        model.name || ('Loading' | translate)
+      <span *ngIf="modal?.id && modal?.isView">{{
+        model?.name || ('Loading' | translate)
       }}</span>
     </div>
     <div class="modal-content">
-      <nz-spin
-        *ngIf="loading"
-        style="position: absolute; top: 50%; left: 50%"
-      ></nz-spin>
+      <app-loading *ngIf="isLoading()"></app-loading>
       <form
         nz-form
         [formGroup]="frm"
@@ -177,13 +175,13 @@ export let ParamSelectComponent = {
               (nzOnCancel)="cancelParamFrmModal()"
             >
               <div *nzModalTitle>
-                <span *ngIf="!modal.id">{{ 'Add' | translate }}</span>
-                <span *ngIf="modal.id && !modal.isView"
+                <span *ngIf="!modal?.id">{{ 'Add' | translate }}</span>
+                <span *ngIf="modal?.id && !modal?.isView"
                   >{{ 'Edit' | translate }}
-                  {{ model.name || ('Loading' | translate) }}</span
+                  {{ model?.name || ('Loading' | translate) }}</span
                 >
-                <span *ngIf="modal.id && modal.isView">{{
-                  model.name || ('Loading' | translate)
+                <span *ngIf="modal?.id && modal?.isView">{{
+                  model?.name || ('Loading' | translate)
                 }}</span>
               </div>
               <div *nzModalContent>
@@ -274,7 +272,7 @@ export let ParamSelectComponent = {
                       )
                     "
                   >
-                    <i *ngIf="loading" nz-icon nzType="loading"></i>
+                    <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
                     {{ 'Save' | translate }}
                   </button>
                   <button
@@ -289,7 +287,7 @@ export let ParamSelectComponent = {
             </nz-modal>
             <cdk-virtual-scroll-viewport
               itemSize="50"
-              [ngStyle]="{ height: isView ? '365px' : 'calc(100vh - 240px)' }"
+              [ngStyle]="{ height: modal?.isView ? '365px' : 'calc(100vh - 240px)' }"
             >
               <div
                 cdkDropList cdkDropListLockAxis="y"
@@ -299,8 +297,8 @@ export let ParamSelectComponent = {
                 <!--              <div style="margin-right: 5px">-->
                 <div
                   [ngStyle]="{
-                    'background-color': isView ? '#f5f5f5' : '#E6F7FF',
-                    'border-left': isView
+                    'background-color': modal?.isView ? '#f5f5f5' : '#E6F7FF',
+                    'border-left': modal?.isView
                       ? '3px solid #C0C0C0'
                       : '3px solid #1890ff'
                   }"
@@ -336,7 +334,7 @@ export let ParamSelectComponent = {
                       </a>
                       <nz-divider nzType="vertical"></nz-divider>
                       <a
-                        *ngIf="!isView"
+                        *ngIf="!modal?.isView"
                         nz-button
                         nzType="link"
                         style="padding: 0"
@@ -346,7 +344,7 @@ export let ParamSelectComponent = {
                       </a>
                       <nz-divider nzType="vertical"></nz-divider>
                       <a
-                        *ngIf="!isView"
+                        *ngIf="!modal?.isView"
                         nz-button
                         nzType="link"
                         style="padding: 0"
@@ -359,7 +357,7 @@ export let ParamSelectComponent = {
                   </div>
                 </div>
                 <button
-                  *ngIf="!isView"
+                  *ngIf="!modal?.isView"
                   nz-button
                   nzType="dashed"
                   class="buttonAddfilter"
@@ -405,45 +403,45 @@ export let ParamSelectComponent = {
       </form>
     </div>
     <div *nzModalFooter>
-      <div *ngIf="!isView">
+      <div *ngIf="!modal?.isView">
         <button
           nz-button
           nzType="primary"
           [disabled]="!frm.valid"
-          (click)="onSubmit()"
+          (click)="onSubmit($event)"
         >
-          <i *ngIf="loading" nz-icon nzType="loading"></i>
+          <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
           {{ 'Save' | translate }}
         </button>
         <button nz-button nzType="default" (click)="cancel()">
           {{ 'Cancel' | translate }}
         </button>
       </div>
-      <div *ngIf="isView">
+      <div *ngIf="modal?.isView">
         <a
           nz-typography
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!loading && isReportEdit"
+          *ngIf="!isLoading() && isReportEdit"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ 'Edit' | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!loading && isReportEdit"
+          *ngIf="!isLoading() && isReportEdit"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!loading && isReportRemove"
+          *ngIf="!isLoading() && isReportRemove"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ 'Delete' | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!loading && isReportRemove"
+          *ngIf="!isLoading() && isReportRemove"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -492,28 +490,22 @@ export let ParamSelectComponent = {
     standalone: false,
     encapsulation: ViewEncapsulation.None
 })
-export class ReportOperationComponent implements OnInit {
+export class ReportOperationComponent extends BaseOperationComponent<Report>{
   constructor(
-    private fb: FormBuilder,
-    private ref: NzModalRef<ReportOperationComponent>,
-    private service: ReportService,
-    public uiService: ReportUiService,
+    fb: FormBuilder,
+    ref: NzModalRef<ReportOperationComponent>,
+    service: ReportService,
+    uiService: ReportUiService,
     private authService: AuthService,
     private notificationService: NotificationService
-  ) {}
+  ) {
+    super(fb, ref,service,uiService);
+  }
 
-  readonly modal = inject(NZ_MODAL_DATA);
-  // @Input() id: number = 0;
-  @Input() isView: boolean = false;
   @ViewChild('codeEditorTemplate', { static: false }) codeEditorTemplate?: any;
   @ViewChild('codeEditorCommand', { static: false }) codeEditorCommand?: any;
   printOption = { pageSize: PageSize, orientation: Orientation };
   paramDisplay = ReportParamDisplay;
-  model: Report = {};
-  loading = false;
-  refreshSub$: any;
-  autoTips = CommonValidators.autoTips;
-  frm!: FormGroup;
   paramFrm!: FormGroup;
   paramFrmModal: { isVisible: boolean; operation: string; index: number } = {
     isVisible: false,
@@ -529,46 +521,7 @@ export class ReportOperationComponent implements OnInit {
   isReportRemove: boolean = true;
   type: any;
 
-  ngOnInit(): void {
-    // this.isReportEdit = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__REPORT__EDIT
-    // );
-    // this.isReportRemove = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__REPORT__REMOVE
-    // );
-
-    this.initControl();
-    if (this.isView) {
-      this.frm.disable();
-      this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
-        if (e.key == 'edited') {
-          this.loading = true;
-          this.service.find(this.modal.id).subscribe(
-            (result: Report) => {
-              this.loading = false;
-              this.model = result;
-              this.setFormValue();
-            },
-            (error: any) => {
-              console.log(error);
-            }
-          );
-        } else {
-          this.cancel();
-        }
-      });
-    }
-    if (this.modal.id) {
-      this.loading = true;
-      this.service.find(this.modal.id).subscribe((result: Report) => {
-        this.loading = false;
-        this.model = result;
-        this.setFormValue();
-      });
-    }
-  }
-
-  initControl() {
+  override initControl() {
     const {
       nameExistValidator,
       nameMaxLengthValidator,
@@ -579,7 +532,7 @@ export class ReportOperationComponent implements OnInit {
       name: [
         null,
         [required, nameMaxLengthValidator],
-        [nameExistValidator(this.service, this.modal.id)],
+        [nameExistValidator(this.service, this.modal?.id)],
       ],
       note: [null, [noteMaxLengthValidator()]],
       label: [null, [required]],
@@ -588,7 +541,7 @@ export class ReportOperationComponent implements OnInit {
       isHidden: [false],
       permissionKey: [null, [required]],
       reportGroupId: [null, [required]],
-      //sub form
+      //subform
       printOption: this.fb.group({
         pageSize: [null, required],
         orientation: [null, required],
@@ -612,8 +565,6 @@ export class ReportOperationComponent implements OnInit {
     });
   }
   paramFrmOperation(operation: string, index: number = -1) {
-    console.log(this.paramFrmArray.value);
-
     if (operation == 'Add') {
       this.paramFrmArray.push(this.getParamControl(this.paramFrm.value));
     } else if (operation == 'Edit') {
@@ -661,34 +612,34 @@ export class ReportOperationComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    if (this.frm.valid && !this.loading) {
-      this.loading = true;
+  override onSubmit(e:any) {
+    if (this.frm.valid && !this.isLoading()) {
       let operation$ = this.service.add(this.frm.value);
-      if (this.modal.id) {
-        operation$ = this.service.edit({ ...this.frm.value, id: this.modal.id });
+      if (this.modal?.id) {
+        operation$ = this.service.edit({ ...this.frm.value, id: this.modal?.id });
       }
-      operation$.subscribe({
-        next: (result: Report) => {
-          this.loading = false;
-          this.model = result;
-          this.notificationService.updateNotification('Successfully Updated');
-          console.log(this.modal.id, this.modal);
-
-          if (!this.modal.id) {
-            this.ref.triggerOk();
-          } else {
-            this.uiService.refresher.emit();
-          }
-        },
-        error: (error: any) => {
-          console.log(error);
-        },
-      });
+      if (e.detail === 1 || e.detail === 0) {
+        this.isLoading.set(true);
+        operation$.subscribe({
+          next: (result: Report) => {
+            this.isLoading.set(false);
+            this.model = result;
+            this.notificationService.updateNotification('Successfully Updated');
+            if (!this.modal.id) {
+              this.ref.triggerOk().then();
+            } else {
+              this.uiService.refresher.emit();
+            }
+          },
+          error: (error: any) => {
+            console.log(error);
+          },
+        });
+      }
     }
   }
 
-  cancel() {
+  override cancel() {
     this.ref.triggerOk().then();
     this.ref.triggerCancel().then();
   }
@@ -697,7 +648,7 @@ export class ReportOperationComponent implements OnInit {
     this.paramFrm.reset();
   }
 
-  setFormValue() {
+  override setFormValue() {
     this.frm.patchValue({
       name: this.model.name,
       note: this.model.note,

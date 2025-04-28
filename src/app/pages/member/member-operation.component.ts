@@ -18,13 +18,8 @@ import {AuthService} from "../../helpers/auth.service";
   template: `
       <div *nzModalTitle class="modal-header-ellipsis">
           <span *ngIf="!modal?.id">{{ 'Add' | translate }}</span>
-          <span *ngIf="modal?.id && !modal?.isView"
-          >{{ 'Edit' | translate }}
-              {{ model.code + ' ' + model.name! || ('Loading' | translate) }}</span
-          >
-          <span *ngIf="modal?.id && modal?.isView">{{
-                  model.code + ' ' + model.name! || ('Loading' | translate)
-              }}</span>
+          <span *ngIf="modal?.id && !modal?.isView">{{ 'Edit' | translate }}{{ model?.code + ' ' + model?.name! || ('Loading' | translate) }}</span>
+          <span *ngIf="modal?.id && modal?.isView">{{ model?.code + ' ' + model?.name! || ('Loading' | translate) }}</span>
       </div>
       <div class="modal-content">
           <nz-layout>
@@ -35,13 +30,13 @@ import {AuthService} from "../../helpers/auth.service";
                               [nzAction]="uploadUrl"
                               [(nzFileList)]="fileProfile"
                               [nzBeforeUpload]="beforeUpload"
-                              (nzChange)="handleUploadProfile($event)"
+                              (nzChange)="handleUploadMember($event)"
                               nzListType="picture-card"
                               [nzShowButton]="fileProfile.length < 1"
                       >
                           <div photo>
                               <i nz-icon nzType="plus"></i>
-                              <img [src]="frm.controls['genderId'].value == 2
+                              <img [src]="frm.controls['sexId'].value == 2
                                           ? './assets/image/female.jpg'
                                           : './assets/image/man.png'
                                       " alt="Photo"
@@ -66,7 +61,7 @@ import {AuthService} from "../../helpers/auth.service";
                           <span>{{ 'Information' | translate }}</span>
                       </li>
                       <li
-                              *ngIf="!modal?.isEdit"
+                              *ngIf="modal?.isView"
                               nz-menu-item
                               [nzSelected]="current == 2"
                               (click)="switchCurrent(2)"
@@ -158,8 +153,8 @@ import {AuthService} from "../../helpers/auth.service";
                                                               nzErrorTip=""
                                                       >
                                                           <app-lookup-item-select
-                                                                  formControlName="genderId"
-                                                                  [lookupType]="LOOKUP_TYPE.GenderId"
+                                                                  formControlName="sexId"
+                                                                  [lookupType]="LOOKUP_TYPE.SexId"
                                                           ></app-lookup-item-select>
                                                       </nz-form-control>
                                                   </nz-form-item>
@@ -247,7 +242,7 @@ import {AuthService} from "../../helpers/auth.service";
                                                       <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'Unit' | translate }}
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24">
-
+                                                          <app-unit-select formControlName="unitId"></app-unit-select>
                                                       </nz-form-control>
                                                   </nz-form-item>
                                               </div>
@@ -256,7 +251,20 @@ import {AuthService} from "../../helpers/auth.service";
                                                       <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'Group' | translate }}
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24">
-
+                                                          <app-group-select
+                                                                  formControlName="groupId"></app-group-select>
+                                                      </nz-form-control>
+                                                  </nz-form-item>
+                                              </div>
+                                          </div>
+                                          <div>
+                                              <div nz-col [nzXs]="12">
+                                                  <nz-form-item>
+                                                      <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'Level' | translate }}
+                                                      </nz-form-label>
+                                                      <nz-form-control [nzSm]="14" [nzXs]="24">
+                                                          <app-member-level-select
+                                                                  formControlName="memberLevelId"></app-member-level-select>
                                                       </nz-form-control>
                                                   </nz-form-item>
                                               </div>
@@ -394,7 +402,7 @@ import {AuthService} from "../../helpers/auth.service";
       <div *nzModalFooter>
           <div *ngIf="!modal?.isView">
               <button nz-button nzType="primary" [disabled]="!frm.valid || isLoading()" (click)="onSubmit($event)">
-                  <i *ngIf="isLoading()" nz-icon nzType="isLoading()"></i>
+                  <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
                   {{ 'Save' | translate }}
               </button>
               <button nz-button nzType="default" (click)="cancel()">
@@ -407,7 +415,8 @@ import {AuthService} from "../../helpers/auth.service";
                   <span class="action-text"> {{ 'Edit' | translate }}</span>
               </a>
               <nz-divider nzType="vertical" *ngIf="!isLoading() && isCustomerEdit"></nz-divider>
-              <a nz-typography nzType="danger" (click)="uiService.showDelete(model.id || 0)" *ngIf="!isLoading() && isCustomerRemove">
+              <a nz-typography nzType="danger" (click)="uiService.showDelete(model.id || 0)"
+                 *ngIf="!isLoading() && isCustomerRemove">
                   <i nz-icon nzType="delete" nzTheme="outline"></i>
                   <span class="action-text"> {{ 'Delete' | translate }}</span>
               </a>
@@ -496,7 +505,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   customerNameEn = '';
   isCustomerEdit: boolean = true;
   isCustomerRemove: boolean = true;
-  isCustomerShowPhone: boolean = true;
 
   override ngOnInit(): void {
     this.initControl();
@@ -538,6 +546,9 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
         }
       });
     }
+    if (this.modal?.id) {
+      this.find(this.modal?.id);
+    }
 
     this.frm.get('name')?.valueChanges.subscribe({
       next: (event: any) => {
@@ -556,7 +567,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     this.service.find(id).subscribe({
       next: (result: any) => {
         this.model = result;
-        this.setFormValue();
+        this.setFormValue(result);
         this.isLoading.set(false);
       },
       error: (err: any) => {
@@ -566,10 +577,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     });
   }
 
-  beforeUpload = (
-    file: NzUploadFile,
-    _fileList: NzUploadFile[]
-  ): Observable<boolean> =>
+  beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
     new Observable((observer: Observer<boolean>) => {
       const isJpgOrPng =
         file.type === 'image/jpeg' || file.type === 'image/png';
@@ -634,7 +642,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     this.autoUpload();
   }
 
-  handleUploadProfile(info: NzUploadChangeParam): void {
+  handleUploadMember(info: NzUploadChangeParam): void {
     let fileList = [...info.fileList];
 
     // 1. Limit 5 number of uploaded files
@@ -661,17 +669,20 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       required,
       codeExistValidator,
       multiplePhoneValidator,
-      codeMaxLengthValidator
+      codeMaxLengthValidator,
+      integerValidator
     } = CommonValidators;
     this.frm = this.fb.group({
-      code: [null, [required, codeMaxLengthValidator], codeExistValidator(this.service, this.modal?.id)],
+      code: [null, [required, codeMaxLengthValidator], [codeExistValidator(this.service, this.modal?.id)]],
       name: [null, [required, nameMaxLengthValidator]],
       nameEn: [null],
-      birthDate: [null, [required]],
-      genderId: [0, [required]],
+      birthDate: [null],
+      sexId: [null, [required]],
       nationalityId: [0, [required]],
-      customerGroupId: [null, [required]],
-      idNo: [null],
+      unitId: [0],
+      groupId: [0],
+      memberLevelId: [0],
+      idNo: [null, [integerValidator]],
       nssfId: [null],
       phone: [null, [required, multiplePhoneValidator]],
       email: [null],
@@ -735,29 +746,31 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   }
 
 
-  override setFormValue() {
+  override setFormValue(model?: Member) {
     this.frm.setValue({
-      code: this.model.code,
-      name: this.model.name,
-      nameEn: this.model.nameEn,
-      birthDate: this.model.birthDate,
-      genderId: this.model.sexId,
-      nationalityId: this.model.nationalityId,
-      groupId: this.model.groupId,
-      idNo: this.model.idNo,
-      nssfId: this.model.nssfId,
-      phone: this.model.phone,
-      email: this.model.email,
-      address: this.model.address,
-      note: this.model.note,
+      code: model?.code,
+      name: model?.name,
+      nameEn: model?.nameEn,
+      birthDate: model?.birthDate,
+      sexId: model?.sexId,
+      nationalityId: model?.nationalityId,
+      unitId: model?.unitId,
+      groupId: model?.groupId,
+      memberLevelId: model?.memberLevelId,
+      idNo: model?.idNo,
+      nssfId: model?.nssfId,
+      phone: model?.phone,
+      email: model?.email,
+      address: model?.address,
+      note: model?.note,
     });
 
-    if (this.model.photo) {
+    if (model?.photo) {
       this.fileProfile = [];
-      this.fileProfile.push(<NzUploadFile>{url: this.model.photo, uid: this.model.photo});
+      this.fileProfile.push(<NzUploadFile>{url: model?.photo, uid: model?.photo});
     }
-    if (this.model.attachments) {
-      this.attachments = this.model.attachments;
+    if (model?.attachments) {
+      this.attachments = model?.attachments;
     }
   }
 

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from "@angular/core";
+import {Component, ViewEncapsulation} from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -54,7 +54,7 @@ import { AutoNumberUiService } from "./auto-number-ui.service";
     standalone: false,
     encapsulation: ViewEncapsulation.None,
 })
-export class AutoNumberDeleteComponent extends BaseDeleteComponent<AutoNumber> implements OnInit {
+export class AutoNumberDeleteComponent extends BaseDeleteComponent<AutoNumber>{
   constructor(
     service: AutoNumberService,
     uiService: AutoNumberUiService,

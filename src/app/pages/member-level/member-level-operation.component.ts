@@ -138,15 +138,15 @@ export class MemberLevelOperationComponent extends BaseOperationComponent<Member
         [required, noteMaxLengthValidator()],
         [nameExistValidator(this.service, this.modal?.id)],
       ],
-      levelStay: [null, [required, integerValidator]],
+      levelStay: [null, [required,integerValidator]],
       note: [null],
     });
   }
 
   override setFormValue() {
     this.frm.setValue({
-      levelStay: this.model.levelStay,
       name: this.model.name,
+      levelStay: this.model.levelStay,
       note: this.model.note,
     });
   }

@@ -1,36 +1,28 @@
-import {Component, inject, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
+import { Component, ViewEncapsulation} from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { NzModalRef } from 'ng-zorro-antd/modal';
 import { CommonValidators } from '../../utils/services/common-validators';
 import { ReportGroup, ReportGroupService } from './report-group.service';
 import { ReportGroupUiService } from './report-group-ui.service';
 import { AuthService } from '../../helpers/auth.service';
-import {BaseOperationComponent} from "../../utils/components/base-operation.component";
+import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 
 @Component({
     selector: 'app-report-group-operation',
     template: `
     <div *nzModalTitle class="modal-header-ellipsis">
-      <span *ngIf="!id">{{ 'Add' | translate }}</span>
-      <span *ngIf="id && !isView"
+      <span *ngIf="!modal?.id">{{ 'Add' | translate }}</span>
+      <span *ngIf="modal?.id && !modal?.isView"
         >{{ 'Edit' | translate }}
-        {{ model.name || ('Loading' | translate) }}</span
+        {{ model?.name || ('Loading' | translate) }}</span
       >
-      <span *ngIf="id && isView">{{
-        model.name || ('Loading' | translate)
+      <span *ngIf="modal?.id && modal?.isView">{{
+        model?.name || ('Loading' | translate)
       }}</span>
     </div>
     <div class="modal-content">
-      <nz-spin
-        *ngIf="loading"
-        style="position: absolute; top: 50%; left: 50%"
-      ></nz-spin>
-      <form
-        nz-form
-        [formGroup]="frm"
-        
-        [nzAutoTips]="autoTips"
-      >
+      <app-loading *ngIf="isLoading()"></app-loading>
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
           <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
             'Name' | translate
@@ -55,45 +47,45 @@ import {BaseOperationComponent} from "../../utils/components/base-operation.comp
       </form>
     </div>
     <div *nzModalFooter>
-      <div *ngIf="!isView">
+      <div *ngIf="!modal?.isView">
         <button
           nz-button
           nzType="primary"
           [disabled]="!frm.valid"
           (click)="onSubmit()"
         >
-          <i *ngIf="loading" nz-icon nzType="loading"></i>
+          <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
           {{ 'Save' | translate }}
         </button>
         <button nz-button nzType="default" (click)="cancel()">
           {{ 'Cancel' | translate }}
         </button>
       </div>
-      <div *ngIf="isView">
+      <div *ngIf="modal?.isView">
         <a
           nz-typography
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!loading && isReportGroupEdit"
+          *ngIf="!isLoading() && isReportGroupEdit"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ 'Edit' | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!loading && isReportGroupEdit"
+          *ngIf="!isLoading() && isReportGroupEdit"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!loading && isReportGroupRemove"
+          *ngIf="!isLoading() && isReportGroupRemove"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ 'Delete' | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!loading && isReportGroupRemove"
+          *ngIf="!isLoading() && isReportGroupRemove"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -117,9 +109,6 @@ export class ReportGroupOperationComponent extends BaseOperationComponent<Report
     super(fb, ref, service, uiService)
   }
 
-  @Input() id: number = 0;
-  @Input() isView: boolean = false;
-  loading = false;
   isReportGroupEdit: boolean = true;
   isReportGroupRemove: boolean = true;
 
@@ -132,37 +121,33 @@ export class ReportGroupOperationComponent extends BaseOperationComponent<Report
     // );
 
     this.initControl();   
-    if (this.modal.isView) {
+    if (this.modal?.isView) {
       this.frm.disable();
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
         if (e.key == 'edited') {
-          this.loading = true;
-          this.service.find(this.id).subscribe(
-            (result: ReportGroup) => {
-              this.loading = false;
+          this.isLoading.set(true);
+          this.service.find(this.modal?.id).subscribe({
+            next: (result: ReportGroup) => {
+              this.isLoading.set(false);
               this.model = result;
               this.setFormValue();
             },
-            (error: any) => {
+            error: (error: any) => {
               console.log(error);
+              this.isLoading.set(false);
             }
-          );
+          });
         } else {
           this.cancel();
         }
       });
     }
   
-    if (this.modal.id) {
-    
-      this.loading = true;
-      this.service.find(this.modal.id).subscribe((result: ReportGroup) => {
-
-        console.log(result);
-        
-        this.loading = false;
+    if (this.modal?.id) {
+      this.isLoading.set(true);
+      this.service.find(this.modal?.id).subscribe((result: ReportGroup) => {
+        this.isLoading.set(false);
         this.model = result;
-       
         this.setFormValue();
       });
     }
@@ -179,29 +164,29 @@ export class ReportGroupOperationComponent extends BaseOperationComponent<Report
       name: [
         null,
         [required, nameMaxLengthValidator],
-        [nameExistValidator(this.service, this.id)],
+        [nameExistValidator(this.service, this.modal?.id)],
       ],
       note: [null, [noteMaxLengthValidator()]],
     });
   }
 
   override onSubmit() {
-    if (this.frm.valid && !this.loading) {
-      this.loading = true;
+    if (this.frm.valid && !this.isLoading()) {
+      this.isLoading.set(true);
       let operation$ = this.service.add(this.frm.value);
-      if (this.id) {
-        operation$ = this.service.edit({ ...this.frm.value, id: this.id });
+      if (this.modal?.id) {
+        operation$ = this.service.edit({ ...this.frm.value, id: this.modal?.id });
       }
-      operation$.subscribe(
-        (result: ReportGroup) => {
-          this.loading = false;
-          this.model = result;
-          this.ref.triggerOk().then();
-        },
-        (error: any) => {
-          console.log(error);
-        }
-      );
+      operation$.subscribe({
+          next: (result: ReportGroup) => {
+            this.isLoading.set(false);
+            this.model = result;
+            this.ref.triggerOk().then();
+          },
+          error: (error: any) => {
+            console.log(error);
+          }
+        });
     }
   }
 
