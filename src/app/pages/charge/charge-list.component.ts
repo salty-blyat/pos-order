@@ -7,6 +7,8 @@ import { Charge, ChargeService } from "./charge.service";
 import { ChargeUiService } from "./charge-ui.service";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
+import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { Filter } from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-charge-list",
@@ -26,6 +28,28 @@ import { Observable } from "rxjs";
               "
             >
             </app-filter-input>
+          </div>
+          <div nz-col>
+            <app-lookup-item-select
+              formControlName="chargeTypeId"
+              [showAll]="'AllChargeType' | translate" 
+              [showAllOption]="true"
+              storageKey="charge-type-filter"
+              (valueChanged)="
+                chargeTypeId.set($event); param().pageIndex = 1; search()
+              "
+              [lookupType]="this.lookupItemType.ChargeType"
+            ></app-lookup-item-select>
+          </div>
+          <div *ngIf="draged()">
+            <button
+              nz-button
+              nzType="primary"
+              (click)="saveOrdering()"
+              [nzLoading]="isLoading()"
+            >
+              {{ "Save" | translate }}
+            </button>
           </div>
         </div>
         <div nz-col>
@@ -94,7 +118,7 @@ import { Observable } from "rxjs";
                 }}
               </td>
 
-              <td nzEllipsis>
+              <td nzEllipsis style="flex: 1">
                 <a
                   *ngIf="isChargeView()"
                   (click)="uiService.showView(data.id!)"
@@ -103,23 +127,23 @@ import { Observable } from "rxjs";
                 <span *ngIf="!isChargeView()">{{ data.code }}</span>
               </td>
 
-              <td nzEllipsis title="{{ data.name }}">
-                 {{ data.name }} 
+              <td nzEllipsis title="{{ data.name }}" style="flex: 2">
+                {{ data.name }}
               </td>
 
-              <td nzEllipsis>
+              <td nzEllipsis style="flex: 1">
                 {{
                   translateService.currentLang == "km"
                     ? data.chargeTypeName
                     : data.chargeTypeNameEn
                 }}
               </td>
-              <td nzEllipsis>
+              <td nzEllipsis style="flex: 1">
                 {{ data.unitName }}
               </td>
-              <td nzEllipsis>{{ data.chargeRate }}</td>
+              <td nzEllipsis style="flex: 1">{{ data.chargeRate }}</td>
 
-              <td class="col-action">
+              <td class="col-action" style="flex: 2">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -168,6 +192,20 @@ export class ChargeListComponent extends BaseListComponent<Charge> {
   isChargeEdit = signal<boolean>(true);
   isChargeRemove = signal<boolean>(true);
   isChargeView = signal<boolean>(true);
+  lookupItemType = LOOKUP_TYPE;
 
+  chargeTypeId = signal<number>(0);
+
+  override search() {
+    let filters: Filter[] = [];
+    if (this.chargeTypeId()) {
+      filters.push({
+        field: "chargeTypeId",
+        operator: "eq",
+        value: this.chargeTypeId(),
+      });
+    }
+    super.search(filters, 100);
+  }
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

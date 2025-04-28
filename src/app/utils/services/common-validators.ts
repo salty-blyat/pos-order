@@ -352,7 +352,7 @@ export class CommonValidators extends Validators {
     if (isEmptyInputValue(control.value)) {
       return null;
     }
-    return isInteger(control.value)
+    return isInteger(control.value?.toString())
       ? null
       : {
         integerValidator: {

@@ -147,7 +147,7 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
       codeExistValidator,
       integerValidator,
     } = CommonValidators;
-
+    
     this.frm = this.fb.group({
       code: [
         null,
@@ -159,9 +159,9 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
         [required, nameMaxLengthValidator],
         [nameExistValidator(this.service, this.modal?.id)],
       ],
-      chargeTypeId: [null, required],
-      unitId: [null, required],
-      chargeRate: [0, [required, nameMaxLengthValidator, integerValidator]],
+      chargeTypeId: [null, [required]],
+      unitId: [null, [required]],
+      chargeRate: [null, [required, integerValidator]],
     });
   }
   lookupItemType = LOOKUP_TYPE;
