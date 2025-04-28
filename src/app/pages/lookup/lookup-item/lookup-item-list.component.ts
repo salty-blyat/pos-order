@@ -14,7 +14,7 @@ import {BaseListComponent} from "../../../utils/components/base-list.component";
         <nz-layout>
             <nz-header>
                 <div nz-row>
-                    <div>
+                    <div nz-col>
                         <app-filter-input
                                 storageKey="lookup-item-list-search-{{ lookupTypeId() }}"
                                 (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"

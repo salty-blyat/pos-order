@@ -1,7 +1,6 @@
-import { Component, computed, OnInit } from '@angular/core';
+import {Component, computed, OnInit, ViewEncapsulation} from '@angular/core';
 import { Observable } from 'rxjs';
 import {ActivatedRoute, Data, Router} from '@angular/router';
-import { AuthService } from '../../helpers/auth.service';
 
 @Component({
     selector: 'app-system-setting',
@@ -17,12 +16,13 @@ import { AuthService } from '../../helpers/auth.service';
           {{ 'SystemSetting' | translate }}
         </div>
       </nz-header>
-      <nz-content>
-        <div nz-row class="menu-content">
-          <div nz-col nzSpan="6">
-            <nz-sider nzWidth="200px" nzTheme="light" class="menu-content">
-              <ul nz-menu nzMode="inline" class="menu-content">
+      <nz-content >
+        <div nz-row>
+          <div nz-col nzSpan="6" class="main-content-setting">
+            <nz-sider nzWidth="200px" nzTheme="light">
+              <ul nz-menu nzMode="inline" class="menu-custom-setting">
                 <li
+                  style="margin-top: 0"      
                   nz-menu-item
                   routerLink="/setting/system-setting/company-section"
                   [nzMatchRouter]="true"
@@ -42,7 +42,7 @@ import { AuthService } from '../../helpers/auth.service';
             </nz-sider>
           </div>
           <div nz-col nzSpan="18">
-            <nz-content class="inner-content">
+            <nz-content class="menu-content-setting">
               <router-outlet></router-outlet>
             </nz-content>
           </div>
@@ -51,17 +51,22 @@ import { AuthService } from '../../helpers/auth.service';
     </nz-layout>
   `,
     styleUrls: ["../../../assets/scss/list.style.scss"],
-    styles: [
-        `
-      .inner-content {
-        padding: 16px 6px;
+    styles: [`
+      .main-content-setting {
+        height: calc(100vh - 110px);
       }
-      .menu-content {
+      .menu-content-setting {
         height: 100% !important;
+        border-left: 1px solid #e8e8e8;
+      }
+      .menu-custom-setting{
+        background: #fff;
+        padding-right: 1px;
       }
     `,
     ],
-    standalone: false
+    standalone: false,
+    encapsulation: ViewEncapsulation.None,
 })
 export class SystemSettingComponent implements OnInit {
   constructor(
@@ -70,7 +75,6 @@ export class SystemSettingComponent implements OnInit {
   ) {}
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
   ngOnInit(): void {
-    
     this.router.navigate(['/','setting','system-setting','company-section']).then();
   }
 }

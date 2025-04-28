@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import {Component, OnInit, ViewEncapsulation} from "@angular/core";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
@@ -50,8 +50,9 @@ import { RoomUiService } from "./room-ui.service";
             </button>
         </div>
     `,
-    styleUrls: ["../../../assets/scss/operation_modal.scss"],
-    standalone: false
+    styleUrls: ["../../../assets/scss/operation.style.scss"],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None,
 })
 export class RoomDeleteComponent extends BaseDeleteComponent<Room> implements OnInit {
   constructor(

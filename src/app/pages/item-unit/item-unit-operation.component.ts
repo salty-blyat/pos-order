@@ -70,7 +70,7 @@ import { ItemUnit, ItemUnitService } from "./item-unit.service";
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading && isItemUnitEdit"
+          *ngIf="!isLoading() && isItemUnitEdit"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>

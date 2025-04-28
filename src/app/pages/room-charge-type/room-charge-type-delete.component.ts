@@ -1,18 +1,21 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
-import { Group, GroupService } from "./group.service";
-import { GroupUiService } from "./group-ui.service";
+import {
+  RoomChargeType,
+  RoomChargeTypeService,
+} from "./room-type-type.service";
+import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
 
 @Component({
-  selector: "app-group-delete",
+  selector: "app-room-charge-type-delete",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="modal?.id"
         >{{ "Remove" | translate }}
-        {{ model?.name || ("Loading" | translate) }}</span
+        {{ model?.roomName || ("Loading" | translate) }}</span
       >
     </div>
     <div class="modal-content">
@@ -26,17 +29,20 @@ import { GroupUiService } from "./group-ui.service";
         nzJustify="center"
         style="margin:2px 0"
       >
-        <span nz-typography nzType="danger" style="position: absolute">{{
-          errMessage() | translate
-        }}</span>
+        <span
+          nz-typography
+          nzType="danger"
+          style="position: absolute; z-index: 1; top: 18%"
+          >{{ errMessage() | translate }}</span
+        >
       </div>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
-            >{{ "Name" | translate }}
+            >{{ "RoomName" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="">
-            <input nz-input formControlName="name" />
+            <input nz-input formControlName="roomName" />
           </nz-form-control>
         </nz-form-item>
 
@@ -57,7 +63,7 @@ import { GroupUiService } from "./group-ui.service";
     </div>
     <div *nzModalFooter>
       <button
-        *ngIf="!errMessage() && model?.name"
+        *ngIf="!errMessage() && model?.roomName"
         nz-button
         nzDanger
         nzType="primary"
@@ -76,28 +82,28 @@ import { GroupUiService } from "./group-ui.service";
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class GroupDeleteComponent extends BaseDeleteComponent<Group> {
+export class RoomChargeTypeDeleteComponent extends BaseDeleteComponent<RoomChargeType> {
   constructor(
-    service: GroupService,
-    uiService: GroupUiService,
-    ref: NzModalRef<GroupDeleteComponent>,
+    service: RoomChargeTypeService,
+    uiService: RoomChargeTypeUiService,
+    ref: NzModalRef<RoomChargeTypeDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);
   }
 
-  // override initControl(): void {
-  //   const { noteMaxLengthValidator } = CommonValidators;
-  //   this.frm = this.fb.group({
-  //     name: [{ value: null, disabled: true }, [Validators.required]],
-  //     note: [null, [noteMaxLengthValidator()]],
-  //   });
-  // }
+  override initControl(): void {
+    const { noteMaxLengthValidator } = CommonValidators;
+    this.frm = this.fb.group({
+      name: [{ value: null, disabled: true }, [Validators.required]],
+      note: [null, [noteMaxLengthValidator()]],
+    });
+  }
 
-  // override setFormValue() {
-  //   this.frm.setValue({
-  //     name: this.model.name,
-  //     note: "",
-  //   });
-  // }
+  override setFormValue() {
+    this.frm.setValue({
+      name: this.model.roomName,
+      note: "",
+    });
+  }
 }

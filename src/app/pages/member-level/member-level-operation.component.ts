@@ -80,7 +80,7 @@ import { MemberLevelUiService } from "./member-level-ui.component";
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading && isMemberLevelEdit"
+          *ngIf="!isLoading() && isMemberLevelEdit"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>

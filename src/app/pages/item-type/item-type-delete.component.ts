@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import {Component, ViewEncapsulation} from "@angular/core";
 import { ItemType, ItemTypeService } from "./item-type.service";
 import { ItemTypeUiService } from "./item-type-ui.service.component";
 import { FormBuilder, Validators } from "@angular/forms";
@@ -75,8 +75,9 @@ import { BaseDeleteComponent } from "../../utils/components/base-delete.componen
       </button>
     </div>
   `,
-  styleUrls: ["../../../assets/scss/operation_modal.scss"],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class ItemTypeDeleteComponent extends BaseDeleteComponent<ItemType> {
   constructor(

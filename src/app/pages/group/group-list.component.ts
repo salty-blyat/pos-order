@@ -1,4 +1,4 @@
-import { Component, computed } from "@angular/core";
+import {Component, computed, ViewEncapsulation} from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
@@ -18,7 +18,7 @@ import { GroupUiService } from "./group-ui.service";
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
-          <div style="width: 220px; margin-right: 4px;">
+          <div nz-col>
             <app-filter-input
               storageKey="group-list-search"
               (filterChanged)="
@@ -69,13 +69,11 @@ import { GroupUiService } from "./group-ui.service";
           </ng-template>
           <thead>
             <tr>
-              <th nzColumnKey="drag" [nzWidth]="SIZE_COLUMNS.DRAG"></th>
-              <th class="col-header col-rowno" [nzWidth]="SIZE_COLUMNS.ID">
-                #
-              </th>
+              <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-              <th class="col-action" [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody
@@ -88,23 +86,16 @@ import { GroupUiService } from "./group-ui.service";
               <td style=" cursor: move;" cdkDragHandle>
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
-              <td nzEllipsis style="flex: 1;">
-                {{
-                  i
-                    | rowNumber
-                      : {
-                          index: param().pageIndex || 0,
-                          size: param().pageSize || 0
-                        }
-                }}
+              <td nzEllipsis >
+                {{ i | rowNumber : { index: param().pageIndex || 0, size: param().pageSize || 0 } }}
               </td>
-              <td nzEllipsis style="flex: 3;" title="{{ data.name }}">
-                {{ data.name }}
+              <td nzEllipsis title="{{ data.name }}">
+                  <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
-              <td nzEllipsis style="flex: 2;" title="{{ data.note }}">
+              <td nzEllipsis title="{{ data.note }}">
                 {{ data.note }}
               </td>
-              <td nzAlign="right">
+              <td class="col-action" >
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -119,8 +110,7 @@ import { GroupUiService } from "./group-ui.service";
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
-                      nz-typography
-                      style="color: #F31313"
+                      class="delete"
                     >
                       <i nz-icon nzType="delete" nzTheme="outline"></i>
                       {{ "Delete" | translate }}
@@ -136,6 +126,7 @@ import { GroupUiService } from "./group-ui.service";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class GroupListComponent extends BaseListComponent<Group> {
   constructor(
@@ -144,7 +135,7 @@ export class GroupListComponent extends BaseListComponent<Group> {
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute
   ) {
-    super(service, uiService, sessionStorageService, "group-list");
+    super(service, uiService, sessionStorageService, "group-list" );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isGroupAdd: boolean = true;

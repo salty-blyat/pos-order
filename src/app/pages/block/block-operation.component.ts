@@ -62,7 +62,7 @@ import {SETTING_KEY, SystemSettingService} from "../system-setting/system-settin
                         }}
                     </nz-form-label>
                     <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="">
-                        <textarea nz-input formControlName="description" rows="3"></textarea>
+                        <textarea nz-input formControlName="note" rows="3"></textarea>
                     </nz-form-control>
                 </nz-form-item>
             </form>
@@ -147,7 +147,7 @@ export class BlockOperationComponent extends BaseOperationComponent<Block> {
                 [required, nameMaxLengthValidator],
                 [nameExistValidator(this.service, this.modal?.id)],
             ],
-            description: [null],
+            note: [null],
             address: [null],
         });
     }
@@ -158,7 +158,7 @@ export class BlockOperationComponent extends BaseOperationComponent<Block> {
          this.frm.setValue({
              code:this.model.code,
              name:this.model.name,
-             description:this.model.description,
+             note:this.model.note,
              address:this.model.address,
          })
     }

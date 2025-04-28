@@ -80,13 +80,9 @@ export class SettingComponent implements OnInit {
   isAutoNumberList: boolean = true;
   isBlockList: boolean = true;
   isRoomTypeList: boolean = true;
-  isRoomList: boolean = true;
-  isAmenityGroup: boolean = true;
-  isStaffList: boolean = true;
-  isHousekeepingList: boolean = true;
-  isRateOptionList: boolean = true;
-  isCancelPolicyList: boolean = true;
-  isItemList: boolean = true;
+  isItemList: boolean = true; 
+  isRoomChargeType : boolean = true;
+  isCharge : boolean = true;
   isItemTypeList: boolean = true;
   isGroupList: boolean = true;
   ngOnInit(): void {
@@ -94,12 +90,6 @@ export class SettingComponent implements OnInit {
       {
         groupName: "GeneralSetting",
         subName: [
-          {
-            icon: "container",
-            url: `${this.urlPart}/block`,
-            label: "Block",
-            isList: this.isBlockList,
-          },
           {
             icon: "container",
             url: `${this.urlPart}/lookup`,
@@ -114,10 +104,16 @@ export class SettingComponent implements OnInit {
           },
           {
             icon: "container",
-            url: `${this.urlPart}/member-level`,
-            label: "MemberLevel",
-            isList: this.isMemberLevelList,
+            url: `${this.urlPart}/item-unit`,
+            label: "ItemUnit",
+            isList: this.isItemUnitList,
           },
+
+        ],
+      },
+      {
+        groupName: "Unit",
+        subName: [
           {
             icon: "container",
             url: `${this.urlPart}/unit`,
@@ -126,32 +122,33 @@ export class SettingComponent implements OnInit {
           },
           {
             icon: "container",
-            url: `${this.urlPart}/item-unit`,
-            label: "ItemUnit",
-            isList: this.isItemUnitList,
-          },
-          {
-            icon: "container",
             url: `${this.urlPart}/group`,
             label: "Group",
             isList: this.isGroupList,
           },
+          {
+            icon: "container",
+            url: `${this.urlPart}/member-level`,
+            label: "MemberLevel",
+            isList: this.isMemberLevelList,
+          },
         ],
       },
       {
-        groupName: "Room",
+        groupName: "Block",
         subName: [
+          {
+            icon: "container",
+            url: `${this.urlPart}/block`,
+            label: "Block",
+            isList: this.isBlockList,
+          },
           {
             icon: "container",
             url: `${this.urlPart}/room-type`,
             label: "RoomType",
             isList: this.isRoomTypeList,
           },
-        ],
-      },
-      {
-        groupName: "Item",
-        subName: [
           {
             icon: "container",
             url: `${this.urlPart}/item-type`,
@@ -166,6 +163,23 @@ export class SettingComponent implements OnInit {
           },
         ],
       },
+      {
+        groupName: "Charge",
+        subName: [
+          {
+            icon: "container",
+            url: `${this.urlPart}/room-charge-type`,
+            label: "RoomChargeType",
+            isList: this.isRoomChargeType,
+          }, 
+          
+          {
+            icon: "container",
+            url: `${this.urlPart}/charge`,
+            label: "Charge",
+            isList: this.isCharge,
+          }, 
+        ]},
       {
         groupName: "SystemSetting",
         subName: [

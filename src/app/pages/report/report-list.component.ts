@@ -24,7 +24,7 @@ import { NotificationService } from "../../utils/services/notification.service";
     <nz-layout>
       <nz-header>
         <div nz-row>
-          <div style="width: 220px; margin-right: 4px;">
+          <div nz-col>
             <app-filter-input
               storageKey="position-list-search"
               (filterChanged)="

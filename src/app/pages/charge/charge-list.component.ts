@@ -1,45 +1,42 @@
-import { Component, input, OnChanges, SimpleChanges } from "@angular/core";
-import { BaseListComponent } from "../../utils/components/base-list.component";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { Floor, FloorService } from "./floor.service";
-import { FloorUiService } from "./floor-ui.service";
-import { Filter } from "../../utils/services/base-api.service";
+import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SIZE_COLUMNS } from "../../const";
-import {delay} from "rxjs";
+import { TranslateService } from "@ngx-translate/core";
+import { Charge, ChargeService } from "./charge.service";
+import { ChargeUiService } from "./charge-ui.service";
+import { ActivatedRoute } from "@angular/router";
+import { Observable } from "rxjs";
 
 @Component({
-  selector: "app-floor-list",
+  selector: "app-charge-list",
   template: `
     <nz-layout>
+      <app-breadcrumb
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
+      ></app-breadcrumb>
       <nz-header>
         <div nz-row>
           <div nz-col>
             <app-filter-input
-              storageKey="floor-list-search"
+              storageKey="charge-list-search"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
-            ></app-filter-input>
-          </div>
-          <div *ngIf="draged()">
-            <button
-              nz-button
-              nzType="primary"
-              (click)="saveOrdering()"
-              [nzLoading]="isLoading()"
             >
-              {{ "Save" | translate }}
-            </button>
+            </app-filter-input>
           </div>
         </div>
-        <div>
+        <div nz-col>
           <button
+            *ngIf="isChargeAdd()"
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd(this.blockId())"
+            (click)="uiService.showAdd()"
           >
-            <i nz-icon nzType="plus" nzTheme="outline"></i>
-            {{ "Add" | translate }}
+            <i nz-icon nzType="plus" nzTheme="outline"></i
+            >{{ "Add" | translate }}
           </button>
         </div>
       </nz-header>
@@ -64,10 +61,16 @@ import {delay} from "rxjs";
           </ng-template>
           <thead>
             <tr>
-              <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th>{{ "Note" | translate }}</th>
+              <th nzWidth="150px">
+                {{ "ChargeType" | translate }}
+              </th>
+              <th nzWidth="150px">{{ "Unit" | translate }}</th>
+              <th nzWidth="150px">{{ "ChargeRate" | translate }}</th>
+              <th nzWidth="150px">{{ "ChargeType" | translate }}</th>
+
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -78,10 +81,7 @@ import {delay} from "rxjs";
             [cdkDropListData]="lists()"
           >
             <tr *ngFor="let data of lists(); let i = index" cdkDrag>
-              <td
-                style="align-content: center;text-align: center; cursor: move;"
-                cdkDragHandle
-              >
+              <td style=" cursor: move;" cdkDragHandle>
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
               <td nzEllipsis>
@@ -94,42 +94,28 @@ import {delay} from "rxjs";
                         }
                 }}
               </td>
-              <td nzEllipsis style="flex:2px">
-                <a
-                  (click)="uiService.showView(data.id!)"
-                  >{{ data.name }}</a
-                >
+              <td nzEllipsis title="{{ data.name }}">
+                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
-              <td nzEllipsis>{{ data.note }}</td>
+
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container>
-                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)"
-                      ><i
-                        nz-icon
-                        nzType="edit"
-                        nzTheme="outline"
-                        class="pr-sm"
-                      ></i>
+                  <ng-container *ngIf="isChargeEdit">
+                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
+                      <i nz-icon nzType="edit" nzTheme="outline"></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container>
+                  <ng-container *ngIf="isChargeRemove">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
-                      nz-typography
-                      style="color: #F31313"
+                      class="delete"
                     >
-                      <i
-                        nz-icon
-                        nzType="delete"
-                        nzTheme="outline"
-                        class="pr-sm"
-                      ></i>
+                      <i nz-icon nzType="delete" nzTheme="outline"></i>
                       {{ "Delete" | translate }}
                     </a>
                   </ng-container>
@@ -139,51 +125,28 @@ import {delay} from "rxjs";
           </tbody>
         </nz-table>
       </nz-content>
-    </nz-layout>
+      <nz-layout> </nz-layout
+    ></nz-layout>
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
-export class FloorListComponent extends BaseListComponent<Floor> implements OnChanges
-{
+export class ChargeListComponent extends BaseListComponent<Charge> {
   constructor(
-    override service: FloorService,
-    uiService: FloorUiService,
-    sessionStorageService: SessionStorageService
+    service: ChargeService,
+    override uiService: ChargeUiService,
+    sessionStorageService: SessionStorageService,
+    private activated: ActivatedRoute,
+    protected translateService: TranslateService
   ) {
-    super(service, uiService, sessionStorageService, "floor-list");
+    super(service, uiService, sessionStorageService, "charge-list");
   }
-  blockId = input<number>(0);
-  filters: Filter[] = [
-    {
-      field: "blockId",
-      operator: "eq",
-      value: this.blockId(),
-    },
-  ];
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes["blockId"] && !changes["blockId"].firstChange) {
-      this.filters = [
-        {
-          field: "blockId",
-          operator: "eq",
-          value: this.blockId(),
-        },
-      ];
-      super.search(this.filters);
-    }
-  }
-  override search() {
-    if (this.blockId()) {
-      const filters =[{
-        field: "blockId",
-        operator: "eq",
-        value: this.blockId(),
-      }];
-      super.search(filters);
-    }
-  }
+  breadcrumbData = computed<Observable<any>>(() => this.activated.data);
+  isChargeAdd = signal<boolean>(true);
+  isChargeEdit = signal<boolean>(true);
+  isChargeRemove = signal<boolean>(true);
+  isChargeView = signal<boolean>(true);
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

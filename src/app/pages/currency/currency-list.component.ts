@@ -1,11 +1,11 @@
-import { Component, computed } from "@angular/core";
+import {Component, computed, ViewEncapsulation} from "@angular/core";
 import { Observable } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Currency, CurrencyService } from "./currency.service";
 import { CurrencyUiService } from "./currency-ui.service";
-import { SIZE_COLUMNS } from "../../const";
+import {SIZE_COLUMNS} from "../../const";
 
 @Component({
   selector: "app-currency",
@@ -59,26 +59,14 @@ import { SIZE_COLUMNS } from "../../const";
           </ng-template>
           <thead>
             <tr>
-              <th [nzWidth]="SIZE_COLUMNS.ID" class="col-header col-rowno">
-                #
-              </th>
-              <th
-                [nzWidth]="SIZE_COLUMNS.CODE"
-                class="col-code-max"
-                nzColumnKey="code"
-              >
-                {{ "Code" | translate }}
-              </th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="100px">{{ "Symbol" | translate }}</th>
-              <th nzWidth="100px">{{ "Format" | translate }}</th>
-              <th nzWidth="100px">{{ "Rounding" | translate }}</th>
-              <th nzWidth="150px">{{ "ExchangeRate" | translate }}</th>
-              <th
-                [nzWidth]="SIZE_COLUMNS.ACTION"
-                class="col-action"
-                nzAlign="right"
-              ></th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
+              <th>{{ "Name" | translate }}</th>
+              <th nzWidth="80px">{{ "Symbol" | translate }}</th>
+              <th>{{ "Format" | translate }}</th>
+              <th>{{ "Rounding" | translate }}</th>
+              <th>{{ "ExchangeRate" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
@@ -106,7 +94,7 @@ import { SIZE_COLUMNS } from "../../const";
               <td nzEllipsis>{{ data.format }}</td>
               <td nzEllipsis>{{ data.rounding }}</td>
               <td nzEllipsis>{{ data.exchangeRate }}</td>
-              <td nzAlign="right">
+              <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -117,7 +105,7 @@ import { SIZE_COLUMNS } from "../../const";
                         nz-icon
                         nzType="edit"
                         nzTheme="outline"
-                        style="padding-right: 5px"
+                        class="edit"
                       ></i>
                       {{ "Edit" | translate }}
                     </a>
@@ -127,7 +115,7 @@ import { SIZE_COLUMNS } from "../../const";
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
                       nz-typography
-                      style="color: #F31313"
+                      class="delete"
                     >
                       <i
                         nz-icon
@@ -148,6 +136,7 @@ import { SIZE_COLUMNS } from "../../const";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class CurrencyListComponent extends BaseListComponent<Currency> {
   constructor(
@@ -164,24 +153,4 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
   isCurrencyRemove: boolean = true;
   isCurrencyView: boolean = true;
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
-
-  override ngOnInit() {
-    // this.isCurrencyAdd = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__CURRENCY__ADD
-    // );
-    // this.isCurrencyEdit = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__CURRENCY__EDIT
-    // );
-    // this.isCurrencyRemove = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__CURRENCY__REMOVE
-    // );
-    // this.isCurrencyView = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__CURRENCY__VIEW
-    // );
-
-    this.refreshSub = this.uiService.refresher.subscribe((result) => {
-      this.search();
-    });
-    super.ngOnInit();
-  }
 }

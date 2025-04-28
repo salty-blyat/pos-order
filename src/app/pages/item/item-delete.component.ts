@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import {Component, OnInit, ViewEncapsulation} from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -53,7 +53,7 @@ import { ItemUiService } from "./item-ui.service";
     </div>
     <div *nzModalFooter>
       <button
-        *ngIf="!errMessage && model?.name"
+        *ngIf="!errMessage() && model?.name"
         nz-button
         nzDanger
         nzType="primary"
@@ -68,8 +68,9 @@ import { ItemUiService } from "./item-ui.service";
       </button>
     </div>
   `,
-  styleUrls: ["../../../assets/scss/operation_modal.scss"],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class ItemDeleteComponent extends BaseDeleteComponent<Item> {
   constructor(

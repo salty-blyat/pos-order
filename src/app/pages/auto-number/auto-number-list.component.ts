@@ -16,7 +16,7 @@ import { SIZE_COLUMNS } from "../../const";
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
-          <div>
+          <div nz-col>
             <app-filter-input
               storageKey="auto-number-list-search"
               (filterChanged)="

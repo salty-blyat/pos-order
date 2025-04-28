@@ -7,24 +7,17 @@ import {Observable} from "rxjs";
 export interface Floor {
     id?: number;
     name?: string;
-    description?: string;
     blockId?: number;
     blockName?: string;
     ordering?: number;
-
+    note?: string
 }
 
 @Injectable({
     providedIn: 'root',
 })
 export class FloorService extends BaseApiService<Floor> {
-    constructor(private http: HttpClient, settingService: SettingService) {
+    constructor(http: HttpClient, settingService: SettingService) {
         super('floor', http, settingService);
     }
-    // public updateOrdering(lists: Floor[]): Observable<Floor[]> {
-    //     return this.http.put<Floor[]>(
-    //         `${this.getUrl()}/update-ordering`,
-    //         lists
-    //     );
-    // }
 }

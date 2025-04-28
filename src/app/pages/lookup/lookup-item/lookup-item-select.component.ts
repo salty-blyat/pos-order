@@ -1,14 +1,12 @@
-import { Validators } from "@angular/forms";
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { QueryParam } from "../../../utils/services/base-api.service";
+import {Component, forwardRef, input, signal, ViewEncapsulation} from "@angular/core";
+import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { LookupItem, LookupItemService } from "./lookup-item.service";
 import { LookupItemUiService } from "./lookup-item-ui.service";
 import { LOOKUP_TYPE } from "../lookup-type.service";
 import { SessionStorageService } from "../../../utils/services/sessionStorage.service";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../../helpers/auth.service";
-import { UUID } from "uuid-generator-ts";
+import {BaseSelectComponent} from "../../../utils/components/base-select.component";
 @Component({
   providers: [
     {
@@ -23,22 +21,21 @@ import { UUID } from "uuid-generator-ts";
       nzShowSearch
       [nzDropdownRender]="actionItem"
       [nzServerSearch]="true"
-      [nzAllowClear]="allowClear"
-      [(ngModel)]="selectedValue"
+      [nzAllowClear]="allowClear()"
+      [(ngModel)]="selected"
       (ngModelChange)="onModalChange()"
-      (nzOnSearch)="searchText = $event; param.pageIndex = 1; search()"
-      [nzDisabled]="disabled"
+      (nzOnSearch)="searchText.set($event); param().pageIndex = 1; search()"
+      [nzDisabled]="disabled()"
       [nzCustomTemplate]="customTemplate"
-      style="width: 100%"
     >
       <nz-option
         *ngIf="showAllOption"
         [nzValue]="0"
-        [nzLabel]="typeLabelAll ? typeLabelAll : (showAll | translate)"
+        [nzLabel]="typeLabelAll() ? typeLabelAll() : (showAll() | translate)"
       ></nz-option>
-      <ng-container *ngIf="lookupType !== LOOKUP_TYPE.HouseKeepingStatus">
+      <ng-container *ngIf="lookupType() !== LOOKUP_TYPE.HouseKeepingStatus">
         <nz-option
-          *ngFor="let item of lists"
+          *ngFor="let item of lists()"
           [nzValue]="item.valueId"
           nzCustomContent
           [nzLabel]="(this.translate.currentLang === 'km' ? item.name || item.nameEn : item.nameEn || item.name) || ''"
@@ -53,9 +50,9 @@ import { UUID } from "uuid-generator-ts";
           </div>
         </nz-option>
       </ng-container>
-      <ng-container *ngIf="lookupType == LOOKUP_TYPE.HouseKeepingStatus">
+      <ng-container *ngIf="lookupType() == LOOKUP_TYPE.HouseKeepingStatus">
         <nz-option
-          *ngFor="let item of lists; let i = index"
+          *ngFor="let item of lists(); let i = index"
           nzCustomContent
           [nzValue]="item.valueId"
           [nzLabel]="(this.translate.currentLang === 'km' ? item.name || item.nameEn : item.nameEn || item.name) || ''"
@@ -71,7 +68,7 @@ import { UUID } from "uuid-generator-ts";
           </div>
         </nz-option>
       </ng-container>
-      <nz-option *ngIf="loading" nzDisabled nzCustomContent>
+      <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
         <i nz-icon nzType="loading" class="loading-icon"></i>
         {{ "Loading" | translate }}
       </nz-option>
@@ -79,7 +76,7 @@ import { UUID } from "uuid-generator-ts";
         {{ selected.nzLabel }}
       </ng-template>
       <ng-template #actionItem>
-        <a *ngIf="addOption && isLookupAdd" (click)="uiService.showAdd(lookupType)" class="item-action">
+        <a *ngIf="addOption() && isLookupAdd()" (click)="uiService.showAdd(lookupType())" class="item-action">
           <i nz-icon nzType="plus"></i> {{ "Add" | translate }}
         </a>
       </ng-template>
@@ -122,149 +119,54 @@ import { UUID } from "uuid-generator-ts";
     `,
   ],
   standalone: false,
+  encapsulation: ViewEncapsulation.None
 })
-export class LookupItemSelectComponent implements OnInit, ControlValueAccessor {
+export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem>{
   constructor(
+     service: LookupItemService,
+     uiService: LookupItemUiService,
+     sessionStorageService: SessionStorageService,
     public translate: TranslateService,
-    private service: LookupItemService,
-    public uiService: LookupItemUiService,
-    private sessionStorageService: SessionStorageService,
     private authService: AuthService
-  ) { }
-
-  @Input() storageKey!: string;
-  @Input() showAllOption!: boolean;
-  @Input() addOption!: boolean;
-  @Input() typeLabelAll!: string;
-  @Input() showAll!: string;
-  @Input() allowClear = false;
-  @Output() valueChanged = new EventEmitter<any>();
-  @Input() lookupType: LOOKUP_TYPE = LOOKUP_TYPE.HouseKeepingStatus;
-  parentStorageKey = "lookup-item-filter";
-  componentId = UUID.createUUID();
-  @Input() disabled = false;
-  @Input() statuses: number[] = [];
-  loading = false;
-  searchText = "";
-  selectedValue = 0;
-  refreshSub$: any;
-  lists: LookupItem[] = [];
-  param: QueryParam = {
-    pageSize: 9999999,
-    pageIndex: 1,
-    sorts: "",
-    filters: "",
-  };
-  isLookupAdd: boolean = false;
-
-  onChangeCallback: any = () => { };
-  onTouchedCallback: any = () => { };
-
-  ngOnInit(): void {
-    // this.isLookupAdd = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__LOOKUP__ADD
-    // );
-
-    this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
-      console.log(e);
-      if (e.key === "added" && e.componentId === this.componentId) {
-        this.selectedValue = e.value.valueId;
-        this.service.find(this.selectedValue).subscribe((result: any) => {
-          this.loading = false;
-          this.lists.push(result);
-          this.onModalChange();
-        });
-      }
-    });
-    if (this.loading) {
-      return;
-    }
-    if (this.showAllOption) this.selectedValue = 0;
-    if (this.storageKey) {
-      let recentFilters: any = [];
-      recentFilters = this.sessionStorageService.getValue(this.parentStorageKey) ?? [];
-      const recentFilter = recentFilters.filter((item: any) => item.key === this.storageKey)[0];
-
-      this.selectedValue = recentFilter?.value.valueId ?? 0;
-      if (this.selectedValue !== 0) this.lists.push(recentFilter?.value);
-      this.valueChanged.emit(this.selectedValue);
-      this.onChangeCallback(this.selectedValue);
-      this.onTouchedCallback(this.selectedValue);
-    }
+  ) {
+    super(service, uiService, sessionStorageService, 'lookup-item-filter', 'all-lookup-item')
   }
 
-  search() {
-    if (this.loading) {
-      return;
-    }
-    this.loading = true;
+  showAll = input<string>('allLookupItem');
+  allowClear = input<boolean>(false);
+  lookupType = input<LOOKUP_TYPE>(LOOKUP_TYPE.HouseKeepingStatus);
+  statuses = input<number[]>([]);
+  typeLabelAll = input<string>('')
+  isLookupAdd = signal(false);
+
+
+  override search() {
+    this.isLoading.set(true);
     setTimeout(() => {
-      this.param.filters = JSON.stringify([
-        { field: "Name", operator: "contains", value: this.searchText },
-        { field: "lookupTypeId", operator: "eq", value: this.lookupType },
-      ]);
-      if (this.searchText && this.param.pageIndex === 1) {
-        this.lists = [];
-      }
-      this.service.search(this.param).subscribe({
-        next: (result: { results: LookupItem[] }) => {
-          this.loading = false;
-          if (this.statuses.length > 0) {
-            this.lists = result.results.filter((x: LookupItem) => !this.statuses.includes(x?.valueId!));
-          } else {
-            this.lists = result.results;
-          }
-        },
-        error: (error: any) => {
-          console.log(error);
-        },
+      setTimeout(() => {
+        this.param().filters = JSON.stringify([
+          { field: "Name", operator: "contains", value: this.searchText() },
+          { field: "lookupTypeId", operator: "eq", value: this.lookupType() },
+        ]);
+        if (this.searchText() && this.param().pageIndex === 1) {
+          this.lists.set([]);
+        }
+        this.service.search(this.param()).subscribe({
+          next: (result: { results: LookupItem[] }) => {
+            this.isLoading.set(false);
+            if (this.statuses.length > 0) {
+              this.lists.set(result.results.filter((x: LookupItem) => !this.statuses().includes(x?.valueId!)));
+            } else {
+              this.lists.set(result.results);
+            }
+          },
+          error: (error: any) => {
+            console.log(error);
+          },
+        });
       });
-    });
+    }, 50);
+
   }
-
-  onModalChange() {
-    this.valueChanged.emit(this.selectedValue);
-    this.onChangeCallback(this.selectedValue);
-    this.onTouchedCallback(this.selectedValue);
-    this.setStorageKey(this.selectedValue);
-  }
-
-  writeValue(value: any) {
-    this.selectedValue = value;
-    this.search();
-  }
-
-  registerOnChange(fn: any) {
-    this.onChangeCallback = fn;
-  }
-
-  registerOnTouched(fn: any) {
-    this.onTouchedCallback = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
-
-  setStorageKey(filter: any): void {
-    if (this.storageKey) {
-      let value: any = [];
-      let item = this.lists.filter((item) => item.valueId === filter)[0];
-
-      if (filter === 0) item = { id: 0, name: "all_lookup_items" };
-      value = this.sessionStorageService.getValue(this.parentStorageKey) || [];
-      const index = value.findIndex((e: any) => e.key === this.storageKey);
-      index !== -1 ? (value[index].value = item) : value.push({ key: this.storageKey, value: item });
-      this.sessionStorageService.setValue({
-        key: this.parentStorageKey,
-        value,
-      });
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.refreshSub$?.unsubscribe();
-  }
-
   protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }
