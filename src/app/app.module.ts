@@ -315,6 +315,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberLevelListComponent,
     MemberLevelOperationComponent,
     MemberLevelDeleteComponent,
+    MemberLevelSelectComponent,
 
     // Item
     ItemListComponent,
@@ -331,6 +332,7 @@ export class CustomTranslate implements TranslateLoader {
     UnitListComponent,
     UnitOperationComponent,
     UnitDeleteComponent,
+    UnitSelectComponent,
 
     // item unit
     ItemUnitListComponent,
@@ -349,6 +351,10 @@ export class CustomTranslate implements TranslateLoader {
     // charge
     ChargeListComponent,
     ChargeOperationComponent ,
+
+    RoomChargeTypeSelectComponent,
+    RoomChargeTypeListComponent,
+    RoomChargeTypeDeleteComponent
 
   ],
   bootstrap: [AppComponent],

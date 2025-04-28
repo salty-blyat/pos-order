@@ -1,12 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    forwardRef,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-} from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 // @ts-ignore
 import { v4 as uuidv4 } from 'uuid';
@@ -89,8 +81,7 @@ import {UnitUiService} from "./unit-ui.service";
     ],
     standalone: false
 })
-export class UnitSelectComponent
-    implements OnInit, ControlValueAccessor, OnDestroy
+export class UnitSelectComponent implements OnInit, ControlValueAccessor, OnDestroy
 {
     constructor(
         private service: UnitService,

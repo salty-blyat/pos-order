@@ -419,7 +419,56 @@ import {AuthService} from "../../helpers/auth.service";
           </div>
       </div>
   `,
-  styleUrls: ["../../../assets/scss/operation_page.scss"],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
+  styles: [`
+    .photo {
+      width: 108px;
+      height: auto;
+      padding: 1px;
+      min-height: 2cm;
+      margin: 16px auto 0;
+      border: 1px solid #d0cfcf;
+      border-radius: 4px;
+
+      img {
+        width: 100%;
+      }
+    }
+
+    .member-name {
+      text-align: center;
+
+      p {
+        margin-top: 5px;
+        font-weight: bold;
+      }
+    }
+
+    .menu-item {
+      background: #fff;
+    }
+
+    .sider-member {
+      height: calc(100vh - 180px);
+      border-right: 1px solid #d9d9d9;
+    }
+
+    [profile] {
+      .ant-upload-list-picture-card .ant-upload-list-item-actions {
+        display: none;
+      }
+
+      .ant-upload-list-picture-card .ant-upload-list-item-info::before {
+        display: none;
+      }
+    }
+
+    .profile {
+      .ant-upload.ant-upload-select-picture-card {
+        margin: 0;
+      }
+    }
+  `],
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
@@ -502,9 +551,118 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     });
   }
 
-  override initControl() {
-    const { codeExistValidator, nameMaxLengthValidator, required } =
-      CommonValidators;
+  find(id: number) {
+    this.isLoading.set(true);
+    this.service.find(id).subscribe({
+      next: (result: any) => {
+        this.model = result;
+        this.setFormValue();
+        this.isLoading.set(false);
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  beforeUpload = (
+    file: NzUploadFile,
+    _fileList: NzUploadFile[]
+  ): Observable<boolean> =>
+    new Observable((observer: Observer<boolean>) => {
+      const isJpgOrPng =
+        file.type === 'image/jpeg' || file.type === 'image/png';
+      if (!isJpgOrPng) {
+        this.msg.error('You can only upload JPG file!');
+        observer.complete();
+        return;
+      }
+      const isLt2M = file.size! / 1024 / 1024 < 5;
+      if (!isLt2M) {
+        this.msg.error('Image must smaller than 2MB!');
+        observer.complete();
+        return;
+      }
+      observer.next(isJpgOrPng && isLt2M);
+      observer.complete();
+    });
+
+  handleChange(info: NzUploadChangeParam): void {
+    let fileList = [...info.fileList];
+    // 1. Limit 10 number of uploaded files
+    fileList = fileList.slice(-10);
+
+    // 2. Read from response and show file link
+    fileList = fileList.map((file) => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url;
+        if (file.response.name) {
+          file.name = file.response.name;
+        }
+      }
+      return file;
+    });
+    this.fileLists = fileList;
+    let attachment: Attachment = {};
+    let username = this.authService.clientInfo.name;
+    this.fileLists.map((file) => {
+      return (attachment = {
+        uid: file.uid,
+        name: file.name,
+        url: file.url,
+        type: file.type,
+        date: new Date(),
+        by: username,
+      });
+    });
+    this.uploadLoading = true;
+    if (attachment.url) {
+      this.uploadLoading = false;
+      this.attachments.push(attachment);
+      this.autoUpload();
+    }
+  }
+
+  getTime(date: any) {
+    return new Date(date).getTime();
+  }
+
+  removeAttachment(i: number) {
+    this.attachments.splice(i, 1);
+    this.autoUpload();
+  }
+
+  handleUploadProfile(info: NzUploadChangeParam): void {
+    let fileList = [...info.fileList];
+
+    // 1. Limit 5 number of uploaded files
+    fileList = fileList.slice(-5);
+
+    // 2. Read from response and show file link
+    fileList = fileList.map((file) => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url;
+        if (file.response.name) {
+          file.name = file.response.name;
+        }
+      }
+      return file;
+    });
+    this.fileProfile = fileList;
+  }
+
+  override initControl(): void {
+    const {
+      nameMaxLengthValidator,
+      noteMaxLengthValidator,
+      required,
+      codeExistValidator,
+      multiplePhoneValidator,
+      codeMaxLengthValidator
+    } = CommonValidators;
     this.frm = this.fb.group({
       code: [null, [required, codeMaxLengthValidator], codeExistValidator(this.service, this.modal?.id)],
       name: [null, [required, nameMaxLengthValidator]],

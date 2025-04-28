@@ -148,9 +148,7 @@ import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class RoomChargeTypeListComponent
-  extends BaseListComponent<RoomChargeType>
-  implements OnInit
+export class RoomChargeTypeListComponent extends BaseListComponent<RoomChargeType>
 {
   constructor(
     service: RoomChargeTypeService,

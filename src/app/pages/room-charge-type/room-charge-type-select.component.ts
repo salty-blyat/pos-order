@@ -89,8 +89,7 @@ import { RoomChargeTypeUiService } from './room-charge-type-ui.service';
     ],
     standalone: false
 })
-export class RoomChargeTypeSelectComponent
-    implements OnInit, ControlValueAccessor, OnDestroy
+export class RoomChargeTypeSelectComponent implements OnInit, ControlValueAccessor, OnDestroy
 {
     constructor(
         private service: RoomChargeTypeService,
