@@ -269,6 +269,7 @@ export class CustomTranslate implements TranslateLoader {
     ReportGroupOperationComponent,
     ReportGroupSelectComponent,
     ReportGroupMenuComponent,
+    ReportGroupListComponent,
     ReportDeleteComponent,
     ReportDynamicInputComponent,
     ReportFilterComponent,
