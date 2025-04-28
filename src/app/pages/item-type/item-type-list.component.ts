@@ -66,7 +66,7 @@ import { SIZE_COLUMNS } from "../../const";
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NOTE">
                 {{ "Note" | translate }}
               </th>
-              <th class="col-action"></th>
+              <th  [nzWidth]="SIZE_COLUMNS.ACTION" class="col-action"></th>
             </tr>
           </thead>
           <tbody>

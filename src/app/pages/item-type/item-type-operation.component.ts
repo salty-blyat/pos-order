@@ -47,7 +47,6 @@ import { CommonValidators } from "../../utils/services/common-validators";
               nz-input
               rows="3"
               formControlName="note"
-              style="width: 100%;"
             ></textarea>
           </nz-form-control>
         </nz-form-item>

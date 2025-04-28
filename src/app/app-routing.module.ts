@@ -26,6 +26,8 @@ import { MemberLevelListComponent } from "./pages/member-level/member-level-list
 import { UnitListComponent } from "./pages/unit/unit-list.component";
 import { ItemUnitListComponent } from "./pages/item-unit/item-unit-list.component";
 import { GroupListComponent } from "./pages/group/group-list.component";
+import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
+import { ChargeListComponent } from "./pages/charge/charge-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -201,6 +203,24 @@ const routes: Routes = [
           { index: 1, label: "ItemType", url: null },
         ],
       },
+      
+      {
+        path: "setting/room-charge-type",
+        component: RoomChargeTypeListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "RoomChargeType", url: null },
+        ],
+      },
+      {
+        path: "setting/charge",
+        component: ChargeListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Charge", url: null },
+        ],
+      },
+      
     ],
   },
   {

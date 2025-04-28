@@ -34,7 +34,7 @@ import { Group, GroupService } from "./group.service";
             >{{ "Name" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="name" />
+            <input nz-input formControlName="name" /> 
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -46,7 +46,6 @@ import { Group, GroupService } from "./group.service";
               nz-input
               rows="3"
               formControlName="note"
-              style="width: 100%;"
             ></textarea>
           </nz-form-control>
         </nz-form-item>

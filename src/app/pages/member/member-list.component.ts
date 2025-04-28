@@ -39,6 +39,7 @@ import {SIZE_COLUMNS} from "../../const";
           [nzPageSize]="param().pageSize || 0"
           [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
+          nzHideOnSinglePage="true"
           (nzQueryParams)="onQueryParamsChange($event)"
         >
           <ng-template #noResult>
@@ -62,7 +63,14 @@ import {SIZE_COLUMNS} from "../../const";
           <tbody>
             <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
-                {{ i | rowNumber : { index: param().pageIndex || 0, size: param().pageSize || 0} }}
+                {{
+                  i
+                    | rowNumber
+                      : {
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
+                        }
+                }}
               </td>
               <td nzEllipsis>
                 <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
@@ -74,8 +82,8 @@ import {SIZE_COLUMNS} from "../../const";
               <td nzEllipsis title="{{ data.unit }}">{{ data.unit }}</td>
               <td nzEllipsis title="{{ data.level }}">{{ data.level }}</td>
               <td nzEllipsis title="{{ data.phone }}">{{ data.phone }}</td>
-              <td nzEllipsis title="{{ data.nationalityName }}">
-                {{ data.nationalityName }}
+              <td nzEllipsis title="{{ data.nationality }}">
+                {{ data.nationality }}
               </td>
               <td>
                 <nz-space [nzSplit]="spaceSplit">

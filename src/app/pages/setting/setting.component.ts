@@ -80,7 +80,9 @@ export class SettingComponent implements OnInit {
   isAutoNumberList: boolean = true;
   isBlockList: boolean = true;
   isRoomTypeList: boolean = true;
-  isItemList: boolean = true;
+  isItemList: boolean = true; 
+  isRoomChargeType : boolean = true;
+  isCharge : boolean = true;
   isItemTypeList: boolean = true;
   isGroupList: boolean = true;
   ngOnInit(): void {
@@ -161,6 +163,23 @@ export class SettingComponent implements OnInit {
           },
         ],
       },
+      {
+        groupName: "Charge",
+        subName: [
+          {
+            icon: "container",
+            url: `${this.urlPart}/room-charge-type`,
+            label: "RoomChargeType",
+            isList: this.isRoomChargeType,
+          }, 
+          
+          {
+            icon: "container",
+            url: `${this.urlPart}/charge`,
+            label: "Charge",
+            isList: this.isCharge,
+          }, 
+        ]},
       {
         groupName: "SystemSetting",
         subName: [

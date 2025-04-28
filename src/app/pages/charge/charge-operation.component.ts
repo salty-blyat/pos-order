@@ -3,11 +3,12 @@ import { BaseOperationComponent } from "../../utils/components/base-operation.co
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { NzModalRef } from "ng-zorro-antd/modal";
-import { UnitUiService } from "./unit-ui.service";
-import { Unit, UnitService } from "./unit.service";
+import { Charge, ChargeService } from "./charge.service";
+import { ChargeUiService } from "./charge-ui.service";
+import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 
 @Component({
-  selector: "app-unit-operation",
+  selector: "app-charge-unit-operation",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
@@ -24,12 +25,16 @@ import { Unit, UnitService } from "./unit.service";
         *ngIf="isLoading()"
         style="position: absolute; top: 50%; left: 50%"
       ></nz-spin>
-      <form
-        nz-form
-        [formGroup]="frm"
-        
-        [nzAutoTips]="autoTips"
-      >
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Code" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+            <input nz-input formControlName="code" />
+          </nz-form-control>
+        </nz-form-item>
+
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "Name" | translate }}
@@ -38,16 +43,34 @@ import { Unit, UnitService } from "./unit.service";
             <input nz-input formControlName="name" />
           </nz-form-control>
         </nz-form-item>
+
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24"
-            >{{ "Note" | translate }}
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Unit" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
-            <textarea
-              nz-input
-              rows="3"
-              formControlName="note"
-            ></textarea>
+            <app-unit-select formControlName="unitId" [addOption]="true" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "ChargeType" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            <app-lookup-item-select
+              formControlName="chargeTypeId"
+              [lookupType]="this.lookupItemType.ChargeType"
+            ></app-lookup-item-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "ChargeRate" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            <input nz-input formControlName="chargeRate" nzHasFeedback />
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -70,27 +93,27 @@ import { Unit, UnitService } from "./unit.service";
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isUnitEdit"
+          *ngIf="!isLoading() && isChargeEdit"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isUnitEdit"
+          *ngIf="!isLoading() && isChargeEdit"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isUnitRemove"
+          *ngIf="!isLoading() && isChargeRemove"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isUnitRemove"
+          *ngIf="!isLoading() && isChargeRemove"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -103,36 +126,52 @@ import { Unit, UnitService } from "./unit.service";
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class UnitOperationComponent extends BaseOperationComponent<Unit> {
+export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
   constructor(
     fb: FormBuilder,
-    ref: NzModalRef<UnitOperationComponent>,
-    service: UnitService,
-    uiService: UnitUiService
+    ref: NzModalRef<ChargeOperationComponent>,
+    service: ChargeService,
+    uiService: ChargeUiService
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isUnitEdit: boolean = true;
-  isUnitRemove: boolean = true;
+  isChargeEdit: boolean = true;
+  isChargeRemove: boolean = true;
 
   override initControl(): void {
-    const { required, noteMaxLengthValidator, nameExistValidator } =
-      CommonValidators;
+    const {
+      required,
+      nameMaxLengthValidator,
+      nameExistValidator,
+      codeExistValidator,
+      integerValidator,
+    } = CommonValidators;
+
     this.frm = this.fb.group({
+      code: [
+        null,
+        [required, nameMaxLengthValidator],
+        [codeExistValidator(this.service, this.modal?.id)],
+      ],
       name: [
         null,
-        [required, noteMaxLengthValidator()],
+        [required, nameMaxLengthValidator],
         [nameExistValidator(this.service, this.modal?.id)],
       ],
-      note: [null],
+      chargeTypeId: [null, required],
+      unitId: [null, required],
+      chargeRate: [0, [required, nameMaxLengthValidator, integerValidator]],
     });
   }
-
-  override setFormValue() {
+  lookupItemType = LOOKUP_TYPE;
+  override setFormValue(): void {
     this.frm.setValue({
+      code: this.model.code,
       name: this.model.name,
-      note: this.model.note,
+      unitId: this.model.unitId,
+      chargeRate: this.model.chargeRate,
+      chargeTypeId: this.model.chargeTypeId,
     });
   }
 }

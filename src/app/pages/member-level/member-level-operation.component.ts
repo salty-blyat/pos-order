@@ -43,7 +43,7 @@ import { MemberLevelUiService } from "./member-level-ui.component";
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "LevelStay" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
             <input nz-input formControlName="levelStay" />
           </nz-form-control>
         </nz-form-item>
@@ -56,7 +56,6 @@ import { MemberLevelUiService } from "./member-level-ui.component";
               nz-input
               rows="3"
               formControlName="note"
-              style="width: 100%;"
             ></textarea>
           </nz-form-control>
         </nz-form-item>

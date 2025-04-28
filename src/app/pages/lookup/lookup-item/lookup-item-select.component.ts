@@ -33,7 +33,7 @@ import {BaseSelectComponent} from "../../../utils/components/base-select.compone
         [nzValue]="0"
         [nzLabel]="typeLabelAll() ? typeLabelAll() : (showAll() | translate)"
       ></nz-option>
-      <ng-container *ngIf="lookupType() !== LOOKUP_TYPE.HouseKeepingStatus">
+      <ng-container *ngIf="lookupType() !== LOOKUP_TYPE.ChargeType">
         <nz-option
           *ngFor="let item of lists()"
           [nzValue]="item.valueId"
@@ -50,7 +50,7 @@ import {BaseSelectComponent} from "../../../utils/components/base-select.compone
           </div>
         </nz-option>
       </ng-container>
-      <ng-container *ngIf="lookupType() == LOOKUP_TYPE.HouseKeepingStatus">
+      <ng-container *ngIf="lookupType() == LOOKUP_TYPE.ChargeType">
         <nz-option
           *ngFor="let item of lists(); let i = index"
           nzCustomContent
@@ -134,11 +134,10 @@ export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem>{
 
   showAll = input<string>('allLookupItem');
   allowClear = input<boolean>(false);
-  lookupType = input<LOOKUP_TYPE>(LOOKUP_TYPE.HouseKeepingStatus);
+  lookupType = input<LOOKUP_TYPE>(LOOKUP_TYPE.ChargeType);
   statuses = input<number[]>([]);
   typeLabelAll = input<string>('')
-  isLookupAdd = signal(false);
-
+  isLookupAdd = signal(false); 
 
   override search() {
     this.isLoading.set(true);

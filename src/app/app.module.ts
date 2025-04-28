@@ -150,8 +150,16 @@ import { ItemUnitDeleteComponent } from "./pages/item-unit/item-unit-delete.comp
 import { GroupDeleteComponent } from "./pages/group/group-delete.component";
 import { GroupListComponent } from "./pages/group/group-list.component";
 import { GroupOperationComponent } from "./pages/group/group-operation.component";
-import {NzCodeEditorModule} from "ng-zorro-antd/code-editor";
 import {RoomInventoryListComponent} from "./pages/room-inventory/room-inventory-list.component";
+import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
+import { RoomChargeTypeDeleteComponent } from "./pages/room-charge-type/room-charge-type-delete.component";
+import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
+import { MemberLevelSelectComponent } from "./pages/member-level/member-level-select.component";
+import { UnitSelectComponent } from "./pages/unit/unit-select.component";
+import { ChargeListComponent } from "./pages/charge/charge-list.component";
+import { ChargeOperationComponent } from "./pages/charge/charge-operation.component";
+import { RoomChargeTypeSelectComponent } from "./pages/room-charge-type/room-charge-type-select.component";
+import { GroupSelectComponent } from "./pages/group/group-select.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -334,7 +342,14 @@ export class CustomTranslate implements TranslateLoader {
     GroupOperationComponent,
     GroupDeleteComponent,
 
-    RoomInventoryListComponent
+    RoomInventoryListComponent,
+    GroupSelectComponent,
+
+
+    // charge
+    ChargeListComponent,
+    ChargeOperationComponent ,
+
   ],
   bootstrap: [AppComponent],
   imports: [

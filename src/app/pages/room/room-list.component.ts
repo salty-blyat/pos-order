@@ -1,4 +1,10 @@
-import {Component, Input, OnInit, signal, ViewEncapsulation} from "@angular/core";
+import {
+  Component,
+  Input,
+  OnInit,
+  signal,
+  ViewEncapsulation,
+} from "@angular/core";
 import { ActivatedRoute, Data } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -148,9 +154,9 @@ import {TranslateService} from "@ngx-translate/core";
         </nz-table>
       </nz-content>
   `,
-    styleUrls: ["../../../assets/scss/list.style.scss"],
-    standalone: false,
-    encapsulation: ViewEncapsulation.None,
+  styleUrls: ["../../../assets/scss/list.style.scss"],
+  standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class RoomListComponent extends BaseListComponent<Room> {
   constructor(
@@ -161,8 +167,10 @@ export class RoomListComponent extends BaseListComponent<Room> {
   ) {
     super(service, uiService, sessionStorageService, "room-list");
   }
-
-  roomTypeId = signal<number>(0);
+  readonly roomTypeIdKey = "room-type-filter";
+  roomTypeId = signal(
+    parseInt(this.sessionStorageService.getValue(this.roomTypeIdKey) ?? 0) ?? 0
+  );
   floorId: number = 0;
   roomStatusId = signal<number>(0);
   tagIds: number[] = [];
@@ -176,6 +184,7 @@ export class RoomListComponent extends BaseListComponent<Room> {
   hasAdvancedFilter = signal<boolean>(false);
 
   override ngOnInit() {
+    console.log(this.sessionStorageService.getValue(this.roomTypeIdKey));
     this.refreshSub = this.uiService.refresher.subscribe((result) => {
       if (result.key === "advanced-filter-room") {
         this.setAdvancedFilter(result.value);
@@ -189,6 +198,7 @@ export class RoomListComponent extends BaseListComponent<Room> {
         this.sessionStorageService.getValue(this.advancedStoreKey)
       );
     }
+
     this.search();
   }
 
@@ -204,21 +214,22 @@ export class RoomListComponent extends BaseListComponent<Room> {
     }
 
   override search() {
-      const filters: Filter[] = [];
-      // const filters: any[] = [
-      //   { field: "search", operator: "contains", value: this.searchText() },
-      // ];
-      if (this.floorId) {
-        filters.push({ field: "floorId", operator: "eq", value: this.floorId });
-      }
+    const filters: Filter[] = [];
+    // const filters: any[] = [
+    //   { field: "search", operator: "contains", value: this.searchText() },
+    // ];
+    if (this.floorId) {
+      filters.push({ field: "floorId", operator: "eq", value: this.floorId });
+      super.search(filters);
+    }
 
-      if (this.roomTypeId()) {
-        filters.push({
-          field: "roomTypeId",
-          operator: "eq",
-          value: this.roomTypeId(),
-        });
-      }
+    if (this.roomTypeId()) {
+      filters.push({
+        field: "roomTypeId",
+        operator: "eq",
+        value: this.roomTypeId(),
+      });
+    }
 
       if (this.roomStatusId()) {
         filters.push({
@@ -228,15 +239,15 @@ export class RoomListComponent extends BaseListComponent<Room> {
         });
       }
 
-      if (this.tagIds.length > 0) {
-        filters.push({
-          field: "tagIds",
-          operator: "in",
-          value: this.tagIds.join(","),
-        });
-      }
-      super.search(filters);
+    if (this.tagIds.length > 0) {
+      filters.push({
+        field: "tagIds",
+        operator: "in",
+        value: this.tagIds.join(","),
+      });
+    }
+    super.search(filters);
   }
 
-    protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
+  protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

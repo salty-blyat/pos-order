@@ -69,7 +69,7 @@ import { GroupUiService } from "./group-ui.service";
           </ng-template>
           <thead>
             <tr>
-              <th nzColumnKey="drag" [nzWidth]="SIZE_COLUMNS.DRAG"></th>
+              <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
@@ -95,7 +95,7 @@ import { GroupUiService } from "./group-ui.service";
               <td nzEllipsis title="{{ data.note }}">
                 {{ data.note }}
               </td>
-              <td class="col-action">
+              <td class="col-action" >
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -135,7 +135,7 @@ export class GroupListComponent extends BaseListComponent<Group> {
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute
   ) {
-    super(service, uiService, sessionStorageService, "group-list");
+    super(service, uiService, sessionStorageService, "group-list" );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isGroupAdd: boolean = true;

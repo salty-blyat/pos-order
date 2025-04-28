@@ -7,7 +7,7 @@ export enum LOOKUP_TYPE {
   GenderId = 1,
   Nationality = 2,
   Status = 36001,
-  HouseKeepingStatus = 36002,
+  ChargeType = 36002,
   Amenities = 36003,
   Position = 36004,
   RoomClass = 36005,

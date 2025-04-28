@@ -9,7 +9,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
 import { SettingService } from "../../app-setting";
 import { Image } from "../lookup/lookup-item/lookup-item.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
-import { Observable } from "rxjs"; 
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-item-operation",
@@ -55,7 +55,7 @@ import { Observable } from "rxjs";
               <nz-form-label [nzSpan]="7" nzRequired>{{
                 "ItemType" | translate
               }}</nz-form-label>
-              <nz-form-control [nzSpan]="14" nzHasFeedback>
+              <nz-form-control [nzSpan]="14">
                 <app-item-type-select
                   [storageKey]="'item-type-filter'"
                   formControlName="itemTypeId"
@@ -234,9 +234,11 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
   override onSubmit(e?: any) {
     if (this.frm.valid && !this.isLoading()) {
       this.isLoading.set(true);
-      this.frm.patchValue({
-        image: this.file[0].url,
-      });
+      if (this.file.length > 0) {
+        this.frm.patchValue({
+          image: this.file[0].url,
+        });
+      }
       let operation$: Observable<Item> = this.service.add(
         this.frm.getRawValue()
       );

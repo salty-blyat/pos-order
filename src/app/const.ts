@@ -111,4 +111,5 @@ export const SIZE_COLUMNS = {
   Amenity: "400px",
   GENDER: "100px",
   NORMAL: "12%",
+  FORMAT: "150px",
 };
