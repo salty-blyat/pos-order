@@ -39,17 +39,17 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "Name" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
             <input nz-input formControlName="name" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
-            >{{ "Unit" | translate }}
+            >{{ "ItemUnit" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
-            <app-unit-select formControlName="unitId" [addOption]="true" />
+            <app-item-unit-select formControlName="unitId" [addOption]="true" />
           </nz-form-control>
         </nz-form-item>
 
@@ -147,18 +147,14 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
       codeExistValidator,
       integerValidator,
     } = CommonValidators;
-    
+
     this.frm = this.fb.group({
       code: [
         null,
         [required, nameMaxLengthValidator],
         [codeExistValidator(this.service, this.modal?.id)],
       ],
-      name: [
-        null,
-        [required, nameMaxLengthValidator],
-        [nameExistValidator(this.service, this.modal?.id)],
-      ],
+      name: [null, [required, nameMaxLengthValidator]],
       chargeTypeId: [null, [required]],
       unitId: [null, [required]],
       chargeRate: [null, [required, integerValidator]],

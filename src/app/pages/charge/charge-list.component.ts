@@ -32,7 +32,7 @@ import { Filter } from "../../utils/services/base-api.service";
           <div nz-col>
             <app-lookup-item-select
               formControlName="chargeTypeId"
-              [showAll]="'AllChargeType' | translate" 
+              [showAll]="'AllChargeType' | translate"
               [showAllOption]="true"
               storageKey="charge-type-filter"
               (valueChanged)="
@@ -41,6 +41,17 @@ import { Filter } from "../../utils/services/base-api.service";
               [lookupType]="this.lookupItemType.ChargeType"
             ></app-lookup-item-select>
           </div>
+          <div nz-col>
+            <app-item-unit-select
+              formControlName="itemUnitId"
+              [showAllOption]="true"
+              storageKey="item-unit-filter"
+              (valueChanged)="
+                unitId.set($event); param().pageIndex = 1; search()
+              "
+            ></app-item-unit-select>
+          </div>
+
           <div *ngIf="draged()">
             <button
               nz-button
@@ -92,8 +103,8 @@ import { Filter } from "../../utils/services/base-api.service";
               <th nzWidth="150px">
                 {{ "ChargeType" | translate }}
               </th>
-              <th nzWidth="150px">{{ "Unit" | translate }}</th>
-              <th nzWidth="150px">{{ "ChargeRate" | translate }}</th>
+              <th nzWidth="150px" nzAlign="right">{{ "ChargeRate" | translate }}</th>
+              <th nzWidth="150px" >{{ "ItemUnit" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -138,10 +149,10 @@ import { Filter } from "../../utils/services/base-api.service";
                     : data.chargeTypeNameEn
                 }}
               </td>
+              <td nzEllipsis style="flex: 1" nzAlign="right">{{ data.chargeRate }}</td>
               <td nzEllipsis style="flex: 1">
                 {{ data.unitName }}
               </td>
-              <td nzEllipsis style="flex: 1">{{ data.chargeRate }}</td>
 
               <td class="col-action" style="flex: 2">
                 <nz-space [nzSplit]="spaceSplit">
@@ -195,7 +206,7 @@ export class ChargeListComponent extends BaseListComponent<Charge> {
   lookupItemType = LOOKUP_TYPE;
 
   chargeTypeId = signal<number>(0);
-
+  unitId = signal<number>(0);
   override search() {
     let filters: Filter[] = [];
     if (this.chargeTypeId()) {
@@ -203,6 +214,13 @@ export class ChargeListComponent extends BaseListComponent<Charge> {
         field: "chargeTypeId",
         operator: "eq",
         value: this.chargeTypeId(),
+      });
+    }
+    if (this.unitId()) {
+      filters.push({
+        field: "unitId",
+        operator: "eq",
+        value: this.unitId(),
       });
     }
     super.search(filters, 100);
