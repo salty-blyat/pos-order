@@ -314,6 +314,7 @@ export class CustomTranslate implements TranslateLoader {
     //member
     MemberListComponent,
     MemberOperationComponent,
+    MemberAdvancedFilterComponent,
 
     // member level
     MemberLevelListComponent,

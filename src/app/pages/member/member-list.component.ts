@@ -72,14 +72,14 @@ import {RoomAdvancedFilter} from "../room/room.service";
                   </ng-template>
                   <thead>
                   <tr>
-                      <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-                      <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
-                      <th nzWidth="140px">{{ "Name" | translate }}</th>
-                      <th nzWidth="100px">{{ "Phone" | translate }}</th>
-                      <th nzWidth="80px">{{ "Sex" | translate }}</th>
-                      <th nzWidth="120px">{{ "Level" | translate }}</th>
-                      <th nzWidth="120px">{{ "Group" | translate }}</th>
-                      <th>{{ "Unit" | translate }}</th>
+                      <th nzEllipsis [nzWidth]="SIZE_COLUMNS.ID">#</th>
+                      <th nzEllipsis [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
+                      <th nzEllipsis nzWidth="140px">{{ "Name" | translate }}</th>
+                      <th nzEllipsis nzWidth="100px">{{ "Phone" | translate }}</th>
+                      <th nzEllipsis nzWidth="80px">{{ "Sex" | translate }}</th>
+                      <th nzEllipsis nzWidth="120px">{{ "Level" | translate }}</th>
+                      <th nzEllipsis nzWidth="120px">{{ "Group" | translate }}</th>
+                      <th nzEllipsis>{{ "Unit" | translate }}</th>
                       <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
                   </tr>
                   </thead>
