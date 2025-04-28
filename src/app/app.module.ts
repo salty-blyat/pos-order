@@ -162,6 +162,7 @@ import { RoomChargeTypeSelectComponent } from "./pages/room-charge-type/room-cha
 import { GroupSelectComponent } from "./pages/group/group-select.component";
 import { ChargeDeleteComponent } from "./pages/charge/charge-delete.component";
 import { ItemUnitSelectComponent } from "./pages/item-unit/item-unit-select.component";
+import { RoomChargeTypeOperationComponent } from "./pages/room-charge-type/room-charge-type-operation.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -359,7 +360,9 @@ export class CustomTranslate implements TranslateLoader {
     //roomcharge
     RoomChargeTypeSelectComponent,
     RoomChargeTypeListComponent,
+    RoomChargeTypeOperationComponent,
     RoomChargeTypeDeleteComponent
+
 
   ],
   bootstrap: [AppComponent],

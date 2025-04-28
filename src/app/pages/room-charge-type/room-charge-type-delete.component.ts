@@ -6,7 +6,7 @@ import { BaseDeleteComponent } from "../../utils/components/base-delete.componen
 import {
   RoomChargeType,
   RoomChargeTypeService,
-} from "./room-type-type.service";
+} from "./room-charge-type.service";
 import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
 
 @Component({
@@ -15,7 +15,7 @@ import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="modal?.id"
         >{{ "Remove" | translate }}
-        {{ model?.roomName || ("Loading" | translate) }}</span
+        {{ model?.roomNumber || ("Loading" | translate) }}</span
       >
     </div>
     <div class="modal-content">
@@ -63,7 +63,7 @@ import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
     </div>
     <div *nzModalFooter>
       <button
-        *ngIf="!errMessage() && model?.roomName"
+        *ngIf="!errMessage() && model?.roomNumber"
         nz-button
         nzDanger
         nzType="primary"
@@ -95,14 +95,14 @@ export class RoomChargeTypeDeleteComponent extends BaseDeleteComponent<RoomCharg
   override initControl(): void {
     const { noteMaxLengthValidator } = CommonValidators;
     this.frm = this.fb.group({
-      name: [{ value: null, disabled: true }, [Validators.required]],
+      roomNumber: [{ value: null, disabled: true }, [Validators.required]],
       note: [null, [noteMaxLengthValidator()]],
     });
   }
 
   override setFormValue() {
     this.frm.setValue({
-      name: this.model.roomName,
+      roomNumber: this.model.roomNumber,
       note: "",
     });
   }

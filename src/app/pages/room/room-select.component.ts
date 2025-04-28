@@ -34,9 +34,9 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
           *ngFor="let item of lists()"
           nzCustomContent
           [nzValue]="item.id"
-          [nzLabel]="item?.roomNumber + ''"
+          [nzLabel]="item?.roomNumber	+ ' ' + item?.roomTypeName"
         >
-          <span class="b-name">{{ item.roomNumber }}</span>
+          <span class="b-name">{{ item?.roomNumber	+ ' ' + item?.roomTypeName }}</span>
         </nz-option>
         <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
           <i nz-icon nzType="loading" class="loading-icon"></i>

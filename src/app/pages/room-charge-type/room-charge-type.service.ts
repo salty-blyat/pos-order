@@ -5,7 +5,7 @@ import { HttpClient } from "@angular/common/http";
 
 export interface RoomChargeType {
   id?: number;
-  roomName?: string;
+  roomNumber?: string;
   chargeType?: string;
   limit?: number;
 }
