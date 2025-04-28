@@ -73,6 +73,12 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
             <input nz-input formControlName="chargeRate" nzHasFeedback />
           </nz-form-control>
         </nz-form-item>
+        <nz-form-item>
+          <nz-form-label   [nzSm]="6" [nzXs]="24" >{{ "Note" | translate }}</nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            <textarea nz-input formControlName="note" rows="3"></textarea>
+          </nz-form-control>
+        </nz-form-item>
       </form>
     </div>
     <div *nzModalFooter>
@@ -143,9 +149,8 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
     const {
       required,
       nameMaxLengthValidator,
-      nameExistValidator,
       codeExistValidator,
-      integerValidator,
+      integerValidator,noteMaxLengthValidator
     } = CommonValidators;
 
     this.frm = this.fb.group({
@@ -157,7 +162,8 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
       name: [null, [required, nameMaxLengthValidator]],
       chargeTypeId: [null, [required]],
       unitId: [null, [required]],
-      chargeRate: [null, [required, integerValidator]],
+      chargeRate: [0, [required, integerValidator]],
+      note: [null, [noteMaxLengthValidator]],
     });
   }
   lookupItemType = LOOKUP_TYPE;
@@ -168,6 +174,7 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
       unitId: this.model.unitId,
       chargeRate: this.model.chargeRate,
       chargeTypeId: this.model.chargeTypeId,
+      note: this.model.note,
     });
   }
 }

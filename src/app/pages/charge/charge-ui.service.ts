@@ -13,9 +13,9 @@ export class ChargeUiService extends BaseUiService {
       modalService,
       ChargeOperationComponent,
       ChargeDeleteComponent,
-      "580px",
-      "580px",
-      "580px",
+      "450px",
+      "450px",
+      "450px",
       "450px"
     );
   }

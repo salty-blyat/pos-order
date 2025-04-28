@@ -19,7 +19,7 @@ import { Filter } from "../../utils/services/base-api.service";
         [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-header>
-        <div nz-row>
+        <div nz-row style="flex-wrap: nowrap; ">
           <div nz-col>
             <app-filter-input
               storageKey="charge-list-search"
@@ -63,7 +63,7 @@ import { Filter } from "../../utils/services/base-api.service";
             </button>
           </div>
         </div>
-        <div nz-col>
+        <div nz-col style="margin-left: 1rem">
           <button
             *ngIf="isChargeAdd()"
             nz-button
@@ -100,11 +100,14 @@ import { Filter } from "../../utils/services/base-api.service";
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="150px">
+              <th nzWidth="100px">
                 {{ "ChargeType" | translate }}
               </th>
-              <th nzWidth="150px" nzAlign="right">{{ "ChargeRate" | translate }}</th>
-              <th nzWidth="150px" >{{ "ItemUnit" | translate }}</th>
+              <th nzWidth="100px" nzAlign="right">
+                {{ "ChargeRate" | translate }}
+              </th>
+              <th nzWidth="150px">{{ "ItemUnit" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -115,7 +118,7 @@ import { Filter } from "../../utils/services/base-api.service";
             [cdkDropListData]="lists()"
           >
             <tr *ngFor="let data of lists(); let i = index" cdkDrag>
-              <td style=" cursor: move;" cdkDragHandle>
+              <td style="cursor: move;" cdkDragHandle>
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
               <td nzEllipsis>
@@ -138,23 +141,26 @@ import { Filter } from "../../utils/services/base-api.service";
                 <span *ngIf="!isChargeView()">{{ data.code }}</span>
               </td>
 
-              <td nzEllipsis title="{{ data.name }}" style="flex: 2">
+              <td nzEllipsis style="flex: 1">
                 {{ data.name }}
               </td>
 
-              <td nzEllipsis style="flex: 1">
+              <td nzEllipsis style="flex: 2">
                 {{
                   translateService.currentLang == "km"
                     ? data.chargeTypeName
                     : data.chargeTypeNameEn
                 }}
               </td>
-              <td nzEllipsis style="flex: 1" nzAlign="right">{{ data.chargeRate }}</td>
+              <td nzEllipsis style="flex: 1" nzAlign="right">
+                {{ data.chargeRate }}
+              </td>
               <td nzEllipsis style="flex: 1">
                 {{ data.unitName }}
               </td>
+              <td nzEllipsis style="flex: 4">{{ data.note }}</td>
 
-              <td class="col-action" style="flex: 2">
+              <td class="col-action" style="flex: 1">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
