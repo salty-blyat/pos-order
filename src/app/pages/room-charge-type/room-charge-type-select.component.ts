@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { QueryParam } from '../../utils/services/base-api.service';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import { AuthService } from '../../helpers/auth.service'; 
-import { RoomChargeType, RoomChargeTypeService } from './room-type-type.service';
+import { RoomChargeType, RoomChargeTypeService } from './room-charge-type.service';
 import { RoomChargeTypeUiService } from './room-charge-type-ui.service';
 
 
@@ -46,9 +46,9 @@ import { RoomChargeTypeUiService } from './room-charge-type-ui.service';
           *ngFor="let item of lists"
           nzCustomContent
           [nzValue]="item.id"
-          [nzLabel]="item?.roomName + ''"
+          [nzLabel]="item?.roomNumber + ''"
         >
-          <span class="b-name">{{ item.roomName }}</span>
+          <span class="b-name">{{ item.roomNumber }}</span>
         </nz-option>
         <nz-option *ngIf="loading" nzDisabled nzCustomContent>
           <i nz-icon nzType="loading" class="loading-icon"></i>
@@ -187,7 +187,7 @@ export class RoomChargeTypeSelectComponent implements OnInit, ControlValueAccess
         if (this.storageKey) {
             let value: any = [];
             let item = this.lists.filter((item) => item.id === filter)[0];
-            if (filter === 0) item = { id: 0, roomName: 'all_room_charge_type' };
+            if (filter === 0) item = { id: 0, roomNumber: 'all_room_charge_type' };
             value = this.sessionStorageService.getValue(this.parentStorageKey) || [];
             const index = value.findIndex((e: any) => e.key === this.storageKey);
             index !== -1

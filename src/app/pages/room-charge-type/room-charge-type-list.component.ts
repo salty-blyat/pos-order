@@ -13,8 +13,9 @@ import { SIZE_COLUMNS } from "../../const";
 import {
   RoomChargeType,
   RoomChargeTypeService,
-} from "./room-type-type.service";
+} from "./room-charge-type.service";
 import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
+import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 
 @Component({
   selector: "app-room-charge-type-list",
@@ -34,13 +35,27 @@ import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
               "
             ></app-filter-input>
           </div>
+           <!-- TODO:  add floor to query room first -->
           <div nz-col>
-            <!-- <app-room-charge-type-select
-                storageKey="room-charge-type-filter"
-                (valueChanged)="
-                  chargeType.set($event); param().pageIndex = 1; search()
-                "
-              ></app-room-charge-type-select> -->
+            <app-room-select
+              [showAllOption]="true"
+              storageKey="room-filter"
+              (valueChanged)="
+                roomId.set($event); param().pageIndex = 1; search()
+              "
+            ></app-room-select>
+          </div>
+          <div nz-col>
+            <app-lookup-item-select
+              formControlName="chargeTypeId"
+              [showAll]="'AllChargeType' | translate"
+              [showAllOption]="true"
+              storageKey="charge-type-filter"
+              (valueChanged)="
+                chargeTypeId.set($event); param().pageIndex = 1; search()
+              "
+              [lookupType]="this.lookupItemType.ChargeType"
+            ></app-lookup-item-select>
           </div>
         </div>
         <div>
@@ -76,9 +91,7 @@ import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
           </ng-template>
           <thead>
             <tr>
-              <th [nzWidth]="SIZE_COLUMNS.ID">
-                #
-              </th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">
                 {{ "RoomName" | translate }}
               </th>
@@ -90,7 +103,7 @@ import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of lists(); let i = index"> 
+            <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
                 {{
                   i
@@ -101,7 +114,7 @@ import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
                         }
                 }}
               </td>
-              <td nzEllipsis>{{ data.roomName }}</td>
+              <td nzEllipsis>{{ data.roomNumber }}</td>
               <td nzEllipsis>{{ data.chargeType }}</td>
               <td nzEllipsis>{{ data.limit }}</td>
               <td nzAlign="right">
@@ -148,8 +161,7 @@ import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class RoomChargeTypeListComponent extends BaseListComponent<RoomChargeType>
-{
+export class RoomChargeTypeListComponent extends BaseListComponent<RoomChargeType> {
   constructor(
     service: RoomChargeTypeService,
     uiService: RoomChargeTypeUiService,
@@ -164,29 +176,33 @@ export class RoomChargeTypeListComponent extends BaseListComponent<RoomChargeTyp
   isRoomChargeTypeEdit = signal<boolean>(true);
   isRoomChargeTypeRemove = signal<boolean>(true);
   isRoomChargeTypeView = signal<boolean>(true);
-  readonly chargeTypeSelectedKey = "charge-type-list-filter";
-
-  chargeType = signal(
-    parseInt(
-      this.sessionStorageService.getValue(this.chargeTypeSelectedKey) ?? 0
-    ) ?? 0
-  );
+  lookupItemType = LOOKUP_TYPE;
+  roomId = signal(0);
+  chargeTypeId = signal(0);
   override lists = signal<RoomChargeType[]>([
-    { id: 1, roomName: "Room 001", chargeType: "Water", limit: 50 },
-    { id: 2, roomName: "Room 001", chargeType: "Electricity", limit: 100 },
-    { id: 3, roomName: "Room 002", chargeType: "Electricity", limit: 100 },
+    { id: 1, roomNumber: "001", chargeType: "Water", limit: 50 },
+    { id: 2, roomNumber: "002", chargeType: "Electricity", limit: 100 },
+    { id: 3, roomNumber: "003", chargeType: "Electricity", limit: 100 },
   ]);
 
   //   override search() {
   //     const filters: Filter[] = [];
   //     if (this.chargeType()) {
   //       filters.push({
-  //         field: "chargeType",
+  //         field: "chargeTypeId",
   //         operator: "eq",
-  //         value: this.chargeType(),
+  //         value: this.chargeTypeId(),
   //       });
-  //       super.search(filters);
+  //
+  //     } 
+  //   if (this.roomId()) {
+  //       filters.push({
+  //         field: "roomId",
+  //         operator: "eq",
+  //         value: this.roomId(),
+  //       });
+  //
   //     }
-  //     super.search();
+  //     super.search(filters);
   //   }
 }

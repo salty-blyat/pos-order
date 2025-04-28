@@ -7,6 +7,8 @@ import { Charge, ChargeService } from "./charge.service";
 import { ChargeUiService } from "./charge-ui.service";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
+import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { Filter } from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-charge-list",
@@ -17,7 +19,7 @@ import { Observable } from "rxjs";
         [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-header>
-        <div nz-row>
+        <div nz-row style="flex-wrap: nowrap; ">
           <div nz-col>
             <app-filter-input
               storageKey="charge-list-search"
@@ -27,8 +29,41 @@ import { Observable } from "rxjs";
             >
             </app-filter-input>
           </div>
+          <div nz-col>
+            <app-lookup-item-select
+              formControlName="chargeTypeId"
+              [showAll]="'AllChargeType' | translate"
+              [showAllOption]="true"
+              storageKey="charge-type-filter"
+              (valueChanged)="
+                chargeTypeId.set($event); param().pageIndex = 1; search()
+              "
+              [lookupType]="this.lookupItemType.ChargeType"
+            ></app-lookup-item-select>
+          </div>
+          <div nz-col>
+            <app-item-unit-select
+              formControlName="itemUnitId"
+              [showAllOption]="true"
+              storageKey="item-unit-filter"
+              (valueChanged)="
+                unitId.set($event); param().pageIndex = 1; search()
+              "
+            ></app-item-unit-select>
+          </div>
+
+          <div *ngIf="draged()">
+            <button
+              nz-button
+              nzType="primary"
+              (click)="saveOrdering()"
+              [nzLoading]="isLoading()"
+            >
+              {{ "Save" | translate }}
+            </button>
+          </div>
         </div>
-        <div nz-col>
+        <div nz-col style="margin-left: 1rem">
           <button
             *ngIf="isChargeAdd()"
             nz-button
@@ -65,11 +100,14 @@ import { Observable } from "rxjs";
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="150px">
+              <th nzWidth="100px">
                 {{ "ChargeType" | translate }}
               </th>
-              <th nzWidth="150px">{{ "Unit" | translate }}</th>
-              <th nzWidth="150px">{{ "ChargeRate" | translate }}</th>
+              <th nzWidth="100px" nzAlign="right">
+                {{ "ChargeRate" | translate }}
+              </th>
+              <th nzWidth="150px">{{ "ItemUnit" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -80,7 +118,7 @@ import { Observable } from "rxjs";
             [cdkDropListData]="lists()"
           >
             <tr *ngFor="let data of lists(); let i = index" cdkDrag>
-              <td style=" cursor: move;" cdkDragHandle>
+              <td style="cursor: move;" cdkDragHandle>
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
               <td nzEllipsis>
@@ -94,7 +132,7 @@ import { Observable } from "rxjs";
                 }}
               </td>
 
-              <td nzEllipsis>
+              <td nzEllipsis style="flex: 1">
                 <a
                   *ngIf="isChargeView()"
                   (click)="uiService.showView(data.id!)"
@@ -103,23 +141,26 @@ import { Observable } from "rxjs";
                 <span *ngIf="!isChargeView()">{{ data.code }}</span>
               </td>
 
-              <td nzEllipsis title="{{ data.name }}">
-                 {{ data.name }} 
+              <td nzEllipsis style="flex: 1">
+                {{ data.name }}
               </td>
 
-              <td nzEllipsis>
+              <td nzEllipsis style="flex: 2">
                 {{
                   translateService.currentLang == "km"
                     ? data.chargeTypeName
                     : data.chargeTypeNameEn
                 }}
               </td>
-              <td nzEllipsis>
+              <td nzEllipsis style="flex: 1" nzAlign="right">
+                {{ data.chargeRate }}
+              </td>
+              <td nzEllipsis style="flex: 1">
                 {{ data.unitName }}
               </td>
-              <td nzEllipsis>{{ data.chargeRate }}</td>
+              <td nzEllipsis style="flex: 4">{{ data.note }}</td>
 
-              <td class="col-action">
+              <td class="col-action" style="flex: 1">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -168,6 +209,27 @@ export class ChargeListComponent extends BaseListComponent<Charge> {
   isChargeEdit = signal<boolean>(true);
   isChargeRemove = signal<boolean>(true);
   isChargeView = signal<boolean>(true);
+  lookupItemType = LOOKUP_TYPE;
 
+  chargeTypeId = signal<number>(0);
+  unitId = signal<number>(0);
+  override search() {
+    let filters: Filter[] = [];
+    if (this.chargeTypeId()) {
+      filters.push({
+        field: "chargeTypeId",
+        operator: "eq",
+        value: this.chargeTypeId(),
+      });
+    }
+    if (this.unitId()) {
+      filters.push({
+        field: "unitId",
+        operator: "eq",
+        value: this.unitId(),
+      });
+    }
+    super.search(filters, 100);
+  }
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

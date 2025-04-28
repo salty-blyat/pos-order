@@ -14,6 +14,7 @@ export interface Charge {
   chargeTypeName?: string;
   chargeTypeNameEn?: string;
   ordering?: number;
+  note?: string;
 }
 @Injectable({
   providedIn: "root",

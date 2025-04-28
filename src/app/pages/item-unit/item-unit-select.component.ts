@@ -1,19 +1,19 @@
 import {Component, forwardRef} from '@angular/core';
 import {NG_VALUE_ACCESSOR} from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
-import { RoomUiService } from './room-ui.service';
-import {Room, RoomService} from "./room.service";
 import {BaseSelectComponent} from "../../utils/components/base-select.component";
+import { ItemUnit, ItemUnitService } from './item-unit.service';
+import { ItemUnitUiService } from './item-unit-ui.service';
 
 @Component({
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => RoomSelectComponent),
+      useExisting: forwardRef(() => ItemUnitSelectComponent),
       multi: true,
     },
   ],
-  selector: 'app-room-select',
+  selector: 'app-item-unit-select',
   template: `
     <nz-select
         nzShowSearch
@@ -26,17 +26,17 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
         style="width: 100%"
       >
         <nz-option
-          *ngIf="showAllOption"
+          *ngIf="showAllOption()"
           [nzValue]="0"
-          [nzLabel]="'AllRoom' | translate"
+          [nzLabel]="'AllItemUnit' | translate"
         ></nz-option>
         <nz-option
           *ngFor="let item of lists()"
           nzCustomContent
           [nzValue]="item.id"
-          [nzLabel]="item?.roomNumber	+ ' ' + item?.roomTypeName"
+          [nzLabel]="item?.name + ''"
         >
-          <span class="b-name">{{ item?.roomNumber	+ ' ' + item?.roomTypeName }}</span>
+          <span class="b-name">{{ item.name }}</span>
         </nz-option>
         <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
           <i nz-icon nzType="loading" class="loading-icon"></i>
@@ -77,13 +77,13 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
   ],
   standalone: false
 })
-export class RoomSelectComponent extends BaseSelectComponent<Room>{
+export class ItemUnitSelectComponent extends BaseSelectComponent<ItemUnit>{
   constructor(
-    service: RoomService,
-    uiService: RoomUiService,
+    service: ItemUnitService,
+    uiService: ItemUnitUiService,
     sessionStorageService: SessionStorageService,
   ) {
-    super(service, uiService, sessionStorageService,'room-filter','all-room' )
+    super(service, uiService, sessionStorageService,'item-unit-filter','all-item-unit' )
   }
 }
 

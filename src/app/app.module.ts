@@ -160,6 +160,9 @@ import { ChargeListComponent } from "./pages/charge/charge-list.component";
 import { ChargeOperationComponent } from "./pages/charge/charge-operation.component";
 import { RoomChargeTypeSelectComponent } from "./pages/room-charge-type/room-charge-type-select.component";
 import { GroupSelectComponent } from "./pages/group/group-select.component";
+import { ChargeDeleteComponent } from "./pages/charge/charge-delete.component";
+import { ItemUnitSelectComponent } from "./pages/item-unit/item-unit-select.component";
+import { RoomChargeTypeOperationComponent } from "./pages/room-charge-type/room-charge-type-operation.component";
 import {MemberAdvancedFilterComponent} from "./pages/member/member-advanced-filter.component";
 
 self.MonacoEnvironment = {
@@ -269,7 +272,6 @@ export class CustomTranslate implements TranslateLoader {
     ReportDeleteComponent,
     ReportDynamicInputComponent,
     ReportFilterComponent,
-    ReportGroupListComponent,
     ReportListComponent,
     ReportViewComponent,
     ReportOperationComponent,
@@ -311,7 +313,6 @@ export class CustomTranslate implements TranslateLoader {
     //member
     MemberListComponent,
     MemberOperationComponent,
-    MemberAdvancedFilterComponent,
 
     // member level
     MemberLevelListComponent,
@@ -340,23 +341,28 @@ export class CustomTranslate implements TranslateLoader {
     ItemUnitListComponent,
     ItemUnitOperationComponent,
     ItemUnitDeleteComponent,
+    ItemUnitSelectComponent,
 
     // group
     GroupListComponent,
     GroupOperationComponent,
     GroupDeleteComponent,
+    GroupSelectComponent,
 
     RoomInventoryListComponent,
-    GroupSelectComponent,
 
 
     // charge
     ChargeListComponent,
     ChargeOperationComponent ,
+    ChargeDeleteComponent,
 
+    //roomcharge
     RoomChargeTypeSelectComponent,
     RoomChargeTypeListComponent,
+    RoomChargeTypeOperationComponent,
     RoomChargeTypeDeleteComponent
+
 
   ],
   bootstrap: [AppComponent],
