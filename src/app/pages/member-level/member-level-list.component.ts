@@ -91,7 +91,7 @@ import { SIZE_COLUMNS } from "../../const";
               <td nzEllipsis title="{{ data.name }}">
                   <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
-              <td nzEllipsis title="{{ data.levelStay }}">
+              <td nzEllipsis title="{{ data.levelStay }}" nzAlign="center">
                 {{ data.levelStay }}
               </td>
               <td nzEllipsis title="{{ data.note }}">

@@ -63,7 +63,6 @@ export class BaseOperationComponent<T extends SharedDomain> implements OnInit , 
 
   onSubmit(e?: any) {
     if (this.frm.valid && !this.isLoading()) {
-      this.isLoading.set(true);
       let operation$: Observable<T> = this.service.add(this.frm.getRawValue());
       if (this.modal?.id) {
         operation$ = this.service.edit({
@@ -72,6 +71,7 @@ export class BaseOperationComponent<T extends SharedDomain> implements OnInit , 
         });
       }
       if (e.detail === 1 || e.detail === 0) {
+        this.isLoading.set(true);
         operation$.subscribe({
           next: (result: T) => {
             this.model = result;

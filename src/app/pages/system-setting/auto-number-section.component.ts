@@ -115,7 +115,6 @@ export class AutoNumberSectionComponent extends BaseSettingSectionComponent {
   override keys = [
     SETTING_KEY.StaffAutoId,
     SETTING_KEY.BlockAutoId,
-    SETTING_KEY.RoomRateAutoId,
   ];
   override ngOnInit() {
     // this.canAddAutoNo = this.authService.isAuthorized(

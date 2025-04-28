@@ -13,7 +13,7 @@ export interface CurrentProfile {
   address?: string;
 }
 
-export interface Setting {
+export interface SystemSetting {
   id?: number;
   key?: string;
   note?: string;
@@ -62,7 +62,7 @@ export const SETTING_KEY = {
   CustomerDefaultId: 'DefaultCustomerId',
   BlockAutoId: 'BlockAutoId',
   StaffAutoId: 'StaffAutoId',
-  RoomRateAutoId: 'RoomRateAutoId',
+  MemberAutoId: 'MemberAutoId',
 };
 
 export interface Setting {
@@ -114,6 +114,8 @@ export class SystemSettingService {
   ) {}
   private currentSetting!: SettingList;
 
+  public getUrl = (): string => `${this.settingService.setting.BASE_API_URL}/setting`;
+
   public getByItems(keys: string[]): Observable<SettingList> {
     return this.http
       .get<Setting[]>(`${this.settingService.setting.BASE_API_URL}/setting`)
@@ -136,6 +138,12 @@ export class SystemSettingService {
       );
   }
 
+  find(key: string): Observable<Setting> {
+    return this.http.get<Setting>(
+      `${this.settingService.setting.BASE_API_URL}/setting/${key}`
+    );
+  }
+
   getAll(): Observable<Setting[]> {
     return this.http.get<Setting[]>(
       `${this.settingService.setting.BASE_API_URL}/setting`
@@ -153,7 +161,6 @@ export class SystemSettingService {
     // console.log(this.currentSetting);
     if (!this.currentSetting) {
       // throw new Error('currentSetting is not yet initialized!');
-      // console.log('not get setting');
       return new SettingList([]);
     }
     return this.currentSetting;

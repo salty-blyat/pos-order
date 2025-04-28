@@ -1,8 +1,9 @@
-import {Component, signal} from "@angular/core";
+import {Component, ViewEncapsulation} from "@angular/core";
 import { Member, MemberService } from "./member.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { MemberUiService } from "./member-ui.service";
+import {SIZE_COLUMNS} from "../../const";
 
 @Component({
   selector: "app-member-list",
@@ -10,7 +11,7 @@ import { MemberUiService } from "./member-ui.service";
     <nz-layout>
       <nz-header>
         <div nz-row>
-          <div style="width: 220px; margin-right: 4px;">
+          <div nz-col>
             <app-filter-input
               storageKey="member-list-search"
               (filterChanged)="
@@ -20,12 +21,7 @@ import { MemberUiService } from "./member-ui.service";
           </div>
         </div>
         <div>
-          <button
-            *ngIf="isMemberAdd"
-            nz-button
-            nzType="primary"
-            (click)="uiService.showAdd()"
-          >
+          <button *ngIf="isMemberAdd" nz-button nzType="primary" (click)="uiService.showAdd()">
             <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Add" | translate }}
           </button>
@@ -43,7 +39,6 @@ import { MemberUiService } from "./member-ui.service";
           [nzPageSize]="param().pageSize || 0"
           [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
-          nzHideOnSinglePage="true"
           (nzQueryParams)="onQueryParamsChange($event)"
         >
           <ng-template #noResult>
@@ -51,8 +46,8 @@ import { MemberUiService } from "./member-ui.service";
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
-              <th class="col-code-max" nzColumnKey="code">
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.CODE">
                 {{ "Code" | translate }}
               </th>
               <th>{{ "Name" | translate }}</th>
@@ -61,20 +56,13 @@ import { MemberUiService } from "./member-ui.service";
               <th>{{ "Level" | translate }}</th>
               <th>{{ "Phone" | translate }}</th>
               <th>{{ "Nationality" | translate }}</th>
-              <th class="col-action"></th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
-                {{
-                  i
-                    | rowNumber
-                      : {
-                          index: param().pageIndex || 0,
-                          size: param().pageSize || 0
-                        }
-                }}
+                {{ i | rowNumber : { index: param().pageIndex || 0, size: param().pageSize || 0} }}
               </td>
               <td nzEllipsis>
                 <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
@@ -86,8 +74,8 @@ import { MemberUiService } from "./member-ui.service";
               <td nzEllipsis title="{{ data.unit }}">{{ data.unit }}</td>
               <td nzEllipsis title="{{ data.level }}">{{ data.level }}</td>
               <td nzEllipsis title="{{ data.phone }}">{{ data.phone }}</td>
-              <td nzEllipsis title="{{ data.nationality }}">
-                {{ data.nationality }}
+              <td nzEllipsis title="{{ data.nationalityName }}">
+                {{ data.nationalityName }}
               </td>
               <td>
                 <nz-space [nzSplit]="spaceSplit">
@@ -121,6 +109,7 @@ import { MemberUiService } from "./member-ui.service";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MemberListComponent extends BaseListComponent<Member> {
   constructor(
@@ -134,40 +123,5 @@ export class MemberListComponent extends BaseListComponent<Member> {
   isMemberEdit: boolean = true;
   isMemberRemove: boolean = true;
   isMemberView: boolean = true;
-
-  override lists = signal([
-    {
-      id: 1,
-      code: "123",
-      name: "Sok Dara",
-      sexId: 1,
-      sex: "Male",
-      unit: "HR Department",
-      level: "Manager",
-      phone: "012345678",
-      nationality: "Cambodian",
-    },
-    {
-      id: 2,
-      code: "123",
-      name: "Chanthy Mey",
-      sexId: 1,
-      sex: "Male",
-      unit: "Finance",
-      level: "Officer",
-      phone: "098765432",
-      nationality: "Cambodian",
-    },
-    {
-      id: 3,
-      code: "123",
-      name: "Kim Lee",
-      sexId: 1,
-      sex: "Male",
-      unit: "IT",
-      level: "Developer",
-      phone: "087654321",
-      nationality: "Korean",
-    },
-  ]);
+  protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

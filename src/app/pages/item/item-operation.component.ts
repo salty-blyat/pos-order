@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { Item } from "./item.service";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";

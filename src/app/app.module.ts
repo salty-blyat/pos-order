@@ -151,6 +151,7 @@ import { GroupDeleteComponent } from "./pages/group/group-delete.component";
 import { GroupListComponent } from "./pages/group/group-list.component";
 import { GroupOperationComponent } from "./pages/group/group-operation.component";
 import {NzCodeEditorModule} from "ng-zorro-antd/code-editor";
+import {RoomInventoryListComponent} from "./pages/room-inventory/room-inventory-list.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -332,6 +333,8 @@ export class CustomTranslate implements TranslateLoader {
     GroupListComponent,
     GroupOperationComponent,
     GroupDeleteComponent,
+
+    RoomInventoryListComponent
   ],
   bootstrap: [AppComponent],
   imports: [

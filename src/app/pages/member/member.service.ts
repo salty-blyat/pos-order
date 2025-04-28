@@ -11,8 +11,36 @@ export interface Member {
   unit?: string;
   level?: string;
   phone?: string;
-  nationality?: string;
   sex?: string;
+  nameEn?: string
+  photo?: string
+  email?: string
+  birthDate?: string
+  idNo?: string
+  nssfId?: string
+  address?: string
+  unitId?: number
+  groupId?: number
+  nationalityId?: number
+  memberLevelId?: number
+  note?: string
+  attachments?: Attachment[]
+  sexName?: string
+  sexNameEn?: string
+  nationalityName?: string
+  nationalityNameEn?: string
+  unitName?: string
+  groupName?: string
+  memberLevelName?: string
+}
+
+export interface Attachment {
+  uid?: string
+  url?: string
+  name?: string
+  type?: string
+  date?: Date
+  by?: string
 }
 
 @Injectable({ providedIn: "root" })
