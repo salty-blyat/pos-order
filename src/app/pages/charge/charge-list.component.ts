@@ -61,6 +61,7 @@ import { Observable } from "rxjs";
           </ng-template>
           <thead>
             <tr>
+              <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
@@ -69,8 +70,6 @@ import { Observable } from "rxjs";
               </th>
               <th nzWidth="150px">{{ "Unit" | translate }}</th>
               <th nzWidth="150px">{{ "ChargeRate" | translate }}</th>
-              <th nzWidth="150px">{{ "ChargeType" | translate }}</th>
-
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -94,9 +93,31 @@ import { Observable } from "rxjs";
                         }
                 }}
               </td>
-              <td nzEllipsis title="{{ data.name }}">
-                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+
+              <td nzEllipsis>
+                <a
+                  *ngIf="isChargeView()"
+                  (click)="uiService.showView(data.id!)"
+                  >{{ data.code }}</a
+                >
+                <span *ngIf="!isChargeView()">{{ data.code }}</span>
               </td>
+
+              <td nzEllipsis title="{{ data.name }}">
+                 {{ data.name }} 
+              </td>
+
+              <td nzEllipsis>
+                {{
+                  translateService.currentLang == "km"
+                    ? data.chargeTypeName
+                    : data.chargeTypeNameEn
+                }}
+              </td>
+              <td nzEllipsis>
+                {{ data.unitName }}
+              </td>
+              <td nzEllipsis>{{ data.chargeRate }}</td>
 
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">

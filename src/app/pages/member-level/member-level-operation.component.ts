@@ -56,7 +56,6 @@ import { MemberLevelUiService } from "./member-level-ui.component";
               nz-input
               rows="3"
               formControlName="note"
-              style="width: 100%;"
             ></textarea>
           </nz-form-control>
         </nz-form-item>

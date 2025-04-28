@@ -158,6 +158,7 @@ import { UnitSelectComponent } from "./pages/unit/unit-select.component";
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
 import { ChargeOperationComponent } from "./pages/charge/charge-operation.component";
 import { RoomChargeTypeSelectComponent } from "./pages/room-charge-type/room-charge-type-select.component";
+import { GroupSelectComponent } from "./pages/group/group-select.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -346,6 +347,7 @@ export class CustomTranslate implements TranslateLoader {
     GroupListComponent,
     GroupOperationComponent,
     GroupDeleteComponent,
+    GroupSelectComponent,
 
 
     // charge

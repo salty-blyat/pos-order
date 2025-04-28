@@ -48,7 +48,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "Unit" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
             <app-unit-select formControlName="unitId" [addOption]="true" />
           </nz-form-control>
         </nz-form-item>
@@ -57,10 +57,9 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "ChargeType" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-          <app-lookup-item-select
-              formControlName="chargeTypeId"  
-               [addOption]="true"  
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            <app-lookup-item-select
+              formControlName="chargeTypeId"
               [lookupType]="this.lookupItemType.ChargeType"
             ></app-lookup-item-select>
           </nz-form-control>
@@ -70,11 +69,10 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "ChargeRate" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="chargeRate" />
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            <input nz-input formControlName="chargeRate" nzHasFeedback />
           </nz-form-control>
         </nz-form-item>
- 
       </form>
     </div>
     <div *nzModalFooter>
@@ -146,8 +144,8 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
       required,
       nameMaxLengthValidator,
       nameExistValidator,
-      noteMaxLengthValidator,
       codeExistValidator,
+      integerValidator,
     } = CommonValidators;
 
     this.frm = this.fb.group({
@@ -160,10 +158,10 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
         null,
         [required, nameMaxLengthValidator],
         [nameExistValidator(this.service, this.modal?.id)],
-      ], 
+      ],
       chargeTypeId: [null, required],
       unitId: [null, required],
-      chargeRate: [0, required],
+      chargeRate: [0, [required, nameMaxLengthValidator, integerValidator]],
     });
   }
   lookupItemType = LOOKUP_TYPE;

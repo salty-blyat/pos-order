@@ -29,7 +29,7 @@ import {BaseSelectComponent} from "../../../utils/components/base-select.compone
       [nzCustomTemplate]="customTemplate"
     >
       <nz-option
-        *ngIf="showAllOption"
+        *ngIf="showAllOption()"
         [nzValue]="0"
         [nzLabel]="typeLabelAll() ? typeLabelAll() : (showAll() | translate)"
       ></nz-option>
