@@ -18,10 +18,10 @@ import {LOOKUP_TYPE} from "../lookup/lookup-type.service";
                 <nz-form-item>
                     <nz-form-label>{{ 'Group' | translate }}</nz-form-label>
                     <nz-form-control>
-                        <app-group-select
+                        <app-member-group-select
                                 [showAllOption]="true"
-                                formControlName="groupId"
-                        ></app-group-select>
+                                formControlName="memberGroupId"
+                        ></app-member-group-select>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
@@ -96,7 +96,7 @@ export class MemberAdvancedFilterComponent implements OnInit {
   }
   private initControl() {
     this.frm = this.fb.group({
-      groupId: [0],
+      memberGroupId: [0],
       sexId: [0],
       nationalityId: [[0]],
     });
@@ -108,7 +108,7 @@ export class MemberAdvancedFilterComponent implements OnInit {
 
   setFormValue(advanced: any) {
     this.frm.setValue({
-      groupId: advanced?.groupId ?? 0,
+      memberGroupId: advanced?.memberGroupId ?? 0,
       sexId: advanced?.sexId ?? 0,
       nationalityId: advanced?.nationalityId ?? 0,
     });
@@ -120,7 +120,7 @@ export class MemberAdvancedFilterComponent implements OnInit {
 
   isSetFilter(): boolean {
     const defaultZeroFields = [
-      'groupId',
+      'memberGroupId',
       'sexId',
       'nationalityId',
     ];

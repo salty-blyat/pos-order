@@ -84,7 +84,7 @@ export class SettingComponent implements OnInit {
   isRoomChargeType : boolean = true;
   isCharge : boolean = true;
   isItemTypeList: boolean = true;
-  isGroupList: boolean = true;
+  isMemberGroupList: boolean = true;
   ngOnInit(): void {
     this.setting = [
       {
@@ -122,9 +122,9 @@ export class SettingComponent implements OnInit {
           },
           {
             icon: "container",
-            url: `${this.urlPart}/group`,
-            label: "Group",
-            isList: this.isGroupList,
+            url: `${this.urlPart}/member-group`,
+            label: "MemberGroup",
+            isList: this.isMemberGroupList,
           },
           {
             icon: "container",

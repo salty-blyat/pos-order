@@ -3,11 +3,11 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
-import { Group, GroupService } from "./group.service";
-import { GroupUiService } from "./group-ui.service";
+import { MemberGroup, MemberGroupService } from "./member-group.service";
+import { MemberGroupUiService } from "./member-group-ui.service";
 
 @Component({
-  selector: "app-group-delete",
+  selector: "app-member-group-delete",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="modal?.id"
@@ -76,11 +76,11 @@ import { GroupUiService } from "./group-ui.service";
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class GroupDeleteComponent extends BaseDeleteComponent<Group> {
+export class MemberGroupDeleteComponent extends BaseDeleteComponent<MemberGroup> {
   constructor(
-    service: GroupService,
-    uiService: GroupUiService,
-    ref: NzModalRef<GroupDeleteComponent>,
+    service: MemberGroupService,
+    uiService: MemberGroupUiService,
+    ref: NzModalRef<MemberGroupDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);

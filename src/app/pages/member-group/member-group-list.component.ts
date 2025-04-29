@@ -3,13 +3,12 @@ import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
 import { SIZE_COLUMNS } from "../../const";
-import { Observable } from "rxjs";
-import { GroupService } from "./group.service";
-import { Group } from "./group.service";
-import { GroupUiService } from "./group-ui.service";
+import { Observable } from "rxjs"; 
+import { MemberGroup, MemberGroupService } from "./member-group.service";
+import { MemberGroupUiService } from "./member-group-ui.service";
 
 @Component({
-  selector: "app-group-list",
+  selector: "app-member-group-list",
   template: `
     <nz-layout>
       <app-breadcrumb
@@ -20,7 +19,7 @@ import { GroupUiService } from "./group-ui.service";
         <div nz-row>
           <div nz-col>
             <app-filter-input
-              storageKey="group-list-search"
+              storageKey="member-group-list-search"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
@@ -39,7 +38,7 @@ import { GroupUiService } from "./group-ui.service";
         </div>
         <div>
           <button
-            *ngIf="isGroupAdd"
+            *ngIf="isMemberGroupAdd"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -100,13 +99,13 @@ import { GroupUiService } from "./group-ui.service";
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isGroupEdit">
+                  <ng-container *ngIf="isMemberGroupEdit">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i nz-icon nzType="edit" nzTheme="outline"></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isGroupRemove">
+                  <ng-container *ngIf="isMemberGroupRemove">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -128,19 +127,19 @@ import { GroupUiService } from "./group-ui.service";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class GroupListComponent extends BaseListComponent<Group> {
+export class MemberGroupListComponent extends BaseListComponent<MemberGroup> {
   constructor(
-    service: GroupService,
-    uiService: GroupUiService,
+    service: MemberGroupService,
+    uiService: MemberGroupUiService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute
   ) {
-    super(service, uiService, sessionStorageService, "group-list" );
+    super(service, uiService, sessionStorageService, "member-group-list" );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isGroupAdd: boolean = true;
-  isGroupEdit: boolean = true;
-  isGroupRemove: boolean = true;
-  isGroupView: boolean = true;
+  isMemberGroupAdd: boolean = true;
+  isMemberGroupEdit: boolean = true;
+  isMemberGroupRemove: boolean = true;
+  isMemberGroupView: boolean = true;
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

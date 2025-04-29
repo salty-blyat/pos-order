@@ -24,10 +24,10 @@ import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
 import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component"; 
 import { UnitListComponent } from "./pages/unit/unit-list.component";
-import { GroupListComponent } from "./pages/group/group-list.component";
 import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
 import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
+import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -172,11 +172,11 @@ const routes: Routes = [
         ],
       },
       {
-        path: "setting/group",
-        component: GroupListComponent,
+        path: "setting/member-group",
+        component: MemberGroupListComponent,
         data: [
           { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Group", url: null },
+          { index: 1, label: "MemberGroup", url: null },
         ],
       },
       {

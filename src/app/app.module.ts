@@ -144,9 +144,10 @@ import { MemberLevelDeleteComponent } from "./pages/member-level/member-level-de
 import { UnitListComponent } from "./pages/unit/unit-list.component";
 import { UnitOperationComponent } from "./pages/unit/unit-operation.component";
 import { UnitDeleteComponent } from "./pages/unit/unit-delete.component";
-import { GroupDeleteComponent } from "./pages/group/group-delete.component";
-import { GroupListComponent } from "./pages/group/group-list.component";
-import { GroupOperationComponent } from "./pages/group/group-operation.component";
+import { MemberGroupDeleteComponent } from "./pages/member-group/member-group-delete.component";
+import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
+import { MemberGroupOperationComponent } from "./pages/member-group/member-group-operation.component";
+import { MemberGroupSelectComponent } from "./pages/member-group/member-group-select.component";
 import {RoomInventoryListComponent} from "./pages/room-inventory/room-inventory-list.component";
 import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
 import { RoomChargeTypeDeleteComponent } from "./pages/room-charge-type/room-charge-type-delete.component";
@@ -156,7 +157,6 @@ import { MemberUnitSelectComponent } from "./pages/member-unit/member-unit-selec
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
 import { ChargeOperationComponent } from "./pages/charge/charge-operation.component";
 import { RoomChargeTypeSelectComponent } from "./pages/room-charge-type/room-charge-type-select.component";
-import { GroupSelectComponent } from "./pages/group/group-select.component";
 import { ChargeDeleteComponent } from "./pages/charge/charge-delete.component";
 import { UnitSelectComponent } from "./pages/unit/unit-select.component";
 import { RoomChargeTypeOperationComponent } from "./pages/room-charge-type/room-charge-type-operation.component";
@@ -346,10 +346,10 @@ export class CustomTranslate implements TranslateLoader {
     UnitSelectComponent,
 
     // group
-    GroupListComponent,
-    GroupOperationComponent,
-    GroupDeleteComponent,
-    GroupSelectComponent,
+    MemberGroupListComponent,
+    MemberGroupOperationComponent,
+    MemberGroupDeleteComponent,
+    MemberGroupSelectComponent,
 
     RoomInventoryListComponent,
 

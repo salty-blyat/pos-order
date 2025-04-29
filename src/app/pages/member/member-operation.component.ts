@@ -248,11 +248,11 @@ import {AuthService} from "../../helpers/auth.service";
                                               </div>
                                               <div nz-col [nzXs]="12">
                                                   <nz-form-item>
-                                                      <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'Group' | translate }}
+                                                      <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'MemberGroup' | translate }}
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24">
-                                                          <app-group-select
-                                                                  formControlName="groupId"></app-group-select>
+                                                          <app-member-group-select
+                                                                  formControlName="memberGroupId"></app-member-group-select>
                                                       </nz-form-control>
                                                   </nz-form-item>
                                               </div>
@@ -680,7 +680,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       sexId: [null, [required]],
       nationalityId: [0, [required]],
       unitId: [0],
-      groupId: [0],
+      memberGroupId: [0],
       memberLevelId: [0],
       idNo: [null, [integerValidator]],
       nssfId: [null],
@@ -755,7 +755,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       sexId: model?.sexId,
       nationalityId: model?.nationalityId,
       unitId: model?.unitId,
-      groupId: model?.groupId,
+      memberGroupId: model?.memberGroupId,
       memberLevelId: model?.memberLevelId,
       idNo: model?.idNo,
       nssfId: model?.nssfId,

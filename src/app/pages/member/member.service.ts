@@ -17,7 +17,7 @@ export interface Member {
   nssfId?: string
   address?: string
   unitId?: number
-  groupId?: number
+  memberGroupId?: number
   nationalityId?: number
   memberLevelId?: number
   note?: string
@@ -26,8 +26,8 @@ export interface Member {
   sexNameEn?: string
   nationalityName?: string
   nationalityNameEn?: string
-  unitName?: string
-  groupName?: string
+  memberUnitName?: string
+  memberGroupName?: string
   memberLevelName?: string
 }
 
@@ -42,7 +42,7 @@ export interface Attachment {
 
 export interface MemberAdvancedFilter {
   sexId: number;
-  groupId: number;
+  memberGroupId: number;
   nationalityId: number;
   isAdvancedFilter: boolean;
 }
