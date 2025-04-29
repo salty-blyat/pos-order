@@ -22,12 +22,13 @@ import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
-import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component"; 
+import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
 import { UnitListComponent } from "./pages/unit/unit-list.component";
 import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
 import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
 import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
+import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -121,6 +122,10 @@ const routes: Routes = [
             path: "company-section",
             component: CompanySectionComponent,
           },
+          {
+            path: "other-app-section",
+            component: OtherAppSectionComponent,
+          },
         ],
       },
       {
@@ -203,7 +208,7 @@ const routes: Routes = [
           { index: 1, label: "ItemType", url: null },
         ],
       },
-      
+
       {
         path: "setting/room-charge-type",
         component: RoomChargeTypeListComponent,
@@ -220,7 +225,6 @@ const routes: Routes = [
           { index: 1, label: "Charge", url: null },
         ],
       },
-      
     ],
   },
   {

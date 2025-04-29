@@ -1,10 +1,10 @@
-import {Component, computed, OnInit, ViewEncapsulation} from '@angular/core';
-import { Observable } from 'rxjs';
-import {ActivatedRoute, Data, Router} from '@angular/router';
+import { Component, computed, OnInit, ViewEncapsulation } from "@angular/core";
+import { Observable } from "rxjs";
+import { ActivatedRoute, Data, Router } from "@angular/router";
 
 @Component({
-    selector: 'app-system-setting',
-    template: `
+  selector: "app-system-setting",
+  template: `
     <nz-layout>
       <app-breadcrumb
         *ngIf="breadcrumbData()"
@@ -13,34 +13,42 @@ import {ActivatedRoute, Data, Router} from '@angular/router';
       <nz-header>
         <div>
           <i nz-icon nzType="setting"></i>
-          {{ 'SystemSetting' | translate }}
+          {{ "SystemSetting" | translate }}
         </div>
       </nz-header>
-      <nz-content >
+      <nz-content>
         <div nz-row>
           <div nz-col nzSpan="6" class="main-content-setting">
             <nz-sider nzWidth="200px" nzTheme="light">
               <ul nz-menu nzMode="inline" class="menu-custom-setting">
                 <li
-                  style="margin-top: 0"      
+                  style="margin-top: 0"
                   nz-menu-item
                   routerLink="/setting/system-setting/company-section"
                   [nzMatchRouter]="true"
                 >
                   <i nz-icon nzType="profile"></i>
-                  <span>{{ 'CompanySetting' | translate }}</span>
+                  <span>{{ "CompanySetting" | translate }}</span>
                 </li>
                 <li
-                    nz-menu-item
-                    routerLink="/setting/system-setting/auto-number-section"
-                    [nzMatchRouter]="true"
+                  nz-menu-item
+                  routerLink="/setting/system-setting/auto-number-section"
+                  [nzMatchRouter]="true"
                 >
                   <i nz-icon nzType="profile"></i>
-                  <span>{{ 'AutoNumber' | translate }}</span>
+                  <span>{{ "AutoNumber" | translate }}</span>
+                </li>
+                <li
+                  nz-menu-item
+                  routerLink="/setting/system-setting/other-app-section"
+                  [nzMatchRouter]="true"
+                >
+                  <i nz-icon nzType="appstore-add"></i>
+                  <span>{{ "OtherApp" | translate }}</span>
                 </li>
               </ul>
             </nz-sider>
-          </div>
+          </div> 
           <div nz-col nzSpan="18">
             <nz-content class="menu-content-setting">
               <router-outlet></router-outlet>
@@ -50,8 +58,9 @@ import {ActivatedRoute, Data, Router} from '@angular/router';
       </nz-content>
     </nz-layout>
   `,
-    styleUrls: ["../../../assets/scss/list.style.scss"],
-    styles: [`
+  styleUrls: ["../../../assets/scss/list.style.scss"],
+  styles: [
+    `
       .main-content-setting {
         height: calc(100vh - 110px);
       }
@@ -59,22 +68,21 @@ import {ActivatedRoute, Data, Router} from '@angular/router';
         height: 100% !important;
         border-left: 1px solid #e8e8e8;
       }
-      .menu-custom-setting{
+      .menu-custom-setting {
         background: #fff;
         padding-right: 1px;
       }
     `,
-    ],
-    standalone: false,
-    encapsulation: ViewEncapsulation.None,
+  ],
+  standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class SystemSettingComponent implements OnInit {
-  constructor(
-      private activated: ActivatedRoute,
-      private router: Router,
-  ) {}
+  constructor(private activated: ActivatedRoute, private router: Router) {}
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
   ngOnInit(): void {
-    this.router.navigate(['/','setting','system-setting','company-section']).then();
+    this.router
+      .navigate(["/", "setting", "system-setting", "company-section"])
+      .then();
   }
 }
