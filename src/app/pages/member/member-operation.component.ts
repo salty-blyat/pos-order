@@ -242,7 +242,7 @@ import {AuthService} from "../../helpers/auth.service";
                                                       <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'Unit' | translate }}
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24">
-                                                          <app-unit-select formControlName="unitId"></app-unit-select>
+                                                          <app-member-unit-select formControlName="unitId"></app-member-unit-select>
                                                       </nz-form-control>
                                                   </nz-form-item>
                                               </div>

@@ -122,6 +122,7 @@ export class BaseSelectComponent<T extends SharedDomain> implements OnInit, Cont
       });
     }
   }
+  
   ngOnDestroy(): void {
     if (this.refreshSub$){
       this.refreshSub$.unsubscribe();

@@ -22,12 +22,12 @@ import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
-import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
-import { UnitListComponent } from "./pages/unit/unit-list.component";
+import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component"; 
 import { ItemUnitListComponent } from "./pages/item-unit/item-unit-list.component";
 import { GroupListComponent } from "./pages/group/group-list.component";
 import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
+import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -164,11 +164,11 @@ const routes: Routes = [
         ],
       },
       {
-        path: "setting/unit",
-        component: UnitListComponent,
+        path: "setting/member-unit",
+        component: MemberUnitListComponent,
         data: [
           { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Unit", url: null },
+          { index: 1, label: "MemberUnit", url: null },
         ],
       },
       {

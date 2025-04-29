@@ -140,10 +140,7 @@ import { ItemTypeSelectComponent } from "./pages/item-type/item-type-select.comp
 import { ItemDeleteComponent } from "./pages/item/item-delete.component";
 import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
 import { MemberLevelOperationComponent } from "./pages/member-level/member-level-operation.component";
-import { MemberLevelDeleteComponent } from "./pages/member-level/member-level-delete.component";
-import { UnitListComponent } from "./pages/unit/unit-list.component";
-import { UnitOperationComponent } from "./pages/unit/unit-operation.component";
-import { UnitDeleteComponent } from "./pages/unit/unit-delete.component";
+import { MemberLevelDeleteComponent } from "./pages/member-level/member-level-delete.component"; 
 import { ItemUnitListComponent } from "./pages/item-unit/item-unit-list.component";
 import { ItemUnitOperationComponent } from "./pages/item-unit/item-unit-operation.component";
 import { ItemUnitDeleteComponent } from "./pages/item-unit/item-unit-delete.component";
@@ -155,7 +152,7 @@ import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
 import { RoomChargeTypeDeleteComponent } from "./pages/room-charge-type/room-charge-type-delete.component";
 import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
 import { MemberLevelSelectComponent } from "./pages/member-level/member-level-select.component";
-import { UnitSelectComponent } from "./pages/unit/unit-select.component";
+import { MemberUnitSelectComponent } from "./pages/member-unit/member-unit-select.component";
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
 import { ChargeOperationComponent } from "./pages/charge/charge-operation.component";
 import { RoomChargeTypeSelectComponent } from "./pages/room-charge-type/room-charge-type-select.component";
@@ -164,6 +161,9 @@ import { ChargeDeleteComponent } from "./pages/charge/charge-delete.component";
 import { ItemUnitSelectComponent } from "./pages/item-unit/item-unit-select.component";
 import { RoomChargeTypeOperationComponent } from "./pages/room-charge-type/room-charge-type-operation.component";
 import {MemberAdvancedFilterComponent} from "./pages/member/member-advanced-filter.component";
+import { MemberUnitDeleteComponent } from "./pages/member-unit/member-unit-delete.component";
+import { MemberUnitOperationComponent } from "./pages/member-unit/member-unit-operation.component";
+import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -333,11 +333,11 @@ export class CustomTranslate implements TranslateLoader {
     ItemTypeDeleteComponent,
     ItemTypeSelectComponent,
 
-    // unit
-    UnitListComponent,
-    UnitOperationComponent,
-    UnitDeleteComponent,
-    UnitSelectComponent,
+    // Member unit
+    MemberUnitListComponent,
+    MemberUnitOperationComponent,
+    MemberUnitDeleteComponent,
+    MemberUnitSelectComponent,
 
     // item unit
     ItemUnitListComponent,

@@ -28,11 +28,11 @@ import {RoomAdvancedFilter} from "../room/room.service";
                       ></app-member-level-select>
                   </div>
                   <div nz-col>
-                      <app-unit-select
+                      <app-member-unit-select
                               [showAllOption]="true"
                               storageKey="member-list-unit-filter"
                               (valueChanged)="memberLevelId.set($event); param().pageIndex = 1; search()"
-                      ></app-unit-select>
+                      ></app-member-unit-select>
                   </div>
                   <div>
                       <nz-badge [nzDot]="hasAdvancedFilter()">

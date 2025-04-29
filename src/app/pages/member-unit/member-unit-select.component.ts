@@ -1,21 +1,21 @@
 import { Component, forwardRef, ViewEncapsulation} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
-import { AuthService } from '../../helpers/auth.service';
-import { Unit, UnitService} from "./unit.service";
-import { UnitUiService} from "./unit-ui.service";
+import { AuthService } from '../../helpers/auth.service'; 
 import { BaseSelectComponent} from "../../utils/components/base-select.component";
+import { MemberUnit, MemberUnitService } from './member-unit.service';
+import { MemberUnitUiService } from './member-unit-ui.service';
 
 
 @Component({
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => UnitSelectComponent),
+            useExisting: forwardRef(() => MemberUnitSelectComponent),
             multi: true,
         },
     ],
-    selector: 'app-unit-select',
+    selector: 'app-member-unit-select',
     template: `
       <nz-select
         nzShowSearch
@@ -42,7 +42,7 @@ import { BaseSelectComponent} from "../../utils/components/base-select.component
         </nz-option>
         <ng-template #actionItem>
           <a
-            *ngIf="addOption() && isUnitAdd"
+            *ngIf="addOption() && isMemberUnitAdd"
             (click)="uiService.showAdd(componentId)"
             class="item-action"
           >
@@ -59,16 +59,16 @@ import { BaseSelectComponent} from "../../utils/components/base-select.component
     standalone: false,
     encapsulation: ViewEncapsulation.None,
 })
-export class UnitSelectComponent extends BaseSelectComponent<Unit>
+export class MemberUnitSelectComponent extends BaseSelectComponent<MemberUnit>
 {
     constructor(
-        service: UnitService,
+        service: MemberUnitService,
         sessionStorageService: SessionStorageService,
-        uiService: UnitUiService,
+        uiService: MemberUnitUiService,
         private authService: AuthService
     ) {
-        super(service, uiService, sessionStorageService, 'unit-filter', 'all-unit')
+        super(service, uiService, sessionStorageService, 'member-unit-filter', 'all-member-unit')
     }
 
-    isUnitAdd: boolean = true;
+    isMemberUnitAdd: boolean = true;
 }

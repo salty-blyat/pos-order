@@ -14,6 +14,6 @@ export interface ItemUnit {
 @Injectable({providedIn: 'root'})
 export class ItemUnitService extends BaseApiService<ItemUnit> {
     constructor(http: HttpClient, settingService: SettingService) {
-        super('itemunit', http, settingService);
+        super('unit', http, settingService);
     }
 }
