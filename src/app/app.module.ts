@@ -141,9 +141,9 @@ import { ItemDeleteComponent } from "./pages/item/item-delete.component";
 import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
 import { MemberLevelOperationComponent } from "./pages/member-level/member-level-operation.component";
 import { MemberLevelDeleteComponent } from "./pages/member-level/member-level-delete.component"; 
-import { ItemUnitListComponent } from "./pages/item-unit/item-unit-list.component";
-import { ItemUnitOperationComponent } from "./pages/item-unit/item-unit-operation.component";
-import { ItemUnitDeleteComponent } from "./pages/item-unit/item-unit-delete.component";
+import { UnitListComponent } from "./pages/unit/unit-list.component";
+import { UnitOperationComponent } from "./pages/unit/unit-operation.component";
+import { UnitDeleteComponent } from "./pages/unit/unit-delete.component";
 import { GroupDeleteComponent } from "./pages/group/group-delete.component";
 import { GroupListComponent } from "./pages/group/group-list.component";
 import { GroupOperationComponent } from "./pages/group/group-operation.component";
@@ -158,7 +158,7 @@ import { ChargeOperationComponent } from "./pages/charge/charge-operation.compon
 import { RoomChargeTypeSelectComponent } from "./pages/room-charge-type/room-charge-type-select.component";
 import { GroupSelectComponent } from "./pages/group/group-select.component";
 import { ChargeDeleteComponent } from "./pages/charge/charge-delete.component";
-import { ItemUnitSelectComponent } from "./pages/item-unit/item-unit-select.component";
+import { UnitSelectComponent } from "./pages/unit/unit-select.component";
 import { RoomChargeTypeOperationComponent } from "./pages/room-charge-type/room-charge-type-operation.component";
 import {MemberAdvancedFilterComponent} from "./pages/member/member-advanced-filter.component";
 import { MemberUnitDeleteComponent } from "./pages/member-unit/member-unit-delete.component";
@@ -339,11 +339,11 @@ export class CustomTranslate implements TranslateLoader {
     MemberUnitDeleteComponent,
     MemberUnitSelectComponent,
 
-    // item unit
-    ItemUnitListComponent,
-    ItemUnitOperationComponent,
-    ItemUnitDeleteComponent,
-    ItemUnitSelectComponent,
+    // unit
+    UnitListComponent,
+    UnitOperationComponent,
+    UnitDeleteComponent,
+    UnitSelectComponent,
 
     // group
     GroupListComponent,
@@ -364,8 +364,6 @@ export class CustomTranslate implements TranslateLoader {
     RoomChargeTypeListComponent,
     RoomChargeTypeOperationComponent,
     RoomChargeTypeDeleteComponent
-
-
   ],
   bootstrap: [AppComponent],
   imports: [

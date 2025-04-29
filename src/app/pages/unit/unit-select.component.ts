@@ -2,18 +2,18 @@ import {Component, forwardRef} from '@angular/core';
 import {NG_VALUE_ACCESSOR} from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import {BaseSelectComponent} from "../../utils/components/base-select.component";
-import { ItemUnit, ItemUnitService } from './item-unit.service';
-import { ItemUnitUiService } from './item-unit-ui.service';
+import { Unit, UnitService } from './unit.service';
+import { UnitUiService } from './unit-ui.service';
 
 @Component({
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ItemUnitSelectComponent),
+      useExisting: forwardRef(() => UnitSelectComponent),
       multi: true,
     },
   ],
-  selector: 'app-item-unit-select',
+  selector: 'app-unit-select',
   template: `
     <nz-select
         nzShowSearch
@@ -28,7 +28,7 @@ import { ItemUnitUiService } from './item-unit-ui.service';
         <nz-option
           *ngIf="showAllOption()"
           [nzValue]="0"
-          [nzLabel]="'AllItemUnit' | translate"
+          [nzLabel]="'AllUnit' | translate"
         ></nz-option>
         <nz-option
           *ngFor="let item of lists()"
@@ -77,13 +77,13 @@ import { ItemUnitUiService } from './item-unit-ui.service';
   ],
   standalone: false
 })
-export class ItemUnitSelectComponent extends BaseSelectComponent<ItemUnit>{
+export class UnitSelectComponent extends BaseSelectComponent<Unit>{
   constructor(
-    service: ItemUnitService,
-    uiService: ItemUnitUiService,
+    service: UnitService,
+    uiService: UnitUiService,
     sessionStorageService: SessionStorageService,
   ) {
-    super(service, uiService, sessionStorageService,'item-unit-filter','all-item-unit' )
+    super(service, uiService, sessionStorageService,'unit-filter','all-unit' )
   }
 }
 

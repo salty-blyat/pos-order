@@ -61,7 +61,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
             >{{ "ItemUnit" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
-            <app-item-unit-select formControlName="unitId" [addOption]="true" />
+            <app-unit-select formControlName="unitId" [addOption]="true" />
           </nz-form-control>
         </nz-form-item>
 

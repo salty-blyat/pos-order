@@ -23,7 +23,7 @@ import { MemberListComponent } from "./pages/member/member-list.component";
 import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
 import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component"; 
-import { ItemUnitListComponent } from "./pages/item-unit/item-unit-list.component";
+import { UnitListComponent } from "./pages/unit/unit-list.component";
 import { GroupListComponent } from "./pages/group/group-list.component";
 import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
@@ -180,11 +180,11 @@ const routes: Routes = [
         ],
       },
       {
-        path: "setting/item-unit",
-        component: ItemUnitListComponent,
+        path: "setting/unit",
+        component: UnitListComponent,
         data: [
           { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "ItemUnit", url: null },
+          { index: 1, label: "Unit", url: null },
         ],
       },
       {

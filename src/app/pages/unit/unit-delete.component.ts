@@ -3,11 +3,11 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
-import { ItemUnit, ItemUnitService } from "./item-unit.service";
-import { ItemUnitUiService } from "./item-unit-ui.service";
+import { Unit, UnitService } from "./unit.service";
+import { UnitUiService } from "./unit-ui.service";
 
 @Component({
-  selector: "app-item-unit-delete",
+  selector: "app-unit-delete",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="modal?.id"
@@ -76,11 +76,11 @@ import { ItemUnitUiService } from "./item-unit-ui.service";
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class ItemUnitDeleteComponent extends BaseDeleteComponent<ItemUnit> {
+export class UnitDeleteComponent extends BaseDeleteComponent<Unit> {
   constructor(
-    service: ItemUnitService,
-    uiService: ItemUnitUiService,
-    ref: NzModalRef<ItemUnitDeleteComponent>,
+    service: UnitService,
+    uiService: UnitUiService,
+    ref: NzModalRef<UnitDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);
