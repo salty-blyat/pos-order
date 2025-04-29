@@ -50,8 +50,8 @@ import { HttpClient } from "@angular/common/http";
 
       <nz-form-item>
         <nz-form-label [nzSm]="7" [nzXs]="24" nzNoColon></nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <button nz-button (click)="testPavr()" style="margin-right:8px">
+        <nz-form-control [nzSm]="8" [nzXs]="24" style="text-align: right">
+          <button nz-button (click)="testPavr()" style="margin-right:8px;">
             <i *ngIf="loading" nz-icon nzType="loading"></i>
             {{ "Test" | translate }}
           </button>
