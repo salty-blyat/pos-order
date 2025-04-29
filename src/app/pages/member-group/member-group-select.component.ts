@@ -2,18 +2,18 @@ import {Component, forwardRef, signal, ViewEncapsulation} from "@angular/core";
 import {NG_VALUE_ACCESSOR} from "@angular/forms"; 
 import { BaseSelectComponent } from "../../utils/components/base-select.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service"; 
-import { Group, GroupService } from "./group.service";
-import { GroupUiService } from "./group-ui.service";
+import {   MemberGroup, MemberGroupService } from "./member-group.service";
+import {  MemberGroupUiService } from "./member-group-ui.service";
 
 @Component({
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => GroupSelectComponent),
+            useExisting: forwardRef(() => MemberGroupSelectComponent),
             multi: true
         }
     ],
-    selector: 'app-group-select',
+    selector: 'app-member-group-select',
     template: `
         <nz-select
                 nzShowSearch
@@ -24,7 +24,7 @@ import { GroupUiService } from "./group-ui.service";
                 (nzOnSearch)="searchText.set($event); param().pageIndex = 1; search()"
                 [nzDisabled]="disabled()"
         >
-            <nz-option *ngIf="showAllOption()" [nzValue]="0" [nzLabel]="'AllGroup' | translate"></nz-option>
+            <nz-option *ngIf="showAllOption()" [nzValue]="0" [nzLabel]="'AllMemberGroup' | translate"></nz-option>
             <nz-option *ngFor="let item of lists()" nzCustomContent [nzValue]="item.id" [nzLabel]="item?.name + ''">
                 <span>{{ item.name }}</span>
             </nz-option>
@@ -33,7 +33,7 @@ import { GroupUiService } from "./group-ui.service";
                 {{ 'Loading' | translate }}
             </nz-option>
             <ng-template #actionItem>
-               <a *ngIf="addOption() && isGroupAdd()" (click)=" uiService.showAdd(componentId)" class="item-action"> 
+               <a *ngIf="addOption() && isMemberGroupAdd()" (click)=" uiService.showAdd(componentId)" class="item-action"> 
                  <i nz-icon nzType="plus"></i> {{ "Add" | translate }}
                </a>  
             </ng-template>
@@ -54,16 +54,16 @@ import { GroupUiService } from "./group-ui.service";
 })
 
 
-export class GroupSelectComponent extends BaseSelectComponent<Group>{
+export class MemberGroupSelectComponent extends BaseSelectComponent<MemberGroup>{
   constructor(
-      service: GroupService,
-      uiService: GroupUiService,
+      service: MemberGroupService,
+      uiService: MemberGroupUiService,
       sessionStorageService: SessionStorageService,
       ) {
-    super(service, uiService, sessionStorageService, "group-filter", "all-group");
+    super(service, uiService, sessionStorageService, "member-group-filter", "all-member-group");
   }
 
-  isGroupAdd = signal<boolean>(true);
+  isMemberGroupAdd = signal<boolean>(true);
   id = signal<number>(0);
 
   override ngOnInit() {

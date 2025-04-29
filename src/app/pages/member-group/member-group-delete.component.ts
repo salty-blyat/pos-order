@@ -3,11 +3,11 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
-import { ItemUnit, ItemUnitService } from "./item-unit.service";
-import { ItemUnitUiService } from "./item-unit-ui.service";
+import { MemberGroup, MemberGroupService } from "./member-group.service";
+import { MemberGroupUiService } from "./member-group-ui.service";
 
 @Component({
-  selector: "app-item-unit-delete",
+  selector: "app-member-group-delete",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="modal?.id"
@@ -76,28 +76,28 @@ import { ItemUnitUiService } from "./item-unit-ui.service";
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class ItemUnitDeleteComponent extends BaseDeleteComponent<ItemUnit> {
+export class MemberGroupDeleteComponent extends BaseDeleteComponent<MemberGroup> {
   constructor(
-    service: ItemUnitService,
-    uiService: ItemUnitUiService,
-    ref: NzModalRef<ItemUnitDeleteComponent>,
+    service: MemberGroupService,
+    uiService: MemberGroupUiService,
+    ref: NzModalRef<MemberGroupDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);
   }
 
-  override initControl(): void {
-    const { noteMaxLengthValidator } = CommonValidators;
-    this.frm = this.fb.group({
-      name: [{ value: null, disabled: true }, [Validators.required]],
-      note: [null, [noteMaxLengthValidator()]],
-    });
-  }
+  // override initControl(): void {
+  //   const { noteMaxLengthValidator } = CommonValidators;
+  //   this.frm = this.fb.group({
+  //     name: [{ value: null, disabled: true }, [Validators.required]],
+  //     note: [null, [noteMaxLengthValidator()]],
+  //   });
+  // }
 
-  override setFormValue() {
-    this.frm.setValue({
-      name: this.model.name,
-      note: "",
-    });
-  }
+  // override setFormValue() {
+  //   this.frm.setValue({
+  //     name: this.model.name,
+  //     note: "",
+  //   });
+  // }
 }

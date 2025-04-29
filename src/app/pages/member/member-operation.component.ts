@@ -248,7 +248,7 @@ import {AuthService} from "../../helpers/auth.service";
                                               </div>
                                               <div nz-col [nzXs]="12">
                                                   <nz-form-item>
-                                                      <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'Group' | translate }}
+                                                      <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'MemberGroup' | translate }}
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24">
                                                           <app-group-select
@@ -458,7 +458,7 @@ import {AuthService} from "../../helpers/auth.service";
     }
 
     .sider-member {
-      height: calc(100vh - 160px);
+      height: calc(100vh - 180px);
       border-right: 1px solid #d9d9d9;
     }
 

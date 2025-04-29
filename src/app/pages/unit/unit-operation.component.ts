@@ -27,8 +27,7 @@ import { Unit, UnitService } from "./unit.service";
       <form
         nz-form
         [formGroup]="frm"
-        
-        [nzAutoTips]="autoTips"
+        [nzAutoTips]="autoTips" 
       >
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired

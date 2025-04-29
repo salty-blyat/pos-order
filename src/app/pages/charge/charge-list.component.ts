@@ -42,14 +42,14 @@ import { Filter } from "../../utils/services/base-api.service";
             ></app-lookup-item-select>
           </div>
           <div nz-col>
-            <app-item-unit-select
-              formControlName="itemUnitId"
+            <app-unit-select
+              formControlName="unitId"
               [showAllOption]="true"
-              storageKey="item-unit-filter"
+              storageKey="unit-filter"
               (valueChanged)="
                 unitId.set($event); param().pageIndex = 1; search()
               "
-            ></app-item-unit-select>
+            ></app-unit-select>
           </div>
 
           <div *ngIf="draged()">

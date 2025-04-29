@@ -1,13 +1,13 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import {Component, ViewEncapsulation} from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
-import { Group, GroupService } from "./group.service";
-import { GroupUiService } from "./group-ui.service";
+import { BaseDeleteComponent } from "../../utils/components/base-delete.component"; 
+import { MemberUnit, MemberUnitService } from "./member-unit.service";
+import { MemberUnitUiService } from "./member-unit-ui.service";
 
 @Component({
-  selector: "app-group-delete",
+  selector: "app-member-unit-delete",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="modal?.id"
@@ -26,9 +26,12 @@ import { GroupUiService } from "./group-ui.service";
         nzJustify="center"
         style="margin:2px 0"
       >
-        <span nz-typography nzType="danger" style="position: absolute">{{
-          errMessage() | translate
-        }}</span>
+        <span
+          nz-typography
+          nzType="danger"
+          style="position: absolute; z-index: 1; top: 18%"
+          >{{ errMessage() | translate }}</span
+        >
       </div>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
@@ -73,31 +76,31 @@ import { GroupUiService } from "./group-ui.service";
     </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
-  encapsulation: ViewEncapsulation.None,
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
-export class GroupDeleteComponent extends BaseDeleteComponent<Group> {
+export class MemberUnitDeleteComponent extends BaseDeleteComponent<MemberUnit> {
   constructor(
-    service: GroupService,
-    uiService: GroupUiService,
-    ref: NzModalRef<GroupDeleteComponent>,
+    service: MemberUnitService,
+    uiService: MemberUnitUiService,
+    ref: NzModalRef<MemberUnitDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);
   }
 
-  // override initControl(): void {
-  //   const { noteMaxLengthValidator } = CommonValidators;
-  //   this.frm = this.fb.group({
-  //     name: [{ value: null, disabled: true }, [Validators.required]],
-  //     note: [null, [noteMaxLengthValidator()]],
-  //   });
-  // }
+  override initControl(): void {
+    const { noteMaxLengthValidator } = CommonValidators;
+    this.frm = this.fb.group({
+      name: [{ value: null, disabled: true }, [Validators.required]],
+      note: [null, [noteMaxLengthValidator()]],
+    });
+  }
 
-  // override setFormValue() {
-  //   this.frm.setValue({
-  //     name: this.model.name,
-  //     note: "",
-  //   });
-  // }
+  override setFormValue() {
+    this.frm.setValue({
+      name: this.model.name,
+      note: "",
+    });
+  }
 }

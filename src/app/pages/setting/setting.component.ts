@@ -74,8 +74,8 @@ export class SettingComponent implements OnInit {
   isCurrencyList: boolean = true;
   isReportList: boolean = true;
   isMemberLevelList: boolean = true;
+  isMemberUnitList: boolean = true;
   isUnitList: boolean = true;
-  isItemUnitList: boolean = true;
   isSystemSettingList: boolean = true;
   isAutoNumberList: boolean = true;
   isBlockList: boolean = true;
@@ -84,7 +84,7 @@ export class SettingComponent implements OnInit {
   isRoomChargeType : boolean = true;
   isCharge : boolean = true;
   isItemTypeList: boolean = true;
-  isGroupList: boolean = true;
+  isMemberGroupList: boolean = true;
   ngOnInit(): void {
     this.setting = [
       {
@@ -104,27 +104,27 @@ export class SettingComponent implements OnInit {
           },
           {
             icon: "container",
-            url: `${this.urlPart}/item-unit`,
-            label: "ItemUnit",
-            isList: this.isItemUnitList,
+            url: `${this.urlPart}/unit`,
+            label: "Unit",
+            isList: this.isUnitList,
           },
 
         ],
       },
       {
-        groupName: "Unit",
+        groupName: "MemberUnit",
         subName: [
           {
             icon: "container",
-            url: `${this.urlPart}/unit`,
-            label: "Unit",
-            isList: this.isUnitList,
+            url: `${this.urlPart}/member-unit`,
+            label: "MemberUnit",
+            isList: this.isMemberUnitList,
           },
           {
             icon: "container",
-            url: `${this.urlPart}/group`,
-            label: "Group",
-            isList: this.isGroupList,
+            url: `${this.urlPart}/member-group`,
+            label: "MemberGroup",
+            isList: this.isMemberGroupList,
           },
           {
             icon: "container",

@@ -4,7 +4,7 @@ import { SettingService } from '../../app-setting';
 import { HttpClient } from '@angular/common/http';
 
 
-export interface ItemUnit {
+export interface MemberUnit {
     id?: number,
     name?: string,
     note?: string,
@@ -12,8 +12,8 @@ export interface ItemUnit {
 }
 
 @Injectable({providedIn: 'root'})
-export class ItemUnitService extends BaseApiService<ItemUnit> {
+export class MemberUnitService extends BaseApiService<MemberUnit> {
     constructor(http: HttpClient, settingService: SettingService) {
-        super('itemunit', http, settingService);
+        super('memberunit', http, settingService);
     }
 }

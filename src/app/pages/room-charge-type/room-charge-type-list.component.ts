@@ -8,7 +8,7 @@ import {
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
-import { Observable } from "rxjs";
+import { filter, Observable } from "rxjs";
 import { SIZE_COLUMNS } from "../../const";
 import {
   RoomChargeType,
@@ -16,6 +16,10 @@ import {
 } from "./room-charge-type.service";
 import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { FloorService } from "../floor/floor.service";
+import { RoomService } from "../room/room.service";
+import { Filter } from "../../utils/services/base-api.service";
+import { RoomListComponent } from "../room/room-list.component";
 
 @Component({
   selector: "app-room-charge-type-list",
@@ -26,7 +30,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
         [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-header>
-        <div nz-row>
+        <div nz-row >
           <div nz-col>
             <app-filter-input
               storageKey="room-charge-type-list-search"
@@ -35,9 +39,18 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
               "
             ></app-filter-input>
           </div>
-           <!-- TODO:  add floor to query room first -->
+          <div nz-col>
+            <app-floor-select
+              #floorSelect
+              [showAllOption]="true"
+              storageKey="floor-filter"
+              (valueChanged)="floorId.set($event); param().pageIndex = 1"
+            ></app-floor-select>
+          </div>
           <div nz-col>
             <app-room-select
+              #roomSelect
+              [floorId]="this.floorId()"
               [showAllOption]="true"
               storageKey="room-filter"
               (valueChanged)="
@@ -58,7 +71,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
             ></app-lookup-item-select>
           </div>
         </div>
-        <div>
+        <div style="margin-left:auto">
           <button
             *ngIf="isRoomChargeTypeAdd()"
             nz-button
@@ -177,32 +190,32 @@ export class RoomChargeTypeListComponent extends BaseListComponent<RoomChargeTyp
   isRoomChargeTypeRemove = signal<boolean>(true);
   isRoomChargeTypeView = signal<boolean>(true);
   lookupItemType = LOOKUP_TYPE;
+  floorId = signal(0);
   roomId = signal(0);
   chargeTypeId = signal(0);
+
   override lists = signal<RoomChargeType[]>([
     { id: 1, roomNumber: "001", chargeType: "Water", limit: 50 },
     { id: 2, roomNumber: "002", chargeType: "Electricity", limit: 100 },
     { id: 3, roomNumber: "003", chargeType: "Electricity", limit: 100 },
   ]);
 
-  //   override search() {
-  //     const filters: Filter[] = [];
-  //     if (this.chargeType()) {
-  //       filters.push({
-  //         field: "chargeTypeId",
-  //         operator: "eq",
-  //         value: this.chargeTypeId(),
-  //       });
-  //
-  //     } 
-  //   if (this.roomId()) {
-  //       filters.push({
-  //         field: "roomId",
-  //         operator: "eq",
-  //         value: this.roomId(),
-  //       });
-  //
-  //     }
-  //     super.search(filters);
-  //   }
+  override search() {
+    const filters: Filter[] = [];
+    if (this.chargeTypeId()) {
+      filters.push({
+        field: "chargeTypeId",
+        operator: "eq",
+        value: this.chargeTypeId(),
+      });
+    }
+    if (this.roomId()) {
+      filters.push({
+        field: "roomId",
+        operator: "eq",
+        value: this.roomId(),
+      });
+    }
+    super.search(filters);
+  }
 }

@@ -1,23 +1,21 @@
-import { Component, forwardRef, ViewEncapsulation} from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import {Component, forwardRef} from '@angular/core';
+import {NG_VALUE_ACCESSOR} from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
-import { AuthService } from '../../helpers/auth.service';
-import { Unit, UnitService} from "./unit.service";
-import { UnitUiService} from "./unit-ui.service";
-import { BaseSelectComponent} from "../../utils/components/base-select.component";
-
+import {BaseSelectComponent} from "../../utils/components/base-select.component";
+import { Unit, UnitService } from './unit.service';
+import { UnitUiService } from './unit-ui.service';
 
 @Component({
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => UnitSelectComponent),
-            multi: true,
-        },
-    ],
-    selector: 'app-unit-select',
-    template: `
-      <nz-select
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => UnitSelectComponent),
+      multi: true,
+    },
+  ],
+  selector: 'app-unit-select',
+  template: `
+    <nz-select
         nzShowSearch
         [nzDropdownRender]="actionItem"
         [nzServerSearch]="true"
@@ -25,6 +23,7 @@ import { BaseSelectComponent} from "../../utils/components/base-select.component
         (ngModelChange)="onModalChange()"
         (nzOnSearch)="searchText.set($event); param().pageIndex = 1; search()"
         [nzDisabled]="disabled()"
+        style="width: 100%"
       >
         <nz-option
           *ngIf="showAllOption()"
@@ -33,8 +32,11 @@ import { BaseSelectComponent} from "../../utils/components/base-select.component
         ></nz-option>
         <nz-option
           *ngFor="let item of lists()"
+          nzCustomContent
           [nzValue]="item.id"
-          [nzLabel]="item?.name + ''">
+          [nzLabel]="item?.name + ''"
+        >
+          <span class="b-name">{{ item.name }}</span>
         </nz-option>
         <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
           <i nz-icon nzType="loading" class="loading-icon"></i>
@@ -42,7 +44,7 @@ import { BaseSelectComponent} from "../../utils/components/base-select.component
         </nz-option>
         <ng-template #actionItem>
           <a
-            *ngIf="addOption() && isUnitAdd"
+            *ngIf="addOption()"
             (click)="uiService.showAdd(componentId)"
             class="item-action"
           >
@@ -51,24 +53,37 @@ import { BaseSelectComponent} from "../../utils/components/base-select.component
         </ng-template>
       </nz-select>
     `,
-    styles: [`
-        nz-select {
-          width: 100%;
-        }
-      `],
-    standalone: false,
-    encapsulation: ViewEncapsulation.None,
-})
-export class UnitSelectComponent extends BaseSelectComponent<Unit>
-{
-    constructor(
-        service: UnitService,
-        sessionStorageService: SessionStorageService,
-        uiService: UnitUiService,
-        private authService: AuthService
-    ) {
-        super(service, uiService, sessionStorageService, 'unit-filter', 'all-unit')
+  styles: [
+      `
+    nz-select {
+      width: 100%;
     }
-
-    isUnitAdd: boolean = true;
+    .item-action {
+      flex: 0 0 auto;
+      padding: 6px 8px;
+      display: block;
+    }
+    .b-code {
+      font-weight: bolder;
+    }
+    .b-name {
+      font-size: 12px;
+      padding-left: 5px;
+    }
+    ::ng-deep cdk-virtual-scroll-viewport {
+      min-height: 34px;
+    }
+  `,
+  ],
+  standalone: false
+})
+export class UnitSelectComponent extends BaseSelectComponent<Unit>{
+  constructor(
+    service: UnitService,
+    uiService: UnitUiService,
+    sessionStorageService: SessionStorageService,
+  ) {
+    super(service, uiService, sessionStorageService,'unit-filter','all-unit' )
+  }
 }
+

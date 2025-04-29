@@ -24,10 +24,11 @@ import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
 import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
 import { UnitListComponent } from "./pages/unit/unit-list.component";
-import { ItemUnitListComponent } from "./pages/item-unit/item-unit-list.component";
-import { GroupListComponent } from "./pages/group/group-list.component";
 import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
+import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
+import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
+import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -121,6 +122,10 @@ const routes: Routes = [
             path: "company-section",
             component: CompanySectionComponent,
           },
+          {
+            path: "other-app-section",
+            component: OtherAppSectionComponent,
+          },
         ],
       },
       {
@@ -164,27 +169,27 @@ const routes: Routes = [
         ],
       },
       {
+        path: "setting/member-unit",
+        component: MemberUnitListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "MemberUnit", url: null },
+        ],
+      },
+      {
+        path: "setting/member-group",
+        component: MemberGroupListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "MemberGroup", url: null },
+        ],
+      },
+      {
         path: "setting/unit",
         component: UnitListComponent,
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Unit", url: null },
-        ],
-      },
-      {
-        path: "setting/group",
-        component: GroupListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Group", url: null },
-        ],
-      },
-      {
-        path: "setting/item-unit",
-        component: ItemUnitListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "ItemUnit", url: null },
         ],
       },
       {
@@ -203,7 +208,7 @@ const routes: Routes = [
           { index: 1, label: "ItemType", url: null },
         ],
       },
-      
+
       {
         path: "setting/room-charge-type",
         component: RoomChargeTypeListComponent,
@@ -220,7 +225,6 @@ const routes: Routes = [
           { index: 1, label: "Charge", url: null },
         ],
       },
-      
     ],
   },
   {

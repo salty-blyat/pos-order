@@ -42,7 +42,7 @@ export interface Attachment {
 
 export interface MemberAdvancedFilter {
   sexId: number;
-  groupId: number;
+  memberGroupId: number;
   nationalityId: number;
   isAdvancedFilter: boolean;
 }

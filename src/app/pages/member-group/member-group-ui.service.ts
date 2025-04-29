@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
 import { BaseUiService } from "../../utils/services/base-ui.service";
 import { NzModalService } from "ng-zorro-antd/modal";
-import { GroupOperationComponent } from "./group-operation.component";
-import { GroupDeleteComponent } from "./group-delete.component";
+import { MemberGroupOperationComponent } from "./member-group-operation.component";
+import { MemberGroupDeleteComponent } from "./member-group-delete.component";
 
 @Injectable({ providedIn: "root" })
-export class GroupUiService extends BaseUiService {
+export class MemberGroupUiService extends BaseUiService {
   constructor(modalService: NzModalService) {
     super(
       modalService,
-      GroupOperationComponent,
-      GroupDeleteComponent,
+      MemberGroupOperationComponent,
+      MemberGroupDeleteComponent,
       "450px",
       "450px",
       "450px",

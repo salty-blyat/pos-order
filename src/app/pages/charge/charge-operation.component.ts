@@ -46,15 +46,6 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
-            >{{ "ItemUnit" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24">
-            <app-item-unit-select formControlName="unitId" [addOption]="true" />
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "ChargeType" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
@@ -62,6 +53,15 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
               formControlName="chargeTypeId"
               [lookupType]="this.lookupItemType.ChargeType"
             ></app-lookup-item-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "ItemUnit" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            <app-unit-select formControlName="unitId" [addOption]="true" />
           </nz-form-control>
         </nz-form-item>
 

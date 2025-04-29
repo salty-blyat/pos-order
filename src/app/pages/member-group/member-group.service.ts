@@ -4,7 +4,7 @@ import { SettingService } from '../../app-setting';
 import { HttpClient } from '@angular/common/http';
 
 
-export interface Group {
+export interface MemberGroup {
     id?: number,
     name?: string,
     note?: string,
@@ -12,8 +12,8 @@ export interface Group {
 }
 
 @Injectable({providedIn: 'root'})
-export class GroupService extends BaseApiService<Group> {
+export class MemberGroupService extends BaseApiService<MemberGroup> {
     constructor(http: HttpClient, settingService: SettingService) {
-        super('group', http, settingService);
+        super('membergroup', http, settingService);
     }
 }

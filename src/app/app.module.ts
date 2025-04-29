@@ -144,32 +144,33 @@ import { MemberLevelDeleteComponent } from "./pages/member-level/member-level-de
 import { UnitListComponent } from "./pages/unit/unit-list.component";
 import { UnitOperationComponent } from "./pages/unit/unit-operation.component";
 import { UnitDeleteComponent } from "./pages/unit/unit-delete.component";
-import { ItemUnitListComponent } from "./pages/item-unit/item-unit-list.component";
-import { ItemUnitOperationComponent } from "./pages/item-unit/item-unit-operation.component";
-import { ItemUnitDeleteComponent } from "./pages/item-unit/item-unit-delete.component";
-import { GroupDeleteComponent } from "./pages/group/group-delete.component";
-import { GroupListComponent } from "./pages/group/group-list.component";
-import { GroupOperationComponent } from "./pages/group/group-operation.component";
-import {RoomInventoryListComponent} from "./pages/room-inventory/room-inventory-list.component";
+import { MemberGroupDeleteComponent } from "./pages/member-group/member-group-delete.component";
+import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
+import { MemberGroupOperationComponent } from "./pages/member-group/member-group-operation.component";
+import { MemberGroupSelectComponent } from "./pages/member-group/member-group-select.component";
+import { RoomInventoryListComponent } from "./pages/room-inventory/room-inventory-list.component";
 import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
 import { RoomChargeTypeDeleteComponent } from "./pages/room-charge-type/room-charge-type-delete.component";
 import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
 import { MemberLevelSelectComponent } from "./pages/member-level/member-level-select.component";
-import { UnitSelectComponent } from "./pages/unit/unit-select.component";
+import { MemberUnitSelectComponent } from "./pages/member-unit/member-unit-select.component";
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
 import { ChargeOperationComponent } from "./pages/charge/charge-operation.component";
 import { RoomChargeTypeSelectComponent } from "./pages/room-charge-type/room-charge-type-select.component";
-import { GroupSelectComponent } from "./pages/group/group-select.component";
 import { ChargeDeleteComponent } from "./pages/charge/charge-delete.component";
-import { ItemUnitSelectComponent } from "./pages/item-unit/item-unit-select.component";
+import { UnitSelectComponent } from "./pages/unit/unit-select.component";
 import { RoomChargeTypeOperationComponent } from "./pages/room-charge-type/room-charge-type-operation.component";
-import {MemberAdvancedFilterComponent} from "./pages/member/member-advanced-filter.component";
-import {MemberDeleteComponent} from "./pages/member/member-delete.component";
+import { MemberAdvancedFilterComponent } from "./pages/member/member-advanced-filter.component";
+import { MemberUnitDeleteComponent } from "./pages/member-unit/member-unit-delete.component";
+import { MemberUnitOperationComponent } from "./pages/member-unit/member-unit-operation.component";
+import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
+import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
+import { MemberDeleteComponent } from "./pages/member/member-delete.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
     return `assets/vs/base/worker/workerMain.js`;
-  }
+  },
 };
 
 export function app_Init(settingsHttpService: SettingHttpService) {
@@ -239,8 +240,11 @@ export class CustomTranslate implements TranslateLoader {
     LanguageInputComponent,
     LanguageSelectComponent,
     NoResultFoundComponent,
+    // system setting sections
     CompanySectionComponent,
+    OtherAppSectionComponent,
     AutoNumberSectionComponent,
+
     CodeEditorComponent,
     CurrencyInputDirective,
     AutofocusDirective,
@@ -335,39 +339,36 @@ export class CustomTranslate implements TranslateLoader {
     ItemTypeDeleteComponent,
     ItemTypeSelectComponent,
 
+    // Member unit
+    MemberUnitListComponent,
+    MemberUnitOperationComponent,
+    MemberUnitDeleteComponent,
+    MemberUnitSelectComponent,
+
     // unit
     UnitListComponent,
     UnitOperationComponent,
     UnitDeleteComponent,
     UnitSelectComponent,
 
-    // item unit
-    ItemUnitListComponent,
-    ItemUnitOperationComponent,
-    ItemUnitDeleteComponent,
-    ItemUnitSelectComponent,
-
     // group
-    GroupListComponent,
-    GroupOperationComponent,
-    GroupDeleteComponent,
-    GroupSelectComponent,
+    MemberGroupListComponent,
+    MemberGroupOperationComponent,
+    MemberGroupDeleteComponent,
+    MemberGroupSelectComponent,
 
     RoomInventoryListComponent,
 
-
     // charge
     ChargeListComponent,
-    ChargeOperationComponent ,
+    ChargeOperationComponent,
     ChargeDeleteComponent,
 
     //roomcharge
     RoomChargeTypeSelectComponent,
     RoomChargeTypeListComponent,
     RoomChargeTypeOperationComponent,
-    RoomChargeTypeDeleteComponent
-
-
+    RoomChargeTypeDeleteComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

@@ -28,11 +28,11 @@ import {RoomAdvancedFilter} from "../room/room.service";
                       ></app-member-level-select>
                   </div>
                   <div nz-col>
-                      <app-unit-select
+                      <app-member-unit-select
                               [showAllOption]="true"
                               storageKey="member-list-unit-filter"
                               (valueChanged)="memberLevelId.set($event); param().pageIndex = 1; search()"
-                      ></app-unit-select>
+                      ></app-member-unit-select>
                   </div>
                   <div>
                       <nz-badge [nzDot]="hasAdvancedFilter()">
@@ -78,7 +78,7 @@ import {RoomAdvancedFilter} from "../room/room.service";
                       <th nzEllipsis nzWidth="100px">{{ "Phone" | translate }}</th>
                       <th nzEllipsis nzWidth="80px">{{ "Sex" | translate }}</th>
                       <th nzEllipsis nzWidth="120px">{{ "Level" | translate }}</th>
-                      <th nzEllipsis nzWidth="120px">{{ "Group" | translate }}</th>
+                      <th nzEllipsis nzWidth="120px">{{ "MemberGroup" | translate }}</th>
                       <th nzEllipsis>{{ "Unit" | translate }}</th>
                       <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
                   </tr>
@@ -145,7 +145,7 @@ export class MemberListComponent extends BaseListComponent<Member> {
   memberLevelId = signal<number>(0);
   hasAdvancedFilter = signal<boolean>(false);
   sexId = signal<number>(0);
-  groupId = signal<number>(0);
+  memberGroupId = signal<number>(0);
   nationalityId = signal<number>(0);
 
   isMemberAdd: boolean = true;
@@ -177,7 +177,7 @@ export class MemberListComponent extends BaseListComponent<Member> {
   }
   setAdvancedFilter(advancedFilter: MemberAdvancedFilter) {
     this.sexId.set(advancedFilter.sexId);
-    this.groupId.set(advancedFilter.groupId);
+    this.memberGroupId.set(advancedFilter.memberGroupId);
     this.nationalityId.set(advancedFilter.nationalityId);
   }
 
@@ -198,11 +198,11 @@ export class MemberListComponent extends BaseListComponent<Member> {
         value: this.memberLevelId()
       })
     }
-    if (this.groupId()){
+    if (this.memberGroupId()){
       filters.push({
-        field: "groupId",
+        field: "memberGroupId",
         operator: "eq",
-        value: this.groupId()
+        value: this.memberGroupId()
       })
     }
     if (this.nationalityId()){

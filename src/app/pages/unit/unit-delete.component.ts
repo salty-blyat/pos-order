@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -26,12 +26,9 @@ import { UnitUiService } from "./unit-ui.service";
         nzJustify="center"
         style="margin:2px 0"
       >
-        <span
-          nz-typography
-          nzType="danger"
-          style="position: absolute; z-index: 1; top: 18%"
-          >{{ errMessage() | translate }}</span
-        >
+        <span nz-typography nzType="danger" style="position: absolute">{{
+          errMessage() | translate
+        }}</span>
       </div>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
@@ -76,8 +73,8 @@ import { UnitUiService } from "./unit-ui.service";
     </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
-  standalone: false,
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class UnitDeleteComponent extends BaseDeleteComponent<Unit> {
   constructor(

@@ -1,11 +1,16 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import {   Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { SettingService } from '../../app-setting';
-import { map } from 'rxjs/operators';
-import { LocalStorageService } from '../../utils/services/localStorage.service';
-import { CurrencyService } from '../currency/currency.service';
-import { SharedVar } from '../../utils/services/logic-helper.service';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpParams,
+} from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { SettingService } from "../../app-setting";
+import { map } from "rxjs/operators";
+import { LocalStorageService } from "../../utils/services/localStorage.service";
+import { CurrencyService } from "../currency/currency.service";
+import { SharedVar } from "../../utils/services/logic-helper.service";
 export interface CurrentProfile {
   name?: string;
   url?: string;
@@ -44,25 +49,24 @@ export interface SystemSettingInfo {
 }
 
 export const SETTING_KEY = {
-
-  CompanyName: 'CompanyName',
-  CompanyNameEn: 'CompanyNameEn',
-  CompanyAddress: 'CompanyAddress',
-  CompanyAddressEn: 'CompanyAddressEn',
-  CompanyPhone: 'CompanyPhone',
-  CompanyLogo: 'CompanyLogo',
-  CompanyEmail: 'CompanyEmail',
-  CompanyWebsite: 'CompanyWebsite',
-  RequiredPhone: 'required_phone',
-  RequiredAddress: 'required_address',
-  MainCurrency: 'MainCurrencyId',
-  SecondCurrency: 'SecondaryCurrencyId',
-  ExchangeRate: 'SecondaryCurrencyExchangeRate',
-  ExchangeRateDisplay: 'ExchangeRateDisplay',
-  CustomerDefaultId: 'DefaultCustomerId',
-  BlockAutoId: 'BlockAutoId',
-  StaffAutoId: 'StaffAutoId',
-  MemberAutoId: 'MemberAutoId',
+  CompanyName: "CompanyName",
+  CompanyNameEn: "CompanyNameEn",
+  CompanyAddress: "CompanyAddress",
+  CompanyAddressEn: "CompanyAddressEn",
+  CompanyPhone: "CompanyPhone",
+  CompanyLogo: "CompanyLogo",
+  CompanyEmail: "CompanyEmail",
+  CompanyWebsite: "CompanyWebsite",
+  RequiredPhone: "required_phone",
+  RequiredAddress: "required_address",
+  MainCurrency: "MainCurrencyId",
+  SecondCurrency: "SecondaryCurrencyId",
+  ExchangeRate: "SecondaryCurrencyExchangeRate",
+  ExchangeRateDisplay: "ExchangeRateDisplay",
+  CustomerDefaultId: "DefaultCustomerId",
+  BlockAutoId: "BlockAutoId",
+  StaffAutoId: "StaffAutoId",
+  MemberAutoId: "MemberAutoId",
 };
 
 export interface Setting {
@@ -76,7 +80,7 @@ export class SettingList {
 
   get<T>(key: string, defaultValue: T) {
     let tmp = this.items.find((x) => x.key == key)?.value ?? defaultValue;
-    if (typeof defaultValue === 'number') {
+    if (typeof defaultValue === "number") {
       return +tmp;
     }
     return tmp;
@@ -103,7 +107,7 @@ export class SettingList {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class SystemSettingService {
   constructor(
@@ -114,7 +118,8 @@ export class SystemSettingService {
   ) {}
   private currentSetting!: SettingList;
 
-  public getUrl = (): string => `${this.settingService.setting.BASE_API_URL}/setting`;
+  public getUrl = (): string =>
+    `${this.settingService.setting.BASE_API_URL}/setting`;
 
   public getByItems(keys: string[]): Observable<SettingList> {
     return this.http
@@ -207,5 +212,10 @@ export class SystemSettingService {
           return result;
         })
       );
+  }
+  pavrTestUrl(url: string): Observable<any> {
+    return this.http.post(`${this.settingService.setting.BASE_API_URL}/pavrapi/test`, {
+      url,
+    });
   }
 }

@@ -65,7 +65,7 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
     encapsulation: ViewEncapsulation.None,
     standalone: false
 })
-export class FloorSelectComponent extends BaseSelectComponent<Floor>{
+export class FloorSelectComponent extends BaseSelectComponent<Floor> {
   constructor(
        service: FloorService,
        override uiService: FloorUiService,
@@ -73,7 +73,7 @@ export class FloorSelectComponent extends BaseSelectComponent<Floor>{
   ) {
     super(service, uiService, sessionStorageService, 'floor-filter', 'all-floor')
   }
-  isFloorAdd = signal(true)
+  isFloorAdd = signal(true);
 }
 
 
