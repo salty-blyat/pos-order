@@ -164,6 +164,7 @@ import { ChargeDeleteComponent } from "./pages/charge/charge-delete.component";
 import { ItemUnitSelectComponent } from "./pages/item-unit/item-unit-select.component";
 import { RoomChargeTypeOperationComponent } from "./pages/room-charge-type/room-charge-type-operation.component";
 import {MemberAdvancedFilterComponent} from "./pages/member/member-advanced-filter.component";
+import {MemberDeleteComponent} from "./pages/member/member-delete.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -315,6 +316,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberListComponent,
     MemberOperationComponent,
     MemberAdvancedFilterComponent,
+    MemberDeleteComponent,
 
     // member level
     MemberLevelListComponent,

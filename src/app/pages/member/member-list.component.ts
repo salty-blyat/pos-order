@@ -86,7 +86,7 @@ import {RoomAdvancedFilter} from "../room/room.service";
                   <tbody>
                   <tr *ngFor="let data of lists(); let i = index">
                       <td nzEllipsis>
-                          {{ i | rowNumber : { index: param().pageIndex || 0, size: param().pageSize || 0} }}
+                          {{ i | rowNumber : {index: param().pageIndex || 0, size: param().pageSize || 0} }}
                       </td>
                       <td nzEllipsis>
                           <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
@@ -95,12 +95,13 @@ import {RoomAdvancedFilter} from "../room/room.service";
                           {{ data.name }} {{ data.nameEn }}
                       </td>
                       <td nzEllipsis title="{{ data.phone }}">{{ data.phone }}</td>
-                      <td nzEllipsis title="{{ translate.currentLang == 'km' ? (data.sexName || data.sexNameEn) : (data.sexNameEn || data.sexName)}}">
-                          {{  translate.currentLang == 'km' ? (data.sexName || data.sexNameEn) : (data.sexNameEn || data.sexName) }}
+                      <td nzEllipsis
+                          title="{{ translate.currentLang == 'km' ? (data.sexName || data.sexNameEn) : (data.sexNameEn || data.sexName)}}">
+                          {{ translate.currentLang == 'km' ? (data.sexName || data.sexNameEn) : (data.sexNameEn || data.sexName) }}
                       </td>
                       <td nzEllipsis title="{{ data.memberLevelName }}">{{ data.memberLevelName }}</td>
-                      <td nzEllipsis title="{{ data.groupName }}">{{ data.groupName }}</td>
-                      <td nzEllipsis title="{{ data.unitName }}">{{ data.unitName }}</td>
+                      <td nzEllipsis title="{{ data.memberGroupName }}">{{ data.memberGroupName }}</td>
+                      <td nzEllipsis title="{{ data.memberUnitName }}">{{ data.memberUnitName }}</td>
                       <td class="col-action">
                           <nz-space [nzSplit]="spaceSplit">
                               <ng-template #spaceSplit>

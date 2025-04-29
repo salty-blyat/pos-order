@@ -4,6 +4,7 @@ import { NzModalService } from "ng-zorro-antd/modal";
 import { MemberOperationComponent } from "./member-operation.component";
 import { MainPageService } from "../../utils/services/main-page.service";
 import {MemberAdvancedFilterComponent} from "./member-advanced-filter.component";
+import {MemberDeleteComponent} from "./member-delete.component";
 
 @Injectable({ providedIn: "root" })
 export class MemberUiService extends BaseUiService {
@@ -14,7 +15,7 @@ export class MemberUiService extends BaseUiService {
     super(
       modalService,
       MemberOperationComponent, 
-      "",
+      MemberDeleteComponent,
       "580px",
       "580px",
       "580px",

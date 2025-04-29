@@ -65,13 +65,13 @@ import { UnitUiService } from "./unit-ui.service";
           <ng-template #noResult>
             <app-no-result-found></app-no-result-found>
           </ng-template>
-          <thead>
+          <thead >
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-              <th class="col-action" [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+              <th>{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody
@@ -80,16 +80,16 @@ import { UnitUiService } from "./unit-ui.service";
             [cdkDropListData]="lists()"
           >
             <tr *ngFor="let data of lists(); let i = index" cdkDrag>
-              <td style=" cursor: move;" cdkDragHandle>
+              <td [width]="SIZE_COLUMNS.DRAG" class="drag-handle" cdkDragHandle>
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
-              <td nzEllipsis >
+              <td nzEllipsis [width]="SIZE_COLUMNS.ID">
                 {{ i | rowNumber : { index: param().pageIndex || 0, size: param().pageSize || 0 } }}
               </td>
-              <td nzEllipsis title="{{ data.name }}">
+              <td nzEllipsis [width]="SIZE_COLUMNS.NAME" title="{{ data.name }}">
                   <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
-              <td nzEllipsis title="{{ data.note }}">
+              <td nzEllipsis [width]="'90%'" title="{{ data.note }}">
                 {{ data.note }}
               </td>
               <td class="col-action">

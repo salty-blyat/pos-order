@@ -16,6 +16,6 @@ export class MainPageService {
     return { paddingLeft: `${this.sidebar.width + 2}px` };
   }
   getModalBodyStyle() {
-    return { height: `calc(100vh - 180px)`, padding: '0' };
+    return { height: `calc(100vh - 160px)`, padding: '0' };
   }
 }

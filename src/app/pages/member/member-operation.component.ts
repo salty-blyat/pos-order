@@ -242,7 +242,7 @@ import {AuthService} from "../../helpers/auth.service";
                                                       <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'Unit' | translate }}
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24">
-                                                          <app-unit-select formControlName="unitId"></app-unit-select>
+                                                          <app-unit-select formControlName="memberUnitId"></app-unit-select>
                                                       </nz-form-control>
                                                   </nz-form-item>
                                               </div>
@@ -252,7 +252,7 @@ import {AuthService} from "../../helpers/auth.service";
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24">
                                                           <app-group-select
-                                                                  formControlName="groupId"></app-group-select>
+                                                                  formControlName="memberGroupId"></app-group-select>
                                                       </nz-form-control>
                                                   </nz-form-item>
                                               </div>
@@ -458,7 +458,7 @@ import {AuthService} from "../../helpers/auth.service";
     }
 
     .sider-member {
-      height: calc(100vh - 180px);
+      height: calc(100vh - 160px);
       border-right: 1px solid #d9d9d9;
     }
 
@@ -679,8 +679,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       birthDate: [null],
       sexId: [null, [required]],
       nationalityId: [0, [required]],
-      unitId: [0],
-      groupId: [0],
+      memberUnitId: [0],
+      memberGroupId: [0],
       memberLevelId: [0],
       idNo: [null, [integerValidator]],
       nssfId: [null],
@@ -754,8 +754,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       birthDate: model?.birthDate,
       sexId: model?.sexId,
       nationalityId: model?.nationalityId,
-      unitId: model?.unitId,
-      groupId: model?.groupId,
+      memberUnitId: model?.memberUnitId,
+      memberGroupId: model?.memberGroupId,
       memberLevelId: model?.memberLevelId,
       idNo: model?.idNo,
       nssfId: model?.nssfId,

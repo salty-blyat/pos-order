@@ -1,4 +1,12 @@
-import {Component, computed, ViewEncapsulation} from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  QueryList,
+  ViewChildren,
+  ViewEncapsulation
+} from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { MemberLevel, MemberLevelService } from "./member-level.service";
@@ -82,22 +90,22 @@ import { SIZE_COLUMNS } from "../../const";
             [cdkDropListData]="lists()"
           >
             <tr *ngFor="let data of lists(); let i = index" cdkDrag>
-              <td style=" cursor: move;" cdkDragHandle>
+              <td #bodyCell style=" cursor: move;" cdkDragHandle>
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
-              <td nzEllipsis>
+              <td #bodyCell nzEllipsis>
                 {{ i| rowNumber : { index: param().pageIndex || 0, size: param().pageSize || 0} }}
               </td>
-              <td nzEllipsis title="{{ data.name }}">
+              <td #bodyCell nzEllipsis title="{{ data.name }}">
                   <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
-              <td nzEllipsis title="{{ data.levelStay }}" nzAlign="center">
+              <td #bodyCell nzEllipsis title="{{ data.levelStay }}" nzAlign="center">
                 {{ data.levelStay }}
               </td>
-              <td nzEllipsis title="{{ data.note }}">
+              <td #bodyCell nzEllipsis title="{{ data.note }}">
                 {{ data.note }}
               </td>
-              <td class="col-action">
+              <td #bodyCell class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -129,9 +137,18 @@ import { SIZE_COLUMNS } from "../../const";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  styles: [`
+    .preview-row {
+      display: table-row;
+      background-color: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+      width: 100%;
+    }
+  `],
   encapsulation: ViewEncapsulation.None,
 })
-export class MemberLevelListComponent extends BaseListComponent<MemberLevel> {
+export class MemberLevelListComponent extends BaseListComponent<MemberLevel> implements AfterViewInit{
   constructor(
     service: MemberLevelService,
     uiService: MemberLevelUiService,
@@ -140,6 +157,20 @@ export class MemberLevelListComponent extends BaseListComponent<MemberLevel> {
   ) {
     super(service, uiService, sessionStorageService, "member-level-list");
   }
+
+  columnWidths: string[] = [];
+
+  @ViewChildren('bodyCell', { read: ElementRef }) bodyCells!: QueryList<ElementRef>;
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.columnWidths = this.bodyCells.map((cell) =>
+        `${(cell.nativeElement as HTMLElement).offsetWidth}px`
+      );
+      console.log(this.columnWidths)
+    },500);
+  }
+
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isMemberLevelAdd: boolean = true;
   isMemberLevelEdit: boolean = true;

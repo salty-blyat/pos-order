@@ -16,8 +16,8 @@ export interface Member {
   idNo?: string
   nssfId?: string
   address?: string
-  unitId?: number
-  groupId?: number
+  memberUnitId?: number
+  memberGroupId?: number
   nationalityId?: number
   memberLevelId?: number
   note?: string
@@ -26,8 +26,8 @@ export interface Member {
   sexNameEn?: string
   nationalityName?: string
   nationalityNameEn?: string
-  unitName?: string
-  groupName?: string
+  memberUnitName?: string
+  memberGroupName?: string
   memberLevelName?: string
 }
 
