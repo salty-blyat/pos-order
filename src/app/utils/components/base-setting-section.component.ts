@@ -91,11 +91,10 @@ export class BaseSettingSectionComponent implements OnInit {
         this.setting.items.forEach((item: any) => {
           if (item.key.includes("Company")) {
             this.frm.get(item.key)?.patchValue(item.value);
-          } else if (item.key.includes("PavrUrl")){
-            this.frm.get(item.key)?.patchValue(item.value || this.appSettingService.setting.BASE_API_URL);
-          } else {
-            console.log(item);
-            
+          } else if (item.key.includes("PavrUrl")) {
+            this.frm.get(item.key)?.patchValue(item.value);
+          }
+          else { 
             this.frm.get(item.key)?.patchValue(parseInt(item.value));
           }
         });
