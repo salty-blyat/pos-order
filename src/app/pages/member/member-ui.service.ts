@@ -5,6 +5,7 @@ import { MemberOperationComponent } from "./member-operation.component";
 import { MainPageService } from "../../utils/services/main-page.service";
 import {MemberAdvancedFilterComponent} from "./member-advanced-filter.component";
 import {MemberDeleteComponent} from "./member-delete.component";
+import {MemberPullComponent} from "./member-pull.component";
 
 @Injectable({ providedIn: "root" })
 export class MemberUiService extends BaseUiService {
@@ -63,6 +64,19 @@ export class MemberUiService extends BaseUiService {
       nzBodyStyle: { ...this.mainPageService.getModalBodyStyle() },
       nzStyle: this.mainPageService.getModalFullPageSize(),
       nzMaskClosable: false,
+    });
+  }
+
+  showPull(): void {
+    this.modalService.create({
+      nzContent: MemberPullComponent,
+      nzClosable: true,
+      nzWidth: '350px',
+      nzBodyStyle: { paddingBottom: '10px' },
+      nzMaskClosable: false,
+      nzOnOk: (e) => {
+        this.refresher.emit({ key: 'pull', value: e.model });
+      }
     });
   }
 

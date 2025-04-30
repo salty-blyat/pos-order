@@ -67,6 +67,8 @@ export const SETTING_KEY = {
   BlockAutoId: "BlockAutoId",
   StaffAutoId: "StaffAutoId",
   MemberAutoId: "MemberAutoId",
+  PavrEnable: "PavrEnable",
+  PavrUrl: "PavrUrl",
 };
 
 export interface Setting {

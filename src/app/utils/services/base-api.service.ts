@@ -40,6 +40,15 @@ export interface OperationPage<T> {
   initControl(model: T): void;
 }
 
+export interface PullResult<T> {
+  results: T[]
+  summary: Summary
+}
+export interface Summary {
+  totalInserted?: number;
+  totalUpdated?: number;
+}
+
 export class BaseApiService<T extends SharedDomain> {
   constructor(
     protected endpoint: string,

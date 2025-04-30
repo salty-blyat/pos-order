@@ -50,7 +50,7 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
     this.search();
 
   }
-  search(filters: Filter[] = [], delay: number = 50,  ) {
+  search(filters: Filter[] = [], delay: number = 50, ) {
     if (this.isLoading()) return;
     this.isLoading.set(true);
     setTimeout(() => {
@@ -65,9 +65,8 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
       this.param().filters = JSON.stringify(filters);
       this.service.search(this.param()).subscribe({
         next: (result: { results: T[]; param: QueryParam }) => {
-          this.isLoading.set(true);
           this.lists.set(result.results);
-          this.param().rowCount = result.param.rowCount;
+          this.param.set(result.param);
           this.isLoading.set(false);
         },
         error: () => {

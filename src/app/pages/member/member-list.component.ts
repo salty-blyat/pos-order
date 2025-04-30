@@ -7,6 +7,7 @@ import {SIZE_COLUMNS} from "../../const";
 import {TranslateService} from "@ngx-translate/core";
 import {Filter} from "../../utils/services/base-api.service";
 import {RoomAdvancedFilter} from "../room/room.service";
+import {SETTING_KEY, SystemSetting, SystemSettingService} from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-member-list",
@@ -46,7 +47,11 @@ import {RoomAdvancedFilter} from "../room/room.service";
                       </nz-badge>
                   </div>
               </div>
-              <div>
+              <div nz-flex nzGap="4px" nzAlign="center">
+                  <button *ngIf="pavrEnable" nz-button nzType="primary" (click)="uiService.showPull()">
+                      <i nz-icon nzType="arrow-down" nzTheme="outline"></i>
+                      {{ 'Pull' | translate }}
+                  </button>
                   <button *ngIf="isMemberAdd" nz-button nzType="primary" (click)="uiService.showAdd()">
                       <i nz-icon nzType="plus" nzTheme="outline"></i>
                       {{ "Add" | translate }}
@@ -65,6 +70,7 @@ import {RoomAdvancedFilter} from "../room/room.service";
                       [nzPageSize]="param().pageSize || 0"
                       [nzPageIndex]="param().pageIndex || 0"
                       [nzNoResult]="noResult"
+                      [nzFrontPagination]="false"
                       (nzQueryParams)="onQueryParamsChange($event)"
               >
                   <ng-template #noResult>
@@ -76,10 +82,10 @@ import {RoomAdvancedFilter} from "../room/room.service";
                       <th nzEllipsis [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
                       <th nzEllipsis nzWidth="140px">{{ "Name" | translate }}</th>
                       <th nzEllipsis nzWidth="100px">{{ "Phone" | translate }}</th>
-                      <th nzEllipsis nzWidth="80px">{{ "Sex" | translate }}</th>
-                      <th nzEllipsis nzWidth="120px">{{ "Level" | translate }}</th>
-                      <th nzEllipsis nzWidth="120px">{{ "MemberGroup" | translate }}</th>
-                      <th nzEllipsis>{{ "Unit" | translate }}</th>
+                      <th nzEllipsis nzWidth="70px">{{ "Sex" | translate }}</th>
+                      <th nzEllipsis nzWidth="130px">{{ "MemberLevel" | translate }}</th>
+                      <th nzEllipsis nzWidth="130px">{{ "MemberGroup" | translate }}</th>
+                      <th nzEllipsis>{{ "MemberUnit" | translate }}</th>
                       <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
                   </tr>
                   </thead>
@@ -137,6 +143,7 @@ export class MemberListComponent extends BaseListComponent<Member> {
     override uiService: MemberUiService,
     sessionStorageService: SessionStorageService,
     protected translate: TranslateService,
+    private systemSettingService: SystemSettingService
   ) {
     super(service, uiService, sessionStorageService, "member-list");
   }
@@ -147,6 +154,7 @@ export class MemberListComponent extends BaseListComponent<Member> {
   sexId = signal<number>(0);
   memberGroupId = signal<number>(0);
   nationalityId = signal<number>(0);
+  pavrEnable = signal<boolean>(false);
 
   isMemberAdd: boolean = true;
   isMemberEdit: boolean = true;
@@ -167,6 +175,17 @@ export class MemberListComponent extends BaseListComponent<Member> {
         this.sessionStorageService.getValue(this.advancedStoreKey)
       );
     }
+
+    this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
+      next: (result: SystemSetting) => {
+        this.pavrEnable.set(Boolean(result.value));
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {
+      }
+    })
 
     super.ngOnInit();
   }

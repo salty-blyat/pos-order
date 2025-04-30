@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { BaseApiService } from "../../utils/services/base-api.service";
+import {BaseApiService, PullResult, Summary} from "../../utils/services/base-api.service";
 import { HttpClient } from "@angular/common/http";
 import { SettingService } from "../../app-setting";
+import {Observable} from "rxjs";
 
 export interface Member {
   id?: number;
@@ -47,9 +48,14 @@ export interface MemberAdvancedFilter {
   isAdvancedFilter: boolean;
 }
 
+
 @Injectable({ providedIn: "root" })
-export class MemberService extends BaseApiService<any> {
-  constructor(http: HttpClient, settingService: SettingService) {
+export class MemberService extends BaseApiService<Member> {
+  constructor(private http: HttpClient, settingService: SettingService) {
     super("member", http, settingService);
+  }
+
+  pull():Observable<PullResult<Member>>{
+    return this.http.post<PullResult<Member>>(`${this.getUrl()}/pull`, null)
   }
 }

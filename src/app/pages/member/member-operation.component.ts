@@ -239,10 +239,10 @@ import {AuthService} from "../../helpers/auth.service";
                                           <div nz-row>
                                               <div nz-col [nzXs]="12">
                                                   <nz-form-item>
-                                                      <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'Unit' | translate }}
+                                                      <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'MemberUnit' | translate }}
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24">
-                                                          <app-unit-select formControlName="memberUnitId"></app-unit-select>
+                                                          <app-member-unit-select formControlName="memberUnitId"></app-member-unit-select>
                                                       </nz-form-control>
                                                   </nz-form-item>
                                               </div>
@@ -251,8 +251,8 @@ import {AuthService} from "../../helpers/auth.service";
                                                       <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'MemberGroup' | translate }}
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24">
-                                                          <app-group-select
-                                                                  formControlName="memberGroupId"></app-group-select>
+                                                          <app-member-group-select
+                                                                  formControlName="memberGroupId"></app-member-group-select>
                                                       </nz-form-control>
                                                   </nz-form-item>
                                               </div>
@@ -260,7 +260,7 @@ import {AuthService} from "../../helpers/auth.service";
                                           <div>
                                               <div nz-col [nzXs]="12">
                                                   <nz-form-item>
-                                                      <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'Level' | translate }}
+                                                      <nz-form-label [nzSm]="8" [nzXs]="24">{{ 'MemberLevel' | translate }}
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24">
                                                           <app-member-level-select
