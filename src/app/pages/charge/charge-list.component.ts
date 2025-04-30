@@ -106,7 +106,7 @@ import { Filter } from "../../utils/services/base-api.service";
               <th nzWidth="100px" nzAlign="right">
                 {{ "ChargeRate" | translate }}
               </th>
-              <th nzWidth="150px">{{ "ItemUnit" | translate }}</th>
+              <th nzWidth="150px">{{ "Unit" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>

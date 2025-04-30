@@ -58,7 +58,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
-            >{{ "ItemUnit" | translate }}
+            >{{ "Unit" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
             <app-unit-select formControlName="unitId" [addOption]="true" />
@@ -74,7 +74,9 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label   [nzSm]="6" [nzXs]="24" >{{ "Note" | translate }}</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24">{{
+            "Note" | translate
+          }}</nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
             <textarea nz-input formControlName="note" rows="3"></textarea>
           </nz-form-control>
@@ -150,7 +152,8 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
       required,
       nameMaxLengthValidator,
       codeExistValidator,
-      integerValidator,noteMaxLengthValidator
+      integerValidator,
+      noteMaxLengthValidator,
     } = CommonValidators;
 
     this.frm = this.fb.group({

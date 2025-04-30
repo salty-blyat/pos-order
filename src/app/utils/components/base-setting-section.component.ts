@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormBuilder } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup, UntypedFormBuilder } from "@angular/forms";
+import { HttpErrorResponse } from "@angular/common/http";
 import {
   SETTING_KEY,
   SettingList,
   SystemSettingService,
-} from '../../pages/system-setting/system-setting.service';
-import { NotificationService } from '../../utils/services/notification.service';
-import { CommonValidators } from '../../utils/services/common-validators';
-import { SettingService } from '../../app-setting';
-import { LocalStorageService } from '../../utils/services/localStorage.service';
+} from "../../pages/system-setting/system-setting.service";
+import { NotificationService } from "../../utils/services/notification.service";
+import { CommonValidators } from "../../utils/services/common-validators";
+import { SettingService } from "../../app-setting";
+import { LocalStorageService } from "../../utils/services/localStorage.service";
 
 @Component({
-    template: ``,
-    standalone: false
+  template: ``,
+  standalone: false,
 })
 export class BaseSettingSectionComponent implements OnInit {
   constructor(
@@ -47,19 +47,23 @@ export class BaseSettingSectionComponent implements OnInit {
       }
       this.setting.set(key, this.frm.controls[key].value);
     });
-
+    console.log(this.setting);
+    console.log('key',this.keys);
     this.settingService.updateByItems(this.setting.items).subscribe({
       next: () => {
         this.settingService.initCurrentSetting().subscribe({
           next: () => {
             this.loading = false;
             this.notificationService.successNotification(
-              'Successfully Updated'
+              "Successfully Updated"
             );
           },
         });
       },
       error: (err: HttpErrorResponse) => {
+        this.loading = false;
+      },
+      complete: () => {
         this.loading = false;
       },
     });
@@ -85,9 +89,13 @@ export class BaseSettingSectionComponent implements OnInit {
       next: (result) => {
         this.setting = result;
         this.setting.items.forEach((item: any) => {
-          if (item.key.includes('Company')) {
+          if (item.key.includes("Company")) {
             this.frm.get(item.key)?.patchValue(item.value);
+          } else if (item.key.includes("PavrUrl")){
+            this.frm.get(item.key)?.patchValue(item.value || this.appSettingService.setting.BASE_API_URL);
           } else {
+            console.log(item);
+            
             this.frm.get(item.key)?.patchValue(parseInt(item.value));
           }
         });
@@ -95,6 +103,9 @@ export class BaseSettingSectionComponent implements OnInit {
         this.loading = false;
       },
       error: (err: HttpErrorResponse) => {
+        this.loading = false;
+      },
+      complete: () => {
         this.loading = false;
       },
     });

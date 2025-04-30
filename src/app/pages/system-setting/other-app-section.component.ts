@@ -1,6 +1,6 @@
 import { Component, effect, signal, ViewEncapsulation } from "@angular/core";
 import { UntypedFormBuilder } from "@angular/forms";
-import { SystemSettingService } from "./system-setting.service";
+import { SETTING_KEY, SystemSettingService } from "./system-setting.service";
 import { BaseSettingSectionComponent } from "../../utils/components/base-setting-section.component";
 
 import { NotificationService } from "../../utils/services/notification.service";
@@ -30,10 +30,7 @@ import { HttpClient } from "@angular/common/http";
     >
       <nz-form-item>
         <nz-form-control [nzSm]="7" nzAlign="right" style="text-align: right">
-          <label
-            [nzChecked]="isHrSystemChecked()"
-            (nzCheckedChange)="isHrSystemChecked.set($event)"
-            nz-checkbox
+          <label formControlName="{{ SettingKey.PavrEnable }}" nz-checkbox
             >HR System</label
           >
         </nz-form-control>
@@ -44,7 +41,7 @@ import { HttpClient } from "@angular/common/http";
           {{ "Url" | translate }}
         </nz-form-label>
         <nz-form-control [nzSm]="8" [nzXs]="24">
-          <input formControlName="url" nz-input />
+          <input formControlName="{{ SettingKey.PavrUrl }}" nz-input />
         </nz-form-control>
       </nz-form-item>
 
@@ -56,7 +53,7 @@ import { HttpClient } from "@angular/common/http";
             {{ "Test" | translate }}
           </button>
 
-          <button nz-button nzType="primary">
+          <button nz-button nzType="primary" (click)="submit()">
             <i *ngIf="loading" nz-icon nzType="loading"></i>
             {{ "Save" | translate }}
           </button>
@@ -90,8 +87,6 @@ import { HttpClient } from "@angular/common/http";
   encapsulation: ViewEncapsulation.None,
 })
 export class OtherAppSectionComponent extends BaseSettingSectionComponent {
-  isHrSystemChecked = signal(false);
-
   constructor(
     fb: UntypedFormBuilder,
     settingService: SystemSettingService,
@@ -99,29 +94,21 @@ export class OtherAppSectionComponent extends BaseSettingSectionComponent {
     appSettingService: SettingService
   ) {
     super(fb, settingService, notificationService, appSettingService);
-
     effect(() => {
-      const checked = this.isHrSystemChecked();
-      const urlControl = this.frm?.get("url");
-      if (urlControl) {
-        if (checked) {
-          urlControl.enable({ emitEvent: this.isHrSystemChecked() });
+      this.frm.get("PavrEnable")?.valueChanges.subscribe((value) => {
+        if (value) {
+          this.frm
+            .get("PavrUrl")
+            ?.setValue(this.appSettingService.setting.BASE_API_URL);
+          this.frm.controls["PavrUrl"].disable();
         } else {
-          urlControl.reset(this.appSettingService.setting.BASE_API_URL, {
-            emitEvent: false,
-          });
-          urlControl.disable({ emitEvent: this.isHrSystemChecked() });
+          this.frm.controls["PavrUrl"].enable();
         }
-      }
+      });
     });
-  }
+  } 
 
-  override ngOnInit(): void {
-    const { required } = CommonValidators;
-    this.frm = this.fb.group({
-      url: [this.appSettingService.setting.BASE_API_URL, required],
-    });
-  }
+  override keys = [SETTING_KEY.PavrEnable, SETTING_KEY.PavrUrl];
 
   testPavr() {
     if (this.loading) {
@@ -132,7 +119,7 @@ export class OtherAppSectionComponent extends BaseSettingSectionComponent {
     // }
     this.loading = true;
     this.settingService
-      .pavrTestUrl(this.frm.get("url")?.getRawValue())
+      .pavrTestUrl(this.frm.get("PavrUrl")?.getRawValue())
       .subscribe({
         next: () => {
           this.settingService.initCurrentSetting().subscribe({
@@ -145,6 +132,9 @@ export class OtherAppSectionComponent extends BaseSettingSectionComponent {
           });
         },
         error: (err: HttpErrorResponse) => {
+          this.loading = false;
+        },
+        complete: () => {
           this.loading = false;
         },
       });

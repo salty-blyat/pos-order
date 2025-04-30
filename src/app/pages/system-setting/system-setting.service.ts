@@ -216,8 +216,11 @@ export class SystemSettingService {
       );
   }
   pavrTestUrl(url: string): Observable<any> {
-    return this.http.post(`${this.settingService.setting.BASE_API_URL}/pavrapi/test`, {
-      url,
-    });
+    return this.http.post(
+      `${this.settingService.setting.BASE_API_URL}/pavrapi/test`,
+      {
+        url,
+      }
+    );
   }
 }
