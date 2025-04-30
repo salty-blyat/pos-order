@@ -235,5 +235,7 @@ export class ChargeListComponent extends BaseListComponent<Charge> {
   }
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 
-
+  override ngOnInit(): void {
+    super.ngOnInit(); 
+  }
 }

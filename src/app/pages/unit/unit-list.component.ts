@@ -54,7 +54,7 @@ import { UnitUiService } from "./unit-ui.service";
                       [nzPageSize]="param().pageSize || 0"
                       [nzPageIndex]="param().pageIndex || 0"
                       [nzNoResult]="noResult"
-                      nzHideOnSinglePage="true"
+                      
                       [nzFrontPagination]="false"
                       (nzQueryParams)="onQueryParamsChange($event)"
               >

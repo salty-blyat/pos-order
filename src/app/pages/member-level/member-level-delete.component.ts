@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -15,22 +15,11 @@ import { MemberLevelUiService } from "./member-level-ui.component";
       >
     </div>
     <div class="modal-content">
-      <nz-spin
-        *ngIf="isLoading()"
-        style="position: absolute; top: 50%; left: 50%"
-      ></nz-spin>
-      <div
-        *ngIf="errMessage() && !isLoading()"
-        nz-row
-        nzJustify="center"
-        style="margin:2px 0"
-      >
-        <span
-          nz-typography
-          nzType="danger"
-          style="position: absolute; z-index: 1; top: 18%"
-          >{{ errMessage() | translate }}</span
-        >
+      <app-loading *ngIf="isLoading()"></app-loading>
+      <div *ngIf="errMessage() && !isLoading()" class="delete-error-message ">
+        <span nz-typography nzType="danger">{{
+          errMessage() | translate
+        }}</span>
       </div>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
@@ -74,8 +63,9 @@ import { MemberLevelUiService } from "./member-level-ui.component";
       </button>
     </div>
   `,
-  styleUrls: ["../../../assets/scss/operation_modal.scss"],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MemberLevelDeleteComponent extends BaseDeleteComponent<MemberLevel> {
   constructor(

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, signal, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -6,6 +6,10 @@ import { NzModalRef } from "ng-zorro-antd/modal";
 import { MemberLevelService } from "./member-level.service";
 import { MemberLevel } from "./member-level.service";
 import { MemberLevelUiService } from "./member-level-ui.component";
+import {
+  SETTING_KEY,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-member-level-operation",
@@ -21,16 +25,22 @@ import { MemberLevelUiService } from "./member-level-ui.component";
       }}</span>
     </div>
     <div class="modal-content">
-      <nz-spin
-        *ngIf="isLoading()"
-        style="position: absolute; top: 50%; left: 50%"
-      ></nz-spin>
-      <form
-        nz-form
-        [formGroup]="frm"
-        
-        [nzAutoTips]="autoTips"
-      >
+      <app-loading *ngIf="isLoading()"></app-loading>
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Code" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+            <input
+              nz-input
+              formControlName="code"
+              [placeholder]="
+                memberLevelAutoIdEnable() ? ('NewCode' | translate) : ''
+              "
+            />
+          </nz-form-control>
+        </nz-form-item>
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "Name" | translate }}
@@ -52,11 +62,7 @@ import { MemberLevelUiService } from "./member-level-ui.component";
             >{{ "Note" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
-            <textarea
-              nz-input
-              rows="3"
-              formControlName="note"
-            ></textarea>
+            <textarea nz-input rows="3" formControlName="note"></textarea>
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -116,6 +122,7 @@ export class MemberLevelOperationComponent extends BaseOperationComponent<Member
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<MemberLevelOperationComponent>,
+    public systemSettingService: SystemSettingService,
     service: MemberLevelService,
     uiService: MemberLevelUiService
   ) {
@@ -124,30 +131,60 @@ export class MemberLevelOperationComponent extends BaseOperationComponent<Member
 
   isMemberLevelEdit: boolean = true;
   isMemberLevelRemove: boolean = true;
+  memberLevelAutoIdEnable = signal<boolean>(false);
 
   override initControl(): void {
     const {
       required,
       noteMaxLengthValidator,
       nameExistValidator,
+      codeExistValidator,
       integerValidator,
     } = CommonValidators;
     this.frm = this.fb.group({
+      code: [
+        null,
+        [required, noteMaxLengthValidator()],
+        [codeExistValidator(this.service, this.modal?.id)],
+      ],
       name: [
         null,
         [required, noteMaxLengthValidator()],
         [nameExistValidator(this.service, this.modal?.id)],
       ],
-      levelStay: [null, [required,integerValidator]],
+      levelStay: [null, [required, integerValidator]],
       note: [null],
     });
   }
 
   override setFormValue() {
     this.frm.setValue({
+      code: this.model.code,
       name: this.model.name,
       levelStay: this.model.levelStay,
       note: this.model.note,
+    });
+  }
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    const { required } = CommonValidators;
+    this.systemSettingService.find(SETTING_KEY.MemberLevelAutoId).subscribe({
+      next: (result: any) => { 
+        if (result === 0) {
+          this.memberLevelAutoIdEnable.set(false);
+          this.frm.controls["code"].enable();
+          this.frm.controls["code"].setValidators([required]);
+        } else {
+          this.memberLevelAutoIdEnable.set(true);
+          this.frm.controls["code"].disable();
+          this.frm.controls["code"].setValidators([]);
+        } 
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => { },
     });
   }
 }

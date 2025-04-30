@@ -6,6 +6,7 @@ export interface MemberLevel {
   id?: number;
   levelStay?: number;
   name?: string;
+  code?: string;
   note?: string;
   ordering?: number;
 }

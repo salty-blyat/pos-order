@@ -36,7 +36,13 @@ import {
             >{{ "Code" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="code" />
+            <input
+              nz-input
+              formControlName="code"
+              [placeholder]="
+                chargesAutoIdEnable() ? ('NewCode' | translate) : ''
+              "
+            />
           </nz-form-control>
         </nz-form-item>
 
@@ -192,15 +198,15 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
 
   override ngOnInit(): void {
     super.ngOnInit();
-    const {required} = CommonValidators;
+    const { required } = CommonValidators;
     this.systemSettingService.find(SETTING_KEY.ChargesAutoId).subscribe({
       next: (result: any) => {
         if (result === 0) {
-          this.chargesAutoIdEnable.set(true);
+          this.chargesAutoIdEnable.set(false);
           this.frm.controls["code"].enable();
           this.frm.controls["code"].setValidators([required]);
         } else {
-          this.chargesAutoIdEnable.set(false);
+          this.chargesAutoIdEnable.set(true);
           this.frm.controls["code"].disable();
           this.frm.controls["code"].setValidators([]);
         }

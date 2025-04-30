@@ -70,7 +70,7 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
           [nzPageSize]="param().pageSize || 0"
           [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
-          nzHideOnSinglePage="true"
+          
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
         >

@@ -15,7 +15,11 @@ import { MemberLevelUiService } from "./member-level-ui.component";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { SIZE_COLUMNS } from "../../const";
-import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-setting/system-setting.service";
+import {
+  SETTING_KEY,
+  SystemSetting,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-member-level-list",
@@ -79,7 +83,6 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
           [nzPageSize]="param().pageSize || 0"
           [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
-          nzHideOnSinglePage="true"
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
         >
@@ -90,9 +93,10 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th nzWidth="100px">{{ "LevelStay" | translate }}</th>
-              <th>{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -116,8 +120,11 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
                         }
                 }}
               </td>
-              <td #bodyCell nzEllipsis title="{{ data.name }}">
-                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+              <td nzEllipsis title="{{ data.code }}">
+                <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
+              </td>
+              <td nzEllipsis title="{{ data.name }}">
+                {{ data.name }}
               </td>
               <td
                 #bodyCell
@@ -208,10 +215,11 @@ export class MemberLevelListComponent
   isMemberLevelEdit: boolean = true;
   isMemberLevelRemove: boolean = true;
   isMemberLevelView: boolean = true;
-  readonly SIZE_COLUMNS = SIZE_COLUMNS; 
-  pavrEnable = signal<boolean>(false); 
+  readonly SIZE_COLUMNS = SIZE_COLUMNS;
+  pavrEnable = signal<boolean>(false);
 
   override ngOnInit(): void {
+    super.ngOnInit();
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
       next: (result: SystemSetting) => {
         this.pavrEnable.set(Boolean(result.value));

@@ -17,10 +17,9 @@ import { ItemUiService } from "./item-ui.service";
       >
     </div>
     <div class="modal-content">
-      <nz-spin
+      <app-loading
         *ngIf="isLoading()"
-        style="position: absolute; top: 50%; left: 50%"
-      ></nz-spin>
+      ></app-loading>
 
       <div *ngIf="errMessage() && !isLoading()" class="delete-error-message ">
         <span nz-typography nzType="danger">{{ errMessage() | translate }}</span>
