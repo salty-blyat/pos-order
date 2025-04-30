@@ -15,7 +15,6 @@ export interface RoomChargeType {
 })
 export class RoomChargeTypeService extends BaseApiService<RoomChargeType> {
   constructor(private http: HttpClient, settingService: SettingService) {
-    // super("roomchargetype", http, settingService);
-    super("", http, settingService);
+    super("roomchargetype", http, settingService); 
   }
 }

@@ -12,147 +12,157 @@ import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Room, RoomAdvancedFilter, RoomService } from "./room.service";
 import { RoomUiService } from "./room-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
-import {Filter, QueryParam} from "../../utils/services/base-api.service";
-import {SIZE_COLUMNS} from "../../const";
-import {TranslateService} from "@ngx-translate/core";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
+import { SIZE_COLUMNS } from "../../const";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-room-list",
   template: `
-      <nz-header>
-        <div nz-row>
-          <div nz-col>
-            <app-filter-input
-              storageKey="room-list-search"
-              (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
-            >
-            </app-filter-input>
-          </div>
-          <div nz-col>
-              <app-lookup-item-select
-                      [lookupType]="lookupType.Status"
-                      [showAllOption]="true"
-                      storageKey="room-list-room-type-filter"
-                      [typeLabelAll]="'AllRoomStatus' | translate"
-                      (valueChanged)="roomStatusId.set($event); param().pageIndex = 1; search()"
-              ></app-lookup-item-select>
-          </div>
-          <div>
-            <nz-badge [nzDot]="hasAdvancedFilter()">
-              <button
-                nz-button
-                nzType="default"
-                (click)="uiService.showAdvancedFilter(advancedStoreKey)"
-              >
-                <a nz-icon nzType="align-right" nzTheme="outline"></a>
-              </button>
-            </nz-badge>
-          </div>
+    <nz-header>
+      <div nz-row>
+        <div nz-col>
+          <app-filter-input
+            storageKey="room-list-search"
+            (filterChanged)="
+              searchText.set($event); param().pageIndex = 1; search()
+            "
+          >
+          </app-filter-input>
         </div>
         <div nz-col>
-          <button
-            *ngIf="isRoomTypeAdd()"
-            nz-button
-            nzType="primary"
-            (click)="uiService.showAdd()"
-          >
-            <i nz-icon nzType="plus" nzTheme="outline"></i
-            >{{ "Add" | translate }}
-          </button>
+          <app-lookup-item-select
+            [lookupType]="lookupType.Status"
+            [showAllOption]="true"
+            storageKey="room-list-room-type-filter"
+            [typeLabelAll]="'AllRoomStatus' | translate"
+            (valueChanged)="
+              roomStatusId.set($event); param().pageIndex = 1; search()
+            "
+          ></app-lookup-item-select>
         </div>
-      </nz-header>
-      <nz-content>
-        <nz-table
-          nzSize="small"
-          nzShowSizeChanger
-          #fixedTable
-          nzTableLayout="fixed"
-          [nzPageSizeOptions]="pageSizeOption()"
-          [nzData]="lists()"
-          [nzLoading]="isLoading()"
-          [nzTotal]="param().rowCount || 0"
-          [nzPageSize]="param().pageSize || 0"
-          [nzPageIndex]="param().pageIndex || 0"
-          [nzNoResult]="noResult"
-          [nzFrontPagination]="false"
-          (nzQueryParams)="onQueryParamsChange($event)"
+        <div>
+          <nz-badge [nzDot]="hasAdvancedFilter()">
+            <button
+              nz-button
+              nzType="default"
+              (click)="uiService.showAdvancedFilter(advancedStoreKey)"
+            >
+              <a nz-icon nzType="align-right" nzTheme="outline"></a>
+            </button>
+          </nz-badge>
+        </div>
+      </div>
+      <div nz-col>
+        <button
+          *ngIf="isRoomTypeAdd()"
+          nz-button
+          nzType="primary"
+          (click)="uiService.showAdd()"
         >
-          <ng-template #noResult>
-            <app-no-result-found></app-no-result-found>
-          </ng-template>
-          <thead>
-            <tr>
-              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-              <th nzWidth="100px">{{ "RoomNumber" | translate }}</th>
-              <th nzWidth="150px">{{ "RoomType" | translate }}</th>
-              <th nzWidth="150px">{{ "Floor" | translate }}</th>
-              <th nzWidth="150px">{{ "Status" | translate }}</th>
-              <th>{{ "Note" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of lists(); let i = index">
-              <td nzEllipsis>
-                {{ i | rowNumber: { index: param().pageIndex || 0, size: param().pageSize || 0} }}
-              </td>
-              <td nzEllipsis>
-                  @if (isRoomTypeView()) {
-                      <a (click)="uiService.showView(data.id!)">
-                          {{ data.roomNumber }}
-                      </a> 
-                  } @else {
-                      <span>{{ data.roomNumber }}</span>
-                  }
-              </td>
-              <td nzEllipsis>{{ data.roomTypeName }}</td>
-              <td nzEllipsis>{{ data.floorName }}</td>
-              <td nzEllipsis>
-                  @if (translate.currentLang == 'en') {
-                      {{  data.statusNameEn ?? data.statusName  }}
-                  }@else {
-                      {{  data.statusName ?? data.statusNameEn  }}
-                  }
-              </td>
-              <td nzEllipsis>{{ data.note }}</td>
-              <td class="col-action">
-                <nz-space [nzSplit]="spaceSplit">
-                  <ng-template #spaceSplit>
-                    <nz-divider nzType="vertical"></nz-divider>
-                  </ng-template>
-                  <ng-container *ngIf="isRoomTypeEdit()">
-                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
-                      <i
-                        nz-icon
-                        nzType="edit"
-                        nzTheme="outline"
-                        style="padding-right: 5px"
-                      ></i>
-                      {{ "Edit" | translate }}
-                    </a>
-                  </ng-container>
-                  <ng-container *ngIf="isRoomTypeRemove()">
-                    <a
-                      *nzSpaceItem
-                      nz-typography
-                      style="color: #F31313"
-                      (click)="uiService.showDelete(data.id || 0)"
-                    >
-                      <i
-                        nz-icon
-                        nzType="delete"
-                        nzTheme="outline"
-                        style="padding-right: 5px"
-                      ></i>
-                      {{ "Delete" | translate }}
-                    </a>
-                  </ng-container>
-                </nz-space>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
-      </nz-content>
+          <i nz-icon nzType="plus" nzTheme="outline"></i>{{ "Add" | translate }}
+        </button>
+      </div>
+    </nz-header>
+    <nz-content>
+      <nz-table
+        nzSize="small"
+        nzShowSizeChanger
+        #fixedTable
+        nzTableLayout="fixed"
+        [nzPageSizeOptions]="pageSizeOption()"
+        [nzData]="lists()"
+        [nzLoading]="isLoading()"
+        [nzTotal]="param().rowCount || 0"
+        [nzPageSize]="param().pageSize || 0"
+        [nzPageIndex]="param().pageIndex || 0"
+        [nzNoResult]="noResult"
+        [nzFrontPagination]="false"
+        (nzQueryParams)="onQueryParamsChange($event)"
+      >
+        <ng-template #noResult>
+          <app-no-result-found></app-no-result-found>
+        </ng-template>
+        <thead>
+          <tr>
+            <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+            <th nzWidth="100px">{{ "RoomNumber" | translate }}</th>
+            <th nzWidth="150px">{{ "RoomType" | translate }}</th>
+            <th nzWidth="150px">{{ "Floor" | translate }}</th>
+            <th nzWidth="150px">{{ "Status" | translate }}</th>
+            <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+            <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of lists(); let i = index">
+            <td nzEllipsis>
+              {{
+                i
+                  | rowNumber
+                    : {
+                        index: param().pageIndex || 0,
+                        size: param().pageSize || 0
+                      }
+              }}
+            </td>
+            <td nzEllipsis>
+              @if (isRoomTypeView()) {
+              <a (click)="uiService.showView(data.id!)">
+                {{ data.roomNumber }}
+              </a>
+              } @else {
+              <span>{{ data.roomNumber }}</span>
+              }
+            </td>
+            <td nzEllipsis>{{ data.roomTypeName }}</td>
+            <td nzEllipsis>{{ data.floorName }}</td>
+            <td nzEllipsis>
+              @if (translate.currentLang == 'en') {
+              {{ data.statusNameEn ?? data.statusName }}
+              }@else {
+              {{ data.statusName ?? data.statusNameEn }}
+              }
+            </td>
+            <td nzEllipsis>{{ data.note }}</td>
+            <td class="col-action">
+              <nz-space [nzSplit]="spaceSplit">
+                <ng-template #spaceSplit>
+                  <nz-divider nzType="vertical"></nz-divider>
+                </ng-template>
+                <ng-container *ngIf="isRoomTypeEdit()">
+                  <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
+                    <i
+                      nz-icon
+                      nzType="edit"
+                      nzTheme="outline"
+                      style="padding-right: 5px"
+                    ></i>
+                    {{ "Edit" | translate }}
+                  </a>
+                </ng-container>
+                <ng-container *ngIf="isRoomTypeRemove()">
+                  <a
+                    *nzSpaceItem
+                    nz-typography
+                    style="color: #F31313"
+                    (click)="uiService.showDelete(data.id || 0)"
+                  >
+                    <i
+                      nz-icon
+                      nzType="delete"
+                      nzTheme="outline"
+                      style="padding-right: 5px"
+                    ></i>
+                    {{ "Delete" | translate }}
+                  </a>
+                </ng-container>
+              </nz-space>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-content>
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
@@ -201,16 +211,17 @@ export class RoomListComponent extends BaseListComponent<Room> {
     this.search();
   }
 
-    getAdvancedFilter() {
-        const advancedFilter: RoomAdvancedFilter = this.sessionStorageService.getValue(this.advancedStoreKey);
-        this.hasAdvancedFilter.set(advancedFilter?.isAdvancedFilter ?? false);
-    }
-    setAdvancedFilter(advancedFilter: RoomAdvancedFilter) {
-        this.roomStatusId.set(advancedFilter.roomStatusId);
-        this.tagIds = advancedFilter.tagIds.filter((id: number) => id !== 0);
-        this.floorId = advancedFilter.floorId;
-        this.roomTypeId.set(advancedFilter.roomTypeId);
-    }
+  getAdvancedFilter() {
+    const advancedFilter: RoomAdvancedFilter =
+      this.sessionStorageService.getValue(this.advancedStoreKey);
+    this.hasAdvancedFilter.set(advancedFilter?.isAdvancedFilter ?? false);
+  }
+  setAdvancedFilter(advancedFilter: RoomAdvancedFilter) {
+    this.roomStatusId.set(advancedFilter.roomStatusId);
+    this.tagIds = advancedFilter.tagIds.filter((id: number) => id !== 0);
+    this.floorId = advancedFilter.floorId;
+    this.roomTypeId.set(advancedFilter.roomTypeId);
+  }
 
   override search() {
     const filters: Filter[] = [];
@@ -230,13 +241,13 @@ export class RoomListComponent extends BaseListComponent<Room> {
       });
     }
 
-      if (this.roomStatusId()) {
-        filters.push({
-          field: "status",
-          operator: "eq",
-          value: this.roomStatusId(),
-        });
-      }
+    if (this.roomStatusId()) {
+      filters.push({
+        field: "status",
+        operator: "eq",
+        value: this.roomStatusId(),
+      });
+    }
 
     if (this.tagIds.length > 0) {
       filters.push({

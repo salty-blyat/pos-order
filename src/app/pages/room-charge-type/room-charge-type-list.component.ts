@@ -31,7 +31,7 @@ import { RoomListComponent } from "../room/room-list.component";
       ></app-breadcrumb>
       <nz-header>
         <div nz-row >
-          <div nz-col>
+          <div nz-col  nzSpan="5">
             <app-filter-input
               storageKey="room-charge-type-list-search"
               (filterChanged)="
@@ -39,7 +39,7 @@ import { RoomListComponent } from "../room/room-list.component";
               "
             ></app-filter-input>
           </div>
-          <div nz-col>
+          <div nz-col nzSpan="5">
             <app-floor-select
               #floorSelect
               [showAllOption]="true"
@@ -47,7 +47,7 @@ import { RoomListComponent } from "../room/room-list.component";
               (valueChanged)="floorId.set($event); param().pageIndex = 1"
             ></app-floor-select>
           </div>
-          <div nz-col>
+          <div nz-col nzSpan="5">
             <app-room-select
               #roomSelect
               [floorId]="this.floorId()"
@@ -58,7 +58,7 @@ import { RoomListComponent } from "../room/room-list.component";
               "
             ></app-room-select>
           </div>
-          <div nz-col>
+          <div nz-col nzSpan="5">
             <app-lookup-item-select
               formControlName="chargeTypeId"
               [showAll]="'AllChargeType' | translate"
