@@ -5,23 +5,24 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import { NzModalRef } from "ng-zorro-antd/modal";
-import { MemberUnit, MemberUnitService } from "./member-unit.service";
-import { NzNotificationService } from "ng-zorro-antd/notification";
+import { NzModalRef } from "ng-zorro-antd/modal"; 
+import { NotificationService } from "../../utils/services/notification.service";
 import { Summary } from "../../utils/services/base-api.service";
+import { NzNotificationService } from "ng-zorro-antd/notification";
+import { MemberGroup, MemberGroupService } from "./member-group.service";
 
 @Component({
-  selector: "app-member-unit-pull",
+  selector: "app-member-group-pull",
   template: `
     <div *nzModalTitle>
-      <span>{{ "MemberUnit" | translate }}</span>
+      <span>{{ "MemberGroup" | translate }}</span>
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
       <a>
         <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
       </a>
-      <span>{{ "PullMemberUnit" | translate }} !</span>
+      <span>{{ "PullMemberGroup" | translate }} !</span>
       <ng-template #notificationTemp>
         <div class="ant-notification-notice-content">
           <div class="ant-notification-notice-with-icon">
@@ -68,7 +69,6 @@ import { Summary } from "../../utils/services/base-api.service";
       </button>
     </div>
   `,
-  styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
       .modal-content {
@@ -87,30 +87,28 @@ import { Summary } from "../../utils/services/base-api.service";
       }
     `,
   ],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class MemberUnitPullComponent {
+export class MemberGroupPullComponent {
   constructor(
-    public ref: NzModalRef<MemberUnitPullComponent>,
-    private service: MemberUnitService,
+    private ref: NzModalRef<MemberGroupPullComponent>,
+    private service: MemberGroupService,
+    private notificationService: NotificationService,
     private notification: NzNotificationService
   ) {}
 
   @ViewChild("notificationTemp") notificationTemp!: TemplateRef<any>;
   isLoading = signal<boolean>(false);
-  model: MemberUnit = {};
+  model: MemberGroup = {};
   summary: Summary = {};
-
-  cancel() {
-    this.ref.triggerCancel().then();
-  }
 
   onSubmit(e: MouseEvent) {
     if (e.detail === 1 || e.detail === 0) {
       this.isLoading.set(true);
       this.service.pull().subscribe({
-        next: (result: { results: MemberUnit[]; summary: Summary }) => {
+        next: (result: { results: MemberGroup[]; summary: Summary }) => {
           this.notification.template(this.notificationTemp);
           this.summary = result.summary;
           this.ref.triggerOk().then();
@@ -122,5 +120,9 @@ export class MemberUnitPullComponent {
         },
       });
     }
+  }
+
+  cancel() {
+    this.ref.triggerCancel().then();
   }
 }

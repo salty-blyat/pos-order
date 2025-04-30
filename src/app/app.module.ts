@@ -166,8 +166,9 @@ import { MemberUnitOperationComponent } from "./pages/member-unit/member-unit-op
 import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
 import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
 import { MemberDeleteComponent } from "./pages/member/member-delete.component";
-import {MemberPullComponent} from "./pages/member/member-pull.component";
+import { MemberPullComponent } from "./pages/member/member-pull.component";
 import { MemberUnitPullComponent } from "./pages/member-unit/member-unit-pull.component";
+import { MemberGroupPullComponent } from "./pages/member-group/member-group-pull.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -360,6 +361,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberGroupOperationComponent,
     MemberGroupDeleteComponent,
     MemberGroupSelectComponent,
+    MemberGroupPullComponent,
 
     RoomInventoryListComponent,
 

@@ -1,8 +1,12 @@
 import { Injectable } from "@angular/core";
-import {BaseApiService, PullResult, Summary} from "../../utils/services/base-api.service";
+import {
+  BaseApiService,
+  PullResult,
+  Summary,
+} from "../../utils/services/base-api.service";
 import { HttpClient } from "@angular/common/http";
 import { SettingService } from "../../app-setting";
-import {Observable} from "rxjs";
+import { Observable } from "rxjs";
 
 export interface Member {
   id?: number;
@@ -10,35 +14,35 @@ export interface Member {
   name?: string;
   sexId?: number;
   phone?: string;
-  nameEn?: string
-  photo?: string
-  email?: string
-  birthDate?: string
-  idNo?: string
-  nssfId?: string
-  address?: string
-  memberUnitId?: number
-  memberGroupId?: number
-  nationalityId?: number
-  memberLevelId?: number
-  note?: string
-  attachments?: Attachment[]
-  sexName?: string
-  sexNameEn?: string
-  nationalityName?: string
-  nationalityNameEn?: string
-  memberUnitName?: string
-  memberGroupName?: string
-  memberLevelName?: string
+  nameEn?: string;
+  photo?: string;
+  email?: string;
+  birthDate?: string;
+  idNo?: string;
+  nssfId?: string;
+  address?: string;
+  memberUnitId?: number;
+  memberGroupId?: number;
+  nationalityId?: number;
+  memberLevelId?: number;
+  note?: string;
+  attachments?: Attachment[];
+  sexName?: string;
+  sexNameEn?: string;
+  nationalityName?: string;
+  nationalityNameEn?: string;
+  memberUnitName?: string;
+  memberGroupName?: string;
+  memberLevelName?: string;
 }
 
 export interface Attachment {
-  uid?: string
-  url?: string
-  name?: string
-  type?: string
-  date?: Date
-  by?: string
+  uid?: string;
+  url?: string;
+  name?: string;
+  type?: string;
+  date?: Date;
+  by?: string;
 }
 
 export interface MemberAdvancedFilter {
@@ -48,14 +52,9 @@ export interface MemberAdvancedFilter {
   isAdvancedFilter: boolean;
 }
 
-
 @Injectable({ providedIn: "root" })
 export class MemberService extends BaseApiService<Member> {
   constructor(private http: HttpClient, settingService: SettingService) {
     super("member", http, settingService);
-  }
-
-  pull():Observable<PullResult<Member>>{
-    return this.http.post<PullResult<Member>>(`${this.getUrl()}/pull`, null)
   }
 }

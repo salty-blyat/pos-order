@@ -15,8 +15,5 @@ export interface MemberUnit {
 export class MemberUnitService extends BaseApiService<MemberUnit> {
   constructor(public http: HttpClient, settingService: SettingService) {
     super("memberunit", http, settingService);
-  }
-  pull():Observable<PullResult<MemberUnit>>{
-    return this.http.post<PullResult<MemberUnit>>(`${this.getUrl()}/pull`, null)
-  }
+  } 
 }

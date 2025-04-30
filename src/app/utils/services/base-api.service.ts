@@ -1,9 +1,9 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { SettingService } from '../../app-setting';
-import { FormGroup } from '@angular/forms';
-import { Data } from '@angular/router';
-import {Floor} from "../../pages/floor/floor.service";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { SettingService } from "../../app-setting";
+import { FormGroup } from "@angular/forms";
+import { Data } from "@angular/router";
+import { Floor } from "../../pages/floor/floor.service";
 
 export interface QueryParam {
   pageCount?: number;
@@ -41,8 +41,8 @@ export interface OperationPage<T> {
 }
 
 export interface PullResult<T> {
-  results: T[]
-  summary: Summary
+  results: T[];
+  summary: Summary;
 }
 export interface Summary {
   totalInserted?: number;
@@ -55,22 +55,23 @@ export class BaseApiService<T extends SharedDomain> {
     protected httpClient: HttpClient,
     public settingService: SettingService
   ) {}
-  public getUrl = (): string => `${this.settingService.setting.BASE_API_URL}/${this.endpoint}`;
+  public getUrl = (): string =>
+    `${this.settingService.setting.BASE_API_URL}/${this.endpoint}`;
 
   public getStaticUrl = (): string => `assets/data/${this.endpoint}`;
 
   public search(query: QueryParam): Observable<SearchResult<T>> {
     return this.httpClient.get<SearchResult<T>>(`${this.getUrl()}`, {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       }),
       params: new HttpParams()
-        .append('pageIndex', `${query.pageIndex}`)
-        .append('pageSize', `${query.pageSize}`)
-        .append('sorts', `${query.sorts === undefined ? '' : query.sorts}`)
+        .append("pageIndex", `${query.pageIndex}`)
+        .append("pageSize", `${query.pageSize}`)
+        .append("sorts", `${query.sorts === undefined ? "" : query.sorts}`)
         .append(
-          'filters',
-          `${query.filters === undefined ? '' : query.filters}`
+          "filters",
+          `${query.filters === undefined ? "" : query.filters}`
         ),
     });
   }
@@ -94,13 +95,13 @@ export class BaseApiService<T extends SharedDomain> {
   }
 
   public edit(model: T): Observable<T> {
-    return this.httpClient.put<T>(this.getUrl() + '/' + model.id, model);
+    return this.httpClient.put<T>(this.getUrl() + "/" + model.id, model);
   }
 
   public delete(model: T): Observable<T> {
     const options = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       }),
       body: model,
     };
@@ -115,7 +116,11 @@ export class BaseApiService<T extends SharedDomain> {
     );
   }
 
-  public exists(name: string = '', id: number = 0, params: { key: string; val: any }[] = []): Observable<boolean> {
+  public exists(
+    name: string = "",
+    id: number = 0,
+    params: { key: string; val: any }[] = []
+  ): Observable<boolean> {
     if (!params) {
       params = [];
     }
@@ -124,19 +129,19 @@ export class BaseApiService<T extends SharedDomain> {
       httpParams = httpParams.append(pair.key, pair.val);
     });
     if (name) {
-      httpParams = httpParams.append('name', name);
+      httpParams = httpParams.append("name", name);
     }
-    httpParams = httpParams.append('id', `${id}`);
+    httpParams = httpParams.append("id", `${id}`);
     return this.httpClient.get<boolean>(`${this.getUrl()}/exists`, {
       params: httpParams,
-      headers: { disabledLoading: 'yes' },
+      headers: { disabledLoading: "yes" },
     });
   }
 
   public _get_httpHeader(param: any): object {
     return {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       }),
       params: param,
     };
@@ -144,25 +149,28 @@ export class BaseApiService<T extends SharedDomain> {
 
   public getHttpParam(query: QueryParam): HttpParams {
     return new HttpParams()
-      .append('pageIndex', `${query.pageIndex}`)
-      .append('pageSize', `${query.pageSize}`)
-      .append('sorts', `${query.sorts === undefined ? '' : query.sorts}`)
-      .append('filters', `${query.filters === undefined ? '' : query.filters}`);
+      .append("pageIndex", `${query.pageIndex}`)
+      .append("pageSize", `${query.pageSize}`)
+      .append("sorts", `${query.sorts === undefined ? "" : query.sorts}`)
+      .append("filters", `${query.filters === undefined ? "" : query.filters}`);
   }
 
   public updateOrdering(lists: Floor[]): Observable<Floor[]> {
     return this.httpClient.put<Floor[]>(
-        `${this.getUrl()}/update-ordering`,
-        lists
+      `${this.getUrl()}/update-ordering`,
+      lists
     );
   }
 
   public checkUrlValidity(url: any) {
     let headers = new HttpHeaders();
     headers = headers
-      .set('Accept', 'text/html')
-      .set('disableErrorNotification', 'yes');
-    return this.httpClient.get(url, { headers: headers, responseType: 'text' });
+      .set("Accept", "text/html")
+      .set("disableErrorNotification", "yes");
+    return this.httpClient.get(url, { headers: headers, responseType: "text" });
   }
-
+  
+  public pull(): Observable<PullResult<T>> {
+    return this.httpClient.post<PullResult<T>>(`${this.getUrl()}/pull`, null);
+  }
 }

@@ -1,11 +1,12 @@
-import {Component, computed, ViewEncapsulation} from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
 import { SIZE_COLUMNS } from "../../const";
-import { Observable } from "rxjs"; 
+import { Observable } from "rxjs";
 import { MemberGroup, MemberGroupService } from "./member-group.service";
 import { MemberGroupUiService } from "./member-group-ui.service";
+import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-member-group-list",
@@ -36,7 +37,16 @@ import { MemberGroupUiService } from "./member-group-ui.service";
             </button>
           </div>
         </div>
-        <div>
+        <div nz-flex nzGap="4px" nzAlign="center">
+          <button
+            *ngIf="pavrEnable"
+            nz-button
+            nzType="primary"
+            (click)="uiService.showPull()"
+          >
+            <i nz-icon nzType="arrow-down" nzTheme="outline"></i>
+            {{ "Pull" | translate }}
+          </button>
           <button
             *ngIf="isMemberGroupAdd"
             nz-button
@@ -85,16 +95,23 @@ import { MemberGroupUiService } from "./member-group-ui.service";
               <td style=" cursor: move;" cdkDragHandle>
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
-              <td nzEllipsis >
-                {{ i | rowNumber : { index: param().pageIndex || 0, size: param().pageSize || 0 } }}
+              <td nzEllipsis>
+                {{
+                  i
+                    | rowNumber
+                      : {
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
+                        }
+                }}
               </td>
               <td nzEllipsis title="{{ data.name }}">
-                  <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
               <td nzEllipsis title="{{ data.note }}">
                 {{ data.note }}
               </td>
-              <td class="col-action" >
+              <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -130,16 +147,31 @@ import { MemberGroupUiService } from "./member-group-ui.service";
 export class MemberGroupListComponent extends BaseListComponent<MemberGroup> {
   constructor(
     service: MemberGroupService,
-    uiService: MemberGroupUiService,
+    public override uiService: MemberGroupUiService,
     sessionStorageService: SessionStorageService,
+    public systemSettingService: SystemSettingService,
     private activated: ActivatedRoute
   ) {
-    super(service, uiService, sessionStorageService, "member-group-list" );
+    super(service, uiService, sessionStorageService, "member-group-list");
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isMemberGroupAdd: boolean = true;
   isMemberGroupEdit: boolean = true;
   isMemberGroupRemove: boolean = true;
   isMemberGroupView: boolean = true;
+  pavrEnable = signal<boolean>(false);
+  
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
+
+  override ngOnInit(): void {
+    this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
+      next: (result: SystemSetting) => {
+        this.pavrEnable.set(Boolean(result.value));
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {},
+    });
+  }
 }
