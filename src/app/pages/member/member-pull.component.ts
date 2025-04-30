@@ -16,7 +16,7 @@ import {NzNotificationService} from "ng-zorro-antd/notification";
           <a>
               <i nz-icon nzType="exclamation-circle" nzTheme="outline"></i>
           </a>
-          <span>{{ 'PullMembers' | translate }} !</span>
+          <span>{{ 'PullMember' | translate }} !</span>
           <ng-template #notificationTemp>
               <div class="ant-notification-notice-content">
                   <div class="ant-notification-notice-with-icon">
