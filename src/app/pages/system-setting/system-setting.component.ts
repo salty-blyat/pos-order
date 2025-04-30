@@ -82,7 +82,7 @@ export class SystemSettingComponent implements OnInit {
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
   ngOnInit(): void {
     this.router
-      .navigate(["/", "setting", "system-setting", "company-section"])
+      .navigate(["/", "setting", "system-setting", "company-section","other-app-section"])
       .then();
   }
 }

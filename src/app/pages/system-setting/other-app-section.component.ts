@@ -110,9 +110,9 @@ export class OtherAppSectionComponent extends BaseSettingSectionComponent {
     effect(()=> {
       this.frm.get("PavrEnable")?.valueChanges.subscribe((value) => {
         if (value) {
-          this.frm.controls["PavrUrl"].disable();
-        } else {
           this.frm.controls["PavrUrl"].enable();
+        } else {
+          this.frm.controls["PavrUrl"].disable();
         }
       });
 
