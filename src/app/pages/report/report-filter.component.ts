@@ -33,7 +33,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
             <nz-badge [nzDot]="dot">
               <i
                 nz-icon
-                title="{{ 'Advanced Filter' | translate }}"
+                title="{{ 'AdvancedFilter' | translate }}"
                 nzType="align-right"
                 nzTheme="outline"
               ></i>
@@ -62,7 +62,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
         <div *nzModalTitle>
           <div style="text-align: center">
             <h4 style="font-weight: 600">
-              {{ "Advanced Filter" | translate }}
+              {{ "AdvancedFilter" | translate }}
             </h4>
           </div>
         </div>
@@ -78,7 +78,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
           <div nz-row nzJustify="space-between">
             <button nz-button nzType="default" nzDanger (click)="resetForm()">
               <i nz-icon nzType="undo" nzTheme="outline"></i
-              >{{ "Reset Filter" | translate }}
+              >{{ "ResetFilter" | translate }}
             </button>
             <button nz-button nzType="default" (click)="submit()">
               <i nz-icon nzType="filter" nzTheme="outline"></i

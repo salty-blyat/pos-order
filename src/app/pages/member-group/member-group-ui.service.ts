@@ -24,7 +24,7 @@ export class MemberGroupUiService extends BaseUiService {
       nzContent: MemberGroupPullComponent,
       nzClosable: true,
       nzFooter: null,
-      nzWidth: "450px",
+      nzWidth: "350px",
       nzMaskClosable: false,
     });
   }

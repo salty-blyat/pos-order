@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, signal, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -6,6 +6,11 @@ import { NzModalRef } from "ng-zorro-antd/modal";
 import { Charge, ChargeService } from "./charge.service";
 import { ChargeUiService } from "./charge-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import {
+  SETTING_KEY,
+  SystemSetting,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-charge-unit-operation",
@@ -138,11 +143,13 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<ChargeOperationComponent>,
+    public systemSettingService: SystemSettingService,
     service: ChargeService,
     uiService: ChargeUiService
   ) {
     super(fb, ref, service, uiService);
   }
+  chargesAutoIdEnable = signal<boolean>(false);
 
   isChargeEdit: boolean = true;
   isChargeRemove: boolean = true;
@@ -169,7 +176,9 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
       note: [null, [noteMaxLengthValidator]],
     });
   }
+
   lookupItemType = LOOKUP_TYPE;
+
   override setFormValue(): void {
     this.frm.setValue({
       code: this.model.code,
@@ -178,6 +187,28 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
       chargeRate: this.model.chargeRate,
       chargeTypeId: this.model.chargeTypeId,
       note: this.model.note,
+    });
+  }
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    const {required} = CommonValidators;
+    this.systemSettingService.find(SETTING_KEY.ChargesAutoId).subscribe({
+      next: (result: any) => {
+        if (result === 0) {
+          this.chargesAutoIdEnable.set(true);
+          this.frm.controls["code"].enable();
+          this.frm.controls["code"].setValidators([required]);
+        } else {
+          this.chargesAutoIdEnable.set(false);
+          this.frm.controls["code"].disable();
+          this.frm.controls["code"].setValidators([]);
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {},
     });
   }
 }

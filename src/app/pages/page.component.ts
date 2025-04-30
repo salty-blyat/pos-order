@@ -57,7 +57,7 @@ export interface Type {
             </li>
             <li nz-menu-item [nzMatchRouter]="isActive()">
               <span nz-icon nzType="profile" nzTheme="outline"></span>
-              <span>{{ "MeterRecord" | translate }}</span>
+              <span>{{ "MeterReading" | translate }}</span>
             </li>
             <li nz-menu-item [nzMatchRouter]="isActive()" routerLink="/member">
               <span nz-icon nzType="user" nzTheme="outline"></span>

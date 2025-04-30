@@ -31,8 +31,7 @@ import { HttpClient } from "@angular/common/http";
       <nz-form-item>
         <nz-form-control [nzSm]="7" nzAlign="right" style="text-align: right">
           <label formControlName="{{ SettingKey.PavrEnable }}" nz-checkbox
-            >HR System</label
-          >
+            >{{ "HRSystem" | translate }}</label>
         </nz-form-control>
       </nz-form-item>
 

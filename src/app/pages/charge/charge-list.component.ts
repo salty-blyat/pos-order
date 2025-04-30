@@ -9,6 +9,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { Filter } from "../../utils/services/base-api.service";
+import { SystemSettingService } from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-charge-list",
@@ -213,6 +214,7 @@ export class ChargeListComponent extends BaseListComponent<Charge> {
 
   chargeTypeId = signal<number>(0);
   unitId = signal<number>(0);
+   
   override search() {
     let filters: Filter[] = [];
     if (this.chargeTypeId()) {
@@ -232,4 +234,6 @@ export class ChargeListComponent extends BaseListComponent<Charge> {
     super.search(filters, 100);
   }
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
+
+
 }

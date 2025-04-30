@@ -50,8 +50,8 @@ import { CommonValidators } from "../../utils/services/common-validators";
                                   nzSize="small"
                                   #fixedTable
                                   [nzData]="tags.controls"
-                                  [nzFrontPagination]="false"
                                   [nzNoResult]="' '"
+                                  [nzFrontPagination]="false"
                           >
                               <thead>
                               <tr class="table-form-thead">

@@ -71,6 +71,7 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
           [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
           nzHideOnSinglePage="true"
+          [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
         >
           <ng-template #noResult>

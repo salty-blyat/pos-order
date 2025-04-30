@@ -55,6 +55,7 @@ import { UnitUiService } from "./unit-ui.service";
                       [nzPageIndex]="param().pageIndex || 0"
                       [nzNoResult]="noResult"
                       nzHideOnSinglePage="true"
+                      [nzFrontPagination]="false"
                       (nzQueryParams)="onQueryParamsChange($event)"
               >
                   <ng-template #noResult>

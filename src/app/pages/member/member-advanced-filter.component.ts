@@ -10,13 +10,13 @@ import {LOOKUP_TYPE} from "../lookup/lookup-type.service";
     template: `
         <div *nzModalTitle>
             <div>
-                <h4>{{ 'Advanced Filter' | translate }}</h4>
+                <h4>{{ 'AdvancedFilter' | translate }}</h4>
             </div>
         </div>
         <div class="modal-content">
             <form nzLayout="vertical" style="padding-top: 4px;" nz-form [formGroup]="frm">
                 <nz-form-item>
-                    <nz-form-label>{{ 'Group' | translate }}</nz-form-label>
+                    <nz-form-label>{{ 'MemberGroup' | translate }}</nz-form-label>
                     <nz-form-control>
                         <app-member-group-select
                                 [showAllOption]="true"
@@ -30,7 +30,7 @@ import {LOOKUP_TYPE} from "../lookup/lookup-type.service";
                         <app-lookup-item-select
                                 [showAllOption]="true"
                                 [lookupType]="LOOKUP_TYPE.SexId"
-                                [typeLabelAll]="'AllSex'"
+                                [typeLabelAll]="'AllSex' | translate"
                                 formControlName="sexId"
                         ></app-lookup-item-select>
                     </nz-form-control>
@@ -40,7 +40,7 @@ import {LOOKUP_TYPE} from "../lookup/lookup-type.service";
                     <nz-form-control>
                         <app-lookup-item-select
                                 [showAllOption]="true"
-                                [typeLabelAll]="'AllNationality'"
+                                [typeLabelAll]="'AllNationality' | translate"
                                 [lookupType]="LOOKUP_TYPE.Nationality"
                                 formControlName="nationalityId"
                         ></app-lookup-item-select>
@@ -52,7 +52,7 @@ import {LOOKUP_TYPE} from "../lookup/lookup-type.service";
             <div nz-row nzJustify="space-between">
                 <button nz-button nzType="default" nzDanger (click)="resetForm()">
                     <i nz-icon nzType="undo" nzTheme="outline"></i>
-                    {{ 'Reset Filter' | translate }}
+                    {{ 'ResetFilter' | translate }}
                 </button>
                 <button nz-button nzType="default" (click)="submit()">
                     <i nz-icon nzType="filter" nzTheme="outline"></i>

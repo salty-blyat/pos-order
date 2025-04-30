@@ -69,7 +69,8 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
           [nzTotal]="param().rowCount || 0"
           [nzPageSize]="param().pageSize || 0"
           [nzPageIndex]="param().pageIndex || 0"
-          [nzNoResult]="noResult"
+          [nzNoResult]="noResult" 
+          [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
         >
           <ng-template #noResult>

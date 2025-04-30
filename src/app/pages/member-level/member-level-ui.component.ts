@@ -23,7 +23,7 @@ export class MemberLevelUiService extends BaseUiService {
       nzContent: MemberLevelPullComponent,
       nzClosable: true,
       nzFooter: null,
-      nzWidth: "450px",
+      nzWidth: "350px",
       nzMaskClosable: false,
     });
   }

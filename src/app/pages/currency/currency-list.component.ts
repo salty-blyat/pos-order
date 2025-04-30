@@ -1,11 +1,11 @@
-import {Component, computed, ViewEncapsulation} from "@angular/core";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
 import { Observable } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Currency, CurrencyService } from "./currency.service";
 import { CurrencyUiService } from "./currency-ui.service";
-import {SIZE_COLUMNS} from "../../const";
+import { SIZE_COLUMNS } from "../../const";
 
 @Component({
   selector: "app-currency",
@@ -93,7 +93,7 @@ import {SIZE_COLUMNS} from "../../const";
               <td nzEllipsis>{{ data.symbol }}</td>
               <td nzEllipsis>{{ data.format }}</td>
               <td nzEllipsis>{{ data.rounding }}</td>
-              <td nzEllipsis>{{ data.exchangeRate }}</td>
+              <td nzEllipsis>{{ data.exchangeRate }}</td> 
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>

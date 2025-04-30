@@ -66,9 +66,14 @@ export const SETTING_KEY = {
   CustomerDefaultId: "DefaultCustomerId",
   BlockAutoId: "BlockAutoId",
   StaffAutoId: "StaffAutoId",
-  MemberAutoId: "MemberAutoId",
   PavrEnable: "PavrEnable",
-  PavrUrl: "PavrUrl",
+  PavrUrl: "PavrUrl", 
+  MemberUnitAutoId: "MemberUnitAutoId",
+  MemberLevelAutoId: "MemberLevelAutoId", 
+  ChargesAutoId: "ChargesAutoId",
+  ItemAutoId: "ItemAutoId",
+  MemberAutoId: "MemberAutoId",
+  MeterReadingAutoId: "MeterReadingAutoId",
 };
 
 export interface Setting {

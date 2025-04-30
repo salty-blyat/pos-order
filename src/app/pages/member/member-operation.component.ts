@@ -46,7 +46,7 @@ import {AuthService} from "../../helpers/auth.service";
                   </div>
                   <div class="member-name">
                       <p *ngIf="customerName === ''">
-                          {{ customerNameEn || 'New member' | translate }}
+                          {{ customerNameEn || 'NewMember' | translate }}
                       </p>
                       <p *ngIf="customerName !== ''">{{ customerName }}</p>
                   </div>
@@ -94,14 +94,14 @@ import {AuthService} from "../../helpers/auth.service";
                                                       </nz-form-label>
                                                       <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
                                                           <input [autofocus]="true" nz-input formControlName="code"
-                                                                 placeholder="{{ 'New code' | translate }}"/>
+                                                                 placeholder="{{ 'NewCode' | translate }}"/>
                                                       </nz-form-control>
                                                   </nz-form-item>
                                               </div>
                                               <div nz-col [nzXs]="12">
                                                   <nz-form-item>
                                                       <nz-form-label [nzSm]="8" [nzXs]="24">{{
-                                                              'Date of birth' | translate
+                                                              'DateOfBirth' | translate
                                                           }}
                                                       </nz-form-label>
                                                       <nz-form-control

@@ -21,23 +21,10 @@ import { AuthService } from '../../helpers/auth.service';
       [nzAutoTips]="autoTips"
     >
       <div class="sub-section">
-        <h5>{{ 'General' | translate }}</h5>
+        <h5>{{ 'AutoNumber' | translate }}</h5>
       </div>
-
-      <nz-form-item>
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ 'Staff No' | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <app-auto-number-select
-            formControlName="{{ SettingKey.StaffAutoId }}"
-            [addOption]="canAddAutoNo"
-            [showAllOption]="true"
-            showAllLabel="-"
-          ></app-auto-number-select>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
+ 
+      <!-- <nz-form-item>
         <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
           {{ 'Block No' | translate }}
         </nz-form-label>
@@ -50,6 +37,35 @@ import { AuthService } from '../../helpers/auth.service';
           ></app-auto-number-select>
         </nz-form-control>
       </nz-form-item>
+       -->
+       <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+          {{ 'MemberLevelNo' | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24">
+          <app-auto-number-select
+              formControlName="{{ SettingKey.MemberLevelAutoId }}"
+              [addOption]="canAddAutoNo"
+              [showAllOption]="true"
+              showAllLabel="-"
+          ></app-auto-number-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+          {{ 'ChargesAutoNo' | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24">
+          <app-auto-number-select
+              formControlName="{{ SettingKey.ChargesAutoId }}"
+              [addOption]="canAddAutoNo"
+              [showAllOption]="true"
+              showAllLabel="-"
+          ></app-auto-number-select>
+        </nz-form-control>
+      </nz-form-item>
+      
       <nz-form-item>
         <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
           {{ 'Room Rate No' | translate }}
@@ -113,8 +129,10 @@ export class AutoNumberSectionComponent extends BaseSettingSectionComponent {
   }
   canAddAutoNo = false;
   override keys = [
-    SETTING_KEY.StaffAutoId,
-    SETTING_KEY.BlockAutoId,
+    // SETTING_KEY.StaffAutoId,
+    // SETTING_KEY.BlockAutoId,
+    SETTING_KEY.MemberLevelAutoId, 
+    SETTING_KEY.ChargesAutoId, 
   ];
   override ngOnInit() {
     // this.canAddAutoNo = this.authService.isAuthorized(

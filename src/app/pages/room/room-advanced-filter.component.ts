@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
     template: `
    <div *nzModalTitle>
       <div>
-        <h4>{{ 'Advanced Filter' | translate }}</h4>
+        <h4>{{ 'AdvancedFilter' | translate }}</h4>
       </div>
     </div>
     <div class="modal-content">
@@ -47,7 +47,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
       <div nz-row nzJustify="space-between">
         <button nz-button nzType="default" nzDanger (click)="resetForm()">
           <i nz-icon nzType="undo" nzTheme="outline"></i>
-          {{ 'Reset Filter' | translate }}
+          {{ 'ResetFilter' | translate }}
         </button>
         <button nz-button nzType="default" (click)="submit()">
           <i nz-icon nzType="filter" nzTheme="outline"></i>
