@@ -6,7 +6,6 @@ import { BaseSelectComponent} from "../../utils/components/base-select.component
 import { MemberUnit, MemberUnitService } from './member-unit.service';
 import { MemberUnitUiService } from './member-unit-ui.service';
 
-
 @Component({
     providers: [
         {
@@ -29,7 +28,7 @@ import { MemberUnitUiService } from './member-unit-ui.service';
         <nz-option
           *ngIf="showAllOption()"
           [nzValue]="0"
-          [nzLabel]="'AllUnit' | translate"
+          [nzLabel]="'AllMemberUnit' | translate"
         ></nz-option>
         <nz-option
           *ngFor="let item of lists()"
