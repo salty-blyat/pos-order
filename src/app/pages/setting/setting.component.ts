@@ -85,6 +85,7 @@ export class SettingComponent implements OnInit {
   isCharge : boolean = true;
   isItemTypeList: boolean = true;
   isMemberGroupList: boolean = true;
+  isTags: boolean = true;
   ngOnInit(): void {
     this.setting = [
       {
@@ -104,11 +105,10 @@ export class SettingComponent implements OnInit {
           },
           {
             icon: "container",
-            url: `${this.urlPart}/unit`,
-            label: "Unit",
-            isList: this.isUnitList,
+            url: `${this.urlPart}/tag`,
+            label: "Tag",
+            isList: this.isTags,
           },
-
         ],
       },
       {
@@ -148,6 +148,12 @@ export class SettingComponent implements OnInit {
             url: `${this.urlPart}/room-type`,
             label: "RoomType",
             isList: this.isRoomTypeList,
+          },
+          {
+            icon: "container",
+            url: `${this.urlPart}/unit`,
+            label: "Unit",
+            isList: this.isUnitList,
           },
           {
             icon: "container",

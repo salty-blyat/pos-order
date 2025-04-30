@@ -1,4 +1,4 @@
-import {Component, computed, OnInit, signal} from '@angular/core';
+import {Component, computed, OnInit, signal, ViewEncapsulation} from '@angular/core';
 import { BaseListComponent } from '../../utils/components/base-list.component';
 import { TagGroup, TagGroupService } from './tag-group.service';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
@@ -102,7 +102,8 @@ import { SIZE_COLUMNS } from '../../const';
     </nz-layout>
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
-  standalone: false
+  standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class TagGroupListComponent extends BaseListComponent<TagGroup> {
   constructor(

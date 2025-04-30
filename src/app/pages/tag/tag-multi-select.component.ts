@@ -1,20 +1,9 @@
-import {
-  Component,
-  EventEmitter,
-  forwardRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output, ViewEncapsulation} from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { QueryParam } from "../../utils/services/base-api.service";
 import { Tag, TagGroupService } from "./tag-group.service";
 import { AuthService } from "../../helpers/auth.service";
-import { UUID } from "uuid-generator-ts";
-
 @Component({
   selector: "app-tag-multiple-select",
   providers: [
@@ -103,9 +92,7 @@ import { UUID } from "uuid-generator-ts";
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class TagMultiSelectComponent
-  implements OnInit, ControlValueAccessor, OnDestroy
-{
+export class TagMultiSelectComponent implements OnInit, ControlValueAccessor, OnDestroy {
   constructor(
     private service: TagGroupService,
     private sessionStorageService: SessionStorageService,

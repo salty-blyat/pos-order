@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import { BaseDeleteComponent } from '../../utils/components/base-delete.component';
 import { TagGroup, TagGroupService } from './tag-group.service';
 import { TagGroupUiService } from './tag-group-ui.service';
@@ -50,8 +50,9 @@ import { CommonValidators } from '../../utils/services/common-validators';
             </button>
         </div>
     `,
-    styleUrls: ["../../../assets/scss/operation_modal.scss"],
-    standalone: false
+    styleUrls: ["../../../assets/scss/operation.style.scss"],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None,
 })
 export class TagGroupDeleteComponent extends BaseDeleteComponent<TagGroup> implements OnInit {
   constructor(
