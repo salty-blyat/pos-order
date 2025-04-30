@@ -101,7 +101,11 @@ img{
   margin: 0 !important;
 }
 
-
+app-breadcrumb ~ nz-content {
+  nz-table{
+    height: calc(100vh - 112px) !important;
+  }
+}
 
 .cdk-drag-preview {
   display: flex;

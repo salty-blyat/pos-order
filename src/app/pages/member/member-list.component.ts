@@ -60,6 +60,7 @@ import {SETTING_KEY, SystemSetting, SystemSettingService} from "../system-settin
           </nz-header>
           <nz-content>
               <nz-table
+                      class="table-list"
                       nzSize="small"
                       nzShowSizeChanger
                       nzTableLayout="fixed"
