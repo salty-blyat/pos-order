@@ -13,7 +13,7 @@ export interface Room {
   floorName?: string;
   tagIds?: number[];
   tagNames?: string[];
-  status?: number;
+  statusId?: number;
   statusName?: string
   statusNameEn?: string
 }

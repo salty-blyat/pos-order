@@ -133,7 +133,7 @@ export class RoomOperationComponent extends BaseOperationComponent<Room> {
             roomNumber: this.model.roomNumber,
             roomTypeId: this.model.roomTypeId,
             floorId: this.model.floorId,
-            status: this.model.status,
+            status: this.model.statusId,
             tagIds: this.model.tagIds,
             note: this.model.note,
         });
