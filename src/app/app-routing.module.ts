@@ -54,6 +54,14 @@ const routes: Routes = [
         component: SettingComponent,
       },
       {
+        path: "report",
+        component: ReportGroupMenuComponent,
+      },
+      {
+        path: "report/:id",
+        component: ReportViewComponent,
+      },
+      {
         path: "setting/lookup",
         component: LookupTypeComponent,
         children: [
@@ -67,14 +75,6 @@ const routes: Routes = [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Lookup", url: null },
         ],
-      },
-      {
-        path: "report",
-        component: ReportGroupMenuComponent,
-      },
-      {
-        path: "report/:id",
-        component: ReportViewComponent,
       },
       {
         path: "setting/report",
@@ -98,6 +98,14 @@ const routes: Routes = [
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "AutoNumber", url: null },
+        ],
+      },
+      {
+        path: "setting/tag",
+        component: TagGroupListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Tag", url: null },
         ],
       },
       {
@@ -126,14 +134,6 @@ const routes: Routes = [
             path: "other-app-section",
             component: OtherAppSectionComponent,
           },
-        ],
-      },
-      {
-        path: "setting/currency",
-        component: CurrencyListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Currency", url: null },
         ],
       },
       {

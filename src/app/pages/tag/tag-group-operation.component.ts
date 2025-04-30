@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from "@angular/core";
+import {Component, Input, ViewChild, ViewEncapsulation} from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { Tag, TagGroup, TagGroupService } from "./tag-group.service";
 import { FormArray, FormBuilder } from "@angular/forms";
@@ -19,7 +19,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
       </div>
 
       <div class="modal-content">
-          <nz-spin *ngIf="isLoading" style="position: absolute; top: 50%; left: 50%"></nz-spin>
+          <app-loading *ngIf="isLoading()"></app-loading>
           <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips" class="form-content">
               <nz-tabset style="height:100%">
                   <nz-tab [nzTitle]="tagGroup">
@@ -48,6 +48,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
                       <div #scrollable nz-row class="table-form">
                           <nz-table
                                   nzSize="small"
+                                  nzTableLayout="fixed"
                                   #fixedTable
                                   [nzData]="tags.controls"
                                   [nzNoResult]="' '"
@@ -70,7 +71,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
                               <ng-container *ngFor="let item of tags?.controls; let i = index">
                                   <tr [formGroupName]="i" cdkDrag cdkDragLockAxis="y"
                                       [cdkDragDisabled]="this.modal?.isView">
-                                      <td class="move" cdkDragHandle style="text-align: center;">
+                                      <td class="move" cdkDragHandle>
                                           <span nz-icon nzType="holder" nzTheme="outline"></span>
                                       </td>
                                       <td>
@@ -128,7 +129,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
       <div *nzModalFooter>
           <div *ngIf="!modal?.isView">
               <button nz-button nzType="primary" [disabled]="!frm.valid" (click)="onSubmit($event)">
-                  <i *ngIf="isLoading" nz-icon nzType="loading"></i>
+                  <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
                   {{ "Save" | translate }}
               </button>
               <button nz-button nzType="default" (click)="cancel()">
@@ -136,21 +137,21 @@ import { CommonValidators } from "../../utils/services/common-validators";
               </button>
           </div>
           <div *ngIf="modal?.isView">
-              <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading && isTagGroupEdit">
+              <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isTagGroupEdit">
                   <i nz-icon nzType="edit" nzTheme="outline"></i>
                   <span class="action-text"> {{ "Edit" | translate }}</span>
               </a>
-              <nz-divider nzType="vertical" *ngIf="!isLoading && isTagGroupEdit"></nz-divider>
+              <nz-divider nzType="vertical" *ngIf="!isLoading() && isTagGroupEdit"></nz-divider>
               <a
                       nz-typography
                       nzType="danger"
                       (click)="uiService.showDelete(model.id || 0)"
-                      *ngIf="!isLoading && isTagGroupRemove"
+                      *ngIf="!isLoading() && isTagGroupRemove"
               >
                   <i nz-icon nzType="delete" nzTheme="outline"></i>
                   <span class="action-text"> {{ "Delete" | translate }}</span>
               </a>
-              <nz-divider nzType="vertical" *ngIf="!isLoading && isTagGroupRemove"></nz-divider>
+              <nz-divider nzType="vertical" *ngIf="!isLoading() && isTagGroupRemove"></nz-divider>
               <a nz-typography (click)="cancel()" style="color: gray;">
                   <i nz-icon nzType="close" nzTheme="outline"></i>
                   <span class="action-text"> {{ "Close" | translate }}</span>
@@ -158,10 +159,9 @@ import { CommonValidators } from "../../utils/services/common-validators";
           </div>
       </div>
   `,
-  styleUrls: ["../../../assets/scss/operation_page.scss"],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
-    :host ::ng-deep {
       .ant-tabs-tab {
         margin-left: 10px !important;
         padding: 8px 0;
@@ -199,7 +199,6 @@ import { CommonValidators } from "../../utils/services/common-validators";
         display: flex;
         flex-direction: column;
       }
-    }
 
     .modal-content {
       height: 100%;
@@ -224,6 +223,8 @@ import { CommonValidators } from "../../utils/services/common-validators";
     .move {
       cursor: move;
       width: 3%;
+      text-align: center;
+      vertical-align: middle;
     }
 
     td {
@@ -233,13 +234,16 @@ import { CommonValidators } from "../../utils/services/common-validators";
     .btn-add-row {
       font-weight: bold;
       font-size: 14px;
-      border-top: 1px solid #f0f0f0;
+      border-bottom: 1px solid #f0f0f0 !important;
+      height: 36px;
+    }
+    .btn-add-row:hover {
       border-bottom: 1px solid #f0f0f0;
-      height: 30px;
     }
     `,
   ],
-  standalone: false
+  standalone: false,
+  encapsulation: ViewEncapsulation.None
 })
 export class TagGroupOperationComponent extends BaseOperationComponent<TagGroup> {
   constructor(
