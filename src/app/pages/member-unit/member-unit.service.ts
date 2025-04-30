@@ -1,19 +1,22 @@
-import { Injectable } from '@angular/core';
-import { BaseApiService } from '../../utils/services/base-api.service';
-import { SettingService } from '../../app-setting';
-import { HttpClient } from '@angular/common/http';
-
+import { Injectable } from "@angular/core";
+import { BaseApiService, PullResult } from "../../utils/services/base-api.service";
+import { SettingService } from "../../app-setting";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 export interface MemberUnit {
-    id?: number,
-    name?: string,
-    note?: string,
-    ordering?: number
+  id?: number;
+  name?: string;
+  note?: string;
+  ordering?: number;
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: "root" })
 export class MemberUnitService extends BaseApiService<MemberUnit> {
-    constructor(http: HttpClient, settingService: SettingService) {
-        super('memberunit', http, settingService);
-    }
+  constructor(public http: HttpClient, settingService: SettingService) {
+    super("memberunit", http, settingService);
+  }
+  pull():Observable<PullResult<MemberUnit>>{
+    return this.http.post<PullResult<MemberUnit>>(`${this.getUrl()}/pull`, null)
+  }
 }

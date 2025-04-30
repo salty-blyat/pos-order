@@ -1,4 +1,4 @@
-import {Component, computed, ViewEncapsulation} from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
@@ -6,6 +6,7 @@ import { SIZE_COLUMNS } from "../../const";
 import { Observable } from "rxjs";
 import { MemberUnit, MemberUnitService } from "./member-unit.service";
 import { MemberUnitUiService } from "./member-unit-ui.service";
+import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-member-unit-list",
@@ -36,7 +37,16 @@ import { MemberUnitUiService } from "./member-unit-ui.service";
             </button>
           </div>
         </div>
-        <div>
+        <div nz-flex nzGap="4px" nzAlign="center">
+          <button
+            *ngIf="pavrEnable"
+            nz-button
+            nzType="primary"
+            (click)="uiService.showPull()"
+          >
+            <i nz-icon nzType="arrow-down" nzTheme="outline"></i>
+            {{ "Pull" | translate }}
+          </button>
           <button
             *ngIf="isMemberUnitAdd"
             nz-button
@@ -75,7 +85,8 @@ import { MemberUnitUiService } from "./member-unit-ui.service";
             </tr>
           </thead>
           <tbody
-            cdkDropList cdkDropListLockAxis="y"
+            cdkDropList
+            cdkDropListLockAxis="y"
             (cdkDropListDropped)="drop($event)"
             [cdkDropListData]="lists()"
           >
@@ -83,11 +94,18 @@ import { MemberUnitUiService } from "./member-unit-ui.service";
               <td style=" cursor: move;" cdkDragHandle>
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
-              <td nzEllipsis >
-                {{ i | rowNumber : { index: param().pageIndex || 0, size: param().pageSize || 0 } }}
+              <td nzEllipsis>
+                {{
+                  i
+                    | rowNumber
+                      : {
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
+                        }
+                }}
               </td>
               <td nzEllipsis title="{{ data.name }}">
-                  <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
               <td nzEllipsis title="{{ data.note }}">
                 {{ data.note }}
@@ -108,7 +126,7 @@ import { MemberUnitUiService } from "./member-unit-ui.service";
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
                       nz-typography
-                     class="delete"
+                      class="delete"
                     >
                       <i nz-icon nzType="delete" nzTheme="outline"></i>
                       {{ "Delete" | translate }}
@@ -129,16 +147,32 @@ import { MemberUnitUiService } from "./member-unit-ui.service";
 export class MemberUnitListComponent extends BaseListComponent<MemberUnit> {
   constructor(
     service: MemberUnitService,
-    uiService: MemberUnitUiService,
+    public override uiService: MemberUnitUiService,
     sessionStorageService: SessionStorageService,
+    public systemSettingService: SystemSettingService,
     private activated: ActivatedRoute
   ) {
     super(service, uiService, sessionStorageService, "member-unit-list");
   }
+
+  pavrEnable = signal<boolean>(false);
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isMemberUnitAdd: boolean = true;
   isMemberUnitEdit: boolean = true;
   isMemberUnitRemove: boolean = true;
   isMemberUnitView: boolean = true;
+  
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
+
+  override ngOnInit(): void {
+    this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
+      next: (result: SystemSetting) => {
+        this.pavrEnable.set(Boolean(result.value));
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {},
+    });
+  }
 }

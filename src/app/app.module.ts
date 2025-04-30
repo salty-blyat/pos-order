@@ -167,6 +167,7 @@ import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.co
 import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
 import { MemberDeleteComponent } from "./pages/member/member-delete.component";
 import {MemberPullComponent} from "./pages/member/member-pull.component";
+import { MemberUnitPullComponent } from "./pages/member-unit/member-unit-pull.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -346,6 +347,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberUnitOperationComponent,
     MemberUnitDeleteComponent,
     MemberUnitSelectComponent,
+    MemberUnitPullComponent,
 
     // unit
     UnitListComponent,
