@@ -47,8 +47,6 @@ export class BaseSettingSectionComponent implements OnInit {
       }
       this.setting.set(key, this.frm.controls[key].value);
     });
-    console.log(this.setting);
-    console.log('key',this.keys);
     this.settingService.updateByItems(this.setting.items).subscribe({
       next: () => {
         this.settingService.initCurrentSetting().subscribe({
@@ -93,8 +91,10 @@ export class BaseSettingSectionComponent implements OnInit {
             this.frm.get(item.key)?.patchValue(item.value);
           } else if (item.key.includes("PavrUrl")) {
             this.frm.get(item.key)?.patchValue(item.value);
-          }
-          else { 
+          } else if (item.key.includes("PavrEnable")) { 
+            const boolValue = String(item.value).toLowerCase() === "true";
+            this.frm.get(item.key)?.patchValue(boolValue)
+          } else {
             this.frm.get(item.key)?.patchValue(parseInt(item.value));
           }
         });

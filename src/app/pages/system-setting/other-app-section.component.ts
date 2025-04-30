@@ -41,14 +41,22 @@ import { HttpClient } from "@angular/common/http";
           {{ "Url" | translate }}
         </nz-form-label>
         <nz-form-control [nzSm]="8" [nzXs]="24">
-          <input formControlName="{{ SettingKey.PavrUrl }}" nz-input />
+          <input
+            formControlName="{{ SettingKey.PavrUrl }}" 
+            nz-input
+          />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
         <nz-form-label [nzSm]="7" [nzXs]="24" nzNoColon></nz-form-label>
         <nz-form-control [nzSm]="8" [nzXs]="24" style="text-align: right">
-          <button nz-button [disabled]="!frm.valid" (click)="testPavr()" style="margin-right:8px;">
+          <button
+            nz-button
+            [disabled]="!frm.valid"
+            (click)="testPavr()"
+            style="margin-right:8px;"
+          >
             <i *ngIf="isTestLoading" nz-icon nzType="loading"></i>
             {{ "Test" | translate }}
           </button>
@@ -99,7 +107,7 @@ export class OtherAppSectionComponent extends BaseSettingSectionComponent {
     appSettingService: SettingService
   ) {
     super(fb, settingService, notificationService, appSettingService);
-    effect(() => {
+    effect(()=> {
       this.frm.get("PavrEnable")?.valueChanges.subscribe((value) => {
         if (value) {
           this.frm.controls["PavrUrl"].disable();
@@ -107,8 +115,10 @@ export class OtherAppSectionComponent extends BaseSettingSectionComponent {
           this.frm.controls["PavrUrl"].enable();
         }
       });
-    });
+
+    })
   }
+
   isTestLoading: boolean = false;
 
   override keys = [SETTING_KEY.PavrEnable, SETTING_KEY.PavrUrl];
