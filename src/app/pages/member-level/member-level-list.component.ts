@@ -4,8 +4,9 @@ import {
   computed,
   ElementRef,
   QueryList,
+  signal,
   ViewChildren,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -14,6 +15,7 @@ import { MemberLevelUiService } from "./member-level-ui.component";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { SIZE_COLUMNS } from "../../const";
+import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-member-level-list",
@@ -44,7 +46,16 @@ import { SIZE_COLUMNS } from "../../const";
             </button>
           </div>
         </div>
-        <div>
+        <div nz-flex nzGap="4px" nzAlign="center">
+          <button
+            *ngIf="pavrEnable"
+            nz-button
+            nzType="primary"
+            (click)="uiService.showPull()"
+          >
+            <i nz-icon nzType="arrow-down" nzTheme="outline"></i>
+            {{ "Pull" | translate }}
+          </button>
           <button
             *ngIf="isMemberLevelAdd"
             nz-button
@@ -85,7 +96,8 @@ import { SIZE_COLUMNS } from "../../const";
             </tr>
           </thead>
           <tbody
-            cdkDropList cdkDropListLockAxis="y"
+            cdkDropList
+            cdkDropListLockAxis="y"
             (cdkDropListDropped)="drop($event)"
             [cdkDropListData]="lists()"
           >
@@ -94,12 +106,24 @@ import { SIZE_COLUMNS } from "../../const";
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
               <td #bodyCell nzEllipsis>
-                {{ i| rowNumber : { index: param().pageIndex || 0, size: param().pageSize || 0} }}
+                {{
+                  i
+                    | rowNumber
+                      : {
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
+                        }
+                }}
               </td>
               <td #bodyCell nzEllipsis title="{{ data.name }}">
-                  <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
-              <td #bodyCell nzEllipsis title="{{ data.levelStay }}" nzAlign="center">
+              <td
+                #bodyCell
+                nzEllipsis
+                title="{{ data.levelStay }}"
+                nzAlign="center"
+              >
                 {{ data.levelStay }}
               </td>
               <td #bodyCell nzEllipsis title="{{ data.note }}">
@@ -137,22 +161,28 @@ import { SIZE_COLUMNS } from "../../const";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
-  styles: [`
-    .preview-row {
-      display: table-row;
-      background-color: white;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      border-radius: 4px;
-      width: 100%;
-    }
-  `],
+  styles: [
+    `
+      .preview-row {
+        display: table-row;
+        background-color: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        width: 100%;
+      }
+    `,
+  ],
   encapsulation: ViewEncapsulation.None,
 })
-export class MemberLevelListComponent extends BaseListComponent<MemberLevel> implements AfterViewInit{
+export class MemberLevelListComponent
+  extends BaseListComponent<MemberLevel>
+  implements AfterViewInit
+{
   constructor(
     service: MemberLevelService,
-    uiService: MemberLevelUiService,
+    public override uiService: MemberLevelUiService,
     sessionStorageService: SessionStorageService,
+    public systemSettingService: SystemSettingService,
     private activated: ActivatedRoute
   ) {
     super(service, uiService, sessionStorageService, "member-level-list");
@@ -160,15 +190,16 @@ export class MemberLevelListComponent extends BaseListComponent<MemberLevel> imp
 
   columnWidths: string[] = [];
 
-  @ViewChildren('bodyCell', { read: ElementRef }) bodyCells!: QueryList<ElementRef>;
+  @ViewChildren("bodyCell", { read: ElementRef })
+  bodyCells!: QueryList<ElementRef>;
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.columnWidths = this.bodyCells.map((cell) =>
-        `${(cell.nativeElement as HTMLElement).offsetWidth}px`
+      this.columnWidths = this.bodyCells.map(
+        (cell) => `${(cell.nativeElement as HTMLElement).offsetWidth}px`
       );
-      console.log(this.columnWidths)
-    },500);
+      console.log(this.columnWidths);
+    }, 500);
   }
 
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
@@ -176,5 +207,18 @@ export class MemberLevelListComponent extends BaseListComponent<MemberLevel> imp
   isMemberLevelEdit: boolean = true;
   isMemberLevelRemove: boolean = true;
   isMemberLevelView: boolean = true;
-  readonly SIZE_COLUMNS = SIZE_COLUMNS;
+  readonly SIZE_COLUMNS = SIZE_COLUMNS; 
+  pavrEnable = signal<boolean>(false); 
+
+  override ngOnInit(): void {
+    this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
+      next: (result: SystemSetting) => {
+        this.pavrEnable.set(Boolean(result.value));
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {},
+    });
+  }
 }
