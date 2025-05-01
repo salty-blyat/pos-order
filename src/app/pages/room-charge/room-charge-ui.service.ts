@@ -17,4 +17,18 @@ export class RoomChargeUiService extends BaseUiService {
       "450px"
     );
   }
+
+ override showAdd(roomId: number, componentId: any = '') {
+   this.modalService.create({
+     nzContent: RoomChargeOperationComponent,
+     nzData: {roomId},
+     nzFooter: null,
+     nzClosable: true,
+     nzWidth: '450px',
+     nzMaskClosable: false,
+     nzOnOk: (e: any) => {
+       this.refresher.emit({ key: "added", value: e.model, componentId });
+     },
+   });
+  }
 }

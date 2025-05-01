@@ -65,7 +65,7 @@ import { Room, RoomService } from "./room.service";
                           <i nz-icon nzTheme="outline" nzType="file-text"></i>
                           <span>{{ 'Charge' | translate }}</span>
                       </ng-template>
-                      <app-room-charge-list></app-room-charge-list>
+                      <app-room-charge-list *ngIf="model?.id" [roomId]="model?.id!" ></app-room-charge-list>
                   </nz-tab>
                   <nz-tab [nzTitle]="tabMember">
                       <ng-template #tabMember>
