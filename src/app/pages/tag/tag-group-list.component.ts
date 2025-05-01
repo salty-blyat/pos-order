@@ -1,4 +1,4 @@
-import {Component, computed, OnInit, signal, ViewEncapsulation} from '@angular/core';
+import {Component, computed, signal, ViewEncapsulation} from '@angular/core';
 import { BaseListComponent } from '../../utils/components/base-list.component';
 import { TagGroup, TagGroupService } from './tag-group.service';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
@@ -14,7 +14,7 @@ import { SIZE_COLUMNS } from '../../const';
       <app-breadcrumb *ngIf="breadcrumbData()" [data]="breadcrumbData()"></app-breadcrumb>
       <nz-header>
         <div nz-row>
-          <div>
+          <div nz-col>
             <app-filter-input
               storageKey="auto-number-list-search"
               (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"

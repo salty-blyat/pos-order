@@ -166,10 +166,12 @@ import { MemberPullComponent } from "./pages/member/member-pull.component";
 import { MemberUnitPullComponent } from "./pages/member-unit/member-unit-pull.component";
 import { MemberGroupPullComponent } from "./pages/member-group/member-group-pull.component";
 import { MemberLevelPullComponent } from "./pages/member-level/member-level-pull.component";
+import {RoomViewComponent} from "./pages/room/room-view.component";
 import { RoomChargeListComponent } from "./pages/room-charge/room-charge-list.component";
 import { RoomChargeOperationComponent } from "./pages/room-charge/room-charge-operation.component";
 import { RoomChargeDeleteComponent } from "./pages/room-charge/room-charge-delete.component";
 import { ChargeSelectComponent } from "./pages/charge/charge-select.component";
+import {ItemSelectComponent} from "./pages/item/item-select.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -313,6 +315,7 @@ export class CustomTranslate implements TranslateLoader {
     RoomDeleteComponent,
     RoomAdvancedFilterComponent,
     RoomSelectComponent,
+    RoomViewComponent,
 
     //tag
     TagGroupListComponent,
@@ -338,6 +341,7 @@ export class CustomTranslate implements TranslateLoader {
     ItemListComponent,
     ItemOperationComponent,
     ItemDeleteComponent,
+    ItemSelectComponent,
 
     // Item Type
     ItemTypeListComponent,

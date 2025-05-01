@@ -28,7 +28,7 @@ import {CurrencyUiService} from "./currency-ui.service";
             <nz-option *ngFor="let item of lists()" nzCustomContent [nzValue]="item.id" [nzLabel]="item?.code + ''">
                 <span>{{ item.code }}</span>
             </nz-option>
-            <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+            <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
                 <i nz-icon nzType="loading" class="loading-icon"></i>
                 {{ 'Loading' | translate }}
             </nz-option>

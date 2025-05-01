@@ -58,10 +58,10 @@ export class BaseSelectComponent<T extends SharedDomain> implements OnInit, Cont
     });
     if (this.isLoading()) return;
     if (this.showAllOption()) this.selected.set(0);
-    if (this.storageKey) {
+    if (this.storageKey()) {
       let recentFilters:any[] = this.sessionStorageService.getValue(this.parentStorageKey) ?? [];
       const recentFilter = recentFilters.filter(
-        (item: any) => item.key === this.storageKey
+        (item: any) => item.key === this.storageKey()
       )[0];
       this.selected.set(recentFilter?.value.id ?? 0);
       if (this.selected() !== 0) this.lists.update(value => [...value, recentFilter?.value]);
@@ -71,7 +71,7 @@ export class BaseSelectComponent<T extends SharedDomain> implements OnInit, Cont
     }
   }
 
-  search(filters: any[] = [], delay: number = 50,  ) {
+  search(filters: any[] = [], delay: number = 50) {
     this.isLoading.set(true);
     setTimeout(() => {
       filters?.unshift({ field: 'search', operator: 'contains', value: this.searchText()});
@@ -82,9 +82,14 @@ export class BaseSelectComponent<T extends SharedDomain> implements OnInit, Cont
       if (this.searchText() && this.param().pageIndex === 1) {
         this.lists.set([]);
       }
-      this.service.search(this.param()).subscribe((result: { results: T[] }) => {
-        this.isLoading.set(false);
-        this.lists.set(result.results);
+      this.service.search(this.param()).subscribe({
+        next: (result: { results: T[] }) => {
+          this.isLoading.set(false);
+          this.lists.set(result.results);
+        },
+        error: (err) => {
+          console.log(err)
+        },
       });
     }, delay);
   }
@@ -95,8 +100,10 @@ export class BaseSelectComponent<T extends SharedDomain> implements OnInit, Cont
     this.setStorageKey(this.selected());
   }
   writeValue(value: any) {
-    this.selected.set(parseInt(value));
-    this.search();
+    if (this.selected() !== 0 && this.lists().length == 0 && this.selected() !== value){
+      this.search();
+    }
+    this.selected.set(value);
   }
   registerOnChange(fn: any) {
     this.onChangeCallback = fn;
@@ -108,14 +115,14 @@ export class BaseSelectComponent<T extends SharedDomain> implements OnInit, Cont
     this.disabled.set(isDisabled);
   }
   setStorageKey(filter: any): void {
-    if (this.storageKey) {
+    if (this.storageKey()) {
       let item: any = this.lists().filter((item: T) => item.id === filter)[0];
       if (filter === 0) item = { id: 0, name: this.selectedAllKey };
       let value: any[] = this.sessionStorageService.getValue(this.parentStorageKey) || [];
-      const index = value.findIndex((e: any) => e.key === this.storageKey);
+      const index = value.findIndex((e: any) => e.key === this.storageKey());
       index !== -1
         ? (value[index].value = item)
-        : value.push({ key: this.storageKey, value: item });
+        : value.push({ key: this.storageKey(), value: item });
       this.sessionStorageService.setValue({
         key: this.parentStorageKey,
         value,

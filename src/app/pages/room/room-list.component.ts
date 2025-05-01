@@ -1,18 +1,10 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  signal,
-  ViewEncapsulation,
-} from "@angular/core";
-import { ActivatedRoute, Data } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
+import { Component, signal, ViewEncapsulation } from "@angular/core";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Room, RoomAdvancedFilter, RoomService } from "./room.service";
 import { RoomUiService } from "./room-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
-import { Filter, QueryParam } from "../../utils/services/base-api.service";
+import { Filter } from "../../utils/services/base-api.service";
 import { SIZE_COLUMNS } from "../../const";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -24,9 +16,7 @@ import { TranslateService } from "@ngx-translate/core";
         <div nz-col>
           <app-filter-input
             storageKey="room-list-search"
-            (filterChanged)="
-              searchText.set($event); param().pageIndex = 1; search()
-            "
+            (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
           >
           </app-filter-input>
         </div>
@@ -85,13 +75,13 @@ import { TranslateService } from "@ngx-translate/core";
         </ng-template>
         <thead>
           <tr>
-            <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-            <th nzWidth="100px">{{ "RoomNumber" | translate }}</th>
-            <th nzWidth="150px">{{ "RoomType" | translate }}</th>
-            <th nzWidth="150px">{{ "Floor" | translate }}</th>
-            <th nzWidth="150px">{{ "Status" | translate }}</th>
-            <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-            <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+            <th nzEllipsis [nzWidth]="SIZE_COLUMNS.ID">#</th>
+            <th nzEllipsis nzWidth="100px">{{ "RoomNumber" | translate }}</th>
+            <th nzEllipsis nzWidth="150px">{{ "RoomType" | translate }}</th>
+            <th nzEllipsis nzWidth="150px">{{ "Floor" | translate }}</th>
+            <th nzEllipsis nzWidth="150px">{{ "Status" | translate }}</th>
+            <th nzEllipsis>{{ "Note" | translate }}</th>
+            <th nzEllipsis [nzWidth]="SIZE_COLUMNS.ACTION"></th>
           </tr>
         </thead>
         <tbody>

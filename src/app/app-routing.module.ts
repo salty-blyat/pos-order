@@ -208,15 +208,6 @@ const routes: Routes = [
           { index: 1, label: "ItemType", url: null },
         ],
       },
-
-      {
-        path: "setting/room-charge",
-        component: RoomChargeListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "RoomCharge", url: null },
-        ],
-      },
       {
         path: "setting/charge",
         component: ChargeListComponent,
