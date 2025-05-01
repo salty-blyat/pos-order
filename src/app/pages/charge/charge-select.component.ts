@@ -1,27 +1,21 @@
-import {
-  Component,
-  forwardRef,
-  input,
-  OnChanges,
-  Signal,
-  signal,
-} from "@angular/core";
+import { Component, forwardRef, ViewEncapsulation } from "@angular/core";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { RoomUiService } from "./room-ui.service";
-import { Room, RoomService } from "./room.service";
+import { AuthService } from "../../helpers/auth.service";
 import { BaseSelectComponent } from "../../utils/components/base-select.component";
-import { effect } from "@angular/core";
+import { ChargeDeleteComponent } from "./charge-delete.component";
+import { Charge, ChargeService } from "./charge.service";
+import { ChargeUiService } from "./charge-ui.service";
 
 @Component({
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => RoomSelectComponent),
+      useExisting: forwardRef(() => ChargeSelectComponent),
       multi: true,
     },
   ],
-  selector: "app-room-select",
+  selector: "app-charge-select",
   template: `
     <nz-select
       nzShowSearch
@@ -31,22 +25,19 @@ import { effect } from "@angular/core";
       (ngModelChange)="onModalChange()"
       (nzOnSearch)="searchText.set($event); param().pageIndex = 1; search()"
       [nzDisabled]="disabled()"
-      style="width: 100%"
     >
       <nz-option
         *ngIf="showAllOption()"
         [nzValue]="0"
-        [nzLabel]="'AllRoom' | translate"
+        [nzLabel]="'AllCharge' | translate"
       ></nz-option>
       <nz-option
         *ngFor="let item of lists()"
         nzCustomContent
         [nzValue]="item.id"
-        [nzLabel]="item?.roomNumber + ' ' + item?.roomTypeName"
+        [nzLabel]="item?.name + ''"
       >
-        <span class="b-name">{{
-          item?.roomNumber + " " + item?.roomTypeName
-        }}</span>
+        <span>{{ item.name }}</span>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
         <i nz-icon nzType="loading" class="loading-icon"></i>
@@ -54,7 +45,7 @@ import { effect } from "@angular/core";
       </nz-option>
       <ng-template #actionItem>
         <a
-          *ngIf="addOption()"
+          *ngIf="addOption() && isChargeAdd"
           (click)="uiService.showAdd(componentId)"
           class="item-action"
         >
@@ -68,41 +59,25 @@ import { effect } from "@angular/core";
       nz-select {
         width: 100%;
       }
-      .item-action {
-        flex: 0 0 auto;
-        padding: 6px 8px;
-        display: block;
-      }
-      .b-code {
-        font-weight: bolder;
-      }
-      .b-name {
-        font-size: 12px;
-        padding-left: 5px;
-      }
-      ::ng-deep cdk-virtual-scroll-viewport {
-        min-height: 34px;
-      }
     `,
   ],
+  encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class RoomSelectComponent extends BaseSelectComponent<Room> {
+export class ChargeSelectComponent extends BaseSelectComponent<Charge> {
   constructor(
-    service: RoomService,
-    uiService: RoomUiService,
-    sessionStorageService: SessionStorageService
+    service: ChargeService,
+    uiService: ChargeUiService,
+    sessionStorageService: SessionStorageService,
+    private authService: AuthService
   ) {
-    super(service, uiService, sessionStorageService, "room-filter", "all-room");
-
-    effect(() => {
-      if (this.floorId) {
-        this.search([
-          { field: "floorId", operator: "eq", value: this.floorId() },
-        ]);
-      }
-      console.log(this.floorId);
-    });
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "charge-filter",
+      "all-charge"
+    );
   }
-  floorId = input(0);
+  isChargeAdd: boolean = true;
 }

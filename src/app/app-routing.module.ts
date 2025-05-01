@@ -24,11 +24,11 @@ import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
 import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
 import { UnitListComponent } from "./pages/unit/unit-list.component";
-import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
 import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
 import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
 import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
+import { RoomChargeListComponent } from "./pages/room-charge/room-charge-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -210,11 +210,11 @@ const routes: Routes = [
       },
 
       {
-        path: "setting/room-charge-type",
-        component: RoomChargeTypeListComponent,
+        path: "setting/room-charge",
+        component: RoomChargeListComponent,
         data: [
           { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "RoomChargeType", url: null },
+          { index: 1, label: "RoomCharge", url: null },
         ],
       },
       {

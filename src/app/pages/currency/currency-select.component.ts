@@ -24,7 +24,7 @@ import {CurrencyUiService} from "./currency-ui.service";
                 (nzOnSearch)="searchText.set($event); param().pageIndex = 1; search()"
                 [nzDisabled]="disabled()"
         >
-            <nz-option *ngIf="showAllOption" [nzValue]="0" [nzLabel]="'-' | translate"></nz-option>
+            <nz-option *ngIf="showAllOption()" [nzValue]="0" [nzLabel]="'-' | translate"></nz-option>
             <nz-option *ngFor="let item of lists()" nzCustomContent [nzValue]="item.id" [nzLabel]="item?.code + ''">
                 <span>{{ item.code }}</span>
             </nz-option>

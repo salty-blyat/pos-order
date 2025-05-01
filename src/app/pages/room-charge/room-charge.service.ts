@@ -3,18 +3,26 @@ import { BaseApiService } from "../../utils/services/base-api.service";
 import { SettingService } from "../../app-setting";
 import { HttpClient } from "@angular/common/http";
 
-export interface RoomChargeType {
+export interface RoomCharge {
+  roomId?: number;
+  chargeId?: number;
+  serial?: string;
+  startDate?: string;
+  endDate?: string;
+  statusId?: number;
+  totalLimit?: number;
   id?: number;
   roomNumber?: string;
-  chargeType?: string;
-  limit?: number;
+  chargeName?: string;
+  statusName?: string;
+  statusNameEn?: string;
 }
 
 @Injectable({
   providedIn: "root",
 })
-export class RoomChargeTypeService extends BaseApiService<RoomChargeType> {
+export class RoomChargeService extends BaseApiService<RoomCharge> {
   constructor(private http: HttpClient, settingService: SettingService) {
-    super("roomchargetype", http, settingService); 
+    super("roomcharge", http, settingService);
   }
 }

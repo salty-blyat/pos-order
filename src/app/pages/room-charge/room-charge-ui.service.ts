@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
 import { BaseUiService } from "../../utils/services/base-ui.service";
 import { NzModalService } from "ng-zorro-antd/modal";
-import { RoomChargeTypeDeleteComponent } from "./room-charge-type-delete.component";
-import { RoomChargeTypeOperationComponent } from "./room-charge-type-operation.component";
+import { RoomChargeDeleteComponent } from "./room-charge-delete.component";
+import { RoomChargeOperationComponent } from "./room-charge-operation.component";
 
 @Injectable({ providedIn: "root" })
-export class RoomChargeTypeUiService extends BaseUiService {
+export class RoomChargeUiService extends BaseUiService {
   constructor(modalService: NzModalService) {
     super(
       modalService,
-      RoomChargeTypeOperationComponent,
-      RoomChargeTypeDeleteComponent,
+      RoomChargeOperationComponent,
+      RoomChargeDeleteComponent,
       "450px",
       "450px",
       "450px",

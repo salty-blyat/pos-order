@@ -1,28 +1,17 @@
-import {
-  Component,
-  computed,
-  OnInit,
-  signal,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
-import { filter, Observable } from "rxjs";
+import { Observable } from "rxjs";
 import { SIZE_COLUMNS } from "../../const";
-import {
-  RoomChargeType,
-  RoomChargeTypeService,
-} from "./room-charge-type.service";
-import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
+import { RoomCharge, RoomChargeService } from "./room-charge.service";
+import { RoomChargeUiService } from "./room-charge-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
-import { FloorService } from "../floor/floor.service";
-import { RoomService } from "../room/room.service";
 import { Filter } from "../../utils/services/base-api.service";
-import { RoomListComponent } from "../room/room-list.component";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: "app-room-charge-type-list",
+  selector: "app-room-charge-list",
   template: `
     <nz-layout>
       <app-breadcrumb
@@ -30,10 +19,10 @@ import { RoomListComponent } from "../room/room-list.component";
         [data]="breadcrumbData()"
       ></app-breadcrumb>
       <nz-header>
-        <div nz-row >
-          <div nz-col  nzSpan="5">
+        <div nz-row>
+          <div nz-col nzSpan="5">
             <app-filter-input
-              storageKey="room-charge-type-list-search"
+              storageKey="room-charge-list-search"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
@@ -59,21 +48,19 @@ import { RoomListComponent } from "../room/room-list.component";
             ></app-room-select>
           </div>
           <div nz-col nzSpan="5">
-            <app-lookup-item-select
-              formControlName="chargeTypeId"
-              [showAll]="'AllChargeType' | translate"
+            <app-charge-select
+              formControlName="chargeId"
               [showAllOption]="true"
               storageKey="charge-type-filter"
               (valueChanged)="
-                chargeTypeId.set($event); param().pageIndex = 1; search()
+                chargeId.set($event); param().pageIndex = 1; search()
               "
-              [lookupType]="this.lookupItemType.ChargeType"
-            ></app-lookup-item-select>
+            ></app-charge-select>
           </div>
         </div>
         <div style="margin-left:auto">
           <button
-            *ngIf="isRoomChargeTypeAdd()"
+            *ngIf="isRoomChargeAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -105,13 +92,25 @@ import { RoomListComponent } from "../room/room-list.component";
           <thead>
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">
-                {{ "RoomName" | translate }}
+              <th nzWidth="150px">
+                {{ "Serial" | translate }}
               </th>
-              <th nzWidth="150px">{{ "ChargeType" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NAME">
+                {{ "RoomNumber" | translate }}
+              </th>
+
+              <th nzWidth="150px">{{ "Charge" | translate }}</th>
+
+              <th nzWidth="150px">
+                {{ "StartDate" | translate }}
+              </th>
+              <th nzWidth="150px">
+                {{ "EndDate" | translate }}
+              </th>
               <th nzWidth="150px">
                 {{ "Limit" | translate }}
               </th>
+              <th nzWidth="150px">{{ "Status" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -127,15 +126,32 @@ import { RoomListComponent } from "../room/room-list.component";
                         }
                 }}
               </td>
+              <td nzEllipsis>
+                <a
+                  *ngIf="isRoomChargeView()"
+                  (click)="uiService.showView(data.id!)"
+                  >{{ data.serial }}</a
+                >
+                <span *ngIf="!isRoomChargeView()">{{ data.serial }} </span>
+              </td>
               <td nzEllipsis>{{ data.roomNumber }}</td>
-              <td nzEllipsis>{{ data.chargeType }}</td>
-              <td nzEllipsis>{{ data.limit }}</td>
+              <td nzEllipsis>{{ data.chargeName }}</td>
+              <td nzEllipsis>{{ data.startDate | customDate }}</td>
+              <td nzEllipsis>{{ data.endDate | customDate }}</td>
+              <td nzEllipsis>{{ data.totalLimit }}</td>
+              <td nzEllipsis>
+                {{
+                   this.translateService.currentLang === "km"
+                    ? data.statusName
+                    : data.statusNameEn 
+                }}
+              </td>
               <td nzAlign="right">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isRoomChargeTypeEdit()">
+                  <ng-container *ngIf="isRoomChargeEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i
                         nz-icon
@@ -146,7 +162,7 @@ import { RoomListComponent } from "../room/room-list.component";
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isRoomChargeTypeRemove()">
+                  <ng-container *ngIf="isRoomChargeRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -174,39 +190,34 @@ import { RoomListComponent } from "../room/room-list.component";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class RoomChargeTypeListComponent extends BaseListComponent<RoomChargeType> {
+export class RoomChargeListComponent extends BaseListComponent<RoomCharge> {
   constructor(
-    service: RoomChargeTypeService,
-    uiService: RoomChargeTypeUiService,
+    service: RoomChargeService,
+    uiService: RoomChargeUiService,
     sessionStorageService: SessionStorageService,
-    private activated: ActivatedRoute
+    private activated: ActivatedRoute,
+    public translateService: TranslateService
   ) {
-    super(service, uiService, sessionStorageService, "room-charge-type-list");
+    super(service, uiService, sessionStorageService, "room-charge-list");
   }
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isRoomChargeTypeAdd = signal<boolean>(true);
-  isRoomChargeTypeEdit = signal<boolean>(true);
-  isRoomChargeTypeRemove = signal<boolean>(true);
-  isRoomChargeTypeView = signal<boolean>(true);
+  isRoomChargeAdd = signal<boolean>(true);
+  isRoomChargeEdit = signal<boolean>(true);
+  isRoomChargeRemove = signal<boolean>(true);
+  isRoomChargeView = signal<boolean>(true);
   lookupItemType = LOOKUP_TYPE;
   floorId = signal(0);
   roomId = signal(0);
-  chargeTypeId = signal(0);
-
-  override lists = signal<RoomChargeType[]>([
-    { id: 1, roomNumber: "001", chargeType: "Water", limit: 50 },
-    { id: 2, roomNumber: "002", chargeType: "Electricity", limit: 100 },
-    { id: 3, roomNumber: "003", chargeType: "Electricity", limit: 100 },
-  ]);
+  chargeId = signal(0);
 
   override search() {
     const filters: Filter[] = [];
-    if (this.chargeTypeId()) {
+    if (this.chargeId()) {
       filters.push({
-        field: "chargeTypeId",
+        field: "chargeId",
         operator: "eq",
-        value: this.chargeTypeId(),
+        value: this.chargeId(),
       });
     }
     if (this.roomId()) {
