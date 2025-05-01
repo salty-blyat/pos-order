@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 
 export interface MemberUnit {
   id?: number;
+  code?: string;
   name?: string;
   note?: string;
   ordering?: number;

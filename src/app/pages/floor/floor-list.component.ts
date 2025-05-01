@@ -3,9 +3,7 @@ import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Floor, FloorService } from "./floor.service";
 import { FloorUiService } from "./floor-ui.service";
-import { Filter } from "../../utils/services/base-api.service";
 import { SIZE_COLUMNS } from "../../const";
-import {delay} from "rxjs";
 
 @Component({
   selector: "app-floor-list",
@@ -94,11 +92,8 @@ import {delay} from "rxjs";
                         }
                 }}
               </td>
-              <td nzEllipsis style="flex:2px">
-                <a
-                  (click)="uiService.showView(data.id!)"
-                  >{{ data.name }}</a
-                >
+              <td nzEllipsis style="flex:2">
+                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
               <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
@@ -144,7 +139,9 @@ import {delay} from "rxjs";
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
 })
-export class FloorListComponent extends BaseListComponent<Floor> implements OnChanges
+export class FloorListComponent
+  extends BaseListComponent<Floor>
+  implements OnChanges
 {
   constructor(
     override service: FloorService,
@@ -168,7 +165,7 @@ export class FloorListComponent extends BaseListComponent<Floor> implements OnCh
           operator: "eq",
           value: blockId,
         },
-      ]
+      ];
       super.search(filters);
     }
   }

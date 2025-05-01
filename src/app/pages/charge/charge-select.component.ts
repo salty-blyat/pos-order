@@ -1,4 +1,4 @@
-import { Component, forwardRef, ViewEncapsulation } from "@angular/core";
+import { Component, forwardRef, ViewEncapsulation, WritableSignal } from "@angular/core";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { AuthService } from "../../helpers/auth.service";
@@ -36,6 +36,7 @@ import { ChargeUiService } from "./charge-ui.service";
         nzCustomContent
         [nzValue]="item.id"
         [nzLabel]="item?.name + ''"
+        
       >
         <span>{{ item.name }}</span>
       </nz-option>
@@ -78,6 +79,6 @@ export class ChargeSelectComponent extends BaseSelectComponent<Charge> {
       "charge-filter",
       "all-charge"
     );
-  }
+  } 
   isChargeAdd: boolean = true;
 }

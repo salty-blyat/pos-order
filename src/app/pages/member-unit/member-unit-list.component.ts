@@ -6,7 +6,11 @@ import { SIZE_COLUMNS } from "../../const";
 import { Observable } from "rxjs";
 import { MemberUnit, MemberUnitService } from "./member-unit.service";
 import { MemberUnitUiService } from "./member-unit-ui.service";
-import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-setting/system-setting.service";
+import {
+  SETTING_KEY,
+  SystemSetting,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-member-unit-list",
@@ -69,7 +73,7 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
           [nzTotal]="param().rowCount || 0"
           [nzPageSize]="param().pageSize || 0"
           [nzPageIndex]="param().pageIndex || 0"
-          [nzNoResult]="noResult" 
+          [nzNoResult]="noResult"
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
         >
@@ -80,6 +84,7 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th class="col-action" [nzWidth]="SIZE_COLUMNS.ACTION"></th>
@@ -105,8 +110,11 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
                         }
                 }}
               </td>
+              <td nzEllipsis title="{{ data.code }}">
+                <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
+              </td>
               <td nzEllipsis title="{{ data.name }}">
-                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+                 {{ data.name }} 
               </td>
               <td nzEllipsis title="{{ data.note }}">
                 {{ data.note }}
@@ -162,10 +170,11 @@ export class MemberUnitListComponent extends BaseListComponent<MemberUnit> {
   isMemberUnitEdit: boolean = true;
   isMemberUnitRemove: boolean = true;
   isMemberUnitView: boolean = true;
-  
+
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 
   override ngOnInit(): void {
+    super.ngOnInit();
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
       next: (result: SystemSetting) => {
         this.pavrEnable.set(Boolean(result.value));

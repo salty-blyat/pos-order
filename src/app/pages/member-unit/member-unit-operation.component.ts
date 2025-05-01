@@ -2,9 +2,13 @@ import { Component, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { NzModalRef } from "ng-zorro-antd/modal"; 
+import { NzModalRef } from "ng-zorro-antd/modal";
 import { MemberUnit, MemberUnitService } from "./member-unit.service";
 import { MemberUnitUiService } from "./member-unit-ui.service";
+import {
+  SETTING_KEY,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-member-unit-operation",
@@ -24,12 +28,22 @@ import { MemberUnitUiService } from "./member-unit-ui.service";
         *ngIf="isLoading()"
         style="position: absolute; top: 50%; left: 50%"
       ></nz-spin>
-      <form
-        nz-form
-        [formGroup]="frm"
-        
-        [nzAutoTips]="autoTips"
-      >
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>
+            {{ "Code" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+            <input
+              nz-input
+              formControlName="code"
+              placeholder="{{
+                editableCode ? ('NewCode' | translate) : ''
+              }}"
+            />
+          </nz-form-control>
+        </nz-form-item>
+
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "Name" | translate }}
@@ -43,11 +57,7 @@ import { MemberUnitUiService } from "./member-unit-ui.service";
             >{{ "Note" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
-            <textarea
-              nz-input
-              rows="3"
-              formControlName="note"
-            ></textarea>
+            <textarea nz-input rows="3" formControlName="note"></textarea>
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -108,6 +118,7 @@ export class MemberUnitOperationComponent extends BaseOperationComponent<MemberU
     fb: FormBuilder,
     ref: NzModalRef<MemberUnitOperationComponent>,
     service: MemberUnitService,
+    private systemSettingService: SystemSettingService,
     uiService: MemberUnitUiService
   ) {
     super(fb, ref, service, uiService);
@@ -115,11 +126,27 @@ export class MemberUnitOperationComponent extends BaseOperationComponent<MemberU
 
   isMemberUnitEdit: boolean = true;
   isMemberUnitRemove: boolean = true;
+  editableCode: boolean = false;
+
+  override ngOnInit(): void {
+    setTimeout(() => {
+      let setting = this.systemSettingService.current.items.find(
+        (item) => item.key === SETTING_KEY.MemberUnitAutoId
+      );
+      if (setting) this.editableCode = +setting.value! !== 0;
+      if (this.editableCode) {
+        this.frm.get("code")?.disable();
+      }
+    }, 50);
+    super.ngOnInit();
+  }
 
   override initControl(): void {
     const { required, noteMaxLengthValidator, nameExistValidator } =
       CommonValidators;
+
     this.frm = this.fb.group({
+      code: [{ value: null, disabled: this.editableCode }, [required]],
       name: [
         null,
         [required, noteMaxLengthValidator()],
@@ -131,6 +158,7 @@ export class MemberUnitOperationComponent extends BaseOperationComponent<MemberU
 
   override setFormValue() {
     this.frm.setValue({
+      code: this.model.code,
       name: this.model.name,
       note: this.model.note,
     });

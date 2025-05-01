@@ -1,4 +1,4 @@
-import {Component, OnInit, signal, ViewEncapsulation} from "@angular/core";
+import {Component, signal, ViewEncapsulation} from "@angular/core";
 import {BaseOperationComponent} from "../../utils/components/base-operation.component";
 import {FormBuilder} from "@angular/forms";
 import {CommonValidators} from "../../utils/services/common-validators";
@@ -134,8 +134,6 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
       serial: [null, [required, noteMaxLengthValidator]],
       startReading: [null, [required]],
       statusId: [null, [required]],
-      isFreeUsage: [false],
-      freeUsage: [null, [required, integerValidator]],
       startDate: [null, [required]],
       endDate: [null],
     });
@@ -149,8 +147,6 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
       startReading: this.model.startReading,
       statusId: this.model.statusId,
       startDate: this.model.startDate,
-      isFreeUsage: this.model.isFreeUsage,
-      freeUsage: this.model.freeUsage,
     });
   }
 

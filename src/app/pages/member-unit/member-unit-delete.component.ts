@@ -1,8 +1,8 @@
-import {Component, ViewEncapsulation} from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { BaseDeleteComponent } from "../../utils/components/base-delete.component"; 
+import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
 import { MemberUnit, MemberUnitService } from "./member-unit.service";
 import { MemberUnitUiService } from "./member-unit-ui.service";
 
@@ -16,10 +16,7 @@ import { MemberUnitUiService } from "./member-unit-ui.service";
       >
     </div>
     <div class="modal-content">
-      <nz-spin
-        *ngIf="isLoading()"
-        style="position: absolute; top: 50%; left: 50%"
-      ></nz-spin>
+      <app-loading *ngIf="isLoading()"></app-loading>
       <div
         *ngIf="errMessage() && !isLoading()"
         nz-row
