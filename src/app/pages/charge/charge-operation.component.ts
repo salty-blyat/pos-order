@@ -210,11 +210,7 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
           this.frm.controls["code"].disable();
           this.frm.controls["code"].setValidators([]);
         }
-      },
-      error: (error) => {
-        console.log(error);
-      },
-      complete: () => {},
+      }, 
     });
   }
 }

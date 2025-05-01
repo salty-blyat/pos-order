@@ -43,7 +43,7 @@ import {
         </div>
         <div nz-flex nzGap="4px" nzAlign="center">
           <button
-            *ngIf="pavrEnable"
+            *ngIf="pavrEnable()"
             nz-button
             nzType="primary"
             (click)="uiService.showPull()"
@@ -114,7 +114,7 @@ import {
                 <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
               </td>
               <td nzEllipsis title="{{ data.name }}">
-                 {{ data.name }} 
+                {{ data.name }}
               </td>
               <td nzEllipsis title="{{ data.note }}">
                 {{ data.note }}
@@ -176,13 +176,12 @@ export class MemberUnitListComponent extends BaseListComponent<MemberUnit> {
   override ngOnInit(): void {
     super.ngOnInit();
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
-      next: (result: SystemSetting) => {
-        this.pavrEnable.set(Boolean(result.value));
+      next: (result: boolean) => { 
+        this.pavrEnable.set(result);
       },
       error: (error) => {
         console.log(error);
-      },
-      complete: () => {},
+      }, 
     });
   }
 }

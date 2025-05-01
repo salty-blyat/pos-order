@@ -5,7 +5,8 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Currency, CurrencyService } from "./currency.service";
 import { CurrencyUiService } from "./currency-ui.service";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-currency",
@@ -17,7 +18,7 @@ import { SIZE_COLUMNS } from "../../const";
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
-          <div style="width: 220px; margin-right: 4px;">
+          <div nz-col>
             <app-filter-input
               storageKey="currency-list-search"
               (filterChanged)="
@@ -93,7 +94,7 @@ import { SIZE_COLUMNS } from "../../const";
               <td nzEllipsis>{{ data.symbol }}</td>
               <td nzEllipsis>{{ data.format }}</td>
               <td nzEllipsis>{{ data.rounding }}</td>
-              <td nzEllipsis>{{ data.exchangeRate }}</td> 
+              <td nzEllipsis>{{ data.exchangeRate }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
@@ -143,7 +144,8 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
     service: CurrencyService,
     sessionStorageService: SessionStorageService,
     public override uiService: CurrencyUiService,
-    private activated: ActivatedRoute
+    private activated: ActivatedRoute,
+    public authService: AuthService
   ) {
     super(service, uiService, sessionStorageService, "currency-list");
   }
@@ -152,5 +154,21 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
   isCurrencyEdit: boolean = true;
   isCurrencyRemove: boolean = true;
   isCurrencyView: boolean = true;
+
+  override ngOnInit(): void {
+    this.isCurrencyAdd = this.authService.isAuthorized(
+      AuthKeys.APP__SETTING__CURRENCY__ADD
+    );
+    this.isCurrencyEdit = this.authService.isAuthorized(
+      AuthKeys.APP__SETTING__CURRENCY__EDIT
+    );
+    this.isCurrencyRemove = this.authService.isAuthorized(
+      AuthKeys.APP__SETTING__CURRENCY__REMOVE
+    );
+    this.isCurrencyView = this.authService.isAuthorized(
+      AuthKeys.APP__SETTING__CURRENCY__VIEW
+    );
+  }
+
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

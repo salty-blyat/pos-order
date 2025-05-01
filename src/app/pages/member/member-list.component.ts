@@ -59,7 +59,7 @@ import {
         </div>
         <div style="margin-left:auto" nz-flex nzGap="4px" nzAlign="center">
           <button
-            *ngIf="pavrEnable"
+            *ngIf="pavrEnable()"
             nz-button
             nzType="primary"
             (click)="uiService.showPull()"
@@ -231,13 +231,12 @@ export class MemberListComponent extends BaseListComponent<Member> {
     }
 
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
-      next: (result: SystemSetting) => {
-        this.pavrEnable.set(Boolean(result.value));
+      next: (result: boolean) => {
+        this.pavrEnable.set(result);
       },
       error: (error) => {
         console.log(error);
       },
-      complete: () => {},
     });
 
     super.ngOnInit();
