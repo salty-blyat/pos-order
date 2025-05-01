@@ -10,7 +10,10 @@ import { SettingService } from "../../app-setting";
 import { Image } from "../lookup/lookup-item/lookup-item.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { Observable } from "rxjs";
-import { SETTING_KEY, SystemSettingService } from "../system-setting/system-setting.service";
+import {
+  SETTING_KEY,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-item-operation",
@@ -35,7 +38,13 @@ import { SETTING_KEY, SystemSettingService } from "../system-setting/system-sett
                 >{{ "Code" | translate }}
               </nz-form-label>
               <nz-form-control [nzSpan]="14" nzHasFeedback>
-                <input nz-input formControlName="code" />
+                <input
+                  nz-input
+                  formControlName="code"
+                  placeholder="{{
+                    editableCode ? ('NewCode' | translate) : ''
+                  }}"
+                />
               </nz-form-control>
             </nz-form-item>
 
@@ -54,7 +63,7 @@ import { SETTING_KEY, SystemSettingService } from "../system-setting/system-sett
               </nz-form-label>
               <nz-form-control [nzSpan]="14">
                 <app-item-type-select
-                  [storageKey]="'item-type-filter'"
+                  storageKey="item-type-filter"
                   formControlName="itemTypeId"
                   [addOption]="true"
                 ></app-item-type-select>
@@ -148,7 +157,7 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
     ref: NzModalRef<ItemOperationComponent>,
     override service: ItemService,
     override uiService: ItemUiService,
-    public systemSettingService: SystemSettingService, 
+    public systemSettingService: SystemSettingService,
     private settingService: SettingService
   ) {
     super(fb, ref, service, uiService);
@@ -157,35 +166,25 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   image!: Image;
   nzShowIconList: any = false;
-  itemAutoIdEnable = signal<boolean>(false);
+  editableCode = false;
 
   override ngOnInit() {
     super.ngOnInit();
-    const { required } = CommonValidators;
     setTimeout(() => {
       if (this.modal?.isView) {
         this.nzShowIconList = { showPreviewIcon: true };
       } else {
         this.nzShowIconList = true;
       }
+
+      let setting = this.systemSettingService.current.items.find(
+        (item) => item.key === SETTING_KEY.ItemAutoId
+      );
+      if (setting) this.editableCode = +setting.value! !== 0;
+      if (this.editableCode) {
+        this.frm.get("code")?.disable();
+      }
     }, 10);
-    this.systemSettingService.find(SETTING_KEY.ItemAutoId).subscribe({
-      next: (result: any) => {
-        if (result === 0) {
-          this.itemAutoIdEnable.set(false);
-          this.frm.controls["code"].enable();
-          this.frm.controls["code"].setValidators([required]);
-        } else {
-          this.itemAutoIdEnable.set(true);
-          this.frm.controls["code"].disable();
-          this.frm.controls["code"].setValidators([]);
-        }
-      },
-      error: (error) => {
-        console.log(error);
-      },
-      complete: () => {},
-    });
   }
 
   override initControl(): void {

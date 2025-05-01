@@ -8,7 +8,7 @@ import {MemberUiService} from "./member-ui.service";
 import {SettingService} from "../../app-setting";
 import {NzUploadChangeParam, NzUploadFile} from "ng-zorro-antd/upload";
 import {LOOKUP_TYPE} from "../lookup/lookup-type.service";
-import {SystemSettingService} from "../system-setting/system-setting.service";
+import {SETTING_KEY, SystemSettingService} from "../system-setting/system-setting.service";
 import {Observable, Observer} from "rxjs";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {AuthService} from "../../helpers/auth.service";
@@ -505,9 +505,21 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   customerNameEn = '';
   isCustomerEdit: boolean = true;
   isCustomerRemove: boolean = true;
+  editableCode: boolean = false;
 
   override ngOnInit(): void {
     this.initControl();
+    setTimeout(() => {
+      let setting = this.systemSettingService.current.items.find(
+        (item) => item.key === SETTING_KEY.MemberAutoId
+      );
+      if (setting) this.editableCode = +setting.value! !== 0;
+      if (this.editableCode) {
+        this.frm.get("code")?.disable();
+      }
+    }, 50);
+    super.ngOnInit();
+
     // this.systemSettingService
     //   .search([
     //     SETTING_KEY.CustomerAutoId,
@@ -673,7 +685,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       integerValidator
     } = CommonValidators;
     this.frm = this.fb.group({
-      code: [null, [required, codeMaxLengthValidator], [codeExistValidator(this.service, this.modal?.id)]],
+      code: [{ value: null, disabled: this.editableCode }, [required, codeMaxLengthValidator], [codeExistValidator(this.service, this.modal?.id)]], 
       name: [null, [required, nameMaxLengthValidator]],
       nameEn: [null],
       birthDate: [null],

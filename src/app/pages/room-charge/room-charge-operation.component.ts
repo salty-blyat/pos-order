@@ -39,10 +39,9 @@ import { RoomChargeUiService } from "./room-charge-ui.service";
           }}</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
             <app-room-select
-              [storageKey]="'room-filter'"
+              storageKey="room-filter"
               formControlName="roomId"
               [addOption]="true"
-              [showAllOption]="false"
             ></app-room-select>
           </nz-form-control>
         </nz-form-item>
@@ -53,10 +52,9 @@ import { RoomChargeUiService } from "./room-charge-ui.service";
           }}</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
             <app-charge-select
-              [storageKey]="'charge-filter'"
+              storageKey="charge-filter"
               formControlName="chargeId"
               [addOption]="true"
-              [showAllOption]="false"
             ></app-charge-select>
           </nz-form-control>
         </nz-form-item>
