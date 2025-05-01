@@ -66,17 +66,9 @@ import { RoomChargeUiService } from "./room-charge-ui.service";
             {{ "Status" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-select 
-            formControlName="statusId"
-            >
-              <nz-option
-                [nzValue]="1"
-                nzLabel="Active"
-              ></nz-option>
-              <nz-option
-                [nzValue]="2"
-                nzLabel="InActive"
-              ></nz-option>
+            <nz-select formControlName="statusId">
+              <nz-option [nzValue]="1" nzLabel="Active"></nz-option>
+              <nz-option [nzValue]="2" nzLabel="InActive"></nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
@@ -96,15 +88,6 @@ import { RoomChargeUiService } from "./room-charge-ui.service";
           }}</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
             <nz-date-picker formControlName="startDate"></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label [nzSm]="7" [nzXs]="24">{{
-            "EndDate" | translate
-          }}</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-date-picker formControlName="endDate"></nz-date-picker>
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -174,11 +157,8 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
   isRoomChargeRemove = signal(true);
 
   override initControl(): void {
-    const {
-      required,
-      integerValidator, 
-      noteMaxLengthValidator,
-    } = CommonValidators;
+    const { required, integerValidator, noteMaxLengthValidator } =
+      CommonValidators;
     this.frm = this.fb.group({
       // serial: [null, [required, noteMaxLengthValidator], [nameExistValidator(this.service, this.modal?.id)]],
       serial: [null, [required, noteMaxLengthValidator]],
@@ -186,8 +166,7 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
       statusId: [null, [required]],
       chargeId: [null, [required]],
       totalLimit: [null, [required, integerValidator]],
-      startDate: [null,[required]],
-      endDate: [null],
+      startDate: [null, [required]],
     });
   }
 
@@ -199,7 +178,6 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
       totalLimit: this.model.totalLimit,
       statusId: this.model.statusId,
       startDate: this.model.startDate,
-      endDate: this.model.endDate,
     });
   }
 

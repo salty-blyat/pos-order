@@ -1,14 +1,11 @@
-import { Component, effect, signal, ViewEncapsulation } from "@angular/core";
+import { Component, effect, ViewEncapsulation } from "@angular/core";
 import { UntypedFormBuilder } from "@angular/forms";
 import { SETTING_KEY, SystemSettingService } from "./system-setting.service";
 import { BaseSettingSectionComponent } from "../../utils/components/base-setting-section.component";
 
 import { NotificationService } from "../../utils/services/notification.service";
 import { SettingService } from "../../app-setting";
-import { CommonValidators } from "../../utils/services/common-validators";
-import { LocalStorageService } from "../../utils/services/localStorage.service";
 import { HttpErrorResponse } from "@angular/common/module.d-CnjH8Dlt";
-import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-pavr-section",

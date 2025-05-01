@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, signal, ViewEncapsulation } from "@angular/core";
 import { Item } from "./item.service";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
@@ -10,137 +10,133 @@ import { SettingService } from "../../app-setting";
 import { Image } from "../lookup/lookup-item/lookup-item.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { Observable } from "rxjs";
+import { SETTING_KEY, SystemSettingService } from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-item-operation",
   template: `
-      <div *nzModalTitle class="modal-header-ellipsis">
-          <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
-          <span *ngIf="modal?.id && !modal?.isView"
-          >{{ "Edit" | translate }}
-              {{ model?.name || ("Loading" | translate) }}</span
-          >
-          <span *ngIf="modal?.id && modal?.isView">{{
-                  model?.name || ("Loading" | translate)
-              }}</span>
-      </div>
-      <div class="modal-content" style="padding: 0 24px;">
-          <app-loading *ngIf="isLoading()"/>
-          <form
-                  nz-form
-                  [formGroup]="frm"
-                  [nzAutoTips]="autoTips"
-          >
-              <div nz-row>
-                  <div nz-col [nzSpan]="17">
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="7" nzRequired>{{
-                                  "Code" | translate
-                              }}
-                          </nz-form-label>
-                          <nz-form-control [nzSpan]="14" nzHasFeedback>
-                              <input nz-input formControlName="code"/>
-                          </nz-form-control>
-                      </nz-form-item>
+    <div *nzModalTitle class="modal-header-ellipsis">
+      <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
+      <span *ngIf="modal?.id && !modal?.isView"
+        >{{ "Edit" | translate }}
+        {{ model?.name || ("Loading" | translate) }}</span
+      >
+      <span *ngIf="modal?.id && modal?.isView">{{
+        model?.name || ("Loading" | translate)
+      }}</span>
+    </div>
+    <div class="modal-content" style="padding: 0 24px;">
+      <app-loading *ngIf="isLoading()" />
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
+        <div nz-row>
+          <div nz-col [nzSpan]="17">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired
+                >{{ "Code" | translate }}
+              </nz-form-label>
+              <nz-form-control [nzSpan]="14" nzHasFeedback>
+                <input nz-input formControlName="code" />
+              </nz-form-control>
+            </nz-form-item>
 
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="7" nzRequired>{{
-                                  "Name" | translate
-                              }}
-                          </nz-form-label>
-                          <nz-form-control [nzSpan]="14" nzHasFeedback>
-                              <input nz-input formControlName="name"/>
-                          </nz-form-control>
-                      </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired
+                >{{ "Name" | translate }}
+              </nz-form-label>
+              <nz-form-control [nzSpan]="14" nzHasFeedback>
+                <input nz-input formControlName="name" />
+              </nz-form-control>
+            </nz-form-item>
 
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="7" nzRequired>{{
-                                  "ItemType" | translate
-                              }}
-                          </nz-form-label>
-                          <nz-form-control [nzSpan]="14">
-                              <app-item-type-select
-                                      [storageKey]="'item-type-filter'"
-                                      formControlName="itemTypeId"
-                                      [addOption]="true"
-                              ></app-item-type-select>
-                          </nz-form-control>
-                      </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired
+                >{{ "ItemType" | translate }}
+              </nz-form-label>
+              <nz-form-control [nzSpan]="14">
+                <app-item-type-select
+                  [storageKey]="'item-type-filter'"
+                  formControlName="itemTypeId"
+                  [addOption]="true"
+                ></app-item-type-select>
+              </nz-form-control>
+            </nz-form-item>
 
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="7">{{
-                                  "Note" | translate
-                              }}
-                          </nz-form-label>
-                          <nz-form-control [nzSpan]="14">
-                              <textarea nz-input formControlName="note" rows="3"></textarea>
-                          </nz-form-control>
-                      </nz-form-item>
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="7" nzNoColon></nz-form-label>
-                          <nz-form-control>
-                              <label nz-checkbox
-                                     formControlName="isTrackSerial">{{ "IsTrackSerial" | translate }}</label>
-                          </nz-form-control>
-                      </nz-form-item>
-                  </div>
-
-                  <div nz-col [nzSpan]="7">
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="8">{{ "Image" | translate }}</nz-form-label>
-                          <nz-form-control [nzSpan]="12">
-                              <nz-upload
-                                      [nzAction]="uploadUrl"
-                                      [(nzFileList)]="file"
-                                      nzListType="picture-card"
-                                      (nzChange)="handleUploadItem($event)"
-                                      [nzShowUploadList]="nzShowIconList"
-                                      [nzShowButton]="file.length < 1"
-                                      [nzDisabled]="modal?.isView"
-                              >
-                                  <div>
-                                      <span nz-icon nzType="plus"></span>
-                                      <div class="upload-text">{{ "Upload" | translate }}</div>
-                                  </div>
-                              </nz-upload>
-                          </nz-form-control>
-                      </nz-form-item>
-                  </div>
-              </div>
-          </form>
-      </div>
-      <div *nzModalFooter>
-          <div *ngIf="!modal?.isView">
-              <button
-                      nz-button
-                      nzType="primary"
-                      [disabled]="!frm.valid"
-                      (click)="onSubmit($event)"
-              >
-                  <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
-                  {{ "Save" | translate }}
-              </button>
-              <button nz-button nzType="default" (click)="cancel()">
-                  {{ "Cancel" | translate }}
-              </button>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="7"
+                >{{ "Note" | translate }}
+              </nz-form-label>
+              <nz-form-control [nzSpan]="14">
+                <textarea nz-input formControlName="note" rows="3"></textarea>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzNoColon></nz-form-label>
+              <nz-form-control>
+                <label nz-checkbox formControlName="isTrackSerial">{{
+                  "IsTrackSerial" | translate
+                }}</label>
+              </nz-form-control>
+            </nz-form-item>
           </div>
-          <div *ngIf="modal?.isView">
-              <a *ngIf="!isLoading()">
-                  <i nz-icon nzType="edit" nzTheme="outline"></i>
-                  <span class="action-text"> {{ "Edit" | translate }}</span>
-              </a>
-              <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
-              <a nz-typography nzType="danger" *ngIf="!isLoading()">
-                  <i nz-icon nzType="delete" nzTheme="outline"></i>
-                  <span class="action-text"> {{ "Delete" | translate }}</span>
-              </a>
-              <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
-              <a nz-typography (click)="cancel()" style="color: gray;">
-                  <i nz-icon nzType="close" nzTheme="outline"></i>
-                  <span class="action-text"> {{ "Close" | translate }}</span>
-              </a>
+
+          <div nz-col [nzSpan]="7">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="8">{{
+                "Image" | translate
+              }}</nz-form-label>
+              <nz-form-control [nzSpan]="12">
+                <nz-upload
+                  [nzAction]="uploadUrl"
+                  [(nzFileList)]="file"
+                  nzListType="picture-card"
+                  (nzChange)="handleUploadItem($event)"
+                  [nzShowUploadList]="nzShowIconList"
+                  [nzShowButton]="file.length < 1"
+                  [nzDisabled]="modal?.isView"
+                >
+                  <div>
+                    <span nz-icon nzType="plus"></span>
+                    <div class="upload-text">{{ "Upload" | translate }}</div>
+                  </div>
+                </nz-upload>
+              </nz-form-control>
+            </nz-form-item>
           </div>
+        </div>
+      </form>
+    </div>
+    <div *nzModalFooter>
+      <div *ngIf="!modal?.isView">
+        <button
+          nz-button
+          nzType="primary"
+          [disabled]="!frm.valid"
+          (click)="onSubmit($event)"
+        >
+          <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
+          {{ "Save" | translate }}
+        </button>
+        <button nz-button nzType="default" (click)="cancel()">
+          {{ "Cancel" | translate }}
+        </button>
       </div>
+      <div *ngIf="modal?.isView">
+        <a *ngIf="!isLoading()">
+          <i nz-icon nzType="edit" nzTheme="outline"></i>
+          <span class="action-text"> {{ "Edit" | translate }}</span>
+        </a>
+        <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
+        <a nz-typography nzType="danger" *ngIf="!isLoading()">
+          <i nz-icon nzType="delete" nzTheme="outline"></i>
+          <span class="action-text"> {{ "Delete" | translate }}</span>
+        </a>
+        <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
+        <a nz-typography (click)="cancel()" style="color: gray;">
+          <i nz-icon nzType="close" nzTheme="outline"></i>
+          <span class="action-text"> {{ "Close" | translate }}</span>
+        </a>
+      </div>
+    </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   encapsulation: ViewEncapsulation.None,
@@ -152,6 +148,7 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
     ref: NzModalRef<ItemOperationComponent>,
     override service: ItemService,
     override uiService: ItemUiService,
+    public systemSettingService: SystemSettingService, 
     private settingService: SettingService
   ) {
     super(fb, ref, service, uiService);
@@ -159,17 +156,36 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   image!: Image;
-  nzShowIconList:any = false;
+  nzShowIconList: any = false;
+  itemAutoIdEnable = signal<boolean>(false);
 
   override ngOnInit() {
     super.ngOnInit();
+    const { required } = CommonValidators;
     setTimeout(() => {
       if (this.modal?.isView) {
-        this.nzShowIconList = {showPreviewIcon: true};
-      }else {
+        this.nzShowIconList = { showPreviewIcon: true };
+      } else {
         this.nzShowIconList = true;
       }
-    }, 10)
+    }, 10);
+    this.systemSettingService.find(SETTING_KEY.ItemAutoId).subscribe({
+      next: (result: any) => {
+        if (result === 0) {
+          this.itemAutoIdEnable.set(false);
+          this.frm.controls["code"].enable();
+          this.frm.controls["code"].setValidators([required]);
+        } else {
+          this.itemAutoIdEnable.set(true);
+          this.frm.controls["code"].disable();
+          this.frm.controls["code"].setValidators([]);
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {},
+    });
   }
 
   override initControl(): void {
