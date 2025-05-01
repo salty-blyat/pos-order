@@ -26,7 +26,7 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
         [nzDisabled]="disabled()"
       >
         <nz-option
-          *ngIf="showAllOption"
+          *ngIf="showAllOption()"
           [nzValue]="0"
           [nzLabel]="'AllBlock' | translate"
         ></nz-option>

@@ -170,6 +170,7 @@ import { MemberPullComponent } from "./pages/member/member-pull.component";
 import { MemberUnitPullComponent } from "./pages/member-unit/member-unit-pull.component";
 import { MemberGroupPullComponent } from "./pages/member-group/member-group-pull.component";
 import { MemberLevelPullComponent } from "./pages/member-level/member-level-pull.component";
+import {RoomViewComponent} from "./pages/room/room-view.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -313,6 +314,7 @@ export class CustomTranslate implements TranslateLoader {
     RoomDeleteComponent,
     RoomAdvancedFilterComponent,
     RoomSelectComponent,
+    RoomViewComponent,
 
     //tag
     TagGroupListComponent,

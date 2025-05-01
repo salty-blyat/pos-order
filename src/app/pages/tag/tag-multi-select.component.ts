@@ -218,8 +218,10 @@ export class TagMultiSelectComponent implements OnInit, ControlValueAccessor, On
     this.setStorageKey(this.selectedValue);
   }
   writeValue(value: any) {
+    if (this.selectedValue?.length !== 0 && this.lists?.length == 0 && this.selectedValue?.some(x => x !== value)){
+      this.searchTags();
+    }
     this.selectedValue = value;
-    this.searchTags();
   }
   registerOnChange(fn: any) {
     this.onChangeCallback = fn;

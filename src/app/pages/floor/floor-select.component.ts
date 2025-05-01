@@ -25,17 +25,15 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
       [nzDisabled]="disabled()"
     >
       <nz-option
-        *ngIf="showAllOption"
+        *ngIf="showAllOption()"
         [nzValue]="0"
         [nzLabel]="'AllFloor' | translate"
       ></nz-option>
       <nz-option
         *ngFor="let item of lists()"
-        nzCustomContent
         [nzValue]="item.id"
         [nzLabel]="item?.name + ''"
       >
-        <span >{{ item.name }}</span>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
         <i nz-icon nzType="loading" class="loading-icon"></i>
@@ -52,15 +50,10 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
       </ng-template>
     </nz-select>
   `,
-    styles: [
-      `
+    styles: [`
       nz-select {
         width: 100%;
-      }
-      cdk-virtual-scroll-viewport {
-        min-height: 34px;
-      }
-    `,
+      }`
     ],
     encapsulation: ViewEncapsulation.None,
     standalone: false
