@@ -8,7 +8,7 @@ import {MemberUiService} from "./member-ui.service";
 import {SettingService} from "../../app-setting";
 import {NzUploadChangeParam, NzUploadFile} from "ng-zorro-antd/upload";
 import {LOOKUP_TYPE} from "../lookup/lookup-type.service";
-import {SETTING_KEY, SystemSettingService} from "../system-setting/system-setting.service";
+import {SETTING_KEY, SystemSetting, SystemSettingService} from "../system-setting/system-setting.service";
 import {Observable, Observer} from "rxjs";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {AuthService} from "../../helpers/auth.service";
@@ -505,49 +505,17 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   customerNameEn = '';
   isCustomerEdit: boolean = true;
   isCustomerRemove: boolean = true;
-  editableCode: boolean = false;
 
   override ngOnInit(): void {
-    this.initControl();
-    setTimeout(() => {
-      let setting = this.systemSettingService.current.items.find(
-        (item) => item.key === SETTING_KEY.MemberAutoId
-      );
-      if (setting) this.editableCode = +setting.value! !== 0;
-      if (this.editableCode) {
-        this.frm.get("code")?.disable();
-      }
-    }, 50);
     super.ngOnInit();
-
-    // this.systemSettingService
-    //   .search([
-    //     SETTING_KEY.CustomerAutoId,
-    //   ])
-    //   .subscribe((item: any[]) => {
-    //     item.forEach((x) => {
-    //       if (x.key == SETTING_KEY.CustomerAutoId) {
-    //         this.editableCode = x.value == 0;
-    //       }
-    //     });
-    //   });
-    // this.systemSettingService
-    //   .find(SETTING_KEY.MemberAutoId)
-    //   .subscribe((item: SystemSetting) => {
-    //     const { required } = CommonValidators;
-    //     if (item?.value) {
-    //       if (parseInt(item.value) <= 0 && !this.modal?.isView) {
-    //         this.frm.get('code')?.enable();
-    //         this.frm.get('code')?.setValidators(required);
-    //         this.frm.get('code')?.updateValueAndValidity();
-    //       } else {
-    //         this.frm.get('code')?.disable();
-    //         this.frm.get('code')?.clearValidators();
-    //         this.frm.get('code')?.updateValueAndValidity();
-    //       }
-    //     }
-    //   });
-
+    this.initControl();
+    this.systemSettingService.find(SETTING_KEY.MemberAutoId).subscribe({
+      next: (value?:string) => {
+        if (value){
+          this.frm.get("code")?.disable();
+        }
+      }
+    })
     if (this.modal?.isView) {
       this.frm.disable();
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
@@ -685,7 +653,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       integerValidator
     } = CommonValidators;
     this.frm = this.fb.group({
-      code: [{ value: null, disabled: this.editableCode }, [required, codeMaxLengthValidator], [codeExistValidator(this.service, this.modal?.id)]], 
+      code: [{ value: null, disabled: true }, [required, codeMaxLengthValidator], [codeExistValidator(this.service, this.modal?.id)]],
       name: [null, [required, nameMaxLengthValidator]],
       nameEn: [null],
       birthDate: [null],
@@ -759,30 +727,32 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
 
 
   override setFormValue(model?: Member) {
-    this.frm.setValue({
-      code: model?.code,
-      name: model?.name,
-      nameEn: model?.nameEn,
-      birthDate: model?.birthDate,
-      sexId: model?.sexId,
-      nationalityId: model?.nationalityId,
-      memberUnitId: model?.memberUnitId,
-      memberGroupId: model?.memberGroupId,
-      memberLevelId: model?.memberLevelId,
-      idNo: model?.idNo,
-      nssfId: model?.nssfId,
-      phone: model?.phone,
-      email: model?.email,
-      address: model?.address,
-      note: model?.note,
-    });
+    if (model) {
+      this.frm.patchValue({
+        code: model?.code,
+        name: model?.name,
+        nameEn: model?.nameEn,
+        birthDate: model?.birthDate,
+        sexId: model?.sexId,
+        nationalityId: model?.nationalityId,
+        memberUnitId: model?.memberUnitId,
+        memberGroupId: model?.memberGroupId,
+        memberLevelId: model?.memberLevelId,
+        idNo: model?.idNo,
+        nssfId: model?.nssfId,
+        phone: model?.phone,
+        email: model?.email,
+        address: model?.address,
+        note: model?.note,
+      });
 
-    if (model?.photo) {
-      this.fileProfile = [];
-      this.fileProfile.push(<NzUploadFile>{url: model?.photo, uid: model?.photo});
-    }
-    if (model?.attachments) {
-      this.attachments = model?.attachments;
+      if (model?.photo) {
+        this.fileProfile = [];
+        this.fileProfile.push(<NzUploadFile>{url: model?.photo, uid: model?.photo});
+      }
+      if (model?.attachments) {
+        this.attachments = model?.attachments;
+      }
     }
   }
 

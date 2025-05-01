@@ -150,8 +150,8 @@ export class SystemSettingService {
       );
   }
 
-  find(key: string): Observable<Setting> {
-    return this.http.get<Setting>(
+  find(key: string): Observable<string> {
+    return this.http.get<string>(
       `${this.settingService.setting.BASE_API_URL}/setting/${key}`
     );
   }
@@ -187,39 +187,6 @@ export class SystemSettingService {
     );
   }
 
-  public testRequest(fitUrl: string): Observable<any> {
-    const url = `${this.settingService.setting.BASE_API_URL}/request/test`;
-    return this.http.post<any>(url, { url: fitUrl });
-  }
-
-  getCurrentProfile(): CurrentProfile {
-    const currentProfile: CurrentProfile = {};
-    this.currentSetting.items.forEach((item) => {
-      if (item.key === SETTING_KEY.CompanyLogo) {
-        currentProfile.url = item.value;
-      } else if (item.key === SETTING_KEY.CompanyPhone) {
-        currentProfile.contact = item.value;
-      } else if (item.key === SETTING_KEY.CompanyAddress) {
-        currentProfile.address = item.value;
-      } else if (item.key === SETTING_KEY.CompanyName) {
-        currentProfile.name = item.value;
-      }
-    });
-    return currentProfile;
-  }
-  initCurrency() {
-    return this.currencyService
-      .search({ pageIndex: 1, pageSize: 9999999 })
-      .pipe(
-        map((result) => {
-          this.localStorageService.setValue({
-            key: SharedVar.CURRENCIES,
-            value: result.results,
-          });
-          return result;
-        })
-      );
-  }
   pavrTestUrl(url: string): Observable<any> {
     return this.http.post(
       `${this.settingService.setting.BASE_API_URL}/pavrapi/test`,

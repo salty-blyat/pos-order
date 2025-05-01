@@ -221,8 +221,8 @@ export class MemberLevelListComponent
   override ngOnInit(): void {
     super.ngOnInit();
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
-      next: (result: SystemSetting) => {
-        this.pavrEnable.set(Boolean(result.value));
+      next: (value) => {
+        this.pavrEnable.set(Boolean(value));
       },
       error: (error) => {
         console.log(error);

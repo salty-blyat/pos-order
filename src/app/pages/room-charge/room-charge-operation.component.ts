@@ -29,7 +29,7 @@ import {RoomChargeUiService} from "./room-charge-ui.service";
                       {{"Charge" | translate }}
                   </nz-form-label>
                   <nz-form-control [nzSm]="14" [nzXs]="24">
-                      <app-item-select formControlName="chargeId"></app-item-select>
+                      <app-charge-select formControlName="chargeId"></app-charge-select>
                   </nz-form-control>
               </nz-form-item>
               <nz-form-item>
