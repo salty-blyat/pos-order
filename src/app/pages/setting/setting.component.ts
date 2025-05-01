@@ -81,7 +81,7 @@ export class SettingComponent implements OnInit {
   isBlockList: boolean = true;
   isRoomTypeList: boolean = true;
   isItemList: boolean = true; 
-  isRoomChargeType : boolean = true;
+  isRoomCharge : boolean = true;
   isCharge : boolean = true;
   isItemTypeList: boolean = true;
   isMemberGroupList: boolean = true;
@@ -174,9 +174,9 @@ export class SettingComponent implements OnInit {
         subName: [
           {
             icon: "container",
-            url: `${this.urlPart}/room-charge-type`,
-            label: "RoomChargeType",
-            isList: this.isRoomChargeType,
+            url: `${this.urlPart}/room-charge`,
+            label: "RoomCharge",
+            isList: this.isRoomCharge,
           }, 
           
           {

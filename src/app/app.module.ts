@@ -150,16 +150,12 @@ import { MemberGroupOperationComponent } from "./pages/member-group/member-group
 import { MemberGroupSelectComponent } from "./pages/member-group/member-group-select.component";
 import { RoomInventoryListComponent } from "./pages/room-inventory/room-inventory-list.component";
 import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
-import { RoomChargeTypeDeleteComponent } from "./pages/room-charge-type/room-charge-type-delete.component";
-import { RoomChargeTypeListComponent } from "./pages/room-charge-type/room-charge-type-list.component";
 import { MemberLevelSelectComponent } from "./pages/member-level/member-level-select.component";
 import { MemberUnitSelectComponent } from "./pages/member-unit/member-unit-select.component";
 import { ChargeListComponent } from "./pages/charge/charge-list.component";
 import { ChargeOperationComponent } from "./pages/charge/charge-operation.component";
-import { RoomChargeTypeSelectComponent } from "./pages/room-charge-type/room-charge-type-select.component";
 import { ChargeDeleteComponent } from "./pages/charge/charge-delete.component";
 import { UnitSelectComponent } from "./pages/unit/unit-select.component";
-import { RoomChargeTypeOperationComponent } from "./pages/room-charge-type/room-charge-type-operation.component";
 import { MemberAdvancedFilterComponent } from "./pages/member/member-advanced-filter.component";
 import { MemberUnitDeleteComponent } from "./pages/member-unit/member-unit-delete.component";
 import { MemberUnitOperationComponent } from "./pages/member-unit/member-unit-operation.component";
@@ -171,6 +167,10 @@ import { MemberUnitPullComponent } from "./pages/member-unit/member-unit-pull.co
 import { MemberGroupPullComponent } from "./pages/member-group/member-group-pull.component";
 import { MemberLevelPullComponent } from "./pages/member-level/member-level-pull.component";
 import {RoomViewComponent} from "./pages/room/room-view.component";
+import { RoomChargeListComponent } from "./pages/room-charge/room-charge-list.component";
+import { RoomChargeOperationComponent } from "./pages/room-charge/room-charge-operation.component";
+import { RoomChargeDeleteComponent } from "./pages/room-charge/room-charge-delete.component";
+import { ChargeSelectComponent } from "./pages/charge/charge-select.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -314,7 +314,6 @@ export class CustomTranslate implements TranslateLoader {
     RoomDeleteComponent,
     RoomAdvancedFilterComponent,
     RoomSelectComponent,
-    RoomViewComponent,
 
     //tag
     TagGroupListComponent,
@@ -373,12 +372,12 @@ export class CustomTranslate implements TranslateLoader {
     ChargeListComponent,
     ChargeOperationComponent,
     ChargeDeleteComponent,
+    ChargeSelectComponent,
 
     //roomcharge
-    RoomChargeTypeSelectComponent,
-    RoomChargeTypeListComponent,
-    RoomChargeTypeOperationComponent,
-    RoomChargeTypeDeleteComponent,
+    RoomChargeListComponent,
+    RoomChargeOperationComponent,
+    RoomChargeDeleteComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

@@ -1,16 +1,13 @@
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import {Component,  ViewEncapsulation} from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
-import {
-  RoomChargeType,
-  RoomChargeTypeService,
-} from "./room-charge-type.service";
-import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
+import { BaseDeleteComponent } from "../../utils/components/base-delete.component"; 
+import { RoomCharge, RoomChargeService } from "./room-charge.service";
+import { RoomChargeUiService } from "./room-charge-ui.service";
 
 @Component({
-  selector: "app-room-charge-type-delete",
+  selector: "app-room-charge-delete",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="modal?.id"
@@ -19,37 +16,28 @@ import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
       >
     </div>
     <div class="modal-content">
-      <nz-spin
+      <app-loading
         *ngIf="isLoading()"
-        style="position: absolute; top: 50%; left: 50%"
-      ></nz-spin>
-      <div
-        *ngIf="errMessage() && !isLoading()"
-        nz-row
-        nzJustify="center"
-        style="margin:2px 0"
-      >
-        <span
-          nz-typography
-          nzType="danger"
-          style="position: absolute; z-index: 1; top: 18%"
-          >{{ errMessage() | translate }}</span
-        >
+      ></app-loading>
+
+      <div *ngIf="errMessage() && !isLoading()" class="delete-error-message ">
+        <span nz-typography nzType="danger">{{ errMessage() | translate }}</span>
       </div>
+
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
-            >{{ "RoomName" | translate }}
-          </nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
+            "Name" | translate
+          }}</nz-form-label>
           <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="">
-            <input nz-input formControlName="roomName" />
+            <input nz-input formControlName="roomNumber" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24"
-            >{{ "Note" | translate }}
-          </nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24">{{
+            "Note" | translate
+          }}</nz-form-label>
           <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="">
             <textarea
               nz-input
@@ -79,14 +67,14 @@ import { RoomChargeTypeUiService } from "./room-charge-type-ui.service";
     </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
-  encapsulation: ViewEncapsulation.None,
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
-export class RoomChargeTypeDeleteComponent extends BaseDeleteComponent<RoomChargeType> {
+export class RoomChargeDeleteComponent extends BaseDeleteComponent<RoomCharge> {
   constructor(
-    service: RoomChargeTypeService,
-    uiService: RoomChargeTypeUiService,
-    ref: NzModalRef<RoomChargeTypeDeleteComponent>,
+    service: RoomChargeService,
+    uiService: RoomChargeUiService,
+    ref: NzModalRef<RoomChargeDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);
