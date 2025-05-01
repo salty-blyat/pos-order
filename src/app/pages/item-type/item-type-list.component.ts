@@ -17,11 +17,23 @@ import { SIZE_COLUMNS } from "../../const";
       ></app-breadcrumb>
       <nz-header>
         <div nz-row>
-          <div style="width: 220px; margin-right: 4px;">
+          <div nz-col>
             <app-filter-input
               storageKey="item-list-search"
-              (filterChanged)="  searchText.set($event); param().pageIndex = 1; search() "
+              (filterChanged)="
+                searchText.set($event); param().pageIndex = 1; search()
+              "
             ></app-filter-input>
+          </div>
+          <div *ngIf="draged()">
+            <button
+              nz-button
+              nzType="primary"
+              (click)="saveOrdering()"
+              [nzLoading]="isLoading()"
+            >
+              {{ "Save" | translate }}
+            </button>
           </div>
         </div>
         <div>
@@ -57,6 +69,7 @@ import { SIZE_COLUMNS } from "../../const";
           </ng-template>
           <thead>
             <tr>
+              <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th class="col-header col-rowno" [nzWidth]="SIZE_COLUMNS.ID">
                 #
               </th>
@@ -66,11 +79,22 @@ import { SIZE_COLUMNS } from "../../const";
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NOTE">
                 {{ "Note" | translate }}
               </th>
-              <th  [nzWidth]="SIZE_COLUMNS.ACTION" class="col-action"></th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION" class="col-action"></th>
             </tr>
           </thead>
-          <tbody>
-            <tr *ngFor="let data of lists(); let i = index">
+          <tbody
+            cdkDropList
+            cdkDropListLockAxis="y"
+            (cdkDropListDropped)="drop($event)"
+            [cdkDropListData]="lists()"
+          >
+            <tr *ngFor="let data of lists(); let i = index" cdkDrag>
+              <td
+                style="align-content: center;text-align: center; cursor: move;"
+                cdkDragHandle
+              >
+                <span nz-icon nzType="holder" nzTheme="outline"></span>
+              </td>
               <td nzEllipsis>
                 {{
                   i
@@ -81,7 +105,7 @@ import { SIZE_COLUMNS } from "../../const";
                         }
                 }}
               </td>
-              <td nzEllipsis>
+              <td nzEllipsis style="flex: 2">
                 <a *ngIf="isItemView" (click)="uiService.showView(data.id!)">{{
                   data.name
                 }}</a>
@@ -149,6 +173,5 @@ export class ItemTypeListComponent extends BaseListComponent<ItemType> {
     this.refreshSub = this.uiService.refresher.subscribe((result) => {
       this.search();
     });
-    
   }
 }

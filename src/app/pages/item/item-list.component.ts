@@ -73,11 +73,11 @@ import { Filter } from "../../utils/services/base-api.service";
               <th nzWidth="60px" nzAlign="center">{{ "Image" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="100px">{{ "ItemType" | translate }}</th>
+              <th>{{ "ItemType" | translate }}</th>
               <th nzWidth="80px" nzAlign="center">
                 {{ "IsTrackSerial" | translate }}
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.NOTE" >{{ "Note" | translate }}</th>
+              <th>{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>

@@ -20,15 +20,8 @@ import { Unit, UnitService } from "./unit.service";
       }}</span>
     </div>
     <div class="modal-content">
-      <nz-spin
-        *ngIf="isLoading()"
-        style="position: absolute; top: 50%; left: 50%"
-      ></nz-spin>
-      <form
-        nz-form
-        [formGroup]="frm"
-        [nzAutoTips]="autoTips" 
-      >
+      <app-loading *ngIf="isLoading()"></app-loading>
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "Name" | translate }}
@@ -42,11 +35,7 @@ import { Unit, UnitService } from "./unit.service";
             >{{ "Note" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
-            <textarea
-              nz-input
-              rows="3"
-              formControlName="note"
-            ></textarea>
+            <textarea nz-input rows="3" formControlName="note"></textarea>
           </nz-form-control>
         </nz-form-item>
       </form>

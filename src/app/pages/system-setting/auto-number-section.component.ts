@@ -107,34 +107,7 @@ import { AuthService } from "../../helpers/auth.service";
           ></app-auto-number-select>
         </nz-form-control>
       </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ "MeterReadingAutoId" | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <app-auto-number-select
-            formControlName="{{ SettingKey.MeterReadingAutoId }}"
-            [addOption]="canAddAutoNo"
-            [showAllOption]="true"
-            showAllLabel="-"
-          ></app-auto-number-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <!-- <nz-form-item>
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ 'Room Rate No' | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <app-auto-number-select
-              formControlName="{{ SettingKey.RoomRateAutoId }}"
-              [addOption]="canAddAutoNo"
-              [showAllOption]="true"
-              showAllLabel="-"
-          ></app-auto-number-select>
-        </nz-form-control>
-      </nz-form-item> -->
+ 
       <nz-form-item>
         <nz-form-label [nzSm]="7" [nzXs]="24" nzNoColon> </nz-form-label>
         <nz-form-control [nzSm]="8" [nzXs]="24" style="text-align: right">
@@ -192,7 +165,7 @@ export class AutoNumberSectionComponent extends BaseSettingSectionComponent {
     SETTING_KEY.ChargesAutoId,
     SETTING_KEY.ItemAutoId,
     SETTING_KEY.MemberAutoId,
-    SETTING_KEY.MeterReadingAutoId, 
+    // SETTING_KEY.MeterReadingAutoId, 
   ];
   override ngOnInit() {
     // this.canAddAutoNo = this.authService.isAuthorized(
