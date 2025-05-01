@@ -39,7 +39,7 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
         </div>
         <div nz-flex nzGap="4px" nzAlign="center">
           <button
-            *ngIf="pavrEnable"
+            *ngIf="pavrEnable()"
             nz-button
             nzType="primary"
             (click)="uiService.showPull()"
@@ -166,13 +166,12 @@ export class MemberGroupListComponent extends BaseListComponent<MemberGroup> {
 
   override ngOnInit(): void {
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
-      next: (value) => {
-        this.pavrEnable.set(Boolean(value));
+      next: (result: boolean) => {
+        this.pavrEnable.set(result);
       },
       error: (error) => {
         console.log(error);
-      },
-      complete: () => {},
+      }, 
     });
   }
 }
