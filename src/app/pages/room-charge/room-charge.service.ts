@@ -10,12 +10,17 @@ export interface RoomCharge {
   startDate?: string;
   endDate?: string;
   statusId?: number;
-  totalLimit?: number;
   id?: number;
+  startReading?: string;
+  endReading?: string;
   roomNumber?: string;
   chargeName?: string;
   statusName?: string;
   statusNameEn?: string;
+  memberId?: number;
+  qty?: number;
+  isFreeUsage?: boolean;
+  freeUsage?: number;
 }
 
 @Injectable({

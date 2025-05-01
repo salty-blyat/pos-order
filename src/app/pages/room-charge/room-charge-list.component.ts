@@ -1,4 +1,4 @@
-import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
+import {Component, computed, signal, ViewEncapsulation} from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
@@ -14,49 +14,21 @@ import { TranslateService } from "@ngx-translate/core";
   selector: "app-room-charge-list",
   template: `
     <nz-layout>
-      <app-breadcrumb
-        *ngIf="breadcrumbData()"
-        [data]="breadcrumbData()"
-      ></app-breadcrumb>
       <nz-header>
         <div nz-row>
-          <div nz-col nzSpan="5">
+          <div nz-col>
             <app-filter-input
               storageKey="room-charge-list-search"
-              (filterChanged)="
-                searchText.set($event); param().pageIndex = 1; search()
-              "
+              (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
             ></app-filter-input>
           </div>
-          <div nz-col nzSpan="5">
-            <app-floor-select
-              #floorSelect
-              [showAllOption]="true"
-              storageKey="floor-filter"
-              (valueChanged)="floorId.set($event); param().pageIndex = 1"
-            ></app-floor-select>
-          </div>
-          <div nz-col nzSpan="5">
-            <app-room-select
-              #roomSelect
-              [floorId]="this.floorId()"
-              [showAllOption]="true"
-              storageKey="room-filter"
-              (valueChanged)="
-                roomId.set($event); param().pageIndex = 1; search()
-              "
-            ></app-room-select>
-          </div>
-          <div nz-col nzSpan="5">
-            <app-charge-select
-              formControlName="chargeId"
-              [showAllOption]="true"
-              storageKey="charge-type-filter"
-              (valueChanged)="
-                chargeId.set($event); param().pageIndex = 1; search()
-              "
-            ></app-charge-select>
-          </div>
+            <div nz-col >
+                <app-item-select
+                        [showAllOption]="true"
+                        storageKey="room-charge-item-filter"
+                        (valueChanged)=" chargeId.set($event); param().pageIndex = 1; search()"
+                ></app-item-select>
+            </div>
         </div>
         <div style="margin-left:auto">
           <button
@@ -74,7 +46,6 @@ import { TranslateService } from "@ngx-translate/core";
         <nz-table
           nzSize="small"
           nzShowSizeChanger
-          #fixedTable
           nzTableLayout="fixed"
           [nzPageSizeOptions]="pageSizeOption()"
           [nzData]="lists()"
@@ -91,40 +62,18 @@ import { TranslateService } from "@ngx-translate/core";
           </ng-template>
           <thead>
             <tr>
-              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-              <th nzWidth="150px">
-                {{ "Serial" | translate }}
-              </th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">
-                {{ "RoomNumber" | translate }}
-              </th>
-
-              <th nzWidth="150px">{{ "Charge" | translate }}</th>
-
-              <th nzWidth="150px">
-                {{ "StartDate" | translate }}
-              </th>
-              <th nzWidth="150px">
-                {{ "EndDate" | translate }}
-              </th>
-              <th nzWidth="150px">
-                {{ "Limit" | translate }}
-              </th>
-              <th nzWidth="150px">{{ "Status" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th nzEllipsis nzWidth="150px">{{ "Item" | translate }}</th>
+              <th nzEllipsis nzWidth="150px">{{ "StartDate" | translate }}</th>
+              <th nzEllipsis>{{ "FreeUsage" | translate }}</th>
+              <th nzEllipsis nzWidth="150px">{{ "Status" | translate }}</th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
-                {{
-                  i
-                    | rowNumber
-                      : {
-                          index: param().pageIndex || 0,
-                          size: param().pageSize || 0
-                        }
-                }}
+                {{ i | rowNumber: {index: param().pageIndex || 0, size: param().pageSize || 0} }}
               </td>
               <td nzEllipsis>
                 <a
@@ -134,11 +83,9 @@ import { TranslateService } from "@ngx-translate/core";
                 >
                 <span *ngIf="!isRoomChargeView()">{{ data.serial }} </span>
               </td>
-              <td nzEllipsis>{{ data.roomNumber }}</td>
               <td nzEllipsis>{{ data.chargeName }}</td>
               <td nzEllipsis>{{ data.startDate | customDate }}</td>
-              <td nzEllipsis>{{ data.endDate | customDate }}</td>
-              <td nzEllipsis>{{ data.totalLimit }}</td>
+              <td nzEllipsis>{{ data.freeUsage }}</td>
               <td nzEllipsis>
                 {{
                    this.translateService.currentLang === "km"

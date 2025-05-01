@@ -1,7 +1,7 @@
-import {Component, inject, OnInit, signal, ViewEncapsulation} from "@angular/core";
-import {RoomUiService} from "./room-ui.service";
-import {NZ_MODAL_DATA, NzModalRef} from "ng-zorro-antd/modal";
-import {Room, RoomService} from "./room.service";
+import { Component, inject, OnInit, signal, ViewEncapsulation } from "@angular/core";
+import { RoomUiService } from "./room-ui.service";
+import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
+import { Room, RoomService } from "./room.service";
 
 @Component({
   selector: 'app-room-view',
@@ -32,65 +32,60 @@ import {Room, RoomService} from "./room.service";
                       </ng-template>
 
                       <ng-template #customerAction>
-                          <a>
+                          <a *ngIf="!isLoading() && isRoomEdit()">
                               <i nz-icon nzTheme="outline" nzType="edit"></i>
                           </a>
-                          <nz-divider nzType="vertical"></nz-divider>
-                          <a >
+                          <nz-divider nzType="vertical" *ngIf="!isLoading() && isRoomEdit()"></nz-divider>
+                          <a *ngIf="!isLoading() && isRoomRemove()">
                               <i nz-icon nzTheme="outline" nzType="delete" class="delete"></i>
                           </a>
                       </ng-template>
 
                       <h5>
-                          <i nz-icon nzTheme="outline" nzType="tags"></i>  &nbsp;
+                          <i nz-icon nzTheme="outline" nzType="tags"></i> &nbsp;
                           <span class="info-text">{{ model.floorName }}</span>
                       </h5>
 
                       <h5>
-                          <i nz-icon nzTheme="outline" nzType="info-circle"></i>  &nbsp;
+                          <i nz-icon nzTheme="outline" nzType="info-circle"></i> &nbsp;
                           <span class="info-text">{{ model.statusName }}</span>
                       </h5>
 
                       <h5>
-                          <i nz-icon nzTheme="outline" nzType="user"></i>  &nbsp;
+                          <i nz-icon nzTheme="outline" nzType="user"></i> &nbsp;
                           <span class="info-text blod-text">{{ 0 }}</span>
                       </h5>
                   </nz-card>
               </div>
           </div>
           <div [nzSm]="18" [nzXs]="24" class="main-content" nz-col>
-              <nz-tabset #tabSetComponent>
-                  <nz-tab [nzTitle]="tabEntry" >
-                      <ng-template #tabEntry>
+              <nz-tabset class="tab-custom" [nzTabBarStyle]="{marginBottom: '0'}" #tabSetComponent>
+                  <nz-tab [nzTitle]="tabCharge">
+                      <ng-template #tabCharge>
                           <i nz-icon nzTheme="outline" nzType="file-text"></i>
                           <span>{{ 'Charge' | translate }}</span>
                       </ng-template>
+                      <app-room-charge-list></app-room-charge-list>
                   </nz-tab>
-
-                  <nz-tab [nzTitle]="tabInvoice">
-                      <ng-template #tabInvoice>
-                          <i nz-icon nzTheme="outline" nzType="setting"></i>
-                          <span>{{ 'Inventory' | translate }}</span>
+                  <nz-tab [nzTitle]="tabMember">
+                      <ng-template #tabMember>
+                          <i nz-icon nzTheme="outline" nzType="team"></i>
+                          <span>{{ 'Member' | translate }}</span>
                       </ng-template>
-                      
+                  </nz-tab>
+                  <nz-tab [nzTitle]="tabAsset">
+                      <ng-template #tabAsset>
+                          <i nz-icon nzTheme="outline" nzType="setting"></i>
+                          <span>{{ 'Asset' | translate }}</span>
+                      </ng-template>
+
                   </nz-tab>
               </nz-tabset>
           </div>
       </div>
       <div *nzModalFooter>
           <div *ngIf="modal?.isView">
-<!--              <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isRoomEdit()">-->
-<!--                  <i nz-icon nzType="edit" nzTheme="outline"></i>-->
-<!--                  <span class="action-text"> {{ 'Edit' | translate }}</span>-->
-<!--              </a>-->
-<!--              <nz-divider nzType="vertical" *ngIf="!isLoading() && isRoomEdit()"></nz-divider>-->
-<!--              <a nz-typography nzType="danger" (click)="uiService.showDelete(model.id || 0)"-->
-<!--                 *ngIf="!isLoading() && isRoomRemove()">-->
-<!--                  <i nz-icon nzType="delete" nzTheme="outline"></i>-->
-<!--                  <span class="action-text"> {{ 'Delete' | translate }}</span>-->
-<!--              </a>-->
-<!--              <nz-divider nzType="vertical" *ngIf="!isLoading() && isRoomRemove()"></nz-divider>-->
-              <a nz-typography (click)="cancel()" style="color: gray;">
+              <a (click)="cancel()" class="close">
                   <i nz-icon nzType="close" nzTheme="outline"></i>
                   <span class="action-text"> {{ 'Close' | translate }}</span>
               </a>
@@ -131,7 +126,7 @@ import {Room, RoomService} from "./room.service";
       }
 
       .main-content {
-        padding: 0 4px 0 24px;
+        padding: 0 16px 0 16px;
         height: 100%;
         overflow-y: auto;
         margin-top: -10px;
@@ -160,10 +155,20 @@ import {Room, RoomService} from "./room.service";
       .ant-card-body {
         padding: 0 16px 12px 16px;
       }
-
     }
-    
+    .tab-custom {
+      .ant-tabs-tab-btn{
+        padding: 0;
+      }
+      .ant-tabs-tab{
+        padding: 6px 0 0 !important;
+      }
 
+      nz-table{
+        height: calc(100vh - 264px);
+      }
+      
+    }
   `],
   standalone: false,
   encapsulation: ViewEncapsulation.None,
