@@ -12,10 +12,10 @@ import {CommonValidators} from "../../utils/services/common-validators";
       <div *nzModalTitle class="modal-header-ellipsis">
           <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
           <span *ngIf="modal?.id && !modal?.isView">
-            {{ "Edit" | translate }} {{ model?.roomId || ("Loading" | translate) }}
+            {{ "Edit" | translate }} {{ model?.itemName || ("Loading" | translate) }}
           </span>
           <span *ngIf="modal?.id && modal?.isView">
-            {{ model?.roomId || ("Loading" | translate) }}
+            {{ model?.itemName || ("Loading" | translate) }}
         </span>
       </div>
 

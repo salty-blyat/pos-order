@@ -12,10 +12,10 @@ import {RoomMemberUiService} from "./room-member-ui.service";
       <div *nzModalTitle class="modal-header-ellipsis">
           <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
           <span *ngIf="modal?.id && !modal?.isView">
-            {{ "Edit" | translate }} {{ model?.roomId || ("Loading" | translate) }}
+            {{ "Edit" | translate }} {{ model?.memberName || ("Loading" | translate) }}
           </span>
           <span *ngIf="modal?.id && modal?.isView">
-            {{ model?.roomId || ("Loading" | translate) }}
+            {{ model?.memberName || ("Loading" | translate) }}
         </span>
       </div>
 
