@@ -93,6 +93,14 @@ export interface Type {
               <span>{{ "Room" | translate }}</span>
             </li>
             <li
+                nz-menu-item
+                [nzMatchRouter]="isActive()"
+                routerLink="/billing"
+            >
+                <span nz-icon nzType="dollar" nzTheme="outline"></span>
+                <span>{{ "Billing" | translate }}</span>
+            </li>
+            <li
               *ngIf="isSettingList()"
               nz-menu-item
               [nzMatchRouter]="isActive()"
