@@ -28,7 +28,7 @@ interface Setting {
           </div>
         </nz-header>
         <nz-content class="setting-content">
-          <div nz-row>
+          <div nz-row class="content-container">
             <ng-container *ngFor="let data of setting">
               <div *ngIf="isListGroup(data)">
                 <div class="content-header">
