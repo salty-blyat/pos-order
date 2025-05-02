@@ -1,16 +1,17 @@
-import {Component, computed, ViewEncapsulation} from "@angular/core";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { Observable } from "rxjs";
 import { UnitService } from "./unit.service";
 import { Unit } from "./unit.service";
 import { UnitUiService } from "./unit-ui.service";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
-  selector: "app-unit-list",
-  template: `
+    selector: "app-unit-list",
+    template: `
       <nz-layout>
           <app-breadcrumb
                   *ngIf="breadcrumbData()"
@@ -32,7 +33,7 @@ import { UnitUiService } from "./unit-ui.service";
               </div>
               <div>
                   <button
-                          *ngIf="isUnitAdd"
+                          *ngIf="isUnitAdd()"
                           nz-button
                           nzType="primary"
                           (click)="uiService.showAdd()"
@@ -83,7 +84,8 @@ import { UnitUiService } from "./unit-ui.service";
                           {{ i | rowNumber: {index: param().pageIndex || 0, size: param().pageSize || 0} }}
                       </td>
                       <td nzEllipsis title="{{ data.name }}">
-                         <a (click)="uiService.showView(data.id!)">{{ data.name }}</a> 
+                         <a  *ngIf="isUnitView()" (click)="uiService.showView(data.id!)">{{ data.name }}</a> 
+                         <span *ngIf="!isUnitView()">{{ data.name }}</span> 
                       </td>
                       <td nzEllipsis title="{{ data.note }}">
                           {{ data.note }}
@@ -93,13 +95,13 @@ import { UnitUiService } from "./unit-ui.service";
                               <ng-template #spaceSplit>
                                   <nz-divider nzType="vertical"></nz-divider>
                               </ng-template>
-                              <ng-container *ngIf="isUnitEdit">
+                              <ng-container *ngIf="isUnitEdit()">
                                   <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                                       <i nz-icon nzType="edit" nzTheme="outline"></i>
                                       {{ "Edit" | translate }}
                                   </a>
                               </ng-container>
-                              <ng-container *ngIf="isUnitRemove">
+                              <ng-container *ngIf="isUnitRemove()">
                                   <a *nzSpaceItem (click)="uiService.showDelete(data.id || 0)" class="delete">
                                       <i nz-icon nzType="delete" nzTheme="outline"></i>
                                       {{ "Delete" | translate }}
@@ -113,23 +115,24 @@ import { UnitUiService } from "./unit-ui.service";
           </nz-content>
       </nz-layout>
   `,
-  styleUrls: ["../../../assets/scss/list.style.scss"],
-  standalone: false,
-  encapsulation: ViewEncapsulation.None,
+    styleUrls: ["../../../assets/scss/list.style.scss"],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None,
 })
 export class UnitListComponent extends BaseListComponent<Unit> {
-  constructor(
-    service: UnitService,
-    uiService: UnitUiService,
-    sessionStorageService: SessionStorageService,
-    private activated: ActivatedRoute
-  ) {
-    super(service, uiService, sessionStorageService, "unit-list");
-  }
-  breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isUnitAdd: boolean = true;
-  isUnitEdit: boolean = true;
-  isUnitRemove: boolean = true;
-  isUnitView: boolean = true;
-  readonly SIZE_COLUMNS = SIZE_COLUMNS;
+    constructor(
+        service: UnitService,
+        uiService: UnitUiService, 
+        private authService: AuthService,
+        sessionStorageService: SessionStorageService,
+        private activated: ActivatedRoute
+    ) {
+        super(service, uiService, sessionStorageService, "unit-list");
+    }
+    breadcrumbData = computed<Observable<any>>(() => this.activated.data);
+    isUnitAdd = computed<boolean>(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__ADD));
+    isUnitEdit = computed<boolean>(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__EDIT));
+    isUnitRemove = computed<boolean>(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__REMOVE));
+    isUnitView = computed<boolean>(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__VIEW));
+    readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

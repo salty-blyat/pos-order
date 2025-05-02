@@ -1,4 +1,4 @@
-import { Component, computed, signal, ViewEncapsulation,} from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation, } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
@@ -7,8 +7,10 @@ import { ReportGroupService } from "./report-group.service";
 import { ReportGroupUiService } from "./report-group-ui.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import {Block} from "../block/block.service";
-import {QueryParam} from "../../utils/services/base-api.service";
+import { Block } from "../block/block.service";
+import { QueryParam } from "../../utils/services/base-api.service";
+import { AuthKeys } from "../../const";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-report-new-list",
@@ -62,10 +64,11 @@ import {QueryParam} from "../../utils/services/base-api.service";
                             [nzDropdownMenu]="menu"
                             class="action-button menu-dropdown"
                             nz-dropdown
+                            *ngIf="isReportGroupAdd() || isReportGroupEdit() || isReportGroupView()"
                             nzTrigger="click"
                             nzPlacement="bottomRight"
                     >
-                        <i
+                        <i  
                                 nz-icon
                                 nzType="ellipsis"
                                 nzTheme="outline"
@@ -75,6 +78,14 @@ import {QueryParam} from "../../utils/services/base-api.service";
                 </li>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
                   <ul nz-menu nzSelectable>
+                    <li class="menu-item default" *ngIf="isReportGroupView()"
+                                      nz-menu-item 
+                                      (click)="uiService.showView(data.id!)">
+                                    <span>
+                                      <i nz-icon nzType="eye"></i>&nbsp;
+                                      <span class="action-text">{{ "View" | translate }}</span>
+                                    </span>
+                                  </li> 
                     <li
                       *ngIf="isReportGroupEdit()"
                       class="menu-item edit"
@@ -194,16 +205,17 @@ export class ReportGroupListComponent extends BaseListComponent<Report> {
     uiService: ReportGroupUiService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute,
+    private authService: AuthService,
     public translate: TranslateService
   ) {
     super(service, uiService, sessionStorageService, "report_group_list");
   }
   readonly reportGroupSelectedKey = "report-group-selected-key";
 
-  isReportGroupAdd = signal<boolean>(true);
-  isReportGroupEdit = signal<boolean>(true);
-  isReportGroupRemove = signal<boolean>(true);
-  isReportGroupView = signal<boolean>(true);
+  isReportGroupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__ADD));
+  isReportGroupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__EDIT));
+  isReportGroupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__REMOVE));
+  isReportGroupView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__VIEW));
   reportGroupId = signal<number>(parseInt(this.sessionStorageService.getValue(this.reportGroupSelectedKey) ?? 0) ?? 0);
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
 
@@ -229,7 +241,7 @@ export class ReportGroupListComponent extends BaseListComponent<Report> {
         next: (result: { results: Block[]; param: QueryParam }) => {
           this.isLoading.set(true);
           this.lists.set(result.results);
-          if (!this.reportGroupId() && result.results.length > 0){
+          if (!this.reportGroupId() && result.results.length > 0) {
             this.changeGroupId(result.results[0].id!);
           }
           this.param().rowCount = result.param.rowCount;

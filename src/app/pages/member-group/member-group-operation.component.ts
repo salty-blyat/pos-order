@@ -1,10 +1,12 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { NzModalRef } from "ng-zorro-antd/modal"; 
+import { NzModalRef } from "ng-zorro-antd/modal";
 import { MemberGroupUiService } from "./member-group-ui.service";
 import { MemberGroup, MemberGroupService } from "./member-group.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-member-group-unit-operation",
@@ -61,27 +63,27 @@ import { MemberGroup, MemberGroupService } from "./member-group.service";
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isMemberGroupEdit"
+          *ngIf="!isLoading() && isMemberGroupEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isMemberGroupEdit"
+          *ngIf="!isLoading() && isMemberGroupEdit()"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isMemberGroupRemove"
+          *ngIf="!isLoading() && isMemberGroupRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isMemberGroupRemove"
+          *ngIf="!isLoading() && isMemberGroupRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -98,14 +100,15 @@ export class MemberGroupOperationComponent extends BaseOperationComponent<Member
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<MemberGroupOperationComponent>,
+    private authService: AuthService,
     service: MemberGroupService,
     uiService: MemberGroupUiService
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isMemberGroupEdit: boolean = true;
-  isMemberGroupRemove: boolean = true;
+  isMemberGroupEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__EDIT));
+  isMemberGroupRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__REMOVE));
 
   override initControl(): void {
     const { required, noteMaxLengthValidator, nameExistValidator } =

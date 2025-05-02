@@ -1,12 +1,13 @@
-import { Component, signal, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { Room, RoomAdvancedFilter, RoomService } from "./room.service";
 import { RoomUiService } from "./room-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { Filter } from "../../utils/services/base-api.service";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { TranslateService } from "@ngx-translate/core";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-room-list",
@@ -110,7 +111,7 @@ import { TranslateService } from "@ngx-translate/core";
             <td nzEllipsis>
               @if (translate.currentLang == 'en') {
               {{ data.statusNameEn ?? data.statusName }}
-              }@else {
+              } @else {
               {{ data.statusName ?? data.statusNameEn }}
               }
             </td>
@@ -163,6 +164,7 @@ export class RoomListComponent extends BaseListComponent<Room> {
     service: RoomService,
     override uiService: RoomUiService,
     sessionStorageService: SessionStorageService,
+    private authService: AuthService,
     protected translate: TranslateService
   ) {
     super(service, uiService, sessionStorageService, "room-list");
@@ -177,10 +179,11 @@ export class RoomListComponent extends BaseListComponent<Room> {
   lookupType = LOOKUP_TYPE;
   readonly advancedStoreKey = "room-list-advanced-filter";
 
-  isRoomTypeAdd = signal<boolean>(true);
-  isRoomTypeEdit = signal<boolean>(true);
-  isRoomTypeRemove = signal<boolean>(true);
-  isRoomTypeView = signal<boolean>(true);
+  isRoomTypeAdd  = computed(()=> this.authService.isAuthorized(AuthKeys.APP__ROOM__ADD));
+  isRoomTypeEdit  = computed(()=> this.authService.isAuthorized(AuthKeys.APP__ROOM__EDIT));
+  isRoomTypeRemove  = computed(()=> this.authService.isAuthorized(AuthKeys.APP__ROOM__REMOVE));
+  isRoomTypeView = computed(()=> this.authService.isAuthorized(AuthKeys.APP__ROOM__VIEW));
+
   hasAdvancedFilter = signal<boolean>(false);
 
   override ngOnInit() {
@@ -215,9 +218,6 @@ export class RoomListComponent extends BaseListComponent<Room> {
 
   override search() {
     const filters: Filter[] = [];
-    // const filters: any[] = [
-    //   { field: "search", operator: "contains", value: this.searchText() },
-    // ];
     if (this.floorId) {
       filters.push({ field: "floorId", operator: "eq", value: this.floorId });
       super.search(filters);

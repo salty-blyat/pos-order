@@ -1,9 +1,10 @@
-import { Component, input, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, computed, input, OnChanges, SimpleChanges } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Floor, FloorService } from "./floor.service";
 import { FloorUiService } from "./floor-ui.service";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-floor-list",
@@ -33,7 +34,7 @@ import { SIZE_COLUMNS } from "../../const";
         <div>
           <button
             nz-button
-            nzType="primary"
+            nzType="primary" *ngIf="isFloorAdd()"
             (click)="uiService.showAdd(this.blockId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
@@ -92,8 +93,9 @@ import { SIZE_COLUMNS } from "../../const";
                         }
                 }}
               </td>
-              <td nzEllipsis style="flex:2">
-                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+              <td nzEllipsis style="flex:2"> 
+                <span *ngIf="!isFloorAdd()" >{{ data.name }}</span>
+                <a  *ngIf="isFloorAdd()" (click)="uiService.showView(data.id!)">{{ data.name }}</a>
               </td>
               <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
@@ -101,7 +103,7 @@ import { SIZE_COLUMNS } from "../../const";
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container>
+                  <ng-container *ngIf="isFloorEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)"
                       ><i
                         nz-icon
@@ -112,11 +114,11 @@ import { SIZE_COLUMNS } from "../../const";
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container>
+                  <ng-container *ngIf="isFloorRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
-                      nz-typography
+                      nz-typography 
                       style="color: #F31313"
                     >
                       <i
@@ -141,15 +143,16 @@ import { SIZE_COLUMNS } from "../../const";
 })
 export class FloorListComponent
   extends BaseListComponent<Floor>
-  implements OnChanges
-{
+  implements OnChanges {
   constructor(
     override service: FloorService,
     uiService: FloorUiService,
-    sessionStorageService: SessionStorageService
+    sessionStorageService: SessionStorageService,
+    private authService: AuthService,
   ) {
     super(service, uiService, sessionStorageService, "floor-list");
   }
+
   blockId = input<number>(0);
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -157,6 +160,12 @@ export class FloorListComponent
       this.search(changes["blockId"]?.currentValue);
     }
   }
+
+  isFloorAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__ADD));
+  isFloorView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__VIEW));
+  isFloorRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__REMOVE));
+  isFloorEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__EDIT));
+
   override search(blockId?: any): void {
     if (blockId) {
       let filters = [

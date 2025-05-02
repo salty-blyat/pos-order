@@ -1,6 +1,8 @@
-import { Component, computed, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, computed, OnInit, signal, ViewEncapsulation } from "@angular/core";
 import { Observable } from "rxjs";
 import { ActivatedRoute, Data, Router } from "@angular/router";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-system-setting",
@@ -21,7 +23,7 @@ import { ActivatedRoute, Data, Router } from "@angular/router";
           <div nz-col nzSpan="6" class="main-content-setting">
             <nz-sider nzWidth="200px" nzTheme="light">
               <ul nz-menu nzMode="inline" class="menu-custom-setting">
-                <li
+                <li *ngIf="isCompany()"
                   style="margin-top: 0"
                   nz-menu-item
                   routerLink="/setting/system-setting/company-section"
@@ -30,7 +32,7 @@ import { ActivatedRoute, Data, Router } from "@angular/router";
                   <i nz-icon nzType="profile"></i>
                   <span>{{ "CompanySetting" | translate }}</span>
                 </li>
-                <li
+                <li *ngIf="isAutoNumber()"
                   nz-menu-item
                   routerLink="/setting/system-setting/auto-number-section"
                   [nzMatchRouter]="true"
@@ -38,7 +40,7 @@ import { ActivatedRoute, Data, Router } from "@angular/router";
                   <i nz-icon nzType="profile"></i>
                   <span>{{ "AutoNumber" | translate }}</span>
                 </li>
-                <li
+                <li  *ngIf="isOtherApp()"
                   nz-menu-item
                   routerLink="/setting/system-setting/other-app-section"
                   [nzMatchRouter]="true"
@@ -78,11 +80,15 @@ import { ActivatedRoute, Data, Router } from "@angular/router";
   encapsulation: ViewEncapsulation.None,
 })
 export class SystemSettingComponent implements OnInit {
-  constructor(private activated: ActivatedRoute, private router: Router) {}
+  constructor(private authService: AuthService, private activated: ActivatedRoute, private router: Router) { }
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
+  isCompany = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING));
+  isAutoNumber = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER));
+  isOtherApp = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__OTHER_APP));
+
   ngOnInit(): void {
     this.router
-      .navigate(["/", "setting", "system-setting", "company-section","other-app-section"])
+      .navigate(["/", "setting", "system-setting", "company-section", "other-app-section"])
       .then();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
@@ -9,6 +9,8 @@ import {
   SETTING_KEY,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-block-operation",
@@ -83,16 +85,16 @@ import {
         </button>
       </div>
       <div *ngIf="modal?.isView">
-        <a *ngIf="!isLoading()">
+        <a *ngIf="!isLoading() && isBlockEdit()" >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
-        <a nz-typography nzType="danger" *ngIf="!isLoading()">
+        <nz-divider nzType="vertical" *ngIf="!isLoading()  && isBlockEdit()"></nz-divider>
+        <a nz-typography nzType="danger" *ngIf="!isLoading() && isBlockRemove()">
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
+        <nz-divider nzType="vertical" *ngIf="!isLoading() && isBlockRemove()"></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
           <span class="action-text"> {{ "Close" | translate }}</span>
@@ -110,13 +112,18 @@ export class BlockOperationComponent extends BaseOperationComponent<Block> {
     ref: NzModalRef<BlockOperationComponent>,
     override service: BlockService,
     override uiService: BlockUiService,
-    private systemSettingService: SystemSettingService
+    private systemSettingService: SystemSettingService,
+    private authService: AuthService
   ) {
     super(fb, ref, service, uiService);
   }
+
+  isBlockRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__REMOVE));
+  isBlockEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__EDIT));
+ 
   editableCode: boolean = false;
-  
-  override ngOnInit(): void { 
+
+  override ngOnInit(): void {
     setTimeout(() => {
       let setting = this.systemSettingService.current.items.find(
         (item) => item.key === SETTING_KEY.BlockAutoId
@@ -126,7 +133,7 @@ export class BlockOperationComponent extends BaseOperationComponent<Block> {
         this.frm.get("code")?.disable();
       }
     }, 50);
-    super.ngOnInit(); 
+    super.ngOnInit();
   }
 
   override initControl(): void {

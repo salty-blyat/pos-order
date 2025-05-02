@@ -3,6 +3,7 @@ import {
   computed,
   input,
   OnChanges,
+  signal,
   SimpleChanges,
   ViewEncapsulation,
 } from "@angular/core";
@@ -15,7 +16,7 @@ import { ReportUiService } from "./report-ui.service";
 import { AuthService } from "../../helpers/auth.service";
 import { NotificationService } from "../../utils/services/notification.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 
 @Component({
   selector: "app-report-list",
@@ -44,7 +45,7 @@ import { SIZE_COLUMNS } from "../../const";
         </div>
         <div>
           <button
-            *ngIf="isReportAdd"
+            *ngIf="isReportAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd(reportGroupId)"
@@ -107,11 +108,11 @@ import { SIZE_COLUMNS } from "../../const";
               </td>
               <td nzEllipsis>
                 <a
-                  *ngIf="isReportView"
+                  *ngIf="isReportView()"
                   (click)="uiService.showView(data.id || 0)"
                   >{{ data.name! | translate }}</a
                 >
-                <span *ngIf="!isReportView">{{ data.name! | translate }}</span>
+                <span *ngIf="!isReportView()">{{ data.name! | translate }}</span>
               </td>
               <td nzEllipsis>{{ data.label! | translate }}</td>
               <td nzEllipsis style="flex: 3;">{{ data.note }}</td>
@@ -136,7 +137,7 @@ import { SIZE_COLUMNS } from "../../const";
                       nzTheme="outline"
                     ></span>
                   </ng-container>
-                  <ng-container>
+                  <ng-container *ngIf="isReportEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i
                         nz-icon
@@ -147,7 +148,7 @@ import { SIZE_COLUMNS } from "../../const";
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container>
+                  <ng-container *ngIf="isReportRemove()">
                     <a
                       *nzSpaceItem
                       nz-typography
@@ -172,8 +173,7 @@ import { SIZE_COLUMNS } from "../../const";
 })
 export class ReportListComponent
   extends BaseListComponent<Report>
-  implements OnChanges
-{
+  implements OnChanges {
   constructor(
     service: ReportService,
     uiService: ReportUiService,
@@ -186,10 +186,10 @@ export class ReportListComponent
 
   reportGroupId = input<number>(0);
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
-  isReportAdd: boolean = true;
-  isReportEdit: boolean = true;
-  isReportRemove: boolean = true;
-  isReportView: boolean = true;
+  isReportAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__ADD));
+  isReportEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT));
+  isReportRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE));
+  isReportView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__VIEW));
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["reportGroupId"]) {

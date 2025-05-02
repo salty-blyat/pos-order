@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -9,6 +9,8 @@ import {
   SETTING_KEY,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-member-unit-operation",
@@ -80,27 +82,27 @@ import {
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isMemberUnitEdit"
+          *ngIf="!isLoading() && isMemberUnitEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isMemberUnitEdit"
+          *ngIf="!isLoading() && isMemberUnitEdit()"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isMemberUnitRemove"
+          *ngIf="!isLoading() && isMemberUnitRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isMemberUnitRemove"
+          *ngIf="!isLoading() && isMemberUnitRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -119,17 +121,19 @@ export class MemberUnitOperationComponent extends BaseOperationComponent<MemberU
     ref: NzModalRef<MemberUnitOperationComponent>,
     service: MemberUnitService,
     private systemSettingService: SystemSettingService,
+    private authService: AuthService,
     uiService: MemberUnitUiService
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isMemberUnitEdit: boolean = true;
-  isMemberUnitRemove: boolean = true;
+  isMemberUnitEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__EDIT));
+  isMemberUnitRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__REMOVE));
+
   editableCode: boolean = false;
 
-  override ngOnInit(): void {
-    setTimeout(() => {
+  override ngOnInit(): void { 
+    setTimeout(()=> { 
       let setting = this.systemSettingService.current.items.find(
         (item) => item.key === SETTING_KEY.MemberUnitAutoId
       );
@@ -137,7 +141,7 @@ export class MemberUnitOperationComponent extends BaseOperationComponent<MemberU
       if (this.editableCode) {
         this.frm.get("code")?.disable();
       }
-    }, 50);
+    },50)
     super.ngOnInit();
   }
 

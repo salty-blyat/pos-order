@@ -1,10 +1,12 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { RoomType, RoomTypeService } from "./room-type.service";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { RoomTypeUiService } from "./room-type-ui.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-room-type-operation",
@@ -124,27 +126,27 @@ import { RoomTypeUiService } from "./room-type-ui.service";
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isRoomTypeEdit"
+          *ngIf="!isLoading() && isRoomTypeEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isRoomTypeEdit"
+          *ngIf="!isLoading() && isRoomTypeEdit()"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isRoomTypeRemove"
+          *ngIf="!isLoading() && isRoomTypeRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isRoomTypeRemove"
+          *ngIf="!isLoading() && isRoomTypeRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -161,14 +163,15 @@ export class RoomTypeOperationComponent extends BaseOperationComponent<RoomType>
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<RoomTypeOperationComponent>,
+    private authService: AuthService,
     service: RoomTypeService,
     uiService: RoomTypeUiService
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isRoomTypeEdit: boolean = true;
-  isRoomTypeRemove: boolean = true;
+  isRoomTypeEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE));
+  isRoomTypeRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE));
 
   override ngOnInit(): void {
     if (this.isLoading()) return;

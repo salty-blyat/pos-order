@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { SIDE_EXPAND_COLLAPSED } from "../../const";
+import { Component, computed, OnInit, ViewEncapsulation } from "@angular/core";
+import { AuthKeys, SIDE_EXPAND_COLLAPSED } from "../../const";
 import { LocalStorageService } from "../../utils/services/localStorage.service";
+import { AuthService } from "../../helpers/auth.service";
 
 interface SubName {
   icon?: string;
@@ -60,7 +61,7 @@ interface Setting {
   encapsulation: ViewEncapsulation.None,
 })
 export class SettingComponent implements OnInit {
-  constructor(private localStorageService: LocalStorageService) {}
+  constructor(private localStorageService: LocalStorageService, private authService: AuthService) { }
   setting: Setting[] = [];
   urlPart = "/setting";
   setLastVisited(route: string) {
@@ -70,22 +71,22 @@ export class SettingComponent implements OnInit {
     });
   }
 
-  isLookupList: boolean = true;
-  isCurrencyList: boolean = true;
-  isReportList: boolean = true;
-  isMemberLevelList: boolean = true;
-  isMemberUnitList: boolean = true;
-  isUnitList: boolean = true;
-  isSystemSettingList: boolean = true;
-  isAutoNumberList: boolean = true;
-  isBlockList: boolean = true;
-  isRoomTypeList: boolean = true;
-  isItemList: boolean = true; 
-  isRoomCharge : boolean = true;
-  isCharge : boolean = true;
-  isItemTypeList: boolean = true;
-  isMemberGroupList: boolean = true;
-  isTags: boolean = true;
+  isLookupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP));
+  isCurrencyList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY));
+  isReportList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT));
+  isMemberLevelList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL));
+  isMemberUnitList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT));
+  isUnitList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT));
+  isSystemSettingList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING));
+  isAutoNumberList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER));
+  isBlockList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK));
+  isRoomTypeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE));
+  isItemList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM));
+  isRoomCharge = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_CHARGE));
+  isChargeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE));
+  isItemTypeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM_TYPE));
+  isMemberGroupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP));
+  isTagsList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG));
   ngOnInit(): void {
     this.setting = [
       {
@@ -95,19 +96,19 @@ export class SettingComponent implements OnInit {
             icon: "container",
             url: `${this.urlPart}/lookup`,
             label: "Lookup",
-            isList: this.isLookupList,
+            isList: this.isLookupList(),
           },
           {
             icon: "container",
             url: `${this.urlPart}/currency`,
             label: "Currency",
-            isList: this.isCurrencyList,
+            isList: this.isCurrencyList(),
           },
           {
             icon: "container",
             url: `${this.urlPart}/tag`,
             label: "Tag",
-            isList: this.isTags,
+            isList: this.isTagsList(),
           },
         ],
       },
@@ -118,19 +119,19 @@ export class SettingComponent implements OnInit {
             icon: "container",
             url: `${this.urlPart}/member-unit`,
             label: "MemberUnit",
-            isList: this.isMemberUnitList,
+            isList: this.isMemberUnitList(),
           },
           {
             icon: "container",
             url: `${this.urlPart}/member-group`,
             label: "MemberGroup",
-            isList: this.isMemberGroupList,
+            isList: this.isMemberGroupList(),
           },
           {
             icon: "container",
             url: `${this.urlPart}/member-level`,
             label: "MemberLevel",
-            isList: this.isMemberLevelList,
+            isList: this.isMemberLevelList(),
           },
         ],
       },
@@ -141,51 +142,52 @@ export class SettingComponent implements OnInit {
             icon: "container",
             url: `${this.urlPart}/block`,
             label: "Block",
-            isList: this.isBlockList,
+            isList: this.isBlockList(),
           },
           {
             icon: "container",
             url: `${this.urlPart}/room-type`,
             label: "RoomType",
-            isList: this.isRoomTypeList,
+            isList: this.isRoomTypeList(),
           },
           {
             icon: "container",
             url: `${this.urlPart}/unit`,
             label: "Unit",
-            isList: this.isUnitList,
+            isList: this.isUnitList(),
           },
           {
             icon: "container",
             url: `${this.urlPart}/item-type`,
             label: "ItemType",
-            isList: this.isItemTypeList,
+            isList: this.isItemTypeList(),
           },
           {
             icon: "container",
             url: `${this.urlPart}/item`,
             label: "Item",
-            isList: this.isItemList,
+            isList: this.isItemList(),
           },
         ],
       },
       {
         groupName: "Charge",
         subName: [
-          {
-            icon: "container",
-            url: `${this.urlPart}/room-charge`,
-            label: "RoomCharge",
-            isList: this.isRoomCharge,
-          }, 
-          
+          // {
+          //   icon: "container",
+          //   url: `${this.urlPart}/room-charge`,
+          //   label: "RoomCharge",
+          //   isList: this.isRoomCharge(),
+          // }, 
+
           {
             icon: "container",
             url: `${this.urlPart}/charge`,
             label: "Charge",
-            isList: this.isCharge,
-          }, 
-        ]},
+            isList: this.isChargeList(),
+          },
+        ]
+      },
       {
         groupName: "SystemSetting",
         subName: [
@@ -193,19 +195,19 @@ export class SettingComponent implements OnInit {
             icon: "container",
             url: `${this.urlPart}/system-setting`,
             label: "SystemSetting",
-            isList: this.isSystemSettingList,
+            isList: this.isSystemSettingList(),
           },
           {
             icon: "container",
             url: `${this.urlPart}/auto-number`,
             label: "AutoNumber",
-            isList: this.isAutoNumberList,
+            isList: this.isAutoNumberList(),
           },
           {
             icon: "container",
             url: `${this.urlPart}/report`,
             label: "Report",
-            isList: this.isReportList,
+            isList: this.isReportList(),
           },
         ],
       },

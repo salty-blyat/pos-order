@@ -29,7 +29,7 @@ import { AuthService } from "../../helpers/auth.service";
         </div>
         <div>
           <button
-            *ngIf="isCurrencyAdd"
+            *ngIf="isCurrencyAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -84,11 +84,10 @@ import { AuthService } from "../../helpers/auth.service";
               </td>
               <td nzEllipsis>
                 <a
-                  *ngIf="isCurrencyView"
+                  *ngIf="isCurrencyView()"
                   (click)="uiService.showView(data.id!)"
-                  >{{ data.code }}</a
-                >
-                <span *ngIf="!isCurrencyView">{{ data.code }}</span>
+                  >{{ data.code }}</a>
+                <span *ngIf="!isCurrencyView()">{{ data.code }}</span>
               </td>
               <td nzEllipsis>{{ data.name }}</td>
               <td nzEllipsis>{{ data.symbol }}</td>
@@ -100,7 +99,7 @@ import { AuthService } from "../../helpers/auth.service";
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isCurrencyEdit">
+                  <ng-container *ngIf="isCurrencyEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i
                         nz-icon
@@ -111,7 +110,7 @@ import { AuthService } from "../../helpers/auth.service";
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isCurrencyRemove">
+                  <ng-container *ngIf="isCurrencyRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -145,30 +144,15 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
     sessionStorageService: SessionStorageService,
     public override uiService: CurrencyUiService,
     private activated: ActivatedRoute,
-    public authService: AuthService
+    private authService: AuthService
   ) {
     super(service, uiService, sessionStorageService, "currency-list");
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isCurrencyAdd: boolean = true;
-  isCurrencyEdit: boolean = true;
-  isCurrencyRemove: boolean = true;
-  isCurrencyView: boolean = true;
-
-  override ngOnInit(): void {
-    this.isCurrencyAdd = this.authService.isAuthorized(
-      AuthKeys.APP__SETTING__CURRENCY__ADD
-    );
-    this.isCurrencyEdit = this.authService.isAuthorized(
-      AuthKeys.APP__SETTING__CURRENCY__EDIT
-    );
-    this.isCurrencyRemove = this.authService.isAuthorized(
-      AuthKeys.APP__SETTING__CURRENCY__REMOVE
-    );
-    this.isCurrencyView = this.authService.isAuthorized(
-      AuthKeys.APP__SETTING__CURRENCY__VIEW
-    );
-  }
+  isCurrencyAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__ADD));
+  isCurrencyEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__EDIT));
+  isCurrencyRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__REMOVE));
+  isCurrencyView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__VIEW));
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

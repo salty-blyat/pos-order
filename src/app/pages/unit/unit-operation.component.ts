@@ -1,10 +1,12 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { UnitUiService } from "./unit-ui.service";
 import { Unit, UnitService } from "./unit.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-unit-operation",
@@ -58,27 +60,27 @@ import { Unit, UnitService } from "./unit.service";
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isUnitEdit"
+          *ngIf="!isLoading() && isUnitEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isUnitEdit"
+          *ngIf="!isLoading() && isUnitEdit()"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isUnitRemove"
+          *ngIf="!isLoading() && isUnitRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isUnitRemove"
+          *ngIf="!isLoading() && isUnitRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -95,14 +97,15 @@ export class UnitOperationComponent extends BaseOperationComponent<Unit> {
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<UnitOperationComponent>,
+    private authService: AuthService,
     service: UnitService,
     uiService: UnitUiService
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isUnitEdit: boolean = true;
-  isUnitRemove: boolean = true;
+  isUnitEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__EDIT));
+  isUnitRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__REMOVE));
 
   override initControl(): void {
     const { required, noteMaxLengthValidator, nameExistValidator } =

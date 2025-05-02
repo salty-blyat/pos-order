@@ -1,4 +1,4 @@
-import { Component, signal, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -11,6 +11,8 @@ import {
   SystemSetting,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-charge-unit-operation",
@@ -112,27 +114,27 @@ import {
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isChargeEdit"
+          *ngIf="!isLoading() && isChargeEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isChargeEdit"
+          *ngIf="!isLoading() && isChargeEdit()"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isChargeRemove"
+          *ngIf="!isLoading() && isChargeRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isChargeRemove"
+          *ngIf="!isLoading() && isChargeRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -150,6 +152,7 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
     fb: FormBuilder,
     ref: NzModalRef<ChargeOperationComponent>,
     public systemSettingService: SystemSettingService,
+    private authService: AuthService,
     service: ChargeService,
     uiService: ChargeUiService
   ) {
@@ -157,8 +160,8 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
   }
   chargesAutoIdEnable = signal<boolean>(false);
 
-  isChargeEdit: boolean = true;
-  isChargeRemove: boolean = true;
+  isChargeEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__EDIT));
+  isChargeRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__REMOVE));
 
   override initControl(): void {
     const {

@@ -1,13 +1,14 @@
-import {Component, computed, signal, ViewEncapsulation} from "@angular/core";
-import {Observable} from "rxjs";
-import {BaseListComponent} from "../../utils/components/base-list.component";
-import {SessionStorageService} from "../../utils/services/sessionStorage.service";
-import {ActivatedRoute} from "@angular/router";
-import {BlockUiService} from "./block-ui.service";
-import {Block, BlockService} from "./block.service";
-import {NotificationService} from "../../utils/services/notification.service";
-import {SIZE_COLUMNS} from "../../const";
-import {QueryParam} from "../../utils/services/base-api.service";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
+import { Observable } from "rxjs";
+import { BaseListComponent } from "../../utils/components/base-list.component";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { ActivatedRoute } from "@angular/router";
+import { BlockUiService } from "./block-ui.service";
+import { Block, BlockService } from "./block.service";
+import { NotificationService } from "../../utils/services/notification.service";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
+import { QueryParam } from "../../utils/services/base-api.service";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-block-list",
@@ -39,7 +40,7 @@ import {QueryParam} from "../../utils/services/base-api.service";
                                   nzTheme="outline"
                                   cdkDragHandle></span>
                               {{ data.name }}
-                              <a [nzDropdownMenu]="menu"
+                              <a [nzDropdownMenu]="menu" *ngIf="isBlockView() || isBlockRemove() || isBlockEdit()"
                                  class="action-button menu-dropdown"
                                  nz-dropdown
                                  nzTrigger="click"
@@ -52,15 +53,25 @@ import {QueryParam} from "../../utils/services/base-api.service";
                           </li>
                           <nz-dropdown-menu #menu="nzDropdownMenu">
                               <ul nz-menu>
-                                  <li class="menu-item edit"
-                                      nz-menu-item
+                                  <li class="menu-item default" *ngIf="isBlockView()"
+                                      nz-menu-item 
+                                      (click)="uiService.showView(data.id!)">
+                                    <span>
+                                      <i nz-icon nzType="eye"></i>&nbsp;
+                                      <span class="action-text">{{ "View" | translate }}</span>
+                                    </span>
+                                  </li>
+
+                                  <li class="menu-item edit" *ngIf="isBlockEdit()"
+                                      nz-menu-item 
                                       (click)="uiService.showEdit(data.id!)">
                                     <span>
                                       <i nz-icon nzType="edit"></i>&nbsp;
                                       <span class="action-text">{{ "Edit" | translate }}</span>
                                     </span>
                                   </li>
-                                  <li class="menu-item delete"
+                                  
+                                  <li class="menu-item delete" *ngIf="isBlockRemove()"
                                       nz-menu-item
                                       (click)="uiService.showDelete(data.id!)">
                                       <span>
@@ -72,7 +83,7 @@ import {QueryParam} from "../../utils/services/base-api.service";
                           </nz-dropdown-menu>
                       </ul>
                       <div *ngIf="!draged()">
-                          <button nz-button
+                          <button *ngIf="isBlockAdd()" nz-button
                                   nzType="dashed"
                                   nzBlock
                                   (click)="uiService.showAdd()">
@@ -147,7 +158,8 @@ export class BlockListComponent extends BaseListComponent<Block> {
     sessionStorageService: SessionStorageService,
     public override uiService: BlockUiService,
     private activated: ActivatedRoute,
-    notificationService: NotificationService
+    notificationService: NotificationService,
+    private authService: AuthService
   ) {
     super(
       service,
@@ -166,6 +178,11 @@ export class BlockListComponent extends BaseListComponent<Block> {
     super.ngOnInit();
     this.changeBlockId(this.blockId());
   }
+
+  isBlockAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__ADD));
+  isBlockRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__REMOVE));
+  isBlockEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__EDIT));
+  isBlockView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__VIEW));
 
   changeBlockId(id: number) {
     this.sessionStorageService.setValue({
@@ -189,7 +206,7 @@ export class BlockListComponent extends BaseListComponent<Block> {
         next: (result: { results: Block[]; param: QueryParam }) => {
           this.isLoading.set(true);
           this.lists.set(result.results);
-          if (!this.blockId() && result.results.length > 0){
+          if (!this.blockId() && result.results.length > 0) {
             this.changeBlockId(result.results[0].id!);
           }
           this.param().rowCount = result.param.rowCount;

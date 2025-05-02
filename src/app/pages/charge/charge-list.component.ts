@@ -1,7 +1,7 @@
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { TranslateService } from "@ngx-translate/core";
 import { Charge, ChargeService } from "./charge.service";
 import { ChargeUiService } from "./charge-ui.service";
@@ -10,6 +10,7 @@ import { Observable } from "rxjs";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { Filter } from "../../utils/services/base-api.service";
 import { SystemSettingService } from "../system-setting/system-setting.service";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-charge-list",
@@ -31,8 +32,7 @@ import { SystemSettingService } from "../system-setting/system-setting.service";
             </app-filter-input>
           </div>
           <div nz-col>
-            <app-lookup-item-select
-              formControlName="chargeTypeId"
+            <app-lookup-item-select 
               [showAll]="'AllChargeType' | translate"
               [showAllOption]="true"
               storageKey="charge-type-filter"
@@ -43,8 +43,7 @@ import { SystemSettingService } from "../system-setting/system-setting.service";
             ></app-lookup-item-select>
           </div>
           <div nz-col>
-            <app-unit-select
-              formControlName="unitId"
+            <app-unit-select 
               [showAllOption]="true"
               storageKey="unit-filter"
               (valueChanged)="
@@ -166,13 +165,13 @@ import { SystemSettingService } from "../system-setting/system-setting.service";
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isChargeEdit">
+                  <ng-container *ngIf="isChargeEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i nz-icon nzType="edit" nzTheme="outline"></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isChargeRemove">
+                  <ng-container *ngIf="isChargeRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -201,20 +200,21 @@ export class ChargeListComponent extends BaseListComponent<Charge> {
     override uiService: ChargeUiService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute,
+    private authService: AuthService,
     protected translateService: TranslateService
   ) {
     super(service, uiService, sessionStorageService, "charge-list");
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isChargeAdd = signal<boolean>(true);
-  isChargeEdit = signal<boolean>(true);
-  isChargeRemove = signal<boolean>(true);
-  isChargeView = signal<boolean>(true);
+  isChargeAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__ADD));
+  isChargeEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__EDIT));
+  isChargeRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__REMOVE));
+  isChargeView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__VIEW));
   lookupItemType = LOOKUP_TYPE;
 
   chargeTypeId = signal<number>(0);
   unitId = signal<number>(0);
-   
+
   override search() {
     let filters: Filter[] = [];
     if (this.chargeTypeId()) {
@@ -233,5 +233,5 @@ export class ChargeListComponent extends BaseListComponent<Charge> {
     }
     super.search(filters, 100);
   }
-  protected readonly SIZE_COLUMNS = SIZE_COLUMNS; 
+  protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

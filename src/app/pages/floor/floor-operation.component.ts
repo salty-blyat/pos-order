@@ -1,10 +1,12 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import {  FormBuilder, } from '@angular/forms';
+import { Component, computed, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { BaseOperationComponent } from '../../utils/components/base-operation.component';
-import {CommonValidators} from "../../utils/services/common-validators";
-import {Floor, FloorService} from "./floor.service";
-import {FloorUiService} from "./floor-ui.service";
+import { CommonValidators } from "../../utils/services/common-validators";
+import { Floor, FloorService } from "./floor.service";
+import { FloorUiService } from "./floor-ui.service";
+import { AuthService } from '../../helpers/auth.service';
+import { AuthKeys } from '../../const';
 
 @Component({
     selector: 'app-floor-operation',
@@ -72,21 +74,21 @@ import {FloorUiService} from "./floor-ui.service";
                 </button>
             </div>
             <div *ngIf="modal?.isView">
-                <a *ngIf="!isLoading()" (click)="uiService.showEdit(model.id!)">
+                <a *ngIf="!isLoading() && isFloorEdit()" (click)="uiService.showEdit(model.id!)">
                     <i nz-icon nzType="edit" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Edit' | translate }}</span>
                 </a>
-                <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
+                <nz-divider nzType="vertical" *ngIf="!isLoading() && isFloorEdit()"></nz-divider>
                 <a
                         nz-typography
                         nzType="danger"
-                        *ngIf="!isLoading()"
+                        *ngIf="!isLoading() && isFloorRemove()"
                         (click)="uiService.showDelete(model.id!)"
                 >
                     <i nz-icon nzType="delete" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Delete' | translate }}</span>
                 </a>
-                <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
+                <nz-divider nzType="vertical" *ngIf="!isLoading() && isFloorRemove()"></nz-divider>
                 <a nz-typography (click)="cancel()" style="color: gray;">
                     <i nz-icon nzType="close" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Close' | translate }}</span>
@@ -103,10 +105,14 @@ export class FloorOperationComponent extends BaseOperationComponent<Floor> {
         fb: FormBuilder,
         ref: NzModalRef<FloorOperationComponent>,
         override service: FloorService,
+        private authService: AuthService,
         override uiService: FloorUiService
     ) {
         super(fb, ref, service, uiService);
     }
+
+    isFloorRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__REMOVE));
+    isFloorEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__EDIT));
 
     override initControl(): void {
         const {
@@ -130,9 +136,9 @@ export class FloorOperationComponent extends BaseOperationComponent<Floor> {
 
     override setFormValue(): void {
         this.frm.setValue({
-            name:this.model.name,
-            blockId:this.model.blockId,
-            note:this.model.note,
+            name: this.model.name,
+            blockId: this.model.blockId,
+            note: this.model.note,
         })
     }
 }
