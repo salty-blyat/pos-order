@@ -88,6 +88,6 @@ export class UnitSelectComponent extends BaseSelectComponent<Unit>{
   ) {
     super(service, uiService, sessionStorageService,'unit-filter','all-unit' )
   }
-  isUnitAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT)); 
+  isUnitAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__ADD)); 
 }
 

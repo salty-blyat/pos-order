@@ -40,7 +40,6 @@ import { AuthService } from "../../helpers/auth.service";
           <div nz-col nzSpan="5">
             <app-member-unit-select
               [showAllOption]="true"
-              [addOption]="true"
               storageKey="member-list-unit-filter"
               (valueChanged)="
                 memberLevelId.set($event); param().pageIndex = 1; search()
