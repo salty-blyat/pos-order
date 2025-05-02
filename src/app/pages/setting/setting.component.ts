@@ -71,22 +71,28 @@ export class SettingComponent implements OnInit {
     });
   }
 
-  isLookupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP));
-  isCurrencyList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY));
-  isReportList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT));
-  isMemberLevelList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL));
-  isMemberUnitList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT));
-  isUnitList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT));
-  isSystemSettingList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING));
-  isAutoNumberList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER));
-  isBlockList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK));
-  isRoomTypeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE));
-  isItemList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM));
-  isRoomCharge = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_CHARGE));
-  isChargeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE));
-  isItemTypeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM_TYPE));
-  isMemberGroupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP));
-  isTagsList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG));
+  isLookupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST));
+  isCurrencyList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST));
+  isReportList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST));
+  isMemberLevelList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__LIST));
+  isMemberUnitList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__LIST));
+  isUnitList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__LIST));
+  isAutoNumberList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST));
+  isBlockList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__LIST));
+  isRoomTypeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE__LIST));
+  isItemList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__LIST));
+  isRoomCharge = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_CHARGE__LIST));
+  isChargeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__LIST));
+  isItemTypeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM_TYPE__LIST));
+  isMemberGroupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__LIST));
+  isTagsList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__LIST));
+  isSystemSettingList = computed(() =>  
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING__VIEW) ||
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER__VIEW) ||
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__OTHER_APP__VIEW) 
+
+);
+
   ngOnInit(): void {
     this.setting = [
       {

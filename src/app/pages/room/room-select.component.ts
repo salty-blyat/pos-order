@@ -1,7 +1,9 @@
 import {
   Component,
+  computed,
   forwardRef,
   input,
+  InputSignal,
   OnChanges,
   Signal,
   signal,
@@ -12,6 +14,8 @@ import { RoomUiService } from "./room-ui.service";
 import { Room, RoomService } from "./room.service";
 import { BaseSelectComponent } from "../../utils/components/base-select.component";
 import { effect } from "@angular/core";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   providers: [
@@ -54,7 +58,7 @@ import { effect } from "@angular/core";
       </nz-option>
       <ng-template #actionItem>
         <a
-          *ngIf="addOption()"
+          *ngIf="addOption() && isRoomAdd()"
           (click)="uiService.showAdd(componentId)"
           class="item-action"
         >
@@ -91,7 +95,8 @@ export class RoomSelectComponent extends BaseSelectComponent<Room> {
   constructor(
     service: RoomService,
     uiService: RoomUiService,
-    sessionStorageService: SessionStorageService
+    sessionStorageService: SessionStorageService,
+    private authService: AuthService 
   ) {
     super(service, uiService, sessionStorageService, "room-filter", "all-room");
 
@@ -104,5 +109,8 @@ export class RoomSelectComponent extends BaseSelectComponent<Room> {
       console.log(this.floorId);
     });
   }
+
+  isRoomAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__ROOM__ADD)); 
+
   floorId = input(0);
 }

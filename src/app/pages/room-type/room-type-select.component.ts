@@ -1,9 +1,11 @@
-import {Component, forwardRef, ViewEncapsulation} from '@angular/core';
+import {Component, computed, forwardRef, ViewEncapsulation} from '@angular/core';
 import {NG_VALUE_ACCESSOR} from '@angular/forms';
 import {SessionStorageService} from '../../utils/services/sessionStorage.service';
 import {RoomTypeUiService} from './room-type-ui.service';
 import {RoomType, RoomTypeService} from './room-type.service';
 import {BaseSelectComponent} from "../../utils/components/base-select.component";
+import { AuthService } from '../../helpers/auth.service';
+import { AuthKeys } from '../../const';
 
 @Component({
   providers: [
@@ -43,7 +45,7 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
           </nz-option>
           <ng-template #actionItem>
               <a
-                      *ngIf="addOption() && isBlockAdd"
+                      *ngIf="addOption() && isRoomTypeAdd()"
                       (click)="uiService.showAdd(componentId)"
                       class="item-action"
               >
@@ -65,10 +67,11 @@ export class RoomTypeSelectComponent extends BaseSelectComponent<RoomType> {
     service: RoomTypeService,
     sessionStorageService: SessionStorageService,
     uiService: RoomTypeUiService,
+    private authService: AuthService
   ) {
     super(service, uiService, sessionStorageService, 'room-type-filter', 'all-room-type')
   }
 
-  isBlockAdd: boolean = true;
+  isRoomTypeAdd = computed(() =>this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE__ADD));
 
 }

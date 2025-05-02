@@ -1,9 +1,11 @@
-import {Component, forwardRef, signal, ViewEncapsulation} from '@angular/core';
+import {Component, computed, forwardRef, signal, ViewEncapsulation} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import { MemberLevel, MemberLevelService } from './member-level.service';
 import { MemberLevelUiService } from './member-level-ui.component';
 import {BaseSelectComponent} from "../../utils/components/base-select.component";
+import { AuthService } from '../../helpers/auth.service';
+import { AuthKeys } from '../../const';
   
   @Component({
     providers: [
@@ -65,11 +67,12 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
       service: MemberLevelService,
       uiService: MemberLevelUiService,
       sessionStorageService: SessionStorageService,
+      private authService: AuthService
     ) {
       super(service, uiService, sessionStorageService, "member-level-filter", "all-member-level")
     }
 
-    isMemberLevelAdd = signal(true);
+    isMemberLevelAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__ADD));
   }
   
   

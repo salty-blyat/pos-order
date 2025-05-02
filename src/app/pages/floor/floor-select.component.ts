@@ -1,9 +1,11 @@
-import {Component, forwardRef, signal, ViewEncapsulation} from '@angular/core';
+import {Component, computed, forwardRef, signal, ViewEncapsulation} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import { FloorUiService } from './floor-ui.service';
 import { Floor, FloorService } from './floor.service';
 import {BaseSelectComponent} from "../../utils/components/base-select.component";
+import { AuthKeys } from '../../const';
+import { AuthService } from '../../helpers/auth.service';
 
 @Component({
     providers: [
@@ -61,12 +63,13 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
 export class FloorSelectComponent extends BaseSelectComponent<Floor> {
   constructor(
        service: FloorService,
-       override uiService: FloorUiService,
+       override uiService: FloorUiService,         
+       private authService: AuthService,
        sessionStorageService: SessionStorageService,
   ) {
     super(service, uiService, sessionStorageService, 'floor-filter', 'all-floor')
   }
-  isFloorAdd = signal(true);
+  isFloorAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__ADD));
 }
 
 

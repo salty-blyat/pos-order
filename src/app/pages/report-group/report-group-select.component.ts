@@ -1,10 +1,11 @@
-import {Component, forwardRef, ViewEncapsulation} from '@angular/core';
+import {Component, computed, forwardRef, ViewEncapsulation} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import { ReportGroup, ReportGroupService } from './report-group.service';
 import { ReportGroupUiService } from './report-group-ui.service';
 import { AuthService } from '../../helpers/auth.service';
 import { BaseSelectComponent } from "../../utils/components/base-select.component";
+import { AuthKeys } from '../../const';
 
   
   @Component({
@@ -43,7 +44,7 @@ import { BaseSelectComponent } from "../../utils/components/base-select.componen
         </nz-option>
         <ng-template #actionItem>
           <a
-            *ngIf="addOption() && isReportGroupAdd"
+            *ngIf="addOption() && isReportGroupAdd()"
             (click)="uiService.showAdd(componentId)"
             class="item-action"
           >
@@ -69,8 +70,8 @@ import { BaseSelectComponent } from "../../utils/components/base-select.componen
     ) {
       super(service, uiService, sessionStorageService, 'report-group-filter', 'all-report-groups')
     }
-
-    isReportGroupAdd: boolean = true;
+ 
+    isReportGroupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__ADD));
 
   }
   
