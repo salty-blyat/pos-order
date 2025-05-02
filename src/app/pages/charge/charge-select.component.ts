@@ -1,4 +1,4 @@
-import { Component, forwardRef, ViewEncapsulation, WritableSignal } from "@angular/core";
+import { Component, computed, forwardRef, ViewEncapsulation, WritableSignal } from "@angular/core";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { AuthService } from "../../helpers/auth.service";
@@ -6,6 +6,7 @@ import { BaseSelectComponent } from "../../utils/components/base-select.componen
 import { ChargeDeleteComponent } from "./charge-delete.component";
 import { Charge, ChargeService } from "./charge.service";
 import { ChargeUiService } from "./charge-ui.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   providers: [
@@ -46,7 +47,7 @@ import { ChargeUiService } from "./charge-ui.service";
       </nz-option>
       <ng-template #actionItem>
         <a
-          *ngIf="addOption() && isChargeAdd"
+          *ngIf="addOption() && isChargeAdd()"
           (click)="uiService.showAdd(componentId)"
           class="item-action"
         >
@@ -79,6 +80,7 @@ export class ChargeSelectComponent extends BaseSelectComponent<Charge> {
       "charge-filter",
       "all-charge"
     );
-  } 
-  isChargeAdd: boolean = true;
+  }  
+  isChargeAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__ADD));
+
 }

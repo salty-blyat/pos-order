@@ -1,10 +1,11 @@
-import { Component, forwardRef, ViewEncapsulation} from '@angular/core';
+import { Component, computed, forwardRef, ViewEncapsulation} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import { AutoNumber, AutoNumberService } from './auto-number.service';
 import { AutoNumberUiService } from './auto-number-ui.service';
 import { AuthService } from '../../helpers/auth.service';
 import {BaseSelectComponent} from "../../utils/components/base-select.component";
+import { AuthKeys } from '../../const';
 @Component({
     providers: [
         {
@@ -42,7 +43,7 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
       </nz-option>
       <ng-template #actionItem>
         <a
-          *ngIf="addOption() && isAutoNumberAdd"
+          *ngIf="addOption() && isAutoNumberAdd()"
           (click)="uiService.showAdd(componentId)"
           class="item-action"
         >
@@ -69,5 +70,5 @@ export class AutoNumberSelectComponent extends BaseSelectComponent<AutoNumber>{
     super(service, uiService, sessionStorageService, 'auto-number-filter', 'all-auto-numbers')
   }
 
-  isAutoNumberAdd: boolean = true;
+  isAutoNumberAdd = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__ADD));
 }

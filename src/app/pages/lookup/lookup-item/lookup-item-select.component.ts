@@ -1,4 +1,4 @@
-import {Component, forwardRef, input, signal, ViewEncapsulation} from "@angular/core";
+import {Component, computed, forwardRef, input, signal, ViewEncapsulation} from "@angular/core";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { LookupItem, LookupItemService } from "./lookup-item.service";
 import { LookupItemUiService } from "./lookup-item-ui.service";
@@ -7,6 +7,7 @@ import { SessionStorageService } from "../../../utils/services/sessionStorage.se
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../../helpers/auth.service";
 import {BaseSelectComponent} from "../../../utils/components/base-select.component";
+import { AuthKeys } from "../../../const";
 @Component({
   providers: [
     {
@@ -167,5 +168,6 @@ export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem>{
     }, 50);
 
   }
-  protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
+    isLookupItemAdd = computed(() =>this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__ADD));
+    protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }

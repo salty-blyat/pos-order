@@ -1,10 +1,11 @@
-import { Component, forwardRef, ViewEncapsulation} from '@angular/core';
+import { Component, computed, forwardRef, ViewEncapsulation} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import { AuthService } from '../../helpers/auth.service'; 
 import { BaseSelectComponent} from "../../utils/components/base-select.component";
 import { MemberUnit, MemberUnitService } from './member-unit.service';
 import { MemberUnitUiService } from './member-unit-ui.service';
+import { AuthKeys } from '../../const';
 
 @Component({
     providers: [
@@ -41,7 +42,7 @@ import { MemberUnitUiService } from './member-unit-ui.service';
         </nz-option>
         <ng-template #actionItem>
           <a
-            *ngIf="addOption() && isMemberUnitAdd"
+            *ngIf="addOption() && isMemberUnitAdd()"
             (click)="uiService.showAdd(componentId)"
             class="item-action"
           >
@@ -68,6 +69,6 @@ export class MemberUnitSelectComponent extends BaseSelectComponent<MemberUnit>
     ) {
         super(service, uiService, sessionStorageService, 'member-unit-filter', 'all-member-unit')
     }
-
-    isMemberUnitAdd: boolean = true;
+    isMemberUnitAdd = computed(() =>this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__ADD));
+ 
 }

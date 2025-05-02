@@ -1,9 +1,11 @@
-import {Component, forwardRef, ViewEncapsulation} from "@angular/core";
+import {Component, computed, forwardRef, ViewEncapsulation} from "@angular/core";
 import {BaseSelectComponent} from "../../utils/components/base-select.component";
 import {Item, ItemService} from "./item.service";
 import {ItemUiService} from "./item-ui.service";
 import {SessionStorageService} from "../../utils/services/sessionStorage.service";
 import {NG_VALUE_ACCESSOR} from "@angular/forms";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: 'app-item-select',
@@ -25,7 +27,7 @@ import {NG_VALUE_ACCESSOR} from "@angular/forms";
               [nzDisabled]="disabled()"
       >
           <nz-option
-                  *ngIf="showAllOption()"
+                  *ngIf="showAllOption() && isItemAdd()"
                   [nzValue]="0"
                   [nzLabel]="'AllItemTypes' | translate"
           ></nz-option>
@@ -90,7 +92,9 @@ export class ItemSelectComponent extends BaseSelectComponent<Item>{
     service: ItemService,
     uiService: ItemUiService,
     sessionStorageService: SessionStorageService,
+    private authService: AuthService
   ) {
     super(service, uiService, sessionStorageService, 'item-filter', 'all-item');
   }
+  isItemAdd = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__ADD));
 }

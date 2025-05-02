@@ -1,9 +1,11 @@
-import {Component, forwardRef, signal, ViewEncapsulation} from "@angular/core";
+import {Component, computed, forwardRef, signal, ViewEncapsulation} from "@angular/core";
 import {NG_VALUE_ACCESSOR} from "@angular/forms"; 
 import { BaseSelectComponent } from "../../utils/components/base-select.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service"; 
 import {   MemberGroup, MemberGroupService } from "./member-group.service";
 import {  MemberGroupUiService } from "./member-group-ui.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
     providers: [
@@ -59,11 +61,13 @@ export class MemberGroupSelectComponent extends BaseSelectComponent<MemberGroup>
       service: MemberGroupService,
       uiService: MemberGroupUiService,
       sessionStorageService: SessionStorageService,
+      private authService: AuthService
       ) {
     super(service, uiService, sessionStorageService, "member-group-filter", "all-member-group");
   }
 
-  isMemberGroupAdd = signal<boolean>(true);
+  isMemberGroupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD));
+  
   id = signal<number>(0);
 
   override ngOnInit() {

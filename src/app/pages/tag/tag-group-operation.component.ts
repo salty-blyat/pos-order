@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild, ViewEncapsulation} from "@angular/core";
+import {Component, computed, Input, ViewChild, ViewEncapsulation} from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { Tag, TagGroup, TagGroupService } from "./tag-group.service";
 import { FormArray, FormBuilder } from "@angular/forms";
@@ -6,6 +6,8 @@ import { NzModalRef } from "ng-zorro-antd/modal";
 import { TagGroupUiService } from "./tag-group-ui.service";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { CommonValidators } from "../../utils/services/common-validators";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-tag-group-operation",
@@ -137,21 +139,21 @@ import { CommonValidators } from "../../utils/services/common-validators";
               </button>
           </div>
           <div *ngIf="modal?.isView">
-              <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isTagGroupEdit">
+              <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isTagGroupEdit()">
                   <i nz-icon nzType="edit" nzTheme="outline"></i>
                   <span class="action-text"> {{ "Edit" | translate }}</span>
               </a>
-              <nz-divider nzType="vertical" *ngIf="!isLoading() && isTagGroupEdit"></nz-divider>
+              <nz-divider nzType="vertical" *ngIf="!isLoading() && isTagGroupEdit()"></nz-divider>
               <a
                       nz-typography
                       nzType="danger"
                       (click)="uiService.showDelete(model.id || 0)"
-                      *ngIf="!isLoading() && isTagGroupRemove"
+                      *ngIf="!isLoading() && isTagGroupRemove()"
               >
                   <i nz-icon nzType="delete" nzTheme="outline"></i>
                   <span class="action-text"> {{ "Delete" | translate }}</span>
               </a>
-              <nz-divider nzType="vertical" *ngIf="!isLoading() && isTagGroupRemove"></nz-divider>
+              <nz-divider nzType="vertical" *ngIf="!isLoading() && isTagGroupRemove()"></nz-divider>
               <a nz-typography (click)="cancel()" style="color: gray;">
                   <i nz-icon nzType="close" nzTheme="outline"></i>
                   <span class="action-text"> {{ "Close" | translate }}</span>
@@ -251,7 +253,8 @@ export class TagGroupOperationComponent extends BaseOperationComponent<TagGroup>
     fb: FormBuilder,
     ref: NzModalRef<TagGroupOperationComponent>,
     service: TagGroupService,
-    uiService: TagGroupUiService
+    uiService: TagGroupUiService,
+    private authService: AuthService
   ) {
     super(fb, ref, service, uiService);
   }
@@ -259,8 +262,12 @@ export class TagGroupOperationComponent extends BaseOperationComponent<TagGroup>
   @ViewChild("scrollable") tableForm: any;
   @Input() id = 0;
 
-  isTagGroupEdit: boolean = true;
-  isTagGroupRemove: boolean = true;
+  isTagGroupEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__EDIT)
+  );
+  isTagGroupRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__REMOVE)
+  );
 
   override initControl() {
     const { required,
