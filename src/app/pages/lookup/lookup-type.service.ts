@@ -19,6 +19,19 @@ export enum Status {
   Blocked = 6
 }
 
+export enum ChargeType {
+  Meter = 1,
+  Fixed = 2,
+  GrossArea = 3,
+  NetArea = 4,
+}
+
+export enum RoomChargeStatus
+{
+  Active = 1,
+  Inactive = 2,
+}
+
 
 export interface LookupType {
   id?: number;

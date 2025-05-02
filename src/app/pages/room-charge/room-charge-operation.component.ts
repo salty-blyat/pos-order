@@ -1,11 +1,12 @@
-import {Component, signal, ViewEncapsulation} from "@angular/core";
+import {Component, input, signal, ViewEncapsulation} from "@angular/core";
 import {BaseOperationComponent} from "../../utils/components/base-operation.component";
 import {FormBuilder} from "@angular/forms";
 import {CommonValidators} from "../../utils/services/common-validators";
 import {NzModalRef} from "ng-zorro-antd/modal";
-import {LOOKUP_TYPE} from "../lookup/lookup-type.service";
+import {ChargeType, LOOKUP_TYPE, RoomChargeStatus} from "../lookup/lookup-type.service";
 import {RoomCharge, RoomChargeService} from "./room-charge.service";
 import {RoomChargeUiService} from "./room-charge-ui.service";
+import {Charge, ChargeService} from "../charge/charge.service";
 
 @Component({
   selector: "app-room-charge-operation",
@@ -13,12 +14,11 @@ import {RoomChargeUiService} from "./room-charge-ui.service";
       <div *nzModalTitle class="modal-header-ellipsis">
           <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
           <span *ngIf="modal?.id && !modal?.isView">
-        {{ "Edit" | translate }}
-              {{ model?.roomId || ("Loading" | translate) }}
-      </span>
+            {{ "Edit" | translate }} {{ model?.roomId || ("Loading" | translate) }}
+          </span>
           <span *ngIf="modal?.id && modal?.isView">
-        {{ model?.roomId || ("Loading" | translate) }}
-      </span>
+            {{ model?.roomId || ("Loading" | translate) }}
+        </span>
       </div>
 
       <div class="modal-content">
@@ -26,27 +26,26 @@ import {RoomChargeUiService} from "./room-charge-ui.service";
           <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
               <nz-form-item>
                   <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-                      {{"Charge" | translate }}
+                      {{ "Charge" | translate }}
                   </nz-form-label>
                   <nz-form-control [nzSm]="14" [nzXs]="24">
                       <app-charge-select formControlName="chargeId"></app-charge-select>
                   </nz-form-control>
               </nz-form-item>
-              <nz-form-item>
+              <nz-form-item *ngIf="isSerial()">
                   <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-                      {{"Serial" | translate }}
+                      {{ "Serial" | translate }}
                   </nz-form-label>
                   <nz-form-control [nzSm]="14" [nzXs]="24">
                       <input nz-input formControlName="serial"/></nz-form-control>
               </nz-form-item>
-              <nz-form-item>
+              <nz-form-item  *ngIf="isSerial()">
                   <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-                      {{"StartReading" | translate }}
+                      {{ "StartReading" | translate }}
                   </nz-form-label>
                   <nz-form-control [nzSm]="14" [nzXs]="24">
                       <input nz-input formControlName="startReading"/></nz-form-control>
               </nz-form-item>
-              
               <nz-form-item>
                   <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
                           "StartDate" | translate
@@ -114,28 +113,53 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
     fb: FormBuilder,
     ref: NzModalRef<RoomChargeOperationComponent>,
     service: RoomChargeService,
-    uiService: RoomChargeUiService
+    uiService: RoomChargeUiService,
+    private chargeService: ChargeService
   ) {
     super(fb, ref, service, uiService);
   }
 
+  isSerial = signal(false);
+
+
   isRoomChargeEdit = signal(true);
   isRoomChargeRemove = signal(true);
+
+  override ngOnInit() {
+    super.ngOnInit();
+
+    this.frm.get('chargeId')?.valueChanges?.subscribe((result: any) => {
+        if (result){
+          this.chargeService.find(result).subscribe({
+            next: (result: Charge) => {
+              if (result.chargeTypeId == ChargeType.Meter){
+                this.isSerial.set(true);
+              }else {
+                this.isSerial.set(false);
+              }
+              this.frm.get('startDate')?.enable();
+            },
+            error: err => {
+              console.log(err)
+            }
+          })
+        }
+      });
+  }
 
   override initControl(): void {
     const {
       required,
-      integerValidator,
       noteMaxLengthValidator,
     } = CommonValidators;
     this.frm = this.fb.group({
-      roomId: [null, [required]],
+      roomId: [this.modal?.roomId, [required]],
       chargeId: [null, [required]],
       serial: [null, [required, noteMaxLengthValidator]],
+      qty: [1],
       startReading: [null, [required]],
-      statusId: [null, [required]],
-      startDate: [null, [required]],
-      endDate: [null],
+      statusId: [RoomChargeStatus.Active,],
+      startDate: [{value: null, disabled: true}, [required]],
     });
   }
 
@@ -144,6 +168,7 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
       roomId: this.model.roomId,
       chargeId: this.model.chargeId,
       serial: this.model.serial,
+      qty: this.model.qty,
       startReading: this.model.startReading,
       statusId: this.model.statusId,
       startDate: this.model.startDate,

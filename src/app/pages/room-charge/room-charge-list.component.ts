@@ -1,4 +1,4 @@
-import {Component, computed, signal, ViewEncapsulation} from "@angular/core";
+import {Component, computed, input, signal, ViewEncapsulation} from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
@@ -35,7 +35,7 @@ import { TranslateService } from "@ngx-translate/core";
             *ngIf="isRoomChargeAdd()"
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd()"
+            (click)="uiService.showAdd(roomId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Add" | translate }}
@@ -63,9 +63,8 @@ import { TranslateService } from "@ngx-translate/core";
           <thead>
             <tr>
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.ID">#</th>
-              <th nzEllipsis nzWidth="150px">{{ "Item" | translate }}</th>
+              <th nzEllipsis nzWidth="150px">{{ "Charge" | translate }}</th>
               <th nzEllipsis nzWidth="150px">{{ "StartDate" | translate }}</th>
-              <th nzEllipsis>{{ "FreeUsage" | translate }}</th>
               <th nzEllipsis nzWidth="150px">{{ "Status" | translate }}</th>
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
@@ -75,17 +74,8 @@ import { TranslateService } from "@ngx-translate/core";
               <td nzEllipsis>
                 {{ i | rowNumber: {index: param().pageIndex || 0, size: param().pageSize || 0} }}
               </td>
-              <td nzEllipsis>
-                <a
-                  *ngIf="isRoomChargeView()"
-                  (click)="uiService.showView(data.id!)"
-                  >{{ data.serial }}</a
-                >
-                <span *ngIf="!isRoomChargeView()">{{ data.serial }} </span>
-              </td>
               <td nzEllipsis>{{ data.chargeName }}</td>
               <td nzEllipsis>{{ data.startDate | customDate }}</td>
-              <td nzEllipsis>{{ data.freeUsage }}</td>
               <td nzEllipsis>
                 {{
                    this.translateService.currentLang === "km"
@@ -155,7 +145,7 @@ export class RoomChargeListComponent extends BaseListComponent<RoomCharge> {
   isRoomChargeView = signal<boolean>(true);
   lookupItemType = LOOKUP_TYPE;
   floorId = signal(0);
-  roomId = signal(0);
+  roomId = input(0);
   chargeId = signal(0);
 
   override search() {
