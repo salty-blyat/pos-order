@@ -69,6 +69,6 @@ export class MemberUnitSelectComponent extends BaseSelectComponent<MemberUnit>
     ) {
         super(service, uiService, sessionStorageService, 'member-unit-filter', 'all-member-unit')
     }
-    isMemberUnitAdd = computed(() =>this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE__ADD));
+    isMemberUnitAdd = computed(() =>this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD));
  
 }
