@@ -22,13 +22,19 @@ import { TranslateService } from "@ngx-translate/core";
               (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
             ></app-filter-input>
           </div>
-            <div nz-col >
-                <app-item-select
-                        [showAllOption]="true"
-                        storageKey="room-charge-item-filter"
-                        (valueChanged)=" chargeId.set($event); param().pageIndex = 1; search()"
-                ></app-item-select>
-            </div>
+          <div nz-col>
+              <app-date-range-input
+                      storageKey="room-member-filter-date"
+                      (valueChanged)="startDate.set($event); param().pageIndex = 1; search()"
+              ></app-date-range-input>
+          </div>
+          <div nz-col >
+              <app-charge-select
+                      [showAllOption]="true"
+                      storageKey="room-charge-charge-filter"
+                      (valueChanged)=" chargeId.set($event); param().pageIndex = 1; search()"
+              ></app-charge-select>
+          </div>
         </div>
         <div style="margin-left:auto">
           <button
@@ -63,10 +69,10 @@ import { TranslateService } from "@ngx-translate/core";
           <thead>
             <tr>
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.ID">#</th>
-              <th nzEllipsis nzWidth="150px">{{ "Charge" | translate }}</th>
-              <th nzEllipsis nzWidth="150px">{{ "StartDate" | translate }}</th>
-              <th nzEllipsis nzWidth="150px">{{ "Status" | translate }}</th>
-              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+              <th nzEllipsis >{{ "Charge" | translate }} / {{ 'Serial' | translate }}</th>
+              <th nzEllipsis nzWidth="240px">{{ "StartDate" | translate }}</th>
+              <th nzEllipsis nzWidth="120px">{{ "Status" | translate }}</th>
+              <th nzEllipsis nzWidth="40px"></th>
             </tr>
           </thead>
           <tbody>
@@ -74,8 +80,19 @@ import { TranslateService } from "@ngx-translate/core";
               <td nzEllipsis>
                 {{ i | rowNumber: {index: param().pageIndex || 0, size: param().pageSize || 0} }}
               </td>
-              <td nzEllipsis>{{ data.chargeName }}</td>
-              <td nzEllipsis>{{ data.startDate | customDate }}</td>
+              <td nzEllipsis>
+                  {{ data.chargeName }}
+                  @if (data.serial) {
+                      <span>/</span>
+                      <a (click)="uiService.showView(data.id!)"> {{ data.serial}}</a>
+                  }
+              </td>
+              <td nzEllipsis>
+                  {{ data.startDate | customDate }}
+                  <span *ngIf="data.endDate"> - 
+                      {{ data.endDate | customDate  }} 
+                  </span>
+              </td>
               <td nzEllipsis>
                 {{
                    this.translateService.currentLang === "km"
@@ -83,39 +100,37 @@ import { TranslateService } from "@ngx-translate/core";
                     : data.statusNameEn 
                 }}
               </td>
-              <td nzAlign="right">
-                <nz-space [nzSplit]="spaceSplit">
-                  <ng-template #spaceSplit>
-                    <nz-divider nzType="vertical"></nz-divider>
-                  </ng-template>
-                  <ng-container *ngIf="isRoomChargeEdit()">
-                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
-                      <i
-                        nz-icon
-                        nzType="edit"
-                        nzTheme="outline"
-                        style="padding-right: 5px"
-                      ></i>
-                      {{ "Edit" | translate }}
-                    </a>
-                  </ng-container>
-                  <ng-container *ngIf="isRoomChargeRemove()">
-                    <a
-                      *nzSpaceItem
-                      (click)="uiService.showDelete(data.id || 0)"
-                      nz-typography
-                      style="color: #F31313"
-                    >
-                      <i
-                        nz-icon
-                        nzType="delete"
-                        nzTheme="outline"
-                        style="padding-right: 5px"
-                      ></i>
-                      {{ "Delete" | translate }}
-                    </a>
-                  </ng-container>
-                </nz-space>
+              <td class="col-action">
+                  <a [nzDropdownMenu]="menu"
+                     class="action-button menu-dropdown"
+                     nz-dropdown
+                     nzTrigger="click"
+                     nzPlacement="bottomRight">
+                      <i nz-icon
+                         nzType="ellipsis"
+                         nzTheme="outline"
+                         style="font-size: 22px"></i>
+                  </a>
+                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                      <ul nz-menu class="dropdown-menu-custom">
+                          <li class="menu-item edit"
+                              nz-menu-item
+                              (click)="uiService.showEdit(data.id!)">
+                              <span>
+                                <i nz-icon nzType="edit"></i>&nbsp;
+                                <span class="action-text">{{ "Edit" | translate }}</span>
+                              </span>
+                          </li>
+                          <li class="menu-item delete"
+                              nz-menu-item
+                              (click)="uiService.showDelete(data.id!)">
+                              <span>
+                                <i nz-icon nzType="delete"></i>&nbsp;
+                                <span class="action-text">{{ "Delete" | translate }}</span>
+                              </span>
+                          </li>
+                      </ul>
+                  </nz-dropdown-menu>
               </td>
             </tr>
           </tbody>
@@ -147,6 +162,7 @@ export class RoomChargeListComponent extends BaseListComponent<RoomCharge> {
   floorId = signal(0);
   roomId = input(0);
   chargeId = signal(0);
+  startDate = signal<Date[]>([new Date(), new Date()]);
 
   override search() {
     const filters: Filter[] = [];

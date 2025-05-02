@@ -26,33 +26,33 @@ interface IRecentFilter {
 @Component({
     selector: 'app-date-range-input',
     template: `
-    <nz-range-picker
-      *ngIf="value"
-      [(ngModel)]="value"
-      (ngModelChange)="
-        valueChange.emit(value);
+        <nz-range-picker
+                *ngIf="value"
+                [(ngModel)]="value"
+                (ngModelChange)="
+        valueChanged.emit(value);
         onChangeCallback(value);
         onTouchedCallback(value)
       "
-      [nzAllowClear]="allowClear"
-      (nzOnCalendarChange)="calendarChange($event)"
-      nzFormat="dd-MM-yyyy"
-      [nzShowToday]="true"
-      [nzRenderExtraFooter]="extraTemplate"
-      [nzDisabled]="disabled"
-      #nzDatePickerComponent
-    ></nz-range-picker>
-    <ng-template #extraTemplate>
-      <div *ngIf="dateRanges">
+                [nzAllowClear]="allowClear"
+                (nzOnCalendarChange)="calendarChange($event)"
+                nzFormat="dd-MM-yyyy"
+                [nzShowToday]="true"
+                [nzRenderExtraFooter]="extraTemplate"
+                [nzDisabled]="disabled"
+                #nzDatePickerComponent
+        ></nz-range-picker>
+        <ng-template #extraTemplate>
+            <div *ngIf="dateRanges">
         <span *ngFor="let item of dateRanges; let i = index">
           <nz-divider *ngIf="i > 0" nzType="vertical"></nz-divider>
           <a class="preset-item" (click)="updatePreset(item)">{{
-            item.key | translate
-          }}</a>
+                  item.key | translate
+              }}</a>
         </span>
-      </div>
-    </ng-template>
-  `,
+            </div>
+        </ng-template>
+    `,
     styles: [
         `
       .preset-item {
@@ -61,7 +61,6 @@ interface IRecentFilter {
 
       nz-range-picker {
         width: 230px !important;
-        margin-right: 10px;
       }
     `,
     ],
@@ -82,7 +81,7 @@ export class DateRangeInputComponent
   @Input() formControl!: AbstractControl;
   @Input() value: [Date, Date] = [this.d1, new Date()];
   @Input() defaultValue!: [Date, Date];
-  @Output() valueChange = new EventEmitter<[Date, Date]>();
+  @Output() valueChanged = new EventEmitter<[Date, Date]>();
   @ViewChild('nzDatePickerComponent')
   nzDatePickerComponent!: NzDatePickerComponent;
   presetKey: string = 'custom';
@@ -140,10 +139,10 @@ export class DateRangeInputComponent
             this.value = found[0].val;
           }
         }
-        this.valueChange.emit(this.value);
+        this.valueChanged.emit(this.value);
       }, 60);
     } else {
-      this.valueChange.emit(this.value);
+      this.valueChanged.emit(this.value);
     }
   }
 
@@ -154,7 +153,7 @@ export class DateRangeInputComponent
   updatePreset(preset: { key: string; val: [Date, Date] }): void {
     this.presetKey = preset.key;
     this.value = [preset.val[0], preset.val[1]];
-    this.valueChange.emit(this.value);
+    this.valueChanged.emit(this.value);
     this.onChangeCallback(this.value);
     this.onTouchedCallback(this.value);
     this.updateStorage();
@@ -194,7 +193,7 @@ export class DateRangeInputComponent
       key: this.storageKey,
       val: savingData,
     });
-    this.valueChange.emit(this.value);
+    this.valueChanged.emit(this.value);
   }
 
   onChangeCallback: any = () => { };

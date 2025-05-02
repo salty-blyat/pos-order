@@ -32,6 +32,7 @@ export interface Type {
             <div class="logo-link">
               <img [src]="authService.app?.iconUrl" alt="logo"/>
               <h1 *ngIf="!isCollapsed()" class="modal-header-ellipsis">{{ appName() }}</h1>
+                <nz-icon nzType="down" style="margin-left: 8px;cursor: pointer;" (click)="redirectToMainUrl()" nzTheme="outline"/>
             </div>
           </div>
           <div class="tenant">
@@ -40,7 +41,7 @@ export interface Type {
               <span class="tenant-name" *ngIf="!isCollapsed()">{{ authService.tenant?.name }}</span>
             </div>
             <div class="app-center-icon">
-              <nz-icon nzType="down" (click)="redirectToMainUrl()" nzTheme="outline"/>
+<!--              <nz-icon nzType="down" (click)="redirectToMainUrl()" nzTheme="outline"/>-->
             </div>
           </div>
         </div>

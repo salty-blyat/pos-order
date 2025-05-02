@@ -1,4 +1,4 @@
-import { Component, signal, ViewChild, ViewEncapsulation } from "@angular/core";
+import {Component, computed, signal, ViewChild, ViewEncapsulation} from "@angular/core";
 import { LookupItemUiService } from "./lookup-item-ui.service";
 import { ActivatedRoute } from "@angular/router";
 import { LookupItem, LookupItemService } from "./lookup-item.service";
@@ -27,7 +27,7 @@ import { AuthService } from "../../../helpers/auth.service";
         </div>
         <div>
           <button
-            *ngIf="isLookupAdd"
+            *ngIf="isLookupAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd(lookupTypeId())"
@@ -188,10 +188,12 @@ export class LookupItemListComponent extends BaseListComponent<LookupItem> {
 
   lookupTypeId = signal<number>(0);
   loading = true;
-  isLookupAdd: boolean = true;
+  // isLookupAdd: boolean = true;
   isLookupEdit: boolean = true;
   isLookupRemove: boolean = true;
   isLookupView: boolean = true;
+  isLookupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__ADD) ?? false);
+
 
   override ngOnInit(): void {
     super.ngOnInit();
@@ -201,9 +203,9 @@ export class LookupItemListComponent extends BaseListComponent<LookupItem> {
       );
       this.lookupTypeId.set(parseInt(<string>param.get("id")));
     }); 
-    this.isLookupAdd = this.authService.isAuthorized(
-      AuthKeys.APP__SETTING__LOOKUP__ADD
-    );
+    // this.isLookupAdd = this.authService.isAuthorized(
+    //   AuthKeys.APP__SETTING__LOOKUP__ADD
+    // );
     this.isLookupEdit = this.authService.isAuthorized(
       AuthKeys.APP__SETTING__LOOKUP__EDIT
     );

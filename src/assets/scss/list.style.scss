@@ -12,7 +12,8 @@ nz-header{
     gap: 5px;
     > [nz-col]{
       gap: 5px !important;
-      width: 220px;
+      min-width: 220px;
+      max-width: 240px;
     }
   }
 

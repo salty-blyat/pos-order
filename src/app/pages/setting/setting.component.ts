@@ -27,7 +27,7 @@ interface Setting {
           </div>
         </nz-header>
         <nz-content class="setting-content">
-          <div nz-row>
+          <div class="content-container">
             <ng-container *ngFor="let data of setting">
               <div *ngIf="isListGroup(data)">
                 <div class="content-header">
@@ -151,6 +151,17 @@ export class SettingComponent implements OnInit {
           },
           {
             icon: "container",
+            url: `${this.urlPart}/charge`,
+            label: "Charge",
+            isList: this.isCharge,
+          }
+        ],
+      },
+      {
+        groupName: "Item",
+        subName: [
+          {
+            icon: "container",
             url: `${this.urlPart}/unit`,
             label: "Unit",
             isList: this.isUnitList,
@@ -166,25 +177,7 @@ export class SettingComponent implements OnInit {
             url: `${this.urlPart}/item`,
             label: "Item",
             isList: this.isItemList,
-          },
-        ],
-      },
-      {
-        groupName: "Charge",
-        subName: [
-          {
-            icon: "container",
-            url: `${this.urlPart}/room-charge`,
-            label: "RoomCharge",
-            isList: this.isRoomCharge,
-          }, 
-          
-          {
-            icon: "container",
-            url: `${this.urlPart}/charge`,
-            label: "Charge",
-            isList: this.isCharge,
-          }, 
+          }
         ]},
       {
         groupName: "SystemSetting",

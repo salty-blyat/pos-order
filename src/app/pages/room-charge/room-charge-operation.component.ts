@@ -14,10 +14,10 @@ import {Charge, ChargeService} from "../charge/charge.service";
       <div *nzModalTitle class="modal-header-ellipsis">
           <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
           <span *ngIf="modal?.id && !modal?.isView">
-            {{ "Edit" | translate }} {{ model?.roomId || ("Loading" | translate) }}
+            {{ "Edit" | translate }} {{ model?.chargeName || ("Loading" | translate) }}
           </span>
           <span *ngIf="modal?.id && modal?.isView">
-            {{ model?.roomId || ("Loading" | translate) }}
+            {{ model?.chargeName || ("Loading" | translate) }}
         </span>
       </div>
 
@@ -127,8 +127,7 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
 
   override ngOnInit() {
     super.ngOnInit();
-
-    this.frm.get('chargeId')?.valueChanges?.subscribe((result: any) => {
+      this.frm.get('chargeId')?.valueChanges?.subscribe((result: any) => {
         if (result){
           this.chargeService.find(result).subscribe({
             next: (result: Charge) => {
@@ -137,7 +136,9 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
               }else {
                 this.isSerial.set(false);
               }
-              this.frm.get('startDate')?.enable();
+              if (!this.modal?.isView){
+                this.frm.get('startDate')?.enable();
+              }
             },
             error: err => {
               console.log(err)

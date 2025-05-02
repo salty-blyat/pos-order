@@ -33,9 +33,17 @@ import {NG_VALUE_ACCESSOR} from "@angular/forms";
                   *ngFor="let item of lists()"
                   nzCustomContent
                   [nzValue]="item.id"
-                  [nzLabel]="item?.name + ''"
+                  [nzLabel]="item?.code + ' ' + item?.name"
           >
-              <span class="b-name">{{ item.name }}</span>
+              <div nz-flex nzAlign="center" nzGap="small">
+                  <nz-avatar class="custom-avatar" [nzSrc]="item.image"></nz-avatar>
+                  <div>
+                      <b class="code">{{ item.code }} </b>
+                      <span class="name">
+                          {{ item.name }}
+                      </span>
+                  </div>
+              </div>
           </nz-option>
           <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
               <i nz-icon nzType="loading" class="loading-icon"></i>
@@ -52,7 +60,27 @@ import {NG_VALUE_ACCESSOR} from "@angular/forms";
           </ng-template>
       </nz-select>
   `,
-  styles: [``],
+  styles: [`
+    nz-select {
+      width: 100%;
+    }
+
+    nz-avatar.custom-avatar{
+      width: 28px !important;
+      height: 28px !important;
+    }
+    
+
+    .code {
+      font-size: 14px;
+    }
+    .name {
+      font-size: 14px;
+    }
+    cdk-virtual-scroll-viewport {
+      min-height: 116px;
+    }
+  `],
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })

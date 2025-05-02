@@ -49,11 +49,11 @@ import { SIZE_COLUMNS } from '../../const';
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="35%">{{ "Tags" | translate }}</th>
+              <th nzWidth="30%">{{ "Tags" | translate }}</th>
               <th >{{ "Note" | translate }}</th>
-              <th class="col-action"></th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
@@ -70,13 +70,13 @@ import { SIZE_COLUMNS } from '../../const';
               </td>
               <td nzEllipsis><a (click)="uiService.showView(data.id!)">{{ data.name }}</a></td>
               <td>
-                <div class="show-tag" >
+                <div>
                   <nz-tag *ngFor="let tag of data.tags; let last = last">{{tag.name}}{{last ? '' : ' '}}</nz-tag>
                 </div>
               </td>
               <td nzEllipsis>{{ data.note }}</td>
               
-              <td>
+              <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>

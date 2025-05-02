@@ -1,7 +1,7 @@
 .content {
   min-height: 98vh !important;
   background: #fff;
-  min-width: 1000px;
+  //min-width: 1000px;
 }
 
 .setting-title{
@@ -29,6 +29,12 @@ nz-layout{
   }
   nz-content.setting-content{
     margin-top: 6px !important;
+    .content-container{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      grid-template-rows: max-content;
+      gap: 18px 8px;
+    }
     .content-header{
       p{
         margin-bottom: 0;
@@ -36,10 +42,6 @@ nz-layout{
       }
     }
     .content-body{
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 220px;
       a{
         span{
           padding: 0 12px;

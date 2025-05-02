@@ -3,9 +3,9 @@ import { en_US, km_KH, zh_CN } from "ng-zorro-antd/i18n";
 export const APP_STORAGE_KEY = {
   Authorized: "authorized",
   RefreshToken: "RefreshToken",
-  Language: "hotel-lang",
-  Tenant: "hotel-tenant",
-  App: "hotel-appinfo",
+  Language: "pbs-lang",
+  Tenant: "pbs-tenant",
+  App: "pbs-appinfo",
 };
 
 export const BRANCH_STORAGE_KEY = "branchStorageKey";

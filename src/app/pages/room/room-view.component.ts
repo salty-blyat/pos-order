@@ -55,6 +55,10 @@ import { Room, RoomService } from "./room.service";
                           <i nz-icon nzTheme="outline" nzType="user"></i> &nbsp;
                           <span class="info-text blod-text">{{ 0 }}</span>
                       </h5>
+                      <h5>
+                          <i nz-icon nzTheme="outline" nzType="reconciliation"></i> &nbsp;
+                          <span class="info-text blod-text">{{ 0 }}</span>
+                      </h5>
                   </nz-card>
               </div>
           </div>
@@ -72,13 +76,14 @@ import { Room, RoomService } from "./room.service";
                           <i nz-icon nzTheme="outline" nzType="team"></i>
                           <span>{{ 'Member' | translate }}</span>
                       </ng-template>
+                      <app-room-member-list *ngIf="model?.id"  [roomId]="model?.id!"></app-room-member-list>
                   </nz-tab>
                   <nz-tab [nzTitle]="tabAsset">
                       <ng-template #tabAsset>
-                          <i nz-icon nzTheme="outline" nzType="setting"></i>
+                          <i nz-icon nzTheme="outline" nzType="reconciliation"></i>
                           <span>{{ 'Asset' | translate }}</span>
                       </ng-template>
-
+                      <app-room-inventory-list *ngIf="model?.id"  [roomId]="model?.id!"></app-room-inventory-list>
                   </nz-tab>
               </nz-tabset>
           </div>

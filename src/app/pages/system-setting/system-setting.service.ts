@@ -150,8 +150,8 @@ export class SystemSettingService {
       );
   }
 
-  find(key: string): Observable<boolean> {
-    return this.http.get<boolean>(
+  find(key: string): Observable<any> {
+    return this.http.get<any>(
       `${this.settingService.setting.BASE_API_URL}/setting/${key}`
     );
   }

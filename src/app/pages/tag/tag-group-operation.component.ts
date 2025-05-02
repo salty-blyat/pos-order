@@ -218,6 +218,11 @@ import { CommonValidators } from "../../utils/services/common-validators";
         z-index: 200;
         top: 0;
       }
+
+      td {
+        padding: 2px !important;
+      }
+
     }
 
     .move {
@@ -226,11 +231,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
       text-align: center;
       vertical-align: middle;
     }
-
-    td {
-      padding: 2px !important;
-    }
-
+    
     .btn-add-row {
       font-weight: bold;
       font-size: 14px;

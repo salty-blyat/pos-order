@@ -172,6 +172,13 @@ import { RoomChargeOperationComponent } from "./pages/room-charge/room-charge-op
 import { RoomChargeDeleteComponent } from "./pages/room-charge/room-charge-delete.component";
 import { ChargeSelectComponent } from "./pages/charge/charge-select.component";
 import {ItemSelectComponent} from "./pages/item/item-select.component";
+import {RoomMemberListComponent} from "./pages/room-member/room-member-list.component";
+import {RoomMemberDeleteComponent} from "./pages/room-member/room-member-delete.component";
+import {RoomMemberOperationComponent} from "./pages/room-member/room-member-operation.component";
+import {MemberSelectComponent} from "./pages/member/member-select.component";
+import {RoomInventoryOperationComponent} from "./pages/room-inventory/room-inventory-operation.component";
+import {RoomInventoryDeleteComponent} from "./pages/room-inventory/room-inventory-delete.component";
+import {RoomInventoryMutiOperationComponent} from "./pages/room-inventory/room-inventory-muti-operation.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -329,6 +336,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberAdvancedFilterComponent,
     MemberDeleteComponent,
     MemberPullComponent,
+    MemberSelectComponent,
 
     // member level
     MemberLevelListComponent,
@@ -356,28 +364,37 @@ export class CustomTranslate implements TranslateLoader {
     MemberUnitSelectComponent,
     MemberUnitPullComponent,
 
-    // unit
+    // Unit
     UnitListComponent,
     UnitOperationComponent,
     UnitDeleteComponent,
     UnitSelectComponent,
 
-    // group
+    // Group
     MemberGroupListComponent,
     MemberGroupOperationComponent,
     MemberGroupDeleteComponent,
     MemberGroupSelectComponent,
     MemberGroupPullComponent,
 
+    // Room inventory
     RoomInventoryListComponent,
+    RoomInventoryOperationComponent,
+    RoomInventoryDeleteComponent,
+    RoomInventoryMutiOperationComponent,
 
-    // charge
+    // Room member
+    RoomMemberListComponent,
+    RoomMemberDeleteComponent,
+    RoomMemberOperationComponent,
+
+    // Charge
     ChargeListComponent,
     ChargeOperationComponent,
     ChargeDeleteComponent,
     ChargeSelectComponent,
 
-    //roomcharge
+    // Room charge
     RoomChargeListComponent,
     RoomChargeOperationComponent,
     RoomChargeDeleteComponent,
