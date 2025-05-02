@@ -1,4 +1,4 @@
-import { Component, signal, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { Item } from "./item.service";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
@@ -14,6 +14,8 @@ import {
   SETTING_KEY,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-item-operation",
@@ -130,16 +132,16 @@ import {
         </button>
       </div>
       <div *ngIf="modal?.isView">
-        <a *ngIf="!isLoading()">
+        <a *ngIf="!isLoading() && isItemEdit()">
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
-        <a nz-typography nzType="danger" *ngIf="!isLoading()">
+        <nz-divider nzType="vertical" *ngIf="!isLoading()  && isItemEdit()"></nz-divider>
+        <a nz-typography nzType="danger" *ngIf="!isLoading() && isItemRemove() ">
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading()"></nz-divider>
+        <nz-divider nzType="vertical" *ngIf="!isLoading() && isItemRemove() "></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
           <span class="action-text"> {{ "Close" | translate }}</span>
@@ -158,6 +160,7 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
     override service: ItemService,
     override uiService: ItemUiService,
     public systemSettingService: SystemSettingService,
+    private authService: AuthService,
     private settingService: SettingService
   ) {
     super(fb, ref, service, uiService);
@@ -167,6 +170,9 @@ export class ItemOperationComponent extends BaseOperationComponent<Item> {
   image!: Image;
   nzShowIconList: any = false;
   editableCode = false;
+  isItemEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__EDIT));
+  isItemRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__REMOVE));
+
 
   override ngOnInit() {
     super.ngOnInit();

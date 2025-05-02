@@ -1,4 +1,4 @@
-import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, computed, ViewChild, ViewEncapsulation} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { CommonValidators } from '../../utils/services/common-validators';
@@ -10,6 +10,7 @@ import {
 } from './report.service';
 import { ReportUiService } from './report-ui.service';
 import {
+  AuthKeys,
   Orientation,
   PageSize,
   ReportParamDisplay,
@@ -421,27 +422,27 @@ export let ParamSelectComponent = {
         <a
           nz-typography
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isReportEdit"
+          *ngIf="!isLoading() && isReportEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ 'Edit' | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isReportEdit"
+          *ngIf="!isLoading() && isReportEdit()"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isReportRemove"
+          *ngIf="!isLoading() && isReportRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ 'Delete' | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isReportRemove"
+          *ngIf="!isLoading() && isReportRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -517,8 +518,10 @@ export class ReportOperationComponent extends BaseOperationComponent<Report>{
   ).map((x) => {
     return { value: x, label: x };
   });
-  isReportEdit: boolean = true;
-  isReportRemove: boolean = true;
+
+  isReportEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT));
+  isReportRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE));
+
   type: any;
 
   override initControl() {

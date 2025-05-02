@@ -1,9 +1,9 @@
-import { Component, signal, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { Member, MemberAdvancedFilter, MemberService } from "./member.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { MemberUiService } from "./member-ui.service";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { TranslateService } from "@ngx-translate/core";
 import { Filter } from "../../utils/services/base-api.service";
 import { RoomAdvancedFilter } from "../room/room.service";
@@ -12,6 +12,7 @@ import {
   SystemSetting,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-member-list",
@@ -68,7 +69,7 @@ import {
             {{ "Pull" | translate }}
           </button>
           <button
-            *ngIf="isMemberAdd"
+            *ngIf="isMemberAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -129,7 +130,11 @@ import {
                 }}
               </td>
               <td nzEllipsis>
+                @if (isMemberView()){
                 <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
+                } @else {
+                <span>{{ data.code }}</span>
+                }
               </td>
               <td nzEllipsis title="{{ data.name }}">
                 {{ data.name }} {{ data.nameEn }}
@@ -163,13 +168,13 @@ import {
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isMemberEdit">
+                  <ng-container *ngIf="isMemberEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i nz-icon nzType="edit" nzTheme="outline"></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isMemberRemove">
+                  <ng-container *ngIf="isMemberRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -197,6 +202,7 @@ export class MemberListComponent extends BaseListComponent<Member> {
     override uiService: MemberUiService,
     sessionStorageService: SessionStorageService,
     protected translate: TranslateService,
+    private authService: AuthService,
     private systemSettingService: SystemSettingService
   ) {
     super(service, uiService, sessionStorageService, "member-list");
@@ -210,10 +216,18 @@ export class MemberListComponent extends BaseListComponent<Member> {
   nationalityId = signal<number>(0);
   pavrEnable = signal<boolean>(false);
 
-  isMemberAdd: boolean = true;
-  isMemberEdit: boolean = true;
-  isMemberRemove: boolean = true;
-  isMemberView: boolean = true;
+  isMemberAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD)
+  );
+  isMemberEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__EDIT)
+  );
+  isMemberRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE)
+  );
+  isMemberView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW)
+  );
 
   override ngOnInit() {
     this.refreshSub = this.uiService.refresher.subscribe((result) => {
@@ -231,8 +245,10 @@ export class MemberListComponent extends BaseListComponent<Member> {
     }
 
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
-      next: (result: boolean) => {
-        this.pavrEnable.set(result);
+      next: (value?: string) => {
+        value === "true"
+          ? this.pavrEnable.set(true)
+          : this.pavrEnable.set(false);
       },
       error: (error) => {
         console.log(error);

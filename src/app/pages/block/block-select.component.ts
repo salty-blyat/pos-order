@@ -1,10 +1,11 @@
-import {Component, forwardRef, ViewEncapsulation} from '@angular/core';
+import {Component, computed, forwardRef, ViewEncapsulation} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import { AuthService } from '../../helpers/auth.service';
 import {Block, BlockService} from "./block.service";
 import {BlockUiService} from "./block-ui.service";
 import {BaseSelectComponent} from "../../utils/components/base-select.component";
+import { AuthKeys } from '../../const';
 
 @Component({
     providers: [
@@ -44,7 +45,7 @@ import {BaseSelectComponent} from "../../utils/components/base-select.component"
         </nz-option>
         <ng-template #actionItem>
           <a
-            *ngIf="addOption() && isBlockAdd"
+            *ngIf="addOption() && isBlockAdd()"
             (click)="uiService.showAdd(componentId)"
             class="item-action"
           >
@@ -72,5 +73,6 @@ export class BlockSelectComponent extends BaseSelectComponent<Block>{
     ) {
         super(service, uiService, sessionStorageService, 'block-filter', 'all-block')
     }
-    isBlockAdd: boolean = true;
+    
+    isBlockAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__ADD));
 }

@@ -5,8 +5,9 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { ItemUiService } from "./item-ui.service";
 import { ActivatedRoute } from "@angular/router";
 import { delay, Observable } from "rxjs";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { Filter } from "../../utils/services/base-api.service";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-item-list",
@@ -169,7 +170,8 @@ export class ItemListComponent extends BaseListComponent<Item> {
   constructor(
     service: ItemService,
     uiService: ItemUiService,
-    sessionStorageService: SessionStorageService,
+    sessionStorageService: SessionStorageService, 
+    private authService: AuthService,
     private activated: ActivatedRoute
   ) {
     super(service, uiService, sessionStorageService, "item-list");
@@ -179,10 +181,10 @@ export class ItemListComponent extends BaseListComponent<Item> {
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isItemAdd = signal<boolean>(true);
-  isItemEdit = signal<boolean>(true);
-  isItemRemove = signal<boolean>(true);
-  isItemView = signal<boolean>(true);
+  isItemAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__ADD));
+  isItemEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__EDIT));
+  isItemRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__REMOVE)); 
+  isItemView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__VIEW));
 
   override search() {
     let filters: Filter[] = [];

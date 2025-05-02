@@ -14,12 +14,11 @@ import { MemberLevel, MemberLevelService } from "./member-level.service";
 import { MemberLevelUiService } from "./member-level-ui.component";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import {
-  SETTING_KEY,
-  SystemSetting,
-  SystemSettingService,
+  SETTING_KEY, SystemSettingService
 } from "../system-setting/system-setting.service";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-member-level-list",
@@ -61,7 +60,7 @@ import {
             {{ "Pull" | translate }}
           </button>
           <button
-            *ngIf="isMemberLevelAdd"
+            *ngIf="isMemberLevelAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -121,7 +120,8 @@ import {
                 }}
               </td>
               <td nzEllipsis title="{{ data.code }}">
-                <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
+                <a *ngIf="isMemberLevelView()" (click)="uiService.showView(data.id!)">{{ data.code }}</a>
+                <span *ngIf="!isMemberLevelView()">{{ data.code }}</span>
               </td>
               <td nzEllipsis title="{{ data.name }}">
                 {{ data.name }}
@@ -142,13 +142,13 @@ import {
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isMemberLevelEdit">
+                  <ng-container *ngIf="isMemberLevelEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i nz-icon nzType="edit" nzTheme="outline"></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isMemberLevelRemove">
+                  <ng-container *ngIf="isMemberLevelRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -184,14 +184,15 @@ import {
 })
 export class MemberLevelListComponent
   extends BaseListComponent<MemberLevel>
-  implements AfterViewInit
-{
+  implements AfterViewInit {
   constructor(
     service: MemberLevelService,
     public override uiService: MemberLevelUiService,
     sessionStorageService: SessionStorageService,
     public systemSettingService: SystemSettingService,
-    private activated: ActivatedRoute
+    private activated: ActivatedRoute,
+    private authService: AuthService,
+
   ) {
     super(service, uiService, sessionStorageService, "member-level-list");
   }
@@ -211,22 +212,24 @@ export class MemberLevelListComponent
   }
 
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isMemberLevelAdd: boolean = true;
-  isMemberLevelEdit: boolean = true;
-  isMemberLevelRemove: boolean = true;
-  isMemberLevelView: boolean = true;
+
+  isMemberLevelAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__ADD));
+  isMemberLevelEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__EDIT));
+  isMemberLevelRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__REMOVE));
+  isMemberLevelView = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__VIEW));
+
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
   pavrEnable = signal<boolean>(false);
 
   override ngOnInit(): void {
     super.ngOnInit();
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
-      next: (result: boolean) => { 
-        this.pavrEnable.set(result);
+      next: (value?: string) => {
+        value === "true" ? this.pavrEnable.set(true) : this.pavrEnable.set(false);
       },
       error: (error) => {
         console.log(error);
-      }, 
+      },
     });
   }
 }

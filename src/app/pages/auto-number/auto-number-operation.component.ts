@@ -1,10 +1,12 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, computed, ViewEncapsulation} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { CommonValidators } from '../../utils/services/common-validators';
 import { AutoNumber, AutoNumberService } from './auto-number.service';
 import { AutoNumberUiService } from './auto-number-ui.service';
 import { BaseOperationComponent } from '../../utils/components/base-operation.component';
+import { AuthService } from '../../helpers/auth.service';
+import { AuthKeys } from '../../const';
 
 @Component({
     selector: 'app-auto-number-operation',
@@ -73,21 +75,21 @@ import { BaseOperationComponent } from '../../utils/components/base-operation.co
                 </button>
             </div>
             <div *ngIf="modal?.isView">
-                <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isAutoNumberEdit">
+                <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isAutoNumberEdit()">
                     <i nz-icon nzType="edit" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Edit' | translate }}</span>
                 </a>
-                <nz-divider nzType="vertical" *ngIf="!isLoading() && isAutoNumberEdit"></nz-divider>
+                <nz-divider nzType="vertical" *ngIf="!isLoading() && isAutoNumberEdit()"></nz-divider>
                 <a
                         nz-typography
                         nzType="danger"
                         (click)="uiService.showDelete(model.id || 0)"
-                        *ngIf="!isLoading() && isAutoNumberRemove"
+                        *ngIf="!isLoading() && isAutoNumberRemove()"
                 >
                     <i nz-icon nzType="delete" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Delete' | translate }}</span>
                 </a>
-                <nz-divider nzType="vertical" *ngIf="!isLoading() && isAutoNumberRemove"></nz-divider>
+                <nz-divider nzType="vertical" *ngIf="!isLoading() && isAutoNumberRemove()"></nz-divider>
                 <a nz-typography (click)="cancel()" style="color: gray;">
                     <i nz-icon nzType="close" nzTheme="outline"></i>
                     <span class="action-text"> {{ 'Close' | translate }}</span>
@@ -104,14 +106,15 @@ export class AutoNumberOperationComponent extends BaseOperationComponent<AutoNum
     fb: FormBuilder,
     ref: NzModalRef<AutoNumberOperationComponent>,
     service: AutoNumberService,
+    private authService: AuthService,
     uiService: AutoNumberUiService,
   
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isAutoNumberEdit: boolean = true;
-  isAutoNumberRemove: boolean = true;
+  isAutoNumberEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__EDIT));
+  isAutoNumberRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__REMOVE)); 
 
   override initControl(): void {
     const {

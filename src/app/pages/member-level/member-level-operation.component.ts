@@ -1,4 +1,4 @@
-import { Component, signal, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { FormBuilder } from "@angular/forms";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -10,6 +10,8 @@ import {
   SETTING_KEY,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
+import { AuthKeys } from "../../const";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-member-level-operation",
@@ -85,27 +87,27 @@ import {
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isMemberLevelEdit"
+          *ngIf="!isLoading() && isMemberLevelEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isMemberLevelEdit"
+          *ngIf="!isLoading() && isMemberLevelEdit()"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isMemberLevelRemove"
+          *ngIf="!isLoading() && isMemberLevelRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isMemberLevelRemove"
+          *ngIf="!isLoading() && isMemberLevelRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -124,13 +126,15 @@ export class MemberLevelOperationComponent extends BaseOperationComponent<Member
     ref: NzModalRef<MemberLevelOperationComponent>,
     public systemSettingService: SystemSettingService,
     service: MemberLevelService,
-    uiService: MemberLevelUiService
+    uiService: MemberLevelUiService,
+    private authService: AuthService,
+
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isMemberLevelEdit: boolean = true;
-  isMemberLevelRemove: boolean = true;
+  isMemberLevelEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__EDIT));
+  isMemberLevelRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__REMOVE));
   memberLevelAutoIdEnable = signal<boolean>(false);
 
   override initControl(): void {
@@ -170,7 +174,7 @@ export class MemberLevelOperationComponent extends BaseOperationComponent<Member
     super.ngOnInit();
     const { required } = CommonValidators;
     this.systemSettingService.find(SETTING_KEY.MemberLevelAutoId).subscribe({
-      next: (result: any) => { 
+      next: (result: any) => {
         if (result === 0) {
           this.memberLevelAutoIdEnable.set(false);
           this.frm.controls["code"].enable();
@@ -179,7 +183,7 @@ export class MemberLevelOperationComponent extends BaseOperationComponent<Member
           this.memberLevelAutoIdEnable.set(true);
           this.frm.controls["code"].disable();
           this.frm.controls["code"].setValidators([]);
-        } 
+        }
       },
       error: (error) => {
         console.log(error);

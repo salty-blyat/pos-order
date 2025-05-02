@@ -1,11 +1,12 @@
-import {Component, computed, signal, ViewEncapsulation} from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { RoomType, RoomTypeService } from "./room-type.service";
 import { RoomTypeUiService } from "./room-type-ui.service";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-room-type-list",
@@ -77,7 +78,8 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
                 }}
               </td>
               <td nzEllipsis>
-                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+                <a *ngIf="isRoomTypeView()" (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+                <span *ngIf="!isRoomTypeView()" >{{ data.name }}</span>
               </td>
               <td nzEllipsis class="text-center">
                 {{ data.occupancy }}
@@ -123,6 +125,7 @@ export class RoomTypeListComponent extends BaseListComponent<RoomType> {
     service: RoomTypeService,
     sessionStorageService: SessionStorageService,
     uiService: RoomTypeUiService,
+    private authService: AuthService,
     private activated: ActivatedRoute
   ) {
     super(service, uiService, sessionStorageService, "room-type-list");
@@ -130,9 +133,10 @@ export class RoomTypeListComponent extends BaseListComponent<RoomType> {
 
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
 
-  isRoomTypeAdd = signal<boolean>(true);
-  isRoomTypeEdit = signal<boolean>(true);
-  isRoomTypeRemove = signal<boolean>(true);
+  isRoomTypeAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE));
+  isRoomTypeEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE));
+  isRoomTypeRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE));
+  isRoomTypeView = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE));
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

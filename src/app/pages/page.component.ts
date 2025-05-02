@@ -1,5 +1,12 @@
-import {Component, Inject, OnInit, signal, ViewEncapsulation} from "@angular/core";
-import { LANGUAGES } from "../const";
+import {
+  Component,
+  computed,
+  Inject,
+  OnInit,
+  signal,
+  ViewEncapsulation,
+} from "@angular/core";
+import { AuthKeys, LANGUAGES } from "../const";
 import { Router } from "@angular/router";
 import { AuthService } from "../helpers/auth.service";
 import { DOCUMENT } from "@angular/common";
@@ -37,8 +44,14 @@ export interface Type {
           </div>
           <div class="tenant">
             <div class="tenant-logo">
-              <img [src]="authService.tenant?.logo" alt="tenant" style="margin-right: 4px;"/>
-              <span class="tenant-name" *ngIf="!isCollapsed()">{{ authService.tenant?.name }}</span>
+              <img
+                [src]="authService.tenant?.logo"
+                alt="tenant"
+                style="margin-right: 4px;"
+              />
+              <span class="tenant-name" *ngIf="!isCollapsed()">{{
+                authService.tenant?.name
+              }}</span>
             </div>
             <div class="app-center-icon">
 <!--              <nz-icon nzType="down" (click)="redirectToMainUrl()" nzTheme="outline"/>-->
@@ -47,44 +60,71 @@ export interface Type {
         </div>
         <div class="menu-container">
           <ul
-              class="nz-menu-custom"
-              nz-menu
-              nzMode="inline"
-              [nzInlineCollapsed]="isCollapsed()"
+            class="nz-menu-custom"
+            nz-menu
+            nzMode="inline"
+            [nzInlineCollapsed]="isCollapsed()"
           >
-            <li nz-menu-item [nzMatchRouter]="isActive()" routerLink="/home">
+            <li
+              *ngIf="isHomeList()"
+              nz-menu-item
+              [nzMatchRouter]="isActive()"
+              routerLink="/home"
+            >
               <i nz-icon nzType="home"></i>
               <span>{{ "Home" | translate }}</span>
             </li>
-            <li nz-menu-item [nzMatchRouter]="isActive()" routerLink="/member">
+            <li
+              *ngIf="isMemberList()"
+              nz-menu-item
+              [nzMatchRouter]="isActive()"
+              routerLink="/member"
+            >
               <span nz-icon nzType="user" nzTheme="outline"></span>
               <span>{{ "Member" | translate }}</span>
             </li>
-            <li nz-menu-item [nzMatchRouter]="isActive()" routerLink="/room">
+            <li
+              *ngIf="isRoomList()"
+              nz-menu-item
+              [nzMatchRouter]="isActive()"
+              routerLink="/room"
+            >
               <span nz-icon nzType="border" nzTheme="outline"></span>
               <span>{{ "Room" | translate }}</span>
             </li>
-            <li nz-menu-item  [nzMatchRouter]="isActive()" routerLink="/setting">
+            <li
+              *ngIf="isSettingList()"
+              nz-menu-item
+              [nzMatchRouter]="isActive()"
+              routerLink="/setting"
+            >
               <i nz-icon nzType="setting"></i>
               <span>{{ "Setting" | translate }}</span>
             </li>
-            <li nz-menu-item [nzMatchRouter]="isActive()" routerLink="/report" >
+            <li
+              *ngIf="isReportList()"
+              nz-menu-item
+              [nzMatchRouter]="isActive()"
+              routerLink="/report"
+            >
               <i nz-icon nzType="container"></i>
               <span>{{ "Report" | translate }}</span>
             </li>
           </ul>
-          
+
           <div>
             <div class="version">
               <span>
                 {{ appVersionService.getVersion()?.version }}
               </span>
-              <br *ngIf="isCollapsed()"/>
+              <br *ngIf="isCollapsed()" />
               <span style="color: #8c8c8c;">
                 ({{ appVersionService.getVersion()?.release_date }})
               </span>
             </div>
-            <nz-divider style="margin: 4px 0 4px 0; border-color: #eaeaea;"></nz-divider>
+            <nz-divider
+              style="margin: 4px 0 4px 0; border-color: #eaeaea;"
+            ></nz-divider>
             <div class="user-info-container">
               <div class="user-info">
                 <div nz-flex nzAlign="center" nzGap="4px">
@@ -177,6 +217,42 @@ export class PageComponent implements OnInit {
     sub2: false,
   };
 
+  isHomeList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__HOME)
+  );
+  // isMemberList = computed(() =>
+  //   this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
+  // );
+  isMemberList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
+  )
+  isRoomList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__ROOM__LIST)
+  );
+  isSettingList = computed(
+    () =>
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM_TYPE__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_CHARGE__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__LIST)
+  );
+  isReportList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__REPORT)
+  );
+
   constructor(
     private router: Router,
     public authService: AuthService,
@@ -193,16 +269,7 @@ export class PageComponent implements OnInit {
   appName = signal(this.authService.app?.appName);
 
   ngOnInit(): void {
-    // this.setPermission();
     this.authService.updateClientInfo();
-    // this.appName = this.authService.app?.appName;
-    this.systemSettingService.initCurrentSetting().subscribe({
-      next: (settingList) => {},
-      error: (error) => {
-        console.error("Error fetching settings:", error);
-      },
-    });
-
     if (this.authService.clientInfo.changePasswordRequired) {
       this.router.navigate([`/user-change-password`]).then();
     }
@@ -254,12 +321,7 @@ export class PageComponent implements OnInit {
       "app-center"
     );
   }
-  // setLastVisited(route: string) {
-  //   this.localStorageService.setValue({
-  //     key: SIDE_EXPAND_COLLAPSED,
-  //     value: route,
-  //   });
-  // }
+
   setLastCollapsed(key: string, item: boolean) {
     this.localStorageService.setValue({
       key: key,

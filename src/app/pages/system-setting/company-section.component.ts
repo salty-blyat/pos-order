@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import { Component, computed, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { SETTING_KEY, SystemSettingService } from './system-setting.service';
 import { BaseSettingSectionComponent } from '../../utils/components/base-setting-section.component';
@@ -8,10 +8,12 @@ import { Observable, Observer } from 'rxjs';
 
 import { NotificationService } from '../../utils/services/notification.service';
 import { SettingService } from '../../app-setting';
+import { AuthKeys } from '../../const';
+import { AuthService } from '../../helpers/auth.service';
 
 @Component({
-    selector: 'app-company-section',
-    template: `
+  selector: 'app-company-section',
+  template: `
         <app-indeterminate-bar
                 class="loading-bar"
                 *ngIf="loading"
@@ -131,7 +133,7 @@ import { SettingService } from '../../app-setting';
                 </nz-form-control>
             </nz-form-item>
 
-            <ng-container *ngIf="isAdvancedSetting">
+            <!-- <ng-container >
                 <div class="sub-section">
                     <h5>{{ 'Currency' | translate }}</h5>
                 </div>
@@ -157,9 +159,9 @@ import { SettingService } from '../../app-setting';
                         ></app-currency-select>
                     </nz-form-control>
                 </nz-form-item>
-            </ng-container>
+            </ng-container> -->
 
-            <nz-form-item>
+            <nz-form-item *ngIf="isCompanySettingEdit()">
                 <nz-form-label [nzSm]="7" [nzXs]="24" nzNoColon></nz-form-label>
                 <nz-form-control [nzSm]="8" [nzXs]="24" style="text-align: right">
                     <button
@@ -176,9 +178,9 @@ import { SettingService } from '../../app-setting';
             </nz-form-item>
         </form>
     `,
-    styleUrls: ['../../../assets/scss/operation.style.scss'],
-    styles: [
-        `
+  styleUrls: ['../../../assets/scss/operation.style.scss'],
+  styles: [
+    `
       .system-setting-form {
         padding: 0;
         height: calc(100vh - 200px);
@@ -197,8 +199,8 @@ import { SettingService } from '../../app-setting';
         top: -15px;
       }
     `,
-    ],
-    standalone: false,
+  ],
+  standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
 export class CompanySectionComponent extends BaseSettingSectionComponent {
@@ -207,12 +209,11 @@ export class CompanySectionComponent extends BaseSettingSectionComponent {
     settingService: SystemSettingService,
     notificationService: NotificationService,
     appSettingService: SettingService,
+    private authService: AuthService
   ) {
     super(fb, settingService, notificationService, appSettingService);
   }
 
-  isAdvancedSetting: boolean = false;
-  uploadUrl = `${this.appSettingService.setting.AUTH_API_URL}/upload/file`;
   override keys = [
     SETTING_KEY.CompanyName,
     SETTING_KEY.CompanyNameEn,
@@ -222,19 +223,20 @@ export class CompanySectionComponent extends BaseSettingSectionComponent {
     SETTING_KEY.CompanyPhone,
     SETTING_KEY.CompanyEmail,
     SETTING_KEY.CompanyWebsite,
-    // SETTING_KEY.MainCurrency,
-    // SETTING_KEY.SecondCurrency,
   ];
+
+  isCompanySettingEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING__EDIT));
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.isCompanySettingEdit() ? this.frm.enable() : this.frm.disable(); 
+  }
+
+  uploadUrl = `${this.appSettingService.setting.AUTH_API_URL}/upload/file`;
 
   fileCompany: NzUploadFile[] = [];
   // image: Image = {};
   companyLogoUrl: string = '';
-  override ngOnInit(): void {
-    super.ngOnInit();
-    // this.isAdvancedSetting = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__SYSTEM_SETTING__ADVANCE_SETTING
-    // );
-  }
+
 
   beforeUpload = (
     file: NzUploadFile,

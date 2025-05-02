@@ -1,4 +1,4 @@
-import {Component, computed, signal, ViewChild, ViewEncapsulation} from "@angular/core";
+import { Component, computed, signal, ViewChild, ViewEncapsulation } from "@angular/core";
 import { LookupItemUiService } from "./lookup-item-ui.service";
 import { ActivatedRoute } from "@angular/router";
 import { LookupItem, LookupItemService } from "./lookup-item.service";
@@ -102,11 +102,11 @@ import { AuthService } from "../../../helpers/auth.service";
               </td>
               <td nzEllipsis>
                 <a
-                  *ngIf="isLookupView"
+                  *ngIf="isLookupView()"
                   (click)="uiService.showView(data.id!)"
                   >{{ data.name }}</a
                 >
-                <span *ngIf="!isLookupView">{{ data.name }}</span>
+                <span *ngIf="!isLookupView()">{{ data.name }}</span>
               </td>
               <td nzEllipsis>{{ data.nameEn }}</td>
               <td nzEllipsis>
@@ -123,7 +123,7 @@ import { AuthService } from "../../../helpers/auth.service";
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isLookupEdit">
+                  <ng-container *ngIf="isLookupEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i
                         nz-icon
@@ -134,7 +134,7 @@ import { AuthService } from "../../../helpers/auth.service";
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isLookupRemove">
+                  <ng-container *ngIf="isLookupRemove()">
                     <a
                       *nzSpaceItem
                       class="delete"
@@ -188,12 +188,10 @@ export class LookupItemListComponent extends BaseListComponent<LookupItem> {
 
   lookupTypeId = signal<number>(0);
   loading = true;
-  // isLookupAdd: boolean = true;
-  isLookupEdit: boolean = true;
-  isLookupRemove: boolean = true;
-  isLookupView: boolean = true;
-  isLookupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__ADD) ?? false);
-
+  isLookupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__ADD));
+  isLookupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__EDIT));
+  isLookupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__REMOVE));
+  isLookupView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__VIEW));
 
   override ngOnInit(): void {
     super.ngOnInit();
@@ -202,19 +200,7 @@ export class LookupItemListComponent extends BaseListComponent<LookupItem> {
         "lookup-item-list-search-" + param.get("id")
       );
       this.lookupTypeId.set(parseInt(<string>param.get("id")));
-    }); 
-    // this.isLookupAdd = this.authService.isAuthorized(
-    //   AuthKeys.APP__SETTING__LOOKUP__ADD
-    // );
-    this.isLookupEdit = this.authService.isAuthorized(
-      AuthKeys.APP__SETTING__LOOKUP__EDIT
-    );
-    this.isLookupRemove = this.authService.isAuthorized(
-      AuthKeys.APP__SETTING__LOOKUP__REMOVE
-    );
-    this.isLookupView = this.authService.isAuthorized(
-      AuthKeys.APP__SETTING__LOOKUP__VIEW
-    );
+    });
   }
 
   override search() {

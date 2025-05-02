@@ -1,11 +1,12 @@
-import {Component, computed, signal, ViewEncapsulation} from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Observable } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
 import { AutoNumber, AutoNumberService } from "./auto-number.service";
 import { AutoNumberUiService } from "./auto-number-ui.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
+import { AuthService } from "../../helpers/auth.service";
 @Component({
   selector: "app-auto-number-list",
   template: `
@@ -140,6 +141,7 @@ export class AutoNumberListComponent extends BaseListComponent<AutoNumber> {
   constructor(
     service: AutoNumberService,
     uiService: AutoNumberUiService,
+    private authService: AuthService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute
   ) {
@@ -147,9 +149,9 @@ export class AutoNumberListComponent extends BaseListComponent<AutoNumber> {
   }
 
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isAutoNumberAdd = signal<boolean>(true);
-  isAutoNumberEdit = signal<boolean>(true);
-  isAutoNumberRemove = signal<boolean>(true);
-  isAutoNumberView = signal<boolean>(true);
+  isAutoNumberAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__ADD));
+  isAutoNumberEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__EDIT));
+  isAutoNumberRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__REMOVE));
+  isAutoNumberView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__VIEW));
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

@@ -1,4 +1,4 @@
-import {Component,ViewEncapsulation} from "@angular/core";
+import {Component,computed,ViewEncapsulation} from "@angular/core";
 import {NzModalRef} from "ng-zorro-antd/modal";
 import {FormBuilder} from "@angular/forms";
 import {CommonValidators, control} from "../../../utils/services/common-validators";
@@ -8,6 +8,7 @@ import {AuthService} from "../../../helpers/auth.service";
 import {NzUploadChangeParam, NzUploadFile} from "ng-zorro-antd/upload";
 import {SettingService} from "../../../app-setting";
 import {BaseOperationComponent} from "../../../utils/components/base-operation.component";
+import { AuthKeys } from "../../../const";
 
 @Component({
   selector: "app-lookup-item-operation",
@@ -100,21 +101,21 @@ import {BaseOperationComponent} from "../../../utils/components/base-operation.c
               </button>
           </div>
           <div *ngIf="modal?.isView">
-              <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isLookupEdit">
+              <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isLookupEdit()">
                   <i nz-icon nzType="edit" nzTheme="outline"></i>
                   <span class="action-text"> {{ "Edit" | translate }}</span>
               </a>
-              <nz-divider nzType="vertical" *ngIf="!isLoading() && isLookupEdit"></nz-divider>
+              <nz-divider nzType="vertical" *ngIf="!isLoading() && isLookupEdit()"></nz-divider>
               <a
                       nz-typography
                       nzType="danger"
                       (click)="uiService.showDelete(model.id || 0)"
-                      *ngIf="!isLoading() && isLookupRemove"
+                      *ngIf="!isLoading() && isLookupRemove()"
               >
                   <i nz-icon nzType="delete" nzTheme="outline"></i>
                   <span class="action-text"> {{ "Delete" | translate }}</span>
               </a>
-              <nz-divider nzType="vertical" *ngIf="!isLoading() && isLookupRemove"></nz-divider>
+              <nz-divider nzType="vertical" *ngIf="!isLoading() && isLookupRemove()"></nz-divider>
               <a nz-typography (click)="cancel()" style="color: gray;">
                   <i nz-icon nzType="close" nzTheme="outline"></i>
                   <span class="action-text"> {{ "Close" | translate }}</span>
@@ -158,9 +159,9 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     super(fb, ref, service, uiService);
   }
 
-  isLookupEdit: boolean = true;
-  isLookupRemove: boolean = true;
-
+  isLookupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__EDIT));
+  isLookupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__REMOVE));
+ 
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   image!: Image;

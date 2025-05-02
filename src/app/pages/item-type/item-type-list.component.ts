@@ -5,7 +5,8 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { ItemTypeUiService } from "./item-type-ui.service.component";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-item-type-list",
@@ -38,7 +39,7 @@ import { SIZE_COLUMNS } from "../../const";
         </div>
         <div>
           <button
-            *ngIf="isItemAdd"
+            *ngIf="isItemAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -106,9 +107,12 @@ import { SIZE_COLUMNS } from "../../const";
                 }}
               </td>
               <td nzEllipsis style="flex: 2">
-                <a *ngIf="isItemView" (click)="uiService.showView(data.id!)">{{
+                <a *ngIf="isItemView()" (click)="uiService.showView(data.id!)">{{
                   data.name
                 }}</a>
+                <span *ngIf="!isItemView()">{{
+                  data.name
+                }}</span>
               </td>
               <td nzEllipsis>{{ data.note }}</td>
               <td nzAlign="right">
@@ -116,7 +120,7 @@ import { SIZE_COLUMNS } from "../../const";
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isItemEdit">
+                  <ng-container *ngIf="isItemEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i
                         nz-icon
@@ -127,7 +131,7 @@ import { SIZE_COLUMNS } from "../../const";
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isItemRemove">
+                  <ng-container *ngIf="isItemRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -159,15 +163,18 @@ export class ItemTypeListComponent extends BaseListComponent<ItemType> {
     service: ItemTypeService,
     sessionStorageService: SessionStorageService,
     public override uiService: ItemTypeUiService,
+    private authService: AuthService,
     private activated: ActivatedRoute
   ) {
     super(service, uiService, sessionStorageService, "item-type-list");
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isItemAdd: boolean = true;
-  isItemEdit: boolean = true;
-  isItemRemove: boolean = true;
-  isItemView: boolean = true;
+  
+  isItemAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG));
+  isItemEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM));
+  isItemRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__REMOVE));
+  isItemView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM));
+
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
   override ngOnInit() {
     this.refreshSub = this.uiService.refresher.subscribe((result) => {

@@ -78,7 +78,7 @@ export class MemberUiService extends BaseUiService {
         this.refresher.emit({ key: 'pull', value: e.model });
       }
     });
-  }
+  } 
 
   showAdvancedFilter(storageKey: string, componentId: any = '',  filterTypes?: { roomStatus?: boolean }): void {
     this.modalService.create({

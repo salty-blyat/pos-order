@@ -1,10 +1,11 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
 import { UntypedFormBuilder } from "@angular/forms";
 import { SETTING_KEY, SystemSettingService } from "./system-setting.service";
 import { BaseSettingSectionComponent } from "../../utils/components/base-setting-section.component";
 import { NotificationService } from "../../utils/services/notification.service";
 import { SettingService } from "../../app-setting";
 import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-auto-number-section",
@@ -108,7 +109,7 @@ import { AuthService } from "../../helpers/auth.service";
         </nz-form-control>
       </nz-form-item>
  
-      <nz-form-item>
+      <nz-form-item *ngIf="isAutoNumberEdit()">
         <nz-form-label [nzSm]="7" [nzXs]="24" nzNoColon> </nz-form-label>
         <nz-form-control [nzSm]="8" [nzXs]="24" style="text-align: right">
           <button
@@ -165,12 +166,12 @@ export class AutoNumberSectionComponent extends BaseSettingSectionComponent {
     SETTING_KEY.ChargesAutoId,
     SETTING_KEY.ItemAutoId,
     SETTING_KEY.MemberAutoId,
-    // SETTING_KEY.MeterReadingAutoId, 
   ];
+
+  isAutoNumberEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER__EDIT));
+
   override ngOnInit() {
-    // this.canAddAutoNo = this.authService.isAuthorized(
-    //   AuthKeys.FIT_APP__SETTING__AUTO_NUMBER__ADD
-    // );
     super.ngOnInit();
+    this.isAutoNumberEdit() ? this.frm.enable() : this.frm.disable(); 
   }
 }

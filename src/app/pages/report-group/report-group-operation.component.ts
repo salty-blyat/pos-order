@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation} from '@angular/core';
+import { Component, computed, ViewEncapsulation} from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { CommonValidators } from '../../utils/services/common-validators';
@@ -6,6 +6,7 @@ import { ReportGroup, ReportGroupService } from './report-group.service';
 import { ReportGroupUiService } from './report-group-ui.service';
 import { AuthService } from '../../helpers/auth.service';
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
+import { AuthKeys } from '../../const';
 
 @Component({
     selector: 'app-report-group-operation',
@@ -65,27 +66,27 @@ import { BaseOperationComponent } from "../../utils/components/base-operation.co
         <a
           nz-typography
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isReportGroupEdit"
+          *ngIf="!isLoading() && isReportGroupEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ 'Edit' | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isReportGroupEdit"
+          *ngIf="!isLoading() && isReportGroupEdit()"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isReportGroupRemove"
+          *ngIf="!isLoading() && isReportGroupRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ 'Delete' | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isReportGroupRemove"
+          *ngIf="!isLoading() && isReportGroupRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -103,23 +104,16 @@ export class ReportGroupOperationComponent extends BaseOperationComponent<Report
      fb: FormBuilder,
      ref: NzModalRef<ReportGroupOperationComponent>,
      service: ReportGroupService,
-     uiService: ReportGroupUiService,
-    private authService: AuthService
+    private authService: AuthService,
+    uiService: ReportGroupUiService,
   ) {
     super(fb, ref, service, uiService)
   }
 
-  isReportGroupEdit: boolean = true;
-  isReportGroupRemove: boolean = true;
+  isReportGroupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__EDIT));
+  isReportGroupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__REMOVE)); 
 
-  override ngOnInit(): void {
-    // this.isReportGroupEdit = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__REPORT_GROUP__EDIT
-    // );
-    // this.isReportGroupRemove = this.authService.isAuthorized(
-    //   AuthKeys.POS_ADM__SETTING__REPORT_GROUP__REMOVE
-    // );
-
+  override ngOnInit(): void {  
     this.initControl();   
     if (this.modal?.isView) {
       this.frm.disable();

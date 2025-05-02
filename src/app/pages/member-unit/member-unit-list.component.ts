@@ -2,15 +2,15 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { Observable } from "rxjs";
 import { MemberUnit, MemberUnitService } from "./member-unit.service";
 import { MemberUnitUiService } from "./member-unit-ui.service";
 import {
   SETTING_KEY,
-  SystemSetting,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-member-unit-list",
@@ -52,7 +52,7 @@ import {
             {{ "Pull" | translate }}
           </button>
           <button
-            *ngIf="isMemberUnitAdd"
+            *ngIf="isMemberUnitAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -111,7 +111,8 @@ import {
                 }}
               </td>
               <td nzEllipsis title="{{ data.code }}">
-                <a (click)="uiService.showView(data.id!)">{{ data.code }}</a>
+                <span *ngIf="!isMemberUnitView()">{{ data.code }}</span> 
+                <a *ngIf="isMemberUnitView()" (click)="uiService.showView(data.id!)">{{ data.code }}</a>
               </td>
               <td nzEllipsis title="{{ data.name }}">
                 {{ data.name }}
@@ -124,13 +125,13 @@ import {
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isMemberUnitEdit">
+                  <ng-container *ngIf="isMemberUnitEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i nz-icon nzType="edit" nzTheme="outline"></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isMemberUnitRemove">
+                  <ng-container *ngIf="isMemberUnitRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -159,29 +160,30 @@ export class MemberUnitListComponent extends BaseListComponent<MemberUnit> {
     public override uiService: MemberUnitUiService,
     sessionStorageService: SessionStorageService,
     public systemSettingService: SystemSettingService,
-    private activated: ActivatedRoute
+    private activated: ActivatedRoute,
+    private authService: AuthService
   ) {
     super(service, uiService, sessionStorageService, "member-unit-list");
   }
 
   pavrEnable = signal<boolean>(false);
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isMemberUnitAdd: boolean = true;
-  isMemberUnitEdit: boolean = true;
-  isMemberUnitRemove: boolean = true;
-  isMemberUnitView: boolean = true;
+  isMemberUnitAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__ADD));
+  isMemberUnitEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__EDIT));
+  isMemberUnitRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__REMOVE));
+  isMemberUnitView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__VIEW));
 
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 
   override ngOnInit(): void {
     super.ngOnInit();
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
-      next: (result: boolean) => { 
-        this.pavrEnable.set(result);
+      next: (value?: string) => {
+        value === "true" ? this.pavrEnable.set(true) : this.pavrEnable.set(false);
       },
       error: (error) => {
         console.log(error);
-      }, 
+      },
     });
   }
 }

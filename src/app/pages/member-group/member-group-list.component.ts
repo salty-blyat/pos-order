@@ -2,11 +2,12 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { ActivatedRoute } from "@angular/router";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { Observable } from "rxjs";
 import { MemberGroup, MemberGroupService } from "./member-group.service";
 import { MemberGroupUiService } from "./member-group-ui.service";
 import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-setting/system-setting.service";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   selector: "app-member-group-list",
@@ -48,7 +49,7 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
             {{ "Pull" | translate }}
           </button>
           <button
-            *ngIf="isMemberGroupAdd"
+            *ngIf="isMemberGroupAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -107,7 +108,8 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
                 }}
               </td>
               <td nzEllipsis title="{{ data.name }}">
-                <a (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+                <a *ngIf="isMemberGroupView()" (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+                <span *ngIf="!isMemberGroupView()">{{ data.name }}</span>
               </td>
               <td nzEllipsis title="{{ data.note }}">
                 {{ data.note }}
@@ -117,13 +119,13 @@ import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-sett
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isMemberGroupEdit">
+                  <ng-container *ngIf="isMemberGroupEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
                       <i nz-icon nzType="edit" nzTheme="outline"></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isMemberGroupRemove">
+                  <ng-container *ngIf="isMemberGroupRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
@@ -151,27 +153,28 @@ export class MemberGroupListComponent extends BaseListComponent<MemberGroup> {
     public override uiService: MemberGroupUiService,
     sessionStorageService: SessionStorageService,
     public systemSettingService: SystemSettingService,
-    private activated: ActivatedRoute
+    private activated: ActivatedRoute,
+    private authService: AuthService
   ) {
     super(service, uiService, sessionStorageService, "member-group-list");
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isMemberGroupAdd: boolean = true;
-  isMemberGroupEdit: boolean = true;
-  isMemberGroupRemove: boolean = true;
-  isMemberGroupView: boolean = true;
+  isMemberGroupAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__ADD));
+  isMemberGroupEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__EDIT));
+  isMemberGroupRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__REMOVE));
+  isMemberGroupView = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__VIEW));
   pavrEnable = signal<boolean>(false);
-  
+
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 
   override ngOnInit(): void {
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
-      next: (result: boolean) => {
-        this.pavrEnable.set(result);
+      next: (value?: string) => {
+        value === "true" ? this.pavrEnable.set(true) : this.pavrEnable.set(false);
       },
       error: (error) => {
         console.log(error);
-      }, 
+      },
     });
   }
 }

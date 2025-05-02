@@ -1,4 +1,4 @@
-import { Component, effect, ViewEncapsulation } from "@angular/core";
+import { Component, computed, effect, signal, ViewEncapsulation } from "@angular/core";
 import { UntypedFormBuilder } from "@angular/forms";
 import { SETTING_KEY, SystemSettingService } from "./system-setting.service";
 import { BaseSettingSectionComponent } from "../../utils/components/base-setting-section.component";
@@ -6,6 +6,8 @@ import { BaseSettingSectionComponent } from "../../utils/components/base-setting
 import { NotificationService } from "../../utils/services/notification.service";
 import { SettingService } from "../../app-setting";
 import { HttpErrorResponse } from "@angular/common/module.d-CnjH8Dlt";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-pavr-section",
@@ -100,12 +102,14 @@ export class OtherAppSectionComponent extends BaseSettingSectionComponent {
     fb: UntypedFormBuilder,
     settingService: SystemSettingService,
     notificationService: NotificationService,
-    appSettingService: SettingService
+    appSettingService: SettingService,
+    private authService: AuthService
   ) {
     super(fb, settingService, notificationService, appSettingService);
-    effect(()=> {
+    effect(() => {
+
       this.frm.get("PavrEnable")?.valueChanges.subscribe((value) => {
-        if (value) {
+        if (value && this.isOtherAppEdit()) {
           this.frm.controls["PavrUrl"].enable();
         } else {
           this.frm.controls["PavrUrl"].disable();
@@ -116,8 +120,13 @@ export class OtherAppSectionComponent extends BaseSettingSectionComponent {
   }
 
   isTestLoading: boolean = false;
-
   override keys = [SETTING_KEY.PavrEnable, SETTING_KEY.PavrUrl];
+  isOtherAppEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__OTHER_APP__EDIT));
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.isOtherAppEdit() ? this.frm.enable() : this.frm.disable();
+  }
 
   testPavr() {
     if (this.loading) {
