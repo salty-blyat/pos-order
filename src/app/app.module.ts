@@ -179,6 +179,9 @@ import {MemberSelectComponent} from "./pages/member/member-select.component";
 import {RoomInventoryOperationComponent} from "./pages/room-inventory/room-inventory-operation.component";
 import {RoomInventoryDeleteComponent} from "./pages/room-inventory/room-inventory-delete.component";
 import {RoomInventoryMutiOperationComponent} from "./pages/room-inventory/room-inventory-muti-operation.component";
+import {BillingComponent} from "./pages/billing/billing.component";
+import {BillingCycleListComponent} from "./pages/billing/billing-cycle/billing-cycle-list.component";
+import {MeterReadingListComponent} from "./pages/billing/meter-reading/meter-reading-list.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -398,6 +401,12 @@ export class CustomTranslate implements TranslateLoader {
     RoomChargeListComponent,
     RoomChargeOperationComponent,
     RoomChargeDeleteComponent,
+
+    // Billing
+    BillingComponent,
+    BillingCycleListComponent,
+
+    MeterReadingListComponent
   ],
   bootstrap: [AppComponent],
   imports: [

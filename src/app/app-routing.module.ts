@@ -29,6 +29,9 @@ import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.co
 import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
 import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
 import { RoomChargeListComponent } from "./pages/room-charge/room-charge-list.component";
+import {BillingComponent} from "./pages/billing/billing.component";
+import {BillingCycleListComponent} from "./pages/billing/billing-cycle/billing-cycle-list.component";
+import {MeterReadingListComponent} from "./pages/billing/meter-reading/meter-reading-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -48,6 +51,25 @@ const routes: Routes = [
       {
         path: "room",
         component: RoomListComponent,
+      },
+      {
+        path: "billing",
+        component: BillingComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'cycle',
+            pathMatch: 'full'
+          },
+          {
+            path: "cycle",
+            component: BillingCycleListComponent
+          },
+          {
+            path: "reading",
+            component: MeterReadingListComponent
+          }
+        ]
       },
       {
         path: "setting",

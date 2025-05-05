@@ -174,26 +174,26 @@ export class SettingComponent implements OnInit {
             label: "Item",
             isList: this.isItemList(),
           },
-        ],
-      },
-      {
-        groupName: "Charge",
-        subName: [
-          // {
-          //   icon: "container",
-          //   url: `${this.urlPart}/room-charge`,
-          //   label: "RoomCharge",
-          //   isList: this.isRoomCharge(),
-          // },
-
           {
             icon: "container",
             url: `${this.urlPart}/charge`,
             label: "Charge",
             isList: this.isChargeList(),
           },
-        ]
+        ],
       },
+      // {
+      //   groupName: "Charge",
+      //   subName: [
+      //     // {
+      //     //   icon: "container",
+      //     //   url: `${this.urlPart}/room-charge`,
+      //     //   label: "RoomCharge",
+      //     //   isList: this.isRoomCharge(),
+      //     // },
+      //
+      //   ]
+      // },
       {
         groupName: "SystemSetting",
         subName: [
