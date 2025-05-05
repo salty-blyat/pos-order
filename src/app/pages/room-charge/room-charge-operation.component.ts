@@ -34,10 +34,10 @@ import {Charge, ChargeService} from "../charge/charge.service";
               </nz-form-item>
               <nz-form-item *ngIf="isSerial()">
                   <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-                      {{ "Serial" | translate }}
+                      {{ "MeterSerial" | translate }}
                   </nz-form-label>
                   <nz-form-control [nzSm]="14" [nzXs]="24">
-                      <input nz-input formControlName="serial"/></nz-form-control>
+                      <input nz-input formControlName="meterSerial"/></nz-form-control>
               </nz-form-item>
               <nz-form-item  *ngIf="isSerial()">
                   <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
@@ -156,9 +156,9 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
     this.frm = this.fb.group({
       roomId: [this.modal?.roomId, [required]],
       chargeId: [null, [required]],
-      serial: [null, [required, noteMaxLengthValidator]],
+      meterSerial: [null, [required, noteMaxLengthValidator]],
       qty: [1],
-      startReading: [null, [required]],
+      startReading: [0, [required]],
       statusId: [RoomChargeStatus.Active,],
       startDate: [{value: null, disabled: true}, [required]],
     });
@@ -168,7 +168,7 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
     this.frm.setValue({
       roomId: this.model.roomId,
       chargeId: this.model.chargeId,
-      serial: this.model.serial,
+      meterSerial: this.model.meterSerial,
       qty: this.model.qty,
       startReading: this.model.startReading,
       statusId: this.model.statusId,

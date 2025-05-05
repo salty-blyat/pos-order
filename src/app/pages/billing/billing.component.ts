@@ -4,7 +4,7 @@ import {Component, signal, ViewEncapsulation} from "@angular/core";
   selector: 'app-billing',
   template: `
       <nz-layout>
-          <nz-sider class="billing-sider" nzWidth="220px" nzTheme="light">
+          <nz-sider class="billing-sider" nzWidth="180px" nzTheme="light">
               <ul nz-menu nzMode="inline">
                   <ul>
                       <li [nzMatchRouter]="isActive()"

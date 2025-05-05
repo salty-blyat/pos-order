@@ -182,6 +182,9 @@ import {RoomInventoryMutiOperationComponent} from "./pages/room-inventory/room-i
 import {BillingComponent} from "./pages/billing/billing.component";
 import {BillingCycleListComponent} from "./pages/billing/billing-cycle/billing-cycle-list.component";
 import {MeterReadingListComponent} from "./pages/billing/meter-reading/meter-reading-list.component";
+import {BillingCycleOperationComponent} from "./pages/billing/billing-cycle/billing-cycle-operation.component";
+import {BillingCycleDeleteComponent} from "./pages/billing/billing-cycle/billing-cycle-delete.component";
+import {BillingCycleSelectComponent} from "./pages/billing/billing-cycle/billing-cycle-select.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -405,6 +408,9 @@ export class CustomTranslate implements TranslateLoader {
     // Billing
     BillingComponent,
     BillingCycleListComponent,
+    BillingCycleOperationComponent,
+    BillingCycleDeleteComponent,
+    BillingCycleSelectComponent,
 
     MeterReadingListComponent
   ],

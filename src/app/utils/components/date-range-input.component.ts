@@ -7,7 +7,7 @@ import {
   OnChanges,
   SimpleChanges,
   AfterViewInit,
-  ViewChild,
+  ViewChild, ViewEncapsulation,
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { forwardRef } from '@angular/core';
@@ -60,7 +60,7 @@ interface IRecentFilter {
       }
 
       nz-range-picker {
-        width: 230px !important;
+        min-width: 230px !important;
       }
     `,
     ],
@@ -71,7 +71,8 @@ interface IRecentFilter {
             multi: true,
         },
     ],
-    standalone: false
+    standalone: false,
+    encapsulation: ViewEncapsulation.None
 })
 export class DateRangeInputComponent
   implements OnInit, OnChanges, AfterViewInit, ControlValueAccessor {
