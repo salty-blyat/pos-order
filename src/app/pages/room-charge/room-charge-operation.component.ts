@@ -27,112 +27,88 @@ import { TranslateService } from "@ngx-translate/core";
       </span>
     </div>
 
-    <div class="modal-content">
-      <app-loading *ngIf="isLoading()"></app-loading>
-      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
-        <nz-form-item>
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-            {{ "Charge" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <app-charge-select formControlName="chargeId"></app-charge-select>
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item *ngIf="isSerial()">
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-            {{ "Serial" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <input nz-input formControlName="serial"
-          /></nz-form-control>
-        </nz-form-item>
-        <nz-form-item *ngIf="isSerial()">
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-            {{ "StartReading" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <input nz-input formControlName="startReading"
-          /></nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired
-            >{{ "StartDate" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-date-picker formControlName="startDate"></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
-        <!-- display on view/delete/edit --> 
-        <nz-form-item *ngIf="modal?.isView">
-          <nz-form-label [nzSm]="7" [nzXs]="24"  
-            >{{ "Status" | translate }}
-          </nz-form-label>
-          <nz-form-label nzNoColon>
-            <div class="status-box">
-              <div>
-                <i
-                  nz-icon
-                  nzType="check-circle"
-                  class="anticon"
-                  style="color: green"
-                ></i>
-                {{     translateService.currentLang == 'km'
-                        ? model.statusName
-                        : model.statusNameEn }}
-              </div>
-              <span>{{ model.startDate | customDate }}</span>
-            </div>
-          </nz-form-label>
-        </nz-form-item>
-        
-      </form>
-    </div>
-    <div *nzModalFooter>
-      <div *ngIf="!modal?.isView">
-        <button
-          nz-button
-          nzType="primary"
-          [disabled]="!frm.valid"
-          (click)="onSubmit($event)"
-        >
-          <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
-          {{ "Save" | translate }}
-        </button>
-        <button nz-button nzType="default" (click)="cancel()">
-          {{ "Cancel" | translate }}
-        </button>
+      <div class="modal-content">
+          <app-loading *ngIf="isLoading()"></app-loading>
+          <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
+              <nz-form-item>
+                  <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                      {{ "Charge" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
+                      <app-charge-select formControlName="chargeId"></app-charge-select>
+                  </nz-form-control>
+              </nz-form-item>
+              <nz-form-item *ngIf="isSerial()">
+                  <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                      {{ "MeterSerial" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
+                      <input nz-input formControlName="meterSerial"/></nz-form-control>
+              </nz-form-item>
+              <nz-form-item  *ngIf="isSerial()">
+                  <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+                      {{ "StartReading" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
+                      <input nz-input formControlName="startReading"/></nz-form-control>
+              </nz-form-item>
+              <nz-form-item>
+                  <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
+                          "StartDate" | translate
+                      }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
+                      <nz-date-picker formControlName="startDate"></nz-date-picker>
+                  </nz-form-control>
+              </nz-form-item>
+          </form>
       </div>
-      <div *ngIf="modal?.isView">
-        <a
-          (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isRoomChargeEdit()"
-        >
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Edit" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isRoomChargeEdit()"
-        ></nz-divider>
-        <a
-          nz-typography
-          nzType="danger"
-          (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isRoomChargeRemove()"
-        >
-          <i nz-icon nzType="delete" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Delete" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isRoomChargeRemove()"
-        ></nz-divider>
-        <a nz-typography (click)="cancel()" style="color: gray;">
-          <i nz-icon nzType="close" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Close" | translate }}</span>
-        </a>
+      <div *nzModalFooter>
+          <div *ngIf="!modal?.isView">
+              <button
+                      nz-button
+                      nzType="primary"
+                      [disabled]="!frm.valid"
+                      (click)="onSubmit($event)"
+              >
+                  <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
+                  {{ "Save" | translate }}
+              </button>
+              <button nz-button nzType="default" (click)="cancel()">
+                  {{ "Cancel" | translate }}
+              </button>
+          </div>
+          <div *ngIf="modal?.isView">
+              <a
+                      (click)="uiService.showEdit(model.id || 0)"
+                      *ngIf="!isLoading() && isRoomChargeEdit()"
+              >
+                  <i nz-icon nzType="edit" nzTheme="outline"></i>
+                  <span class="action-text"> {{ "Edit" | translate }}</span>
+              </a>
+              <nz-divider
+                      nzType="vertical"
+                      *ngIf="!isLoading() && isRoomChargeEdit()"
+              ></nz-divider>
+              <a
+                      nz-typography
+                      nzType="danger"
+                      (click)="uiService.showDelete(model.id || 0)"
+                      *ngIf="!isLoading() && isRoomChargeRemove()"
+              >
+                  <i nz-icon nzType="delete" nzTheme="outline"></i>
+                  <span class="action-text"> {{ "Delete" | translate }}</span>
+              </a>
+              <nz-divider
+                      nzType="vertical"
+                      *ngIf="!isLoading() && isRoomChargeRemove()"
+              ></nz-divider>
+              <a nz-typography (click)="cancel()" style="color: gray;">
+                  <i nz-icon nzType="close" nzTheme="outline"></i>
+                  <span class="action-text"> {{ "Close" | translate }}</span>
+              </a>
+          </div>
       </div>
-    </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
@@ -187,11 +163,11 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
     this.frm = this.fb.group({
       roomId: [this.modal?.roomId, [required]],
       chargeId: [null, [required]],
-      serial: [null, [required, noteMaxLengthValidator]],
+      meterSerial: [null, [required, noteMaxLengthValidator]],
       qty: [1],
-      startReading: [null, [required]],
-      statusId: [RoomChargeStatus.Active],
-      startDate: [{ value: null, disabled: true }, [required]],
+      startReading: [0, [required]],
+      statusId: [RoomChargeStatus.Active,],
+      startDate: [{value: null, disabled: true}, [required]],
     });
   }
 
@@ -199,7 +175,7 @@ export class RoomChargeOperationComponent extends BaseOperationComponent<RoomCha
     this.frm.setValue({
       roomId: this.model.roomId,
       chargeId: this.model.chargeId,
-      serial: this.model.serial,
+      meterSerial: this.model.meterSerial,
       qty: this.model.qty,
       startReading: this.model.startReading,
       statusId: this.model.statusId,

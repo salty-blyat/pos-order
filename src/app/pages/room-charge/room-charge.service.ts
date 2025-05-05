@@ -6,12 +6,12 @@ import { HttpClient } from "@angular/common/http";
 export interface RoomCharge {
   roomId?: number;
   chargeId?: number;
-  serial?: string;
+  meterSerial?: string;
   startDate?: string;
   endDate?: string;
   statusId?: number;
   id?: number;
-  startReading?: string;
+  startReading?: number;
   endReading?: string;
   roomNumber?: string;
   chargeName?: string;

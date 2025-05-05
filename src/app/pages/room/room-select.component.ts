@@ -106,7 +106,6 @@ export class RoomSelectComponent extends BaseSelectComponent<Room> {
           { field: "floorId", operator: "eq", value: this.floorId() },
         ]);
       }
-      console.log(this.floorId);
     });
   }
 

@@ -29,7 +29,7 @@ export interface Type {
           class="menu-sidebar"
           nzTheme="light"
           nzCollapsible
-          nzWidth="256px"
+          nzWidth="220px"
           nzBreakpoint="md"
           [(nzCollapsed)]="isCollapsed"
           [nzTrigger]="null"
