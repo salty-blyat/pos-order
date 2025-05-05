@@ -12,9 +12,9 @@ export class MemberLevelUiService extends BaseUiService {
       modalService,
       MemberLevelOperationComponent,
       MemberLevelDeleteComponent,
-      "450px",
-      "450px",
-      "450px",
+      "480px",
+      "480px",
+      "480px",
       "450px"
     );
   }

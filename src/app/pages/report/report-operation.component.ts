@@ -159,7 +159,7 @@ export let ParamSelectComponent = {
                   nz-input
                   type="text"
                   formControlName="note"
-                  rows="5"
+                  rows="3"
                 ></textarea>
               </nz-form-control>
             </nz-form-item>

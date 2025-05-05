@@ -11,6 +11,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { Filter } from "../../utils/services/base-api.service";
 import { SystemSettingService } from "../system-setting/system-setting.service";
 import { AuthService } from "../../helpers/auth.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-charge-list",
@@ -32,7 +33,7 @@ import { AuthService } from "../../helpers/auth.service";
             </app-filter-input>
           </div>
           <div nz-col>
-            <app-lookup-item-select 
+            <app-lookup-item-select
               [showAll]="'AllChargeType' | translate"
               [showAllOption]="true"
               storageKey="charge-type-filter"
@@ -43,7 +44,7 @@ import { AuthService } from "../../helpers/auth.service";
             ></app-lookup-item-select>
           </div>
           <div nz-col>
-            <app-unit-select 
+            <app-unit-select
               [showAllOption]="true"
               storageKey="unit-filter"
               (valueChanged)="
@@ -68,7 +69,7 @@ import { AuthService } from "../../helpers/auth.service";
             *ngIf="isChargeAdd()"
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd()"
+            (click)="uiService.showAdd( {chargeTypeId: chargeTypeId(), unitId: unitId()})"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i
             >{{ "Add" | translate }}
@@ -197,21 +198,35 @@ import { AuthService } from "../../helpers/auth.service";
 export class ChargeListComponent extends BaseListComponent<Charge> {
   constructor(
     service: ChargeService,
-    override uiService: ChargeUiService,
+    public override uiService: ChargeUiService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute,
     private authService: AuthService,
-    protected translateService: TranslateService
+    protected translateService: TranslateService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "charge-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "charge-list",
+      notificationService
+    );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isChargeAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__ADD));
-  isChargeEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__EDIT));
-  isChargeRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__REMOVE));
-  isChargeView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__VIEW));
+  isChargeAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__ADD)
+  );
+  isChargeEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__EDIT)
+  );
+  isChargeRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__REMOVE)
+  );
+  isChargeView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__VIEW)
+  );
   lookupItemType = LOOKUP_TYPE;
-
   chargeTypeId = signal<number>(0);
   unitId = signal<number>(0);
 
@@ -231,6 +246,7 @@ export class ChargeListComponent extends BaseListComponent<Charge> {
         value: this.unitId(),
       });
     }
+
     super.search(filters, 100);
   }
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;

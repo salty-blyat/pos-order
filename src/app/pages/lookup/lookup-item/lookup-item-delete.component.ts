@@ -23,7 +23,7 @@ import {LookupItemUiService} from "./lookup-item-ui.service";
                           "Name" | translate
                       }}
                   </nz-form-label>
-                  <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="">
+                  <nz-form-control [nzSm]="16" [nzXs]="24" nzErrorTip="">
                       <input nz-input formControlName="name"/>
                   </nz-form-control>
               </nz-form-item>
@@ -33,12 +33,12 @@ import {LookupItemUiService} from "./lookup-item-ui.service";
                           "Note" | translate
                       }}
                   </nz-form-label>
-                  <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="">
+                  <nz-form-control [nzSm]="16" [nzXs]="24" nzErrorTip="">
               <textarea
                       nz-input
                       type="text"
                       formControlName="note"
-                      rows="5"
+                      rows="3"
               ></textarea>
                   </nz-form-control>
               </nz-form-item>

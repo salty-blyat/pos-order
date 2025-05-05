@@ -6,8 +6,13 @@ import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { Observable } from "rxjs";
 import { MemberGroup, MemberGroupService } from "./member-group.service";
 import { MemberGroupUiService } from "./member-group-ui.service";
-import { SETTING_KEY, SystemSetting, SystemSettingService } from "../system-setting/system-setting.service";
+import {
+  SETTING_KEY,
+  SystemSetting,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 import { AuthService } from "../../helpers/auth.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-member-group-list",
@@ -71,7 +76,6 @@ import { AuthService } from "../../helpers/auth.service";
           [nzPageSize]="param().pageSize || 0"
           [nzPageIndex]="param().pageIndex || 0"
           [nzNoResult]="noResult"
-          
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
         >
@@ -108,7 +112,11 @@ import { AuthService } from "../../helpers/auth.service";
                 }}
               </td>
               <td nzEllipsis title="{{ data.name }}">
-                <a *ngIf="isMemberGroupView()" (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+                <a
+                  *ngIf="isMemberGroupView()"
+                  (click)="uiService.showView(data.id!)"
+                  >{{ data.name }}</a
+                >
                 <span *ngIf="!isMemberGroupView()">{{ data.name }}</span>
               </td>
               <td nzEllipsis title="{{ data.note }}">
@@ -149,6 +157,7 @@ import { AuthService } from "../../helpers/auth.service";
 })
 export class MemberGroupListComponent extends BaseListComponent<MemberGroup> {
   constructor(
+    notificationService: NotificationService,
     service: MemberGroupService,
     public override uiService: MemberGroupUiService,
     sessionStorageService: SessionStorageService,
@@ -156,13 +165,27 @@ export class MemberGroupListComponent extends BaseListComponent<MemberGroup> {
     private activated: ActivatedRoute,
     private authService: AuthService
   ) {
-    super(service, uiService, sessionStorageService, "member-group-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "member-group-list",
+      notificationService
+    );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isMemberGroupAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__ADD));
-  isMemberGroupEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__EDIT));
-  isMemberGroupRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__REMOVE));
-  isMemberGroupView = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__VIEW));
+  isMemberGroupAdd = computed<boolean>(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__ADD)
+  );
+  isMemberGroupEdit = computed<boolean>(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__EDIT)
+  );
+  isMemberGroupRemove = computed<boolean>(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__REMOVE)
+  );
+  isMemberGroupView = computed<boolean>(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__VIEW)
+  );
   pavrEnable = signal<boolean>(false);
 
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
@@ -170,7 +193,9 @@ export class MemberGroupListComponent extends BaseListComponent<MemberGroup> {
   override ngOnInit(): void {
     this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
       next: (value?: string) => {
-        value === "true" ? this.pavrEnable.set(true) : this.pavrEnable.set(false);
+        value === "true"
+          ? this.pavrEnable.set(true)
+          : this.pavrEnable.set(false);
       },
       error: (error) => {
         console.log(error);

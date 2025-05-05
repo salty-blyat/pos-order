@@ -17,7 +17,7 @@ export class AutoNumberUiService extends BaseUiService {
       '480px',
       '480px',
       '480px',
-      '480px'
+      '450px'
     );
   }
 }

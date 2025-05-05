@@ -22,7 +22,7 @@ export class FloorUiService extends BaseUiService {
     override showAdd(blockId: number, componentId: any = '') {
         this.modalService.create({
             nzContent: FloorOperationComponent,
-            nzData: {blockId},
+            nzData: { blockId: blockId},
             nzFooter: null,
             nzClosable: true,
             nzWidth: '500px',

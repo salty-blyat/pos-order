@@ -19,4 +19,22 @@ export class ChargeUiService extends BaseUiService {
       "450px"
     );
   }
+
+  override showAdd( componentId: any = "" ): void {
+    const { chargeTypeId, unitId } = componentId as {
+      chargeTypeId: number;
+      unitId: number;
+    };
+    this.modalService.create({
+      nzContent: ChargeOperationComponent,
+      nzFooter: null,
+      nzClosable: true,
+      nzWidth: "450px",
+      nzMaskClosable: false,
+      nzData: { chargeTypeId, unitId },
+      nzOnOk: (e: any) => {
+        this.refresher.emit({ key: "added", value: e.model, componentId });
+      },
+    });
+  }
 }

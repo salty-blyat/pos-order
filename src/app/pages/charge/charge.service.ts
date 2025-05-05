@@ -1,6 +1,6 @@
 import { BaseApiService } from "../../utils/services/base-api.service";
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 import { SettingService } from "../../app-setting";
 
 export interface Charge {
@@ -23,4 +23,5 @@ export class ChargeService extends BaseApiService<any> {
   constructor(private http: HttpClient, settingService: SettingService) {
     super("charge", http, settingService);
   }
+  
 }

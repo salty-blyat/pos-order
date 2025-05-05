@@ -22,12 +22,12 @@ import { TranslateService } from "@ngx-translate/core";
               (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
             ></app-filter-input>
           </div>
-          <div nz-col>
+          <!-- <div nz-col>
               <app-date-range-input
                       storageKey="room-member-filter-date"
                       (valueChanged)="startDate.set($event); param().pageIndex = 1; search()"
               ></app-date-range-input>
-          </div>
+          </div> -->
           <div nz-col >
               <app-charge-select
                       [showAllOption]="true"
@@ -93,7 +93,8 @@ import { TranslateService } from "@ngx-translate/core";
                       {{ data.endDate | customDate  }} 
                   </span>
               </td>
-              <td nzEllipsis>
+              <td nzEllipsis> 
+
                 {{
                    this.translateService.currentLang === "km"
                     ? data.statusName
@@ -126,7 +127,7 @@ import { TranslateService } from "@ngx-translate/core";
                               (click)="uiService.showDelete(data.id!)">
                               <span>
                                 <i nz-icon nzType="delete"></i>&nbsp;
-                                <span class="action-text">{{ "Delete" | translate }}</span>
+                                <span class="action-text">{{ "StopUsing" | translate }}</span>
                               </span>
                           </li>
                       </ul>

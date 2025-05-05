@@ -31,8 +31,8 @@ export class BaseUiService<T = NzSafeAny> {
       nzClosable: true,
       nzWidth: this.widthAdd,
       nzMaskClosable: false,
-      nzOnOk: (e: any) => {
-        this.refresher.emit({ key: "added", value: e.model, componentId });
+      nzOnOk: (e: any) => { 
+        this.refresher.emit({ key: "added", value: e.model, componentId }); 
       },
     });
   }
@@ -46,7 +46,7 @@ export class BaseUiService<T = NzSafeAny> {
       nzWidth: this.widthEdit,
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
-        this.refresher.emit({ key: "edited", value: e.model });
+        this.refresher.emit({ key: "edited", value: e.model }); 
       },
     });
   }

@@ -132,12 +132,12 @@ import { AuthKeys } from "../../const";
         </button>
       </div>
       <div *ngIf="modal?.isView">
-        <a *ngIf="!isLoading() && isItemEdit()">
+        <a *ngIf="!isLoading() && isItemEdit()"  (click)="uiService.showEdit(model.id || 0)">
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading()  && isItemEdit()"></nz-divider>
-        <a nz-typography nzType="danger" *ngIf="!isLoading() && isItemRemove() ">
+        <nz-divider nzType="vertical" *ngIf="!isLoading()  && isItemEdit()" ></nz-divider>
+        <a nz-typography nzType="danger"  (click)="uiService.showDelete(model.id || 0)" *ngIf="!isLoading() && isItemRemove() ">
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>

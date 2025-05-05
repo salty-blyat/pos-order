@@ -30,7 +30,7 @@ import { AuthService } from "../../../helpers/auth.service";
             *ngIf="isLookupAdd()"
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd(lookupTypeId())"
+            (click)="uiService.showAdd('',lookupTypeId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Add" | translate }}
@@ -177,7 +177,7 @@ export class LookupItemListComponent extends BaseListComponent<LookupItem> {
   @ViewChild(FilterInputComponent) filter!: any;
 
   constructor(
-    uiService: LookupItemUiService,
+    public override uiService: LookupItemUiService,
     service: LookupItemService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute,

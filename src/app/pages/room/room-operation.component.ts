@@ -1,16 +1,15 @@
-import {Component, OnInit, signal, ViewEncapsulation} from "@angular/core";
-import {BaseOperationComponent} from "../../utils/components/base-operation.component";
-import {Room, RoomService} from "./room.service";
-import {FormBuilder} from "@angular/forms";
-import {CommonValidators} from "../../utils/services/common-validators";
-import {NzModalRef} from "ng-zorro-antd/modal";
-import {RoomUiService} from "./room-ui.service";
-import {LOOKUP_TYPE} from "../lookup/lookup-type.service";
-import {single} from "rxjs";
+import { Component, signal, ViewEncapsulation } from "@angular/core";
+import { BaseOperationComponent } from "../../utils/components/base-operation.component";
+import { Room, RoomService } from "./room.service";
+import { FormBuilder } from "@angular/forms";
+import { CommonValidators } from "../../utils/services/common-validators";
+import { NzModalRef } from "ng-zorro-antd/modal";
+import { RoomUiService } from "./room-ui.service";
+import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 
 @Component({
-  selector: "app-room-operation",
-  template: `
+    selector: "app-room-operation",
+    template: `
       <div *nzModalTitle class="modal-header-ellipsis">
           <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
           <span *ngIf="modal?.id && !modal?.isView">
@@ -99,45 +98,45 @@ import {single} from "rxjs";
           </div>
       </div>
   `,
-  styleUrls: ["../../../assets/scss/operation.style.scss"],
-  standalone: false,
-  encapsulation: ViewEncapsulation.None,
+    styleUrls: ["../../../assets/scss/operation.style.scss"],
+    standalone: false,
+    encapsulation: ViewEncapsulation.None,
 })
 export class RoomOperationComponent extends BaseOperationComponent<Room> {
-  constructor(
-    fb: FormBuilder,
-    ref: NzModalRef<RoomOperationComponent>,
-    service: RoomService,
-    uiService: RoomUiService
-  ) {
-    super(fb, ref, service, uiService);
-  }
+    constructor(
+        fb: FormBuilder,
+        ref: NzModalRef<RoomOperationComponent>,
+        service: RoomService,
+        uiService: RoomUiService
+    ) {
+        super(fb, ref, service, uiService);
+    }
 
-  isRoomEdit = signal(true);
-  isRoomRemove = signal(true);
+    isRoomEdit = signal(true);
+    isRoomRemove = signal(true);
 
-  override initControl(): void {
-    const {required, nameExistValidator} = CommonValidators;
-    this.frm = this.fb.group({
-      roomNumber: [null, [required], [nameExistValidator(this.service, this.modal?.id, 'name')]],
-      roomTypeId: [null, [required]],
-        floorId: [null, [required]],
-      statusId: [null, [required]],
-      tagIds: [null],
-      note: [null],
-    });
-  }
+    override initControl(): void {
+        const { required, nameExistValidator } = CommonValidators;
+        this.frm = this.fb.group({
+            roomNumber: [null, [required], [nameExistValidator(this.service, this.modal?.id, 'name')]],
+            roomTypeId: [null, [required]],
+            floorId: [null, [required]],
+            statusId: [null, [required]],
+            tagIds: [null],
+            note: [null],
+        });
+    }
 
-  override setFormValue() {
-    this.frm.setValue({
-      roomNumber: this.model.roomNumber,
-      roomTypeId: this.model.roomTypeId,
-        floorId: this.model.floorId,
-      statusId: this.model.statusId,
-      tagIds: this.model.tagIds,
-      note: this.model.note,
-    });
-  }
+    override setFormValue() {
+        this.frm.setValue({
+            roomNumber: this.model.roomNumber,
+            roomTypeId: this.model.roomTypeId,
+            floorId: this.model.floorId,
+            statusId: this.model.statusId,
+            tagIds: this.model.tagIds,
+            note: this.model.note,
+        });
+    }
 
-  protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
+    protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }

@@ -74,11 +74,11 @@ import { AuthService } from "../../helpers/auth.service";
               <th nzWidth="60px" nzAlign="center">{{ "Image" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th>{{ "ItemType" | translate }}</th>
-              <th nzWidth="80px" nzAlign="center">
+              <th nzWidth="120px">{{ "ItemType" | translate }}</th>
+              <th nzWidth="120px" nzAlign="center">
                 {{ "IsTrackSerial" | translate }}
               </th>
-              <th>{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -98,8 +98,16 @@ import { AuthService } from "../../helpers/auth.service";
                 <img
                   *ngIf="data.image"
                   class="image-list"
+                  height="42"
                   [src]="data.image"
-                  [alt]="data.name"
+                  alt=""
+                />
+                <img
+                  *ngIf="!data.image"
+                  class="image-list"
+                  height="42"
+                  src="./assets/image/img-not-found.jpg"
+                  alt=""
                 />
               </td>
               <td nzEllipsis>

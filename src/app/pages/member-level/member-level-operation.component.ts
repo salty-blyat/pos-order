@@ -5,7 +5,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { MemberLevelService } from "./member-level.service";
 import { MemberLevel } from "./member-level.service";
-import { MemberLevelUiService } from "./member-level-ui.component";
+import { MemberLevelUiService } from "./member-level-ui.service";
 import {
   SETTING_KEY,
   SystemSettingService,

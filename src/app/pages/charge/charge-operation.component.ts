@@ -52,7 +52,7 @@ import { AuthKeys } from "../../const";
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "Name" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24">
+          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
             <input nz-input formControlName="name" />
           </nz-form-control>
         </nz-form-item>
@@ -153,15 +153,19 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
     ref: NzModalRef<ChargeOperationComponent>,
     public systemSettingService: SystemSettingService,
     private authService: AuthService,
-    service: ChargeService,
+    public override service: ChargeService,
     uiService: ChargeUiService
   ) {
     super(fb, ref, service, uiService);
   }
   chargesAutoIdEnable = signal<boolean>(false);
 
-  isChargeEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__EDIT));
-  isChargeRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__REMOVE));
+  isChargeEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__EDIT)
+  );
+  isChargeRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__REMOVE)
+  );
 
   override initControl(): void {
     const {
@@ -170,25 +174,43 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
       codeExistValidator,
       integerValidator,
       noteMaxLengthValidator,
+      nameExistValidator,
     } = CommonValidators;
-
     this.frm = this.fb.group({
       code: [
         null,
         [required, nameMaxLengthValidator],
         [codeExistValidator(this.service, this.modal?.id)],
       ],
-      name: [null, [required, nameMaxLengthValidator]],
+      name: [
+        null,
+        [required, nameMaxLengthValidator],
+        [nameExistValidator(this.service, this.modal?.id)],
+      ],
       chargeTypeId: [null, [required]],
       unitId: [null, [required]],
       chargeRate: [0, [required, integerValidator]],
       note: [null, [noteMaxLengthValidator]],
     });
+    setTimeout(() => {
+      this.isLoading.set(true);
+      if (this.modal?.chargeTypeId && this.modal?.chargeTypeId !== 0) {
+        this.frm.patchValue({ chargeTypeId: this.modal.chargeTypeId });
+      }
+  
+      if (this.modal?.unitId && this.modal?.unitId !== 0) {
+        this.frm.patchValue({ unitId: this.modal.unitId });
+      }
+
+      this.isLoading.set(false);
+    }, 50);
   }
 
   lookupItemType = LOOKUP_TYPE;
 
   override setFormValue(): void {
+    console.log("hit");
+
     this.frm.setValue({
       code: this.model.code,
       name: this.model.name,
@@ -201,19 +223,16 @@ export class ChargeOperationComponent extends BaseOperationComponent<Charge> {
 
   override ngOnInit(): void {
     super.ngOnInit();
-    const { required } = CommonValidators;
     this.systemSettingService.find(SETTING_KEY.ChargesAutoId).subscribe({
       next: (result: any) => {
         if (result === 0) {
           this.chargesAutoIdEnable.set(false);
           this.frm.controls["code"].enable();
-          this.frm.controls["code"].setValidators([required]);
         } else {
           this.chargesAutoIdEnable.set(true);
           this.frm.controls["code"].disable();
-          this.frm.controls["code"].setValidators([]);
         }
-      }, 
+      },
     });
   }
 }

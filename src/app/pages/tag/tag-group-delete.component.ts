@@ -20,14 +20,14 @@ import { CommonValidators } from '../../utils/services/common-validators';
             <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
                 <nz-form-item>
                     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{ "Name" | translate }}</nz-form-label>
-                    <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="">
+                    <nz-form-control [nzSm]="16" [nzXs]="24" nzErrorTip="">
                         <input nz-input formControlName="name"/>
                     </nz-form-control>
                 </nz-form-item>
 
                 <nz-form-item>
                     <nz-form-label [nzSm]="6" [nzXs]="24">{{ "Note" | translate }}</nz-form-label>
-                    <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="">
+                    <nz-form-control [nzSm]="16" [nzXs]="24" nzErrorTip="">
                         <textarea nz-input type="text" formControlName="note" rows="3"></textarea>
                     </nz-form-control>
                 </nz-form-item>

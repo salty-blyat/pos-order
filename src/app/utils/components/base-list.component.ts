@@ -50,6 +50,7 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
     this.search();
 
   }
+  
   search(filters: Filter[] = [], delay: number = 50, ) {
     if (this.isLoading()) return;
     this.isLoading.set(true);
@@ -104,6 +105,7 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
       this.notificationService?.successNotification('Successfully Saved');
     });
   }
+
   drop(event: CdkDragDrop<Floor[], any, any>): void {
     moveItemInArray(this.lists(), event.previousIndex, event.currentIndex);
     if (event.previousIndex !== event.currentIndex) this.draged.set(true);

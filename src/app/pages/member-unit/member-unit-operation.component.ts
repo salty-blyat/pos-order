@@ -39,9 +39,7 @@ import { AuthKeys } from "../../const";
             <input
               nz-input
               formControlName="code"
-              placeholder="{{
-                editableCode ? ('NewCode' | translate) : ''
-              }}"
+              placeholder="{{ editableCode ? ('NewCode' | translate) : '' }}"
             />
           </nz-form-control>
         </nz-form-item>
@@ -127,13 +125,17 @@ export class MemberUnitOperationComponent extends BaseOperationComponent<MemberU
     super(fb, ref, service, uiService);
   }
 
-  isMemberUnitEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__EDIT));
-  isMemberUnitRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__REMOVE));
+  isMemberUnitEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__EDIT)
+  );
+  isMemberUnitRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__REMOVE)
+  );
 
   editableCode: boolean = false;
 
-  override ngOnInit(): void { 
-    setTimeout(()=> { 
+  override ngOnInit(): void {
+    setTimeout(() => {
       let setting = this.systemSettingService.current.items.find(
         (item) => item.key === SETTING_KEY.MemberUnitAutoId
       );
@@ -141,16 +143,20 @@ export class MemberUnitOperationComponent extends BaseOperationComponent<MemberU
       if (this.editableCode) {
         this.frm.get("code")?.disable();
       }
-    },50)
+    }, 50);
     super.ngOnInit();
   }
 
   override initControl(): void {
-    const { required, noteMaxLengthValidator, nameExistValidator } =
+    const { required,codeExistValidator, noteMaxLengthValidator, nameExistValidator } =
       CommonValidators;
 
     this.frm = this.fb.group({
-      code: [{ value: null, disabled: this.editableCode }, [required]],
+      code: [
+        { value: null, disabled: this.editableCode },
+        [required, noteMaxLengthValidator],
+        [codeExistValidator(this.service, this.modal?.id)],
+      ],
       name: [
         null,
         [required, noteMaxLengthValidator()],

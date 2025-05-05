@@ -28,7 +28,7 @@ import { AutoNumberUiService } from "./auto-number-ui.service";
                 <nz-form-item>
                     <nz-form-label [nzSm]="6" [nzXs]="24">{{ "Note" | translate }}</nz-form-label>
                     <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="">
-                        <textarea nz-input type="text" formControlName="note" rows="5"></textarea>
+                        <textarea nz-input type="text" formControlName="note" rows="3"></textarea>
                     </nz-form-control>
                 </nz-form-item>
             </form>

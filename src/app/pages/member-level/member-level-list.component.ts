@@ -11,7 +11,7 @@ import {
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { MemberLevel, MemberLevelService } from "./member-level.service";
-import { MemberLevelUiService } from "./member-level-ui.component";
+import { MemberLevelUiService } from "./member-level-ui.service";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";

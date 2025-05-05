@@ -112,7 +112,9 @@ import { AuthKeys, SIZE_COLUMNS } from "../../const";
                   (click)="uiService.showView(data.id || 0)"
                   >{{ data.name! | translate }}</a
                 >
-                <span *ngIf="!isReportView()">{{ data.name! | translate }}</span>
+                <span *ngIf="!isReportView()">{{
+                  data.name! | translate
+                }}</span>
               </td>
               <td nzEllipsis>{{ data.label! | translate }}</td>
               <td nzEllipsis style="flex: 3;">{{ data.note }}</td>
@@ -173,7 +175,8 @@ import { AuthKeys, SIZE_COLUMNS } from "../../const";
 })
 export class ReportListComponent
   extends BaseListComponent<Report>
-  implements OnChanges {
+  implements OnChanges
+{
   constructor(
     service: ReportService,
     uiService: ReportUiService,
@@ -186,10 +189,18 @@ export class ReportListComponent
 
   reportGroupId = input<number>(0);
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
-  isReportAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__ADD));
-  isReportEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT));
-  isReportRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE));
-  isReportView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__VIEW));
+  isReportAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__ADD)
+  );
+  isReportEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT)
+  );
+  isReportRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE)
+  );
+  isReportView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__VIEW)
+  );
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["reportGroupId"]) {
@@ -202,7 +213,7 @@ export class ReportListComponent
       {
         field: "reportGroupId",
         operator: "eq",
-        value: reportGroupId,
+        value: this.reportGroupId(),
       },
     ];
     super.search(filters, 100);

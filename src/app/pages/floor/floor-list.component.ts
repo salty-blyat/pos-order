@@ -66,7 +66,7 @@ import { AuthService } from "../../helpers/auth.service";
               <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th>{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE"> {{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -167,16 +167,14 @@ export class FloorListComponent
   isFloorEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__EDIT));
 
   override search(blockId?: any): void {
-    if (blockId) {
       let filters = [
         {
           field: "blockId",
           operator: "eq",
           value: blockId,
-        },
+        }
       ];
-      super.search(filters);
-    }
+    super.search(filters);
   }
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;

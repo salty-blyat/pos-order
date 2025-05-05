@@ -4,7 +4,7 @@ import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
 import { MemberLevel, MemberLevelService } from "./member-level.service";
-import { MemberLevelUiService } from "./member-level-ui.component";
+import { MemberLevelUiService } from "./member-level-ui.service";
 @Component({
   selector: "app-member-level-delete",
   template: `
@@ -16,12 +16,12 @@ import { MemberLevelUiService } from "./member-level-ui.component";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <div *ngIf="errMessage() && !isLoading()" class="delete-error-message ">
-        <span nz-typography nzType="danger">{{
+      <div  class="delete-error-message ">
+        <span *ngIf="errMessage() && !isLoading()" nz-typography nzType="danger">{{
           errMessage() | translate
         }}</span>
       </div>
-      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips" >
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "Name" | translate }}

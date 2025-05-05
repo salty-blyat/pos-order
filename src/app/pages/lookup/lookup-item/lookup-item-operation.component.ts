@@ -177,16 +177,18 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
 
   override initControl(): void {
     const {nameMaxLengthValidator, nameExistValidator, required, noteMaxLengthValidator} = CommonValidators;
+    console.log(this.modal?.lookupTypeId);
+    
     this.frm = this.fb.group({
       lookupTypeId: [this.modal?.lookupTypeId],
       image: [null],
       name: [
-        "",
+        null,
         [required, nameMaxLengthValidator],
         [nameExistValidator(this.service, this.modal?.id, control.name, this.modal?.lookupTypeId)],
       ],
       nameEn: [
-        "",
+        null,
         [required, nameMaxLengthValidator],
         [nameExistValidator(this.service, this.modal?.id, control.nameEn, this.modal?.lookupTypeId)],
       ],
@@ -215,14 +217,16 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
   }
 
   override onSubmit(e: any): void {
-    if (this.frm.valid) {
+    if (this.frm.valid) { 
       this.isLoading.set(true);
       this.file.map((item) => {
         this.image = {uid: item.uid, url: item.url!, name: item.name!, type: item.type!};
       });
+
       let operation$ = this.service.add({...this.frm.value, image: this.image});
-      if (this.modal.id) {
-        operation$ = this.service.edit({...this.frm.value, id: this.modal?.id, image: this.image});
+      
+      if (this.model?.id) {
+        operation$ = this.service.edit({...this.frm.value, id: this.model?.id, image: this.image});
       }
       if (e.detail === 1 || e.detail === 0) {
         operation$.subscribe({
@@ -234,6 +238,9 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
           error: (err: any) => {
             this.isLoading.set(false);
             console.log(err);
+          },
+          complete: () => {
+            this.isLoading.set(false)
           }
         });
       }

@@ -2,7 +2,7 @@ import {Component, computed, forwardRef, signal, ViewEncapsulation} from '@angul
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 import { MemberLevel, MemberLevelService } from './member-level.service';
-import { MemberLevelUiService } from './member-level-ui.component';
+import { MemberLevelUiService } from './member-level-ui.service';
 import {BaseSelectComponent} from "../../utils/components/base-select.component";
 import { AuthService } from '../../helpers/auth.service';
 import { AuthKeys } from '../../const';

@@ -64,7 +64,7 @@ import { AuthService } from "../../helpers/auth.service";
                             [nzDropdownMenu]="menu"
                             class="action-button menu-dropdown"
                             nz-dropdown
-                            *ngIf="isReportGroupAdd() || isReportGroupEdit() || isReportGroupView()"
+                            *ngIf="isReportGroupAdd() || isReportGroupEdit() "
                             nzTrigger="click"
                             nzPlacement="bottomRight"
                     >
@@ -77,15 +77,7 @@ import { AuthService } from "../../helpers/auth.service";
                     </a>
                 </li>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
-                  <ul nz-menu nzSelectable>
-                    <li class="menu-item default" *ngIf="isReportGroupView()"
-                                      nz-menu-item 
-                                      (click)="uiService.showView(data.id!)">
-                                    <span>
-                                      <i nz-icon nzType="eye"></i>&nbsp;
-                                      <span class="action-text">{{ "View" | translate }}</span>
-                                    </span>
-                                  </li> 
+                  <ul nz-menu nzSelectable> 
                     <li
                       *ngIf="isReportGroupEdit()"
                       class="menu-item edit"
@@ -215,7 +207,6 @@ export class ReportGroupListComponent extends BaseListComponent<Report> {
   isReportGroupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__ADD));
   isReportGroupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__EDIT));
   isReportGroupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__REMOVE));
-  isReportGroupView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__VIEW));
   reportGroupId = signal<number>(parseInt(this.sessionStorageService.getValue(this.reportGroupSelectedKey) ?? 0) ?? 0);
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
 

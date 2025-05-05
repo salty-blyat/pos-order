@@ -11,6 +11,7 @@ import {
   SystemSettingService,
 } from "../system-setting/system-setting.service";
 import { AuthService } from "../../helpers/auth.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-member-unit-list",
@@ -161,9 +162,10 @@ export class MemberUnitListComponent extends BaseListComponent<MemberUnit> {
     sessionStorageService: SessionStorageService,
     public systemSettingService: SystemSettingService,
     private activated: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "member-unit-list");
+    super(service, uiService, sessionStorageService, "member-unit-list", notificationService);
   }
 
   pavrEnable = signal<boolean>(false);
