@@ -5,7 +5,7 @@ import {MeterReadingUiService} from "./meter-reading-ui.service";
 import {SessionStorageService} from "../../../utils/services/sessionStorage.service";
 import {SIZE_COLUMNS} from "../../../const";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {QueryParam} from "../../../utils/services/base-api.service";
+import {Filter, QueryParam} from "../../../utils/services/base-api.service";
 
 @Component({
   selector: 'app-meter-reading-list',
@@ -17,16 +17,22 @@ import {QueryParam} from "../../../utils/services/base-api.service";
                       <nz-row class="row-filter">
                           <div nz-col>
                               <app-billing-cycle-select
+                                      storageKey="meter-reading-list-filter-billing-cycle"
+                                      (valueChanged)="billingCycleId.set($event); this.param().pageIndex = 1; search()"
                                       [showAllOption]="true"
                               ></app-billing-cycle-select>
                           </div>
                           <div nz-col>
                               <app-charge-select
+                                      storageKey="meter-reading-list-filter-charge"
+                                      (valueChanged)="chargeId.set($event); this.param().pageIndex = 1; search()"
                                       [showAllOption]="true"
                               ></app-charge-select>
                           </div>
                           <div nz-col>
                               <app-floor-select
+                                      storageKey="meter-reading-list-filter-floor"
+                                      (valueChanged)="floorId.set($event); this.param().pageIndex = 1; search()"
                                       [showAllOption]="true"
                               ></app-floor-select>
                           </div>
@@ -213,6 +219,9 @@ export class MeterReadingListComponent extends BaseListComponent<MeterReading> {
   }
   meterReadingId = signal<number>(0);
   meterReading = signal<MeterReading | null>(null);
+  billingCycleId = signal<number>(0);
+  chargeId = signal<number>(0);
+  floorId = signal<number>(0);
 
   frm!: FormGroup;
 
@@ -249,11 +258,32 @@ export class MeterReadingListComponent extends BaseListComponent<MeterReading> {
     if (this.isLoading()) return;
     this.isLoading.set(true);
     setTimeout(() => {
-      let filters = [{
+      let filters:Filter[] = [{
         field: "search",
         operator: "contains",
         value: this.searchText(),
       }];
+      if (this.billingCycleId()){
+        filters.push({
+          field: "billingCycleId",
+          operator: "eq",
+          value: this.billingCycleId()
+        })
+      }
+      if (this.chargeId()){
+        filters.push({
+          field: "chargeId",
+          operator: "eq",
+          value: this.chargeId()
+        })
+      }
+      if (this.floorId()){
+        filters.push({
+          field: "floorId",
+          operator: "eq",
+          value: this.floorId()
+        })
+      }
       this.param().filters = JSON.stringify(filters);
       this.service.search(this.param()).subscribe({
         next: (result: { results: MeterReading[]; param: QueryParam }) => {

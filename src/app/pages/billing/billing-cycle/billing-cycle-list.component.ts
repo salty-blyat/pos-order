@@ -44,8 +44,8 @@ import {SessionStorageService} from "../../../utils/services/sessionStorage.serv
                   <thead>
                   <tr>
                       <th nzEllipsis [nzWidth]="SIZE_COLUMNS.ID">#</th>
-                      <th nzEllipsis nzWidth="180px">{{ "Date" | translate }}</th>
-                      <th nzEllipsis nzWidth="180px">{{ "Name" | translate }}</th>
+                      <th nzEllipsis nzWidth="190px">{{ "Date" | translate }}</th>
+                      <th nzEllipsis nzWidth="190px">{{ "Name" | translate }}</th>
                       <th nzEllipsis nzWidth="90px" nzAlign="center">{{ "TotalDay" | translate }}</th>
                       <th nzEllipsis nzWidth="90px" nzAlign="center">{{ "TotalRoom" | translate }}</th>
                       <th nzEllipsis>{{ "Note" | translate }}</th>
@@ -71,7 +71,7 @@ import {SessionStorageService} from "../../../utils/services/sessionStorage.serv
                       <td nzEllipsis nzAlign="center">
                         {{ data.totalRoom }}
                       </td>
-                      <td nzEllipsis style="flex: 4">{{ data.note }}</td>
+                      <td nzEllipsis>{{ data.note }}</td>
                       <td class="col-action" style="flex: 1">
                           <nz-space [nzSplit]="spaceSplit">
                               <ng-template #spaceSplit>
