@@ -17,18 +17,10 @@ import { MemberUnitUiService } from "./member-unit-ui.service";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <div
-        *ngIf="errMessage() && !isLoading()"
-        nz-row
-        nzJustify="center"
-        style="margin:2px 0"
-      >
-        <span
-          nz-typography
-          nzType="danger"
-          style="position: absolute; z-index: 1; top: 18%"
-          >{{ errMessage() | translate }}</span
-        >
+      <div  class="delete-error-message ">
+        <span *ngIf="errMessage() && !isLoading()" nz-typography nzType="danger">{{
+          errMessage() | translate
+        }}</span>
       </div>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>

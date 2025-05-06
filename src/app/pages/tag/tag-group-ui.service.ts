@@ -18,7 +18,7 @@ export class TagGroupUiService extends BaseUiService {
       nzFooter: null,
       nzClosable: true,
       nzWidth: '600px',
-      nzBodyStyle: { paddingBottom: '10px', height: '300px'},
+      nzBodyStyle: { padding: '0 0 10px 0', height: '300px'},
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: 'added', value: e.model, componentId });
@@ -33,7 +33,7 @@ export class TagGroupUiService extends BaseUiService {
       nzFooter: null,
       nzClosable: true,
       nzWidth: '600px',
-      nzBodyStyle: { paddingBottom: '10px', height: '300px'},
+      nzBodyStyle: { padding: '0 0 10px 0', height: '300px'},
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: 'edited', value: e.model });
@@ -47,7 +47,7 @@ export class TagGroupUiService extends BaseUiService {
       nzFooter: null,
       nzClosable: true,
       nzWidth: '600px',
-      nzBodyStyle: { paddingBottom: '10px', height: '300px'},
+      nzBodyStyle: { padding: '0 0 10px 0', height: '300px'},
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: 'viewed', value: e.model });

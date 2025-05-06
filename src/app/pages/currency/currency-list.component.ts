@@ -62,11 +62,11 @@ import { AuthService } from "../../helpers/auth.service";
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
-              <th>{{ "Name" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th nzWidth="80px">{{ "Symbol" | translate }}</th>
-              <th>{{ "Format" | translate }}</th>
-              <th>{{ "Rounding" | translate }}</th>
-              <th>{{ "ExchangeRate" | translate }}</th>
+              <th nzWidth="100px">{{ "Format" | translate }}</th>
+              <th nzWidth="100px">{{ "Rounding" | translate }}</th>
+              <th nzWidth="100px">{{ "ExchangeRate" | translate }}</th> 
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -86,14 +86,15 @@ import { AuthService } from "../../helpers/auth.service";
                 <a
                   *ngIf="isCurrencyView()"
                   (click)="uiService.showView(data.id!)"
-                  >{{ data.code }}</a>
+                  >{{ data.code }}</a
+                >
                 <span *ngIf="!isCurrencyView()">{{ data.code }}</span>
               </td>
               <td nzEllipsis>{{ data.name }}</td>
               <td nzEllipsis>{{ data.symbol }}</td>
               <td nzEllipsis>{{ data.format }}</td>
               <td nzEllipsis>{{ data.rounding }}</td>
-              <td nzEllipsis>{{ data.exchangeRate }}</td>
+              <td nzEllipsis>{{ data.exchangeRate }}</td> 
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
@@ -149,10 +150,22 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
     super(service, uiService, sessionStorageService, "currency-list");
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isCurrencyAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__ADD));
-  isCurrencyEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__EDIT));
-  isCurrencyRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__REMOVE));
-  isCurrencyView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__VIEW));
-
+  isCurrencyAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__ADD)
+  );
+  isCurrencyEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__EDIT)
+  );
+  isCurrencyRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__REMOVE)
+  );
+  isCurrencyView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__VIEW)
+  );
+override ngOnInit(): void {
+  super.ngOnInit();
+  console.log(this.lists());
+  
+}
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }
