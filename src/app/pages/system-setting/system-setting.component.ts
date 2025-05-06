@@ -88,7 +88,7 @@ export class SystemSettingComponent implements OnInit {
 
   ngOnInit(): void {
     this.router
-      .navigate(["/", "setting", "system-setting", "company-section", "other-app-section"])
+      .navigate(["/", "setting", "system-setting", "company-section"])
       .then();
   }
 }

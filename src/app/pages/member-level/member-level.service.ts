@@ -13,7 +13,7 @@ export interface MemberLevel {
 
 @Injectable({ providedIn: "root" })
 export class MemberLevelService extends BaseApiService<MemberLevel> {
-  constructor(private http: HttpClient, settingService: SettingService) {
+  constructor(  http: HttpClient, settingService: SettingService) {
     super("memberlevel", http, settingService);
   }
 }

@@ -3,7 +3,7 @@ import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { Attachment, Member, MemberService } from "./member.service";
+import { Attachment, Member, MemberAdvancedFilter, MemberService } from "./member.service";
 import { MemberUiService } from "./member-ui.service";
 import { SettingService } from "../../app-setting";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
@@ -17,6 +17,8 @@ import { Observable, Observer } from "rxjs";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { AuthService } from "../../helpers/auth.service";
 import { AuthKeys } from "../../const";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { RoomAdvancedFilter } from "../room/room.service";
 
 @Component({
   selector: "app-member-operation",
@@ -115,7 +117,7 @@ import { AuthKeys } from "../../const";
                                 [autofocus]="true"
                                 nz-input
                                 formControlName="code"
-                                placeholder="{{ 'NewCode' | translate }}"
+                                [placeholder]="frm.controls['code'].disabled ? ('NewCode' | translate) : ''" 
                               />
                             </nz-form-control>
                           </nz-form-item>
@@ -400,9 +402,9 @@ import { AuthKeys } from "../../const";
                                 {{ item.date | date : "yyyy-MM-dd hh:mm a" }}
                               </td>
                               <td nzEllipsis>{{ item.by }}</td>
-                              <td> 
-                                <a 
-                                *ngIf="isMemberEdit()"
+                              <td>
+                                <a
+                                  *ngIf="isMemberEdit()"
                                   nz-button
                                   nzType="link"
                                   nzDanger
@@ -489,6 +491,10 @@ import { AuthKeys } from "../../const";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
+      .ant-upload-list-picture-card-container {
+        margin: 0 !important;
+      }
+
       .photo {
         width: 108px;
         height: auto;
@@ -550,11 +556,12 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     private settingService: SettingService,
     private systemSettingService: SystemSettingService,
     private msg: NzMessageService,
+    private sessionStorageService: SessionStorageService,
     private authService: AuthService
   ) {
     super(fb, ref, service, uiService);
   }
-
+  readonly advancedStoreKey = "member-list-advanced-filter";
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   uploadLoading: boolean = false;
   fileProfile: NzUploadFile[] = [];
@@ -564,20 +571,20 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   customerName = "";
   customerNameEn = "";
   isMemberEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__EDIT)  
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__EDIT)
   );
   isMemberRemove = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE)
-  ); 
+  );
 
   override ngOnInit(): void {
     super.ngOnInit();
     this.initControl();
     this.systemSettingService.find(SETTING_KEY.MemberAutoId).subscribe({
-      next: (value?: string) => {
-        if (value) {
+      next: (value?: string) => { 
+        if (Number(value) !== 0) {
           this.frm.get("code")?.disable();
-        }
+        } 
       },
     });
     if (this.modal?.isView) {
@@ -683,10 +690,10 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   getTime(date: any) {
     return new Date(date).getTime();
   }
- 
-  removeAttachment(i: number) { 
+
+  removeAttachment(i: number) {
     this.attachments.splice(i, 1);
-    this.autoUpload();  
+    this.autoUpload();
   }
 
   handleUploadMember(info: NzUploadChangeParam): void {
@@ -708,7 +715,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     });
     this.fileProfile = fileList;
   }
-
+ 
   override initControl(): void {
     const {
       nameMaxLengthValidator,
@@ -721,7 +728,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     } = CommonValidators;
     this.frm = this.fb.group({
       code: [
-        { value: null, disabled: true },
+        { value: null, disabled: false },
         [required, codeMaxLengthValidator],
         [codeExistValidator(this.service, this.modal?.id)],
       ],
@@ -729,10 +736,10 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       nameEn: [null],
       birthDate: [null],
       sexId: [null, [required]],
-      nationalityId: [0, [required]],
-      memberUnitId: [0],
-      memberGroupId: [0],
-      memberLevelId: [0],
+      nationalityId: [null, [required]],
+      memberUnitId: [null],
+      memberGroupId: [null],
+      memberLevelId: [null],
       idNo: [null, [integerValidator]],
       nssfId: [null],
       phone: [null, [required, multiplePhoneValidator]],
@@ -740,6 +747,16 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       address: [null, [required]],
       note: [null, [noteMaxLengthValidator]],
     });
+    setTimeout(() => {
+      const sessionData: MemberAdvancedFilter = this.sessionStorageService.getValue(this.advancedStoreKey); 
+      if (this.modal?.memberUnitId && this.modal?.memberUnitId !== 0) this.frm.patchValue({ memberUnitId: this.modal.memberUnitId }) 
+      if (this.modal?.memberLevelId && this.modal?.memberLevelId !== 0) this.frm.patchValue({ memberLevelId: this.modal.memberLevelId });
+
+      if (sessionData.memberGroupId && sessionData.memberGroupId !== 0) this.frm.patchValue({ memberGroupId: sessionData.memberGroupId  });
+      if (sessionData.sexId && sessionData.sexId !== 0) this.frm.patchValue({ sexId: sessionData.sexId  });
+      if (sessionData.nationalityId && sessionData.memberGroupId !== 0) this.frm.patchValue({ nationalityId: sessionData.nationalityId  }); 
+      console.log(this.frm.controls['sexId']); 
+    }, 50);
   }
 
   autoUpload() {

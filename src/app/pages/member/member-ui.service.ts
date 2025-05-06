@@ -24,11 +24,12 @@ export class MemberUiService extends BaseUiService {
     );
   }
 
-  override showAdd(groupId?: number, componentId: any = ''): void {
+  override showAdd(memberUnitId?: number, memberLevelId?: number, componentId: any = ''): void {
     this.modalService.create({
       nzContent: MemberOperationComponent,
       nzFooter: null,
       nzClosable: true,
+      nzData: {memberUnitId , memberLevelId},
       nzWidth: '100%',
       nzBodyStyle: { ...this.mainPageService.getModalBodyStyle() },
       nzStyle: this.mainPageService.getModalFullPageSize(),

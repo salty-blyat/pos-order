@@ -63,7 +63,7 @@ import { AuthService } from "../../helpers/auth.service";
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="35%">{{ "Tags" | translate }}</th>
+              <th nzWidth="100px">{{ "Tags" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION" class="col-action"></th>
             </tr>

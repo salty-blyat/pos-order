@@ -33,7 +33,7 @@ import { AuthService } from "../../helpers/auth.service";
               [showAllOption]="true"
               storageKey="member-list-member-level-filter"
               (valueChanged)="
-                unitId.set($event); param().pageIndex = 1; search()
+                memberLevelId.set($event); param().pageIndex = 1; search()
               "
             ></app-member-level-select>
           </div>
@@ -42,7 +42,7 @@ import { AuthService } from "../../helpers/auth.service";
               [showAllOption]="true"
               storageKey="member-list-unit-filter"
               (valueChanged)="
-                memberLevelId.set($event); param().pageIndex = 1; search()
+                memberUnitId.set($event); param().pageIndex = 1; search()
               "
             ></app-member-unit-select>
           </div>
@@ -72,7 +72,7 @@ import { AuthService } from "../../helpers/auth.service";
             *ngIf="isMemberAdd()"
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd()"
+            (click)="uiService.showAdd(memberUnitId(), memberLevelId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Add" | translate }}
@@ -208,7 +208,7 @@ export class MemberListComponent extends BaseListComponent<Member> {
     super(service, uiService, sessionStorageService, "member-list");
   }
   readonly advancedStoreKey = "member-list-advanced-filter";
-  unitId = signal<number>(0);
+  memberUnitId = signal<number>(0);
   memberLevelId = signal<number>(0);
   hasAdvancedFilter = signal<boolean>(false);
   sexId = signal<number>(0);
@@ -230,9 +230,9 @@ export class MemberListComponent extends BaseListComponent<Member> {
   );
 
   override ngOnInit() {
-    this.refreshSub = this.uiService.refresher.subscribe((result) => {
+    this.uiService.refresher.subscribe((result) => {
       if (result.key === "advanced-filter-member") {
-        this.setAdvancedFilter(result.value);
+        this.setAdvancedFilter(result.value); 
       }
       this.getAdvancedFilter();
       this.search();
@@ -261,8 +261,9 @@ export class MemberListComponent extends BaseListComponent<Member> {
   getAdvancedFilter() {
     const advancedFilter: RoomAdvancedFilter =
       this.sessionStorageService.getValue(this.advancedStoreKey);
-    this.hasAdvancedFilter.set(advancedFilter?.isAdvancedFilter ?? false);
+    this.hasAdvancedFilter.set(advancedFilter?.isAdvancedFilter ?? false); 
   }
+
   setAdvancedFilter(advancedFilter: MemberAdvancedFilter) {
     this.sexId.set(advancedFilter.sexId);
     this.memberGroupId.set(advancedFilter.memberGroupId);
@@ -271,11 +272,11 @@ export class MemberListComponent extends BaseListComponent<Member> {
 
   override search() {
     let filters: Filter[] = [];
-    if (this.unitId()) {
+    if (this.memberUnitId()) {
       filters.push({
-        field: "unitId",
+        field: "memberUnitId",
         operator: "eq",
-        value: this.unitId(),
+        value: this.memberUnitId(),
       });
     }
     if (this.memberLevelId()) {

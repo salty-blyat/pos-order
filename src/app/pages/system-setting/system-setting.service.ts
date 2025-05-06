@@ -1,8 +1,5 @@
 import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-  HttpParams,
+  HttpClient
 } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
@@ -10,7 +7,7 @@ import { SettingService } from "../../app-setting";
 import { map } from "rxjs/operators";
 import { LocalStorageService } from "../../utils/services/localStorage.service";
 import { CurrencyService } from "../currency/currency.service";
-import { SharedVar } from "../../utils/services/logic-helper.service";
+
 export interface CurrentProfile {
   name?: string;
   url?: string;
