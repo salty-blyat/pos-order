@@ -21,13 +21,7 @@ import { TranslateService } from "@ngx-translate/core";
                               storageKey="room-charge-list-search"
                               (filterChanged)="searchText.set($event); param().pageIndex = 1; search()"
                       ></app-filter-input>
-                  </div>
-                  <div nz-col>
-                      <app-date-range-input
-                              storageKey="room-member-filter-date"
-                              (valueChanged)="startDate.set($event); param().pageIndex = 1; search()"
-                      ></app-date-range-input>
-                  </div>
+                  </div> 
                   <div nz-col>
                       <app-charge-select
                               [showAllOption]="true"

@@ -26,10 +26,7 @@ import { AuthKeys } from "../../const";
       }}</span>
     </div>
     <div class="modal-content">
-      <nz-spin
-        *ngIf="isLoading()"
-        style="position: absolute; top: 50%; left: 50%"
-      ></nz-spin>
+      <app-loading *ngIf="isLoading()"></app-loading>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>

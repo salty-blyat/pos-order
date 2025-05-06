@@ -1,8 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from "@angular/core";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
 import { FormBuilder } from "@angular/forms";
-import { NzModalRef } from "ng-zorro-antd/modal";
-import { CommonValidators } from "../../utils/services/common-validators"; 
+import { NzModalRef } from "ng-zorro-antd/modal"; 
 import { Charge, ChargeService } from "./charge.service";
 import { ChargeUiService } from "./charge-ui.service";
 
@@ -15,8 +14,8 @@ import { ChargeUiService } from "./charge-ui.service";
         </div>
         <div class="modal-content">
             <app-loading *ngIf="isLoading()" />
-            <div *ngIf="errMessage() && !isLoading()" nz-row nzJustify="center" style="margin:2px 0">
-                <span nz-typography nzType="danger" style="position: absolute">{{ errMessage() | translate }}</span>
+            <div *ngIf="errMessage() && !isLoading()" class="delete-error-message ">
+                <span nz-typography nzType="danger">{{ errMessage() | translate }}</span>
             </div>
             <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
                 <nz-form-item>

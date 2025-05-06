@@ -61,11 +61,11 @@ import { AuthService } from "../../helpers/auth.service";
           </ng-template>
           <thead>
             <tr>
-              <th class="col-header col-rowno">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th nzWidth="35%">{{ "Tags" | translate }}</th>
-              <th>{{ "Note" | translate }}</th>
-              <th class="col-action"></th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION" class="col-action"></th>
             </tr>
           </thead>
           <tbody>
@@ -88,7 +88,7 @@ import { AuthService } from "../../helpers/auth.service";
                 }
               </td>
               <td>
-                <div class="show-tag">
+                <div>
                   <nz-tag *ngFor="let tag of data.tags; let last = last"
                     >{{ tag.name }}{{ last ? "" : " " }}</nz-tag
                   >
@@ -152,10 +152,18 @@ export class TagGroupListComponent extends BaseListComponent<TagGroup> {
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
 
-  isTagGroupAdd = computed(() =>this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__ADD));
-  isTagGroupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__EDIT) );
-  isTagGroupRemove = computed(() =>this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__REMOVE));
-  isTagGroupView = computed(() =>this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__VIEW));
+  isTagGroupAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__ADD)
+  );
+  isTagGroupEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__EDIT)
+  );
+  isTagGroupRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__REMOVE)
+  );
+  isTagGroupView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__VIEW)
+  );
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

@@ -22,7 +22,7 @@ import { AuthKeys } from "../../const";
 
       <div class="modal-content">
           <app-loading *ngIf="isLoading()"></app-loading>
-          <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips" class="form-content">
+          <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips" class="form-content" >
               <nz-tabset style="height:100%">
                   <nz-tab [nzTitle]="tagGroup">
                       <ng-template #tagGroup><span nz-icon nzType="file-done"></span> {{ "General" | translate }}
