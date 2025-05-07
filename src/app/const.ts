@@ -112,6 +112,7 @@ export const SIZE_COLUMNS = {
   GENDER: "100px",
   NORMAL: "12%",
   FORMAT: "150px",
+  COLOR: "100px", 
 };
 export const AuthKeys = {
   APP : 37000,

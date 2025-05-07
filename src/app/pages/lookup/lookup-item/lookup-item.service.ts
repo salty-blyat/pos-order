@@ -1,9 +1,7 @@
-import { Inject, Injectable } from '@angular/core';
-import { BaseApiService } from '../../../utils/services/base-api.service';
-import { HttpClient } from '@angular/common/http';
-import { SettingService } from '../../../app-setting';
-
-
+import { Inject, Injectable } from "@angular/core";
+import { BaseApiService } from "../../../utils/services/base-api.service";
+import { HttpClient } from "@angular/common/http";
+import { SettingService } from "../../../app-setting";
 
 export interface LookupItem {
   id?: number;
@@ -11,10 +9,11 @@ export interface LookupItem {
   lookupTypeId?: number;
   name?: string;
   nameEn?: string;
-  image?: Image;
+  image?: string;
   color?: string;
   ordering?: number;
   note?: string;
+  canRemove?: boolean;
 }
 
 export interface Image {
@@ -24,9 +23,9 @@ export interface Image {
   type?: string;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class LookupItemService extends BaseApiService<any> {
   constructor(private http: HttpClient, settingService: SettingService) {
-    super('lookupitem', http, settingService);
+    super("lookupitem", http, settingService);
   }
 }

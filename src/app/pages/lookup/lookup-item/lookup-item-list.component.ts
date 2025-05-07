@@ -1,4 +1,10 @@
-import { Component, computed, signal, ViewChild, ViewEncapsulation } from "@angular/core";
+import {
+  Component,
+  computed,
+  signal,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
 import { LookupItemUiService } from "./lookup-item-ui.service";
 import { ActivatedRoute } from "@angular/router";
 import { LookupItem, LookupItemService } from "./lookup-item.service";
@@ -24,13 +30,24 @@ import { AuthService } from "../../../helpers/auth.service";
             >
             </app-filter-input>
           </div>
+          <div *ngIf="draged()">
+            <button
+              style="width: 100%"
+              nz-button
+              nzType="primary"
+              (click)="saveOrdering()"
+              [nzLoading]="isLoading()"
+            >
+              {{ "Save" | translate }}
+            </button>
+          </div>
         </div>
         <div>
           <button
             *ngIf="isLookupAdd()"
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd('',lookupTypeId())"
+            (click)="uiService.showAdd('', lookupTypeId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Add" | translate }}
@@ -58,23 +75,41 @@ import { AuthService } from "../../../helpers/auth.service";
           </ng-template>
           <thead>
             <tr>
-              <th nzWidth="30px">#</th>
-              <th nzEllipsis nzWidth="80px" nzAlign="center">
+              <th [nzWidth]="SIZE_COLUMNS.DRAG" ></th>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.IMAGE" nzAlign="center">
                 {{ "Image" | translate }}
               </th>
-              <th nzEllipsis nzWidth="20%">
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
                 {{ "Name" | translate }}
               </th>
-              <th nzEllipsis nzWidth="20%">
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
                 {{ "NameEn" | translate }}
               </th>
-              <th nzEllipsis>{{ "Color" | translate }}</th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.COLOR">
+                {{ "Color" | translate }}
+              </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
-          <tbody>
-            <tr *ngFor="let data of lists(); let i = index">
-              <td nzEllipsis>
+          <tbody
+            cdkDropList
+            cdkDropListLockAxis="y"
+            (cdkDropListDropped)="drop($event)"
+            [cdkDropListData]="lists()"
+          >
+            <tr cdkDrag *ngFor="let data of lists(); let i = index">
+              <td nzEllipsis style="flex:0.5">
+                <span
+                  class="drag-handle"
+                  nz-icon
+                  nzType="holder"
+                  nzTheme="outline"
+                  cdkDragHandle
+                ></span>
+              </td>
+
+              <td nzEllipsis style="flex:0.25">
                 {{
                   i
                     | rowNumber
@@ -84,12 +119,12 @@ import { AuthService } from "../../../helpers/auth.service";
                         }
                 }}
               </td>
-              <td nzEllipsis class="image" nzAlign="center">
+              <td nzEllipsis class="image" style="flex:0.5" nzAlign="center">
                 <img
                   *ngIf="data.image"
                   class="image-list"
                   height="42"
-                  [src]="data.image.url"
+                  [src]="data.image"
                   alt=""
                 />
                 <img
@@ -100,7 +135,7 @@ import { AuthService } from "../../../helpers/auth.service";
                   alt=""
                 />
               </td>
-              <td nzEllipsis>
+              <td nzEllipsis style="flex:2">
                 <a
                   *ngIf="isLookupView()"
                   (click)="uiService.showView(data.id!)"
@@ -108,17 +143,17 @@ import { AuthService } from "../../../helpers/auth.service";
                 >
                 <span *ngIf="!isLookupView()">{{ data.name }}</span>
               </td>
-              <td nzEllipsis>{{ data.nameEn }}</td>
-              <td nzEllipsis>
+              <td nzEllipsis style="flex:2">{{ data.nameEn }}</td>
+              <td nzEllipsis style="flex:1">
                 <div nz-flex>
                   <div
                     [ngStyle]="{ backgroundColor: data.color ?? 'white' }"
                     class="color-box"
                   ></div>
-                  <span>{{ data.color ?? "" }}</span>
+                  <span>{{ data.color | transparent }}</span>
                 </div>
-              </td>
-              <td class="col-action">
+              </td> 
+              <td class="col-action" style="flex:1">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
@@ -188,10 +223,18 @@ export class LookupItemListComponent extends BaseListComponent<LookupItem> {
 
   lookupTypeId = signal<number>(0);
   loading = true;
-  isLookupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__ADD));
-  isLookupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__EDIT));
-  isLookupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__REMOVE));
-  isLookupView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__VIEW));
+  isLookupAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__ADD)
+  );
+  isLookupEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__EDIT)
+  );
+  isLookupRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__REMOVE)
+  );
+  isLookupView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__VIEW)
+  );
 
   override ngOnInit(): void {
     super.ngOnInit();

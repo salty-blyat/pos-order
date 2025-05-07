@@ -151,6 +151,9 @@ import { MemberGroupPullComponent } from "./pages/member-group/member-group-pull
 import { MemberLevelPullComponent } from "./pages/member-level/member-level-pull.component";
 import { ItemSelectComponent } from "./pages/item/item-select.component";
 import { MemberSelectComponent } from "./pages/member/member-select.component";
+import {
+  TransparentPipe
+} from "./utils/pipes/transparent.pipe";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -193,6 +196,7 @@ export class CustomTranslate implements TranslateLoader {
     AutofocusDirective,
     CurrencyInputDirective,
     AttendanceRatedPipe,
+    TransparentPipe,
     ChunkPipe,
     ConvertHourPipe,
     CustomDatePipe,
@@ -281,7 +285,6 @@ export class CustomTranslate implements TranslateLoader {
     FloorOperationComponent,
     FloorDeleteComponent,
     FloorSelectComponent,
- 
 
     //tag
     TagGroupListComponent,
@@ -322,13 +325,13 @@ export class CustomTranslate implements TranslateLoader {
     MemberUnitDeleteComponent,
     MemberUnitSelectComponent,
     MemberUnitPullComponent,
- 
+
     // Group
     MemberGroupListComponent,
     MemberGroupOperationComponent,
     MemberGroupDeleteComponent,
     MemberGroupSelectComponent,
-    MemberGroupPullComponent, 
+    MemberGroupPullComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -392,6 +395,7 @@ export class CustomTranslate implements TranslateLoader {
     },
     DecimalPipe,
     CurrencyPipe,
+    TransparentPipe,
     provideHttpClient(withInterceptorsFromDi()),
   ],
 })

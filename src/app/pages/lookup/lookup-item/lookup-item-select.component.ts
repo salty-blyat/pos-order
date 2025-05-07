@@ -43,7 +43,7 @@ import { AuthKeys } from "../../../const";
         >
           <div class="option-container">
             <div class="image-container" *ngIf="item.image">
-              <img *ngIf="item.image" [src]="item.image.url" alt="" />
+              <img *ngIf="item.image" [src]="item.image" alt="" />
             </div>
             <span [ngStyle]="{ color: item.color ?? '#000000D9' }" class="option-text">
               {{ (this.translate.currentLang === "km" ? item.name || item.nameEn : item.nameEn || item.name) || "" }}
@@ -60,7 +60,7 @@ import { AuthKeys } from "../../../const";
         >
           <div class="option-container">
             <div class="image-container">
-              <img *ngIf="item.image" [src]="item.image.url" alt="" />
+              <img *ngIf="item.image" [src]="item.image" alt="" />
               <img *ngIf="!item.image" src="./assets/image/img-not-found.jpg" alt="" />
             </div>
             <span [ngStyle]="{ color: item.color ?? '#000000D9' }" class="option-text">

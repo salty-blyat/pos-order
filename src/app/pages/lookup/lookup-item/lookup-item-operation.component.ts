@@ -1,127 +1,173 @@
-import {Component,computed,ViewEncapsulation} from "@angular/core";
-import {NzModalRef} from "ng-zorro-antd/modal";
-import {FormBuilder} from "@angular/forms";
-import {CommonValidators, control} from "../../../utils/services/common-validators";
-import {Image, LookupItem, LookupItemService} from "./lookup-item.service";
-import {LookupItemUiService} from "./lookup-item-ui.service";
-import {AuthService} from "../../../helpers/auth.service";
-import {NzUploadChangeParam, NzUploadFile} from "ng-zorro-antd/upload";
-import {SettingService} from "../../../app-setting";
-import {BaseOperationComponent} from "../../../utils/components/base-operation.component";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
+import { NzModalRef } from "ng-zorro-antd/modal";
+import { FormBuilder } from "@angular/forms";
+import {
+  CommonValidators,
+  control,
+} from "../../../utils/services/common-validators";
+import { Image, LookupItem, LookupItemService } from "./lookup-item.service";
+import { LookupItemUiService } from "./lookup-item-ui.service";
+import { AuthService } from "../../../helpers/auth.service";
+import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
+import { SettingService } from "../../../app-setting";
+import { BaseOperationComponent } from "../../../utils/components/base-operation.component";
 import { AuthKeys } from "../../../const";
 
 @Component({
   selector: "app-lookup-item-operation",
   template: `
-      <div *nzModalTitle class="modal-header-ellipsis">
-          <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
-          <span *ngIf="modal?.id && !modal?.isView">{{ "Edit" | translate }} {{ model?.name || ("loading" | translate) }}</span>
-          <span *ngIf="modal?.id && modal?.isView">{{ model?.name || ("loading" | translate) }}</span>
-      </div>
-      <div class="modal-content">
-          <app-loading *ngIf="isLoading()"></app-loading>
-          <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
-              <div nz-row>
-                  <div nz-col [nzSpan]="14">
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="7" nzRequired>{{ "Name" | translate }}</nz-form-label>
-                          <nz-form-control nzHasFeedback>
-                              <input *ngIf="modal?.id" nz-input formControlName="name"/>
-                              <input *ngIf="!modal?.id" [autofocus]="true" nz-input formControlName="name"/>
-                          </nz-form-control>
-                      </nz-form-item>
+    <div *nzModalTitle class="modal-header-ellipsis">
+      <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
+      <span *ngIf="modal?.id && !modal?.isView"
+        >{{ "Edit" | translate }}
+        {{ model?.name || ("loading" | translate) }}</span
+      >
+      <span *ngIf="modal?.id && modal?.isView">{{
+        model?.name || ("loading" | translate)
+      }}</span>
+    </div>
+    <div class="modal-content">
+      <app-loading *ngIf="isLoading()"></app-loading>
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
+        <div nz-row>
+          <div nz-col [nzSpan]="14">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired>{{
+                "Name" | translate
+              }}</nz-form-label>
+              <nz-form-control nzHasFeedback>
+                <input *ngIf="modal?.id" nz-input formControlName="name" />
+                <input
+                  *ngIf="!modal?.id"
+                  [autofocus]="true"
+                  nz-input
+                  formControlName="name"
+                />
+              </nz-form-control>
+            </nz-form-item>
 
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="7" nzRequired>{{ "NameEn" | translate }}</nz-form-label>
-                          <nz-form-control nzHasFeedback>
-                              <input nz-input formControlName="nameEn"/>
-                          </nz-form-control>
-                      </nz-form-item>
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="7">{{ "Note" | translate }}</nz-form-label>
-                          <nz-form-control>
-                              <textarea nz-input rows="3" formControlName="note" style="width: 100%;"></textarea>
-                          </nz-form-control>
-                      </nz-form-item>
-                  </div>
-                  <div nz-col [nzSpan]="8" nzOffset="2">
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="7">{{ "Image" | translate }}</nz-form-label>
-                          <nz-form-control>
-                              <nz-upload
-                                      *ngIf="!modal?.isView"
-                                      [nzAction]="uploadUrl"
-                                      nzListType="picture-card"
-                                      [(nzFileList)]="file"
-                                      (nzChange)="handleUploadLookupItem($event)"
-                                      [nzShowUploadList]="nzShowIconList"
-                                      [nzShowButton]="file.length < 1"
-                              >
-                                  <div>
-                                      <span nz-icon nzType="plus"></span>
-                                      <div class="upload-text">{{ "Upload" | translate }}</div>
-                                  </div>
-                              </nz-upload>
-                              <nz-upload
-                                      *ngIf="modal?.isView"
-                                      profile
-                                      [nzAction]="uploadUrl"
-                                      nzListType="picture-card"
-                                      [(nzFileList)]="file"
-                                      (nzChange)="handleUploadLookupItem($event)"
-                                      [nzShowButton]="file.length < 1"
-                                      [nzShowUploadList]="nzShowUploadList"
-                                      [nzDisabled]="true"
-                              >
-                                  <div>
-                                      <span nz-icon nzType="plus"></span>
-                                      <div class="upload-text">{{ "Upload" | translate }}</div>
-                                  </div>
-                              </nz-upload>
-                          </nz-form-control>
-                      </nz-form-item>
-                      <nz-form-item>
-                          <nz-form-label [nzSpan]="7">{{ "Color" | translate }}</nz-form-label>
-                          <nz-form-control>
-                              <nz-color-picker formControlName="color" nzShowText></nz-color-picker>
-                          </nz-form-control>
-                      </nz-form-item>
-                  </div>
-              </div>
-          </form>
-      </div>
-      <div *nzModalFooter>
-          <div *ngIf="!modal?.isView">
-              <button nz-button nzType="primary" [disabled]="!frm.valid || isLoading()" (click)="onSubmit($event)">
-                  <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
-                  {{ "Save" | translate }}
-              </button>
-              <button nz-button nzType="default" (click)="cancel()">
-                  {{ "Cancel" | translate }}
-              </button>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired>{{
+                "NameEn" | translate
+              }}</nz-form-label>
+              <nz-form-control nzHasFeedback>
+                <input nz-input formControlName="nameEn" />
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="7">{{
+                "Note" | translate
+              }}</nz-form-label>
+              <nz-form-control>
+                <textarea
+                  nz-input
+                  rows="3"
+                  formControlName="note"
+                  style="width: 100%;"
+                ></textarea>
+              </nz-form-control>
+            </nz-form-item>
           </div>
-          <div *ngIf="modal?.isView">
-              <a (click)="uiService.showEdit(model.id || 0)" *ngIf="!isLoading() && isLookupEdit()">
-                  <i nz-icon nzType="edit" nzTheme="outline"></i>
-                  <span class="action-text"> {{ "Edit" | translate }}</span>
-              </a>
-              <nz-divider nzType="vertical" *ngIf="!isLoading() && isLookupEdit()"></nz-divider>
-              <a
-                      nz-typography
-                      nzType="danger"
-                      (click)="uiService.showDelete(model.id || 0)"
-                      *ngIf="!isLoading() && isLookupRemove()"
-              >
-                  <i nz-icon nzType="delete" nzTheme="outline"></i>
-                  <span class="action-text"> {{ "Delete" | translate }}</span>
-              </a>
-              <nz-divider nzType="vertical" *ngIf="!isLoading() && isLookupRemove()"></nz-divider>
-              <a nz-typography (click)="cancel()" style="color: gray;">
-                  <i nz-icon nzType="close" nzTheme="outline"></i>
-                  <span class="action-text"> {{ "Close" | translate }}</span>
-              </a>
+          <div nz-col [nzSpan]="8" nzOffset="2">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="7">{{
+                "Image" | translate
+              }}</nz-form-label>
+              <nz-form-control>
+                <nz-upload
+                  *ngIf="!modal?.isView"
+                  [nzAction]="uploadUrl"
+                  nzListType="picture-card"
+                  [(nzFileList)]="file"
+                  (nzChange)="handleUploadLookupItem($event)"
+                  [nzShowUploadList]="nzShowIconList"
+                  [nzShowButton]="file.length < 1"
+                >
+                  <div>
+                    <span nz-icon nzType="plus"></span>
+                    <div class="upload-text">{{ "Upload" | translate }}</div>
+                  </div>
+                </nz-upload>
+                <nz-upload
+                  *ngIf="modal?.isView"
+                  profile
+                  [nzAction]="uploadUrl"
+                  nzListType="picture-card"
+                  [(nzFileList)]="file"
+                  (nzChange)="handleUploadLookupItem($event)"
+                  [nzShowButton]="file.length < 1"
+                  [nzShowUploadList]="nzShowUploadList"
+                  [nzDisabled]="true"
+                >
+                  <div>
+                    <span nz-icon nzType="plus"></span>
+                    <div class="upload-text">{{ "Upload" | translate }}</div>
+                  </div>
+                </nz-upload>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzSpan]="7">{{
+                "Color" | translate
+              }}</nz-form-label>
+              <nz-form-control>
+                <nz-color-picker
+                  nzAllowClear
+                  formControlName="color"
+                  nzShowText
+                ></nz-color-picker>
+              </nz-form-control>
+            </nz-form-item>
           </div>
+        </div>
+      </form>
+    </div>
+    <div *nzModalFooter>
+      <div *ngIf="!modal?.isView">
+        <button
+          nz-button
+          nzType="primary"
+          [disabled]="!frm.valid || isLoading()"
+          (click)="onSubmit($event)"
+        >
+          <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
+          {{ "Save" | translate }}
+        </button>
+        <button nz-button nzType="default" (click)="cancel()">
+          {{ "Cancel" | translate }}
+        </button>
       </div>
+      <div *ngIf="modal?.isView">
+        <a
+          (click)="uiService.showEdit(model.id || 0)"
+          *ngIf="!isLoading() && isLookupEdit()"
+        >
+          <i nz-icon nzType="edit" nzTheme="outline"></i>
+          <span class="action-text"> {{ "Edit" | translate }}</span>
+        </a>
+        <nz-divider
+          nzType="vertical"
+          *ngIf="!isLoading() && isLookupEdit()"
+        ></nz-divider>
+        <a
+          nz-typography
+          nzType="danger"
+          (click)="uiService.showDelete(model.id || 0)"
+          *ngIf="!isLoading() && isLookupRemove()"
+        >
+          <i nz-icon nzType="delete" nzTheme="outline"></i>
+          <span class="action-text"> {{ "Delete" | translate }}</span>
+        </a>
+        <nz-divider
+          nzType="vertical"
+          *ngIf="!isLoading() && isLookupRemove()"
+        ></nz-divider>
+        <a nz-typography (click)="cancel()" style="color: gray;">
+          <i nz-icon nzType="close" nzTheme="outline"></i>
+          <span class="action-text"> {{ "Close" | translate }}</span>
+        </a>
+      </div>
+    </div>
   `,
   styles: [
     `
@@ -140,12 +186,11 @@ import { AuthKeys } from "../../../const";
         height: 100%;
         object-fit: contain;
       }
-
     `,
   ],
   styleUrls: ["../../../../assets/scss/operation.style.scss"],
   standalone: false,
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class LookupItemOperationComponent extends BaseOperationComponent<LookupItem> {
   constructor(
@@ -159,12 +204,15 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     super(fb, ref, service, uiService);
   }
 
-  isLookupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__EDIT));
-  isLookupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__REMOVE));
- 
+  isLookupEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__EDIT)
+  );
+  isLookupRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__REMOVE)
+  );
+
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
-  image!: Image;
   nzShowUploadList = {
     showPreviewIcon: true,
     showRemoveIcon: false,
@@ -176,21 +224,39 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
   };
 
   override initControl(): void {
-    const {nameMaxLengthValidator, nameExistValidator, required, noteMaxLengthValidator} = CommonValidators;
-    console.log(this.modal?.lookupTypeId);
-    
+    const {
+      nameMaxLengthValidator,
+      nameExistValidator,
+      required,
+      noteMaxLengthValidator,
+    } = CommonValidators; 
+
     this.frm = this.fb.group({
       lookupTypeId: [this.modal?.lookupTypeId],
       image: [null],
       name: [
         null,
         [required, nameMaxLengthValidator],
-        [nameExistValidator(this.service, this.modal?.id, control.name, this.modal?.lookupTypeId)],
+        [
+          nameExistValidator(
+            this.service,
+            this.modal?.id,
+            control.name,
+            this.modal?.lookupTypeId
+          ),
+        ],
       ],
       nameEn: [
         null,
         [required, nameMaxLengthValidator],
-        [nameExistValidator(this.service, this.modal?.id, control.nameEn, this.modal?.lookupTypeId)],
+        [
+          nameExistValidator(
+            this.service,
+            this.modal?.id,
+            control.nameEn,
+            this.modal?.lookupTypeId
+          ),
+        ],
       ],
       ordering: [0],
       color: [null],
@@ -215,18 +281,21 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     });
     this.file = fileListLookupItems;
   }
-
-  override onSubmit(e: any): void {
-    if (this.frm.valid) { 
+  override onSubmit(e: any): void { 
+    if (this.frm.valid) {
       this.isLoading.set(true);
-      this.file.map((item) => {
-        this.image = {uid: item.uid, url: item.url!, name: item.name!, type: item.type!};
+
+      let operation$ = this.service.add({
+        ...this.frm.value,
+        image: this.file[0].response.url,
       });
 
-      let operation$ = this.service.add({...this.frm.value, image: this.image});
-      
       if (this.model?.id) {
-        operation$ = this.service.edit({...this.frm.value, id: this.model?.id, image: this.image});
+        operation$ = this.service.edit({
+          ...this.frm.value,
+          id: this.model?.id,
+          image: this.file[0].response.url,
+        });
       }
       if (e.detail === 1 || e.detail === 0) {
         operation$.subscribe({
@@ -240,27 +309,36 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
             console.log(err);
           },
           complete: () => {
-            this.isLoading.set(false)
-          }
+            this.isLoading.set(false);
+          },
         });
       }
     }
   }
 
   override setFormValue() {
-    this.frm.patchValue({
+    this.frm.setValue({
       lookupTypeId: this.model?.lookupTypeId,
       name: this.model.name,
       nameEn: this.model.nameEn,
       ordering: this.model.ordering,
+      image: this.model.image,
       color: this.model.color,
       note: this.model.note,
     });
 
-    const imageUrl = this.model.image?.url;
+    const imageUrl = this.model.image;
 
     if (imageUrl) {
-      this.file = [this.model.image as NzUploadFile];
+      this.file = [
+        {
+          uid: "1",
+          name: "preview",
+          status: "done",
+          url: this.model.image,
+          response: { url: this.model.image },
+        },
+      ];
     }
   }
 }

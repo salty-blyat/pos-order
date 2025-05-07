@@ -28,7 +28,7 @@ export class BaseOperationComponent<T extends SharedDomain> implements OnInit , 
   autoTips: Record<any, any> = CommonValidators.autoTips;
   refreshSub$: any;
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     if (this.isLoading()) return;
     this.initControl();
     if (this.modal?.isView) {
@@ -37,7 +37,7 @@ export class BaseOperationComponent<T extends SharedDomain> implements OnInit , 
         if (e.key === 'edited') {
           this.isLoading.set(true);
           this.service.find(this.modal?.id).subscribe({
-            next: (result: T) => {
+            next: (result: T) => { 
               this.model = result;
               this.setFormValue();
               this.isLoading.set(false);
