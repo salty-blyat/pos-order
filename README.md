@@ -1,3 +1,3 @@
-# pbs-ui
+# vip-ui
 
-Basic PBS UI
+Basic VIP UI
