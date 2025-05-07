@@ -90,9 +90,9 @@ export class SettingComponent implements OnInit {
     this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING__VIEW) ||
     this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER__VIEW) ||
     this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__OTHER_APP__VIEW) 
-
-);
-
+  ); 
+  isLocationList = computed(() => true );
+  isBranchList = computed(() => true );
   ngOnInit(): void {
     this.setting = [
       {
@@ -109,24 +109,13 @@ export class SettingComponent implements OnInit {
             url: `${this.urlPart}/currency`,
             label: "Currency",
             isList: this.isCurrencyList(),
-          },
-          {
-            icon: "container",
-            url: `${this.urlPart}/tag`,
-            label: "Tag",
-            isList: this.isTagsList(),
-          },
+          }, 
         ],
       },
       {
         groupName: "MemberUnit",
         subName: [
-          {
-            icon: "container",
-            url: `${this.urlPart}/member-unit`,
-            label: "MemberUnit",
-            isList: this.isMemberUnitList(),
-          },
+          
           {
             icon: "container",
             url: `${this.urlPart}/member-group`,
@@ -142,58 +131,22 @@ export class SettingComponent implements OnInit {
         ],
       },
       {
-        groupName: "Block",
+        groupName: "Location",
         subName: [
           {
             icon: "container",
-            url: `${this.urlPart}/block`,
+            url: `${this.urlPart}/location`,
             label: "Block",
-            isList: this.isBlockList(),
+            isList: this.isLocationList(),
           },
           {
             icon: "container",
-            url: `${this.urlPart}/room-type`,
-            label: "RoomType",
-            isList: this.isRoomTypeList(),
-          },
-          {
-            icon: "container",
-            url: `${this.urlPart}/unit`,
-            label: "Unit",
-            isList: this.isUnitList(),
-          },
-          {
-            icon: "container",
-            url: `${this.urlPart}/item-type`,
-            label: "ItemType",
-            isList: this.isItemTypeList(),
-          },
-          {
-            icon: "container",
-            url: `${this.urlPart}/item`,
-            label: "Item",
-            isList: this.isItemList(),
-          },
-          {
-            icon: "container",
-            url: `${this.urlPart}/charge`,
-            label: "Charge",
-            isList: this.isChargeList(),
-          },
+            url: `${this.urlPart}/branch`,
+            label: "Branch",
+            isList: this.isBranchList(),
+          }, 
         ],
-      },
-      // {
-      //   groupName: "Charge",
-      //   subName: [
-      //     // {
-      //     //   icon: "container",
-      //     //   url: `${this.urlPart}/room-charge`,
-      //     //   label: "RoomCharge",
-      //     //   isList: this.isRoomCharge(),
-      //     // },
-      //
-      //   ]
-      // },
+      }, 
       {
         groupName: "SystemSetting",
         subName: [

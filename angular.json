@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "pbs-ui": {
+    "vip-ui": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -24,7 +24,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/pbs-ui",
+            "outputPath": "dist/vip-ui",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -50,7 +50,7 @@
               "node_modules/highlight.js/styles/default.css"
             ],
             "scripts": [],
-            "baseHref": "/pbs/"
+            "baseHref": "/vip/"
           },
           "configurations": {
             "production": {
@@ -80,10 +80,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "pbs-ui:build:production"
+              "buildTarget": "vip-ui:build:production"
             },
             "development": {
-              "buildTarget": "pbs-ui:build:development"
+              "buildTarget": "vip-ui:build:development"
             }
           },
           "options": {
@@ -94,7 +94,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "pbs-ui:build"
+            "buildTarget": "vip-ui:build"
           }
         },
         "test": {

@@ -5,8 +5,7 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { MemberUiService } from "./member-ui.service";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { TranslateService } from "@ngx-translate/core";
-import { Filter } from "../../utils/services/base-api.service";
-import { RoomAdvancedFilter } from "../room/room.service";
+import { Filter } from "../../utils/services/base-api.service"; 
 import {
   SETTING_KEY,
   SystemSetting,
@@ -227,43 +226,8 @@ export class MemberListComponent extends BaseListComponent<Member> {
   );
   isMemberView = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW)
-  );
-
-  override ngOnInit() {
-    this.uiService.refresher.subscribe((result) => {
-      if (result.key === "advanced-filter-member") {
-        this.setAdvancedFilter(result.value); 
-      }
-      this.getAdvancedFilter();
-      this.search();
-    });
-    this.getAdvancedFilter();
-    if (this.hasAdvancedFilter()) {
-      this.setAdvancedFilter(
-        this.sessionStorageService.getValue(this.advancedStoreKey)
-      );
-    }
-
-    this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
-      next: (value?: string) => {
-        value === "true"
-          ? this.pavrEnable.set(true)
-          : this.pavrEnable.set(false);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
-
-    super.ngOnInit();
-  }
-
-  getAdvancedFilter() {
-    const advancedFilter: RoomAdvancedFilter =
-      this.sessionStorageService.getValue(this.advancedStoreKey);
-    this.hasAdvancedFilter.set(advancedFilter?.isAdvancedFilter ?? false); 
-  }
-
+  ); 
+ 
   setAdvancedFilter(advancedFilter: MemberAdvancedFilter) {
     this.sexId.set(advancedFilter.sexId);
     this.memberGroupId.set(advancedFilter.memberGroupId);

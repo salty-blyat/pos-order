@@ -1,14 +1,14 @@
 version: "3.2"
 services:
   ui-ctn:
-    image: dkr.sgx.bz/pbs-ui
+    image: dkr.sgx.bz/vip-ui
     restart: always
     ports:
       - "60344:80"
     environment:
-      - "LANG_URL=https://core.sgx.bz/files/langs/pbs"
-      - "BASE_API_URL=https://latest.sgx.bz/pbs/api"
+      - "LANG_URL=https://core.sgx.bz/files/langs/vip"
+      - "BASE_API_URL=https://latest.sgx.bz/vip/api"
       - "AUTH_API_URL=https://core.sgx.bz/api"
       - "AUTH_UI_URL=https://core.sgx.bz"
-      - "APP_NAME=PBS"
+      - "APP_NAME=VIP"
       - "APP_ICON=https://core.sgx.bz/files/23/01/dt-logo-removebg-preview.png"

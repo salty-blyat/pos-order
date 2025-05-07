@@ -105,10 +105,6 @@ import { ReportGroupMenuComponent } from "./pages/report-group/report-group-menu
 import { BlockListComponent } from "./pages/block/block-list.component";
 import { BlockOperationComponent } from "./pages/block/block-operation.component";
 import { FloorListComponent } from "./pages/floor/floor-list.component";
-import { RoomTypeDeleteComponent } from "./pages/room-type/room-type-delete.component";
-import { RoomDeleteComponent } from "./pages/room/room-delete.component";
-import { RoomListComponent } from "./pages/room/room-list.component";
-import { RoomTypeSelectComponent } from "./pages/room-type/room-type-select.component";
 import { BlockDeleteComponent } from "./pages/block/block-delete.component";
 import { BlockSelectComponent } from "./pages/block/block-select.component";
 import { FloorOperationComponent } from "./pages/floor/floor-operation.component";
@@ -120,11 +116,7 @@ import { TagGroupDeleteComponent } from "./pages/tag/tag-group-delete.component"
 import { TagMultiSelectComponent } from "./pages/tag/tag-multi-select.component";
 import { CalendarModule, DateAdapter } from "angular-calendar";
 import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
-import { RoomAdvancedFilterComponent } from "./pages/room/room-advanced-filter.component";
 import { DateInputComponent } from "./utils/components/date-input.component";
-import { RoomTypeOperationComponent } from "./pages/room-type/room-type-operation.component";
-import { RoomOperationComponent } from "./pages/room/room-operation.component";
-import { RoomSelectComponent } from "./pages/room/room-select.component";
 import { AppVersionService } from "./utils/services/app-version.service";
 import { NzFlexDirective } from "ng-zorro-antd/flex";
 import { InputNumberComponent } from "./utils/components/input-number.component";
@@ -135,27 +127,18 @@ import { ItemOperationComponent } from "./pages/item/item-operation.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
 import { ItemTypeOperationComponent } from "./pages/item-type/item-type-operation.component";
 import { ItemTypeDeleteComponent } from "./pages/item-type/item-type-delete.component";
-import { RoomTypeListComponent } from "./pages/room-type/room-type-list.component";
 import { ItemTypeSelectComponent } from "./pages/item-type/item-type-select.component";
 import { ItemDeleteComponent } from "./pages/item/item-delete.component";
 import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
 import { MemberLevelOperationComponent } from "./pages/member-level/member-level-operation.component";
 import { MemberLevelDeleteComponent } from "./pages/member-level/member-level-delete.component";
-import { UnitListComponent } from "./pages/unit/unit-list.component";
-import { UnitOperationComponent } from "./pages/unit/unit-operation.component";
-import { UnitDeleteComponent } from "./pages/unit/unit-delete.component";
 import { MemberGroupDeleteComponent } from "./pages/member-group/member-group-delete.component";
 import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
 import { MemberGroupOperationComponent } from "./pages/member-group/member-group-operation.component";
 import { MemberGroupSelectComponent } from "./pages/member-group/member-group-select.component";
-import { RoomInventoryListComponent } from "./pages/room-inventory/room-inventory-list.component";
 import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
 import { MemberLevelSelectComponent } from "./pages/member-level/member-level-select.component";
 import { MemberUnitSelectComponent } from "./pages/member-unit/member-unit-select.component";
-import { ChargeListComponent } from "./pages/charge/charge-list.component";
-import { ChargeOperationComponent } from "./pages/charge/charge-operation.component";
-import { ChargeDeleteComponent } from "./pages/charge/charge-delete.component";
-import { UnitSelectComponent } from "./pages/unit/unit-select.component";
 import { MemberAdvancedFilterComponent } from "./pages/member/member-advanced-filter.component";
 import { MemberUnitDeleteComponent } from "./pages/member-unit/member-unit-delete.component";
 import { MemberUnitOperationComponent } from "./pages/member-unit/member-unit-operation.component";
@@ -166,25 +149,8 @@ import { MemberPullComponent } from "./pages/member/member-pull.component";
 import { MemberUnitPullComponent } from "./pages/member-unit/member-unit-pull.component";
 import { MemberGroupPullComponent } from "./pages/member-group/member-group-pull.component";
 import { MemberLevelPullComponent } from "./pages/member-level/member-level-pull.component";
-import {RoomViewComponent} from "./pages/room/room-view.component";
-import { RoomChargeListComponent } from "./pages/room-charge/room-charge-list.component";
-import { RoomChargeOperationComponent } from "./pages/room-charge/room-charge-operation.component";
-import { RoomChargeDeleteComponent } from "./pages/room-charge/room-charge-delete.component";
-import { ChargeSelectComponent } from "./pages/charge/charge-select.component";
-import {ItemSelectComponent} from "./pages/item/item-select.component";
-import {RoomMemberListComponent} from "./pages/room-member/room-member-list.component";
-import {RoomMemberDeleteComponent} from "./pages/room-member/room-member-delete.component";
-import {RoomMemberOperationComponent} from "./pages/room-member/room-member-operation.component";
-import {MemberSelectComponent} from "./pages/member/member-select.component";
-import {RoomInventoryOperationComponent} from "./pages/room-inventory/room-inventory-operation.component";
-import {RoomInventoryDeleteComponent} from "./pages/room-inventory/room-inventory-delete.component";
-import {RoomInventoryMutiOperationComponent} from "./pages/room-inventory/room-inventory-muti-operation.component";
-import {BillingComponent} from "./pages/billing/billing.component";
-import {BillingCycleListComponent} from "./pages/billing/billing-cycle/billing-cycle-list.component";
-import {MeterReadingListComponent} from "./pages/billing/meter-reading/meter-reading-list.component";
-import {BillingCycleOperationComponent} from "./pages/billing/billing-cycle/billing-cycle-operation.component";
-import {BillingCycleDeleteComponent} from "./pages/billing/billing-cycle/billing-cycle-delete.component";
-import {BillingCycleSelectComponent} from "./pages/billing/billing-cycle/billing-cycle-select.component";
+import { ItemSelectComponent } from "./pages/item/item-select.component";
+import { MemberSelectComponent } from "./pages/member/member-select.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -315,20 +281,7 @@ export class CustomTranslate implements TranslateLoader {
     FloorOperationComponent,
     FloorDeleteComponent,
     FloorSelectComponent,
-
-    //room type
-    RoomTypeListComponent,
-    RoomTypeOperationComponent,
-    RoomTypeDeleteComponent,
-    RoomTypeSelectComponent,
-
-    //room
-    RoomListComponent,
-    RoomOperationComponent,
-    RoomDeleteComponent,
-    RoomAdvancedFilterComponent,
-    RoomSelectComponent,
-    RoomViewComponent,
+ 
 
     //tag
     TagGroupListComponent,
@@ -369,50 +322,13 @@ export class CustomTranslate implements TranslateLoader {
     MemberUnitDeleteComponent,
     MemberUnitSelectComponent,
     MemberUnitPullComponent,
-
-    // Unit
-    UnitListComponent,
-    UnitOperationComponent,
-    UnitDeleteComponent,
-    UnitSelectComponent,
-
+ 
     // Group
     MemberGroupListComponent,
     MemberGroupOperationComponent,
     MemberGroupDeleteComponent,
     MemberGroupSelectComponent,
-    MemberGroupPullComponent,
-
-    // Room inventory
-    RoomInventoryListComponent,
-    RoomInventoryOperationComponent,
-    RoomInventoryDeleteComponent,
-    RoomInventoryMutiOperationComponent,
-
-    // Room member
-    RoomMemberListComponent,
-    RoomMemberDeleteComponent,
-    RoomMemberOperationComponent,
-
-    // Charge
-    ChargeListComponent,
-    ChargeOperationComponent,
-    ChargeDeleteComponent,
-    ChargeSelectComponent,
-
-    // Room charge
-    RoomChargeListComponent,
-    RoomChargeOperationComponent,
-    RoomChargeDeleteComponent,
-
-    // Billing
-    BillingComponent,
-    BillingCycleListComponent,
-    BillingCycleOperationComponent,
-    BillingCycleDeleteComponent,
-    BillingCycleSelectComponent,
-
-    MeterReadingListComponent
+    MemberGroupPullComponent, 
   ],
   bootstrap: [AppComponent],
   imports: [

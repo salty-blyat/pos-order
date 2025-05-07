@@ -26,20 +26,27 @@ export interface Type {
   template: `
     <nz-layout class="app-layout">
       <nz-sider
-          class="menu-sidebar"
-          nzTheme="light"
-          nzCollapsible
-          nzWidth="220px"
-          nzBreakpoint="md"
-          [(nzCollapsed)]="isCollapsed"
-          [nzTrigger]="null"
+        class="menu-sidebar"
+        nzTheme="light"
+        nzCollapsible
+        nzWidth="220px"
+        nzBreakpoint="md"
+        [(nzCollapsed)]="isCollapsed"
+        [nzTrigger]="null"
       >
         <div class="header-content">
           <div class="sidebar-logo">
             <div class="logo-link">
-              <img [src]="authService.app?.iconUrl" alt="logo"/>
-              <h1 *ngIf="!isCollapsed()" class="modal-header-ellipsis">{{ appName() }}</h1>
-                <nz-icon nzType="down" class="icon-down" (click)="redirectToMainUrl()" nzTheme="outline"/>
+              <img [src]="authService.app?.iconUrl" alt="logo" />
+              <h1 *ngIf="!isCollapsed()" class="modal-header-ellipsis">
+                {{ appName() }}
+              </h1>
+              <nz-icon
+                nzType="down"
+                class="icon-down"
+                (click)="redirectToMainUrl()"
+                nzTheme="outline"
+              />
             </div>
           </div>
           <div class="tenant">
@@ -54,7 +61,7 @@ export interface Type {
               }}</span>
             </div>
             <div class="app-center-icon">
-<!--              <nz-icon nzType="down" (click)="redirectToMainUrl()" nzTheme="outline"/>-->
+              <!--              <nz-icon nzType="down" (click)="redirectToMainUrl()" nzTheme="outline"/>-->
             </div>
           </div>
         </div>
@@ -75,30 +82,22 @@ export interface Type {
               <span>{{ "Home" | translate }}</span>
             </li>
             <li
-              *ngIf="isMemberList()"
+              *ngIf="isAccountList()"
               nz-menu-item
               [nzMatchRouter]="isActive()"
-              routerLink="/member"
+              routerLink="/account"
             >
-              <span nz-icon nzType="user" nzTheme="outline"></span>
-              <span>{{ "Member" | translate }}</span>
+              <i nz-icon nzType="user"></i>
+              <span>{{ "Account" | translate }}</span>
             </li>
             <li
-              *ngIf="isRoomList()"
+              *ngIf="isAgentList()"
               nz-menu-item
               [nzMatchRouter]="isActive()"
-              routerLink="/room"
+              routerLink="/agent"
             >
-              <span nz-icon nzType="border" nzTheme="outline"></span>
-              <span>{{ "Room" | translate }}</span>
-            </li>
-            <li
-                nz-menu-item
-                [nzMatchRouter]="isActive()"
-                routerLink="/billing"
-            >
-                <span nz-icon nzType="dollar" nzTheme="outline"></span>
-                <span>{{ "Billing" | translate }}</span>
+              <i nz-icon nzType="shop"></i>
+              <span>{{ "Agent" | translate }}</span>
             </li>
             <li
               *ngIf="isSettingList()"
@@ -137,58 +136,62 @@ export interface Type {
               <div class="user-info">
                 <div nz-flex nzAlign="center" nzGap="4px">
                   <nz-avatar
-                      [nzSrc]="authService.clientInfo.profile"
-                      [nzSize]="32"
-                      style="margin-right: 4px;"
-                      (click)="redirectToViewProfileUrl()"
-                      nzIcon="user"
+                    [nzSrc]="authService.clientInfo.profile"
+                    [nzSize]="32"
+                    style="margin-right: 4px;"
+                    (click)="redirectToViewProfileUrl()"
+                    nzIcon="user"
                   ></nz-avatar>
                   <div
-                      nz-flex
-                      [nzVertical]="true"
-                      *ngIf="!isCollapsed()"
-                      (click)="redirectToViewProfileUrl()"
+                    nz-flex
+                    [nzVertical]="true"
+                    *ngIf="!isCollapsed()"
+                    (click)="redirectToViewProfileUrl()"
                   >
-                    <span style="font-size: 14px">{{ authService.clientInfo.fullName }}</span>
-                    <span style="font-size: 10px">{{ authService.clientInfo.email ?? "-" }}</span>
+                    <span style="font-size: 14px">{{
+                      authService.clientInfo.fullName
+                    }}</span>
+                    <span style="font-size: 10px">{{
+                      authService.clientInfo.email ?? "-"
+                    }}</span>
                   </div>
                 </div>
 
                 <span
-                    *ngIf="!isCollapsed()"
-                    nzTrigger="click"
-                    nzPlacement="bottomRight"
-                    nz-dropdown
-                    style="padding: 0 6px; float: right; cursor: pointer;"
-                    [nzDropdownMenu]="language"
+                  *ngIf="!isCollapsed()"
+                  nzTrigger="click"
+                  nzPlacement="bottomRight"
+                  nz-dropdown
+                  style="padding: 0 6px; float: right; cursor: pointer;"
+                  [nzDropdownMenu]="language"
                 >
                   <img
-                      class="img-head"
-                      [src]="
+                    class="img-head"
+                    [src]="
                       translateService.currentLang == 'km'
                         ? './assets/image/kh_FLAG.png'
                         : './assets/image/en_FLAG.png'
                     "
-                      alt="language"
+                    alt="language"
                   />
                   <nz-dropdown-menu #language="nzDropdownMenu">
                     <ul nz-menu style="width: 125px;">
                       <li
-                          nz-menu-item
-                          *ngFor="let lang of languages"
-                          (click)="languageService.switchLanguage(lang.key)"
+                        nz-menu-item
+                        *ngFor="let lang of languages"
+                        (click)="languageService.switchLanguage(lang.key)"
                       >
-                        <img class="img" [src]="lang.image" alt="language"/>
+                        <img class="img" [src]="lang.image" alt="language" />
                         <span>{{ lang.label }}</span>
                         <i
-                            style="position: absolute; right: 5px;"
-                            class="primary-color"
-                            *ngIf="
+                          style="position: absolute; right: 5px;"
+                          class="primary-color"
+                          *ngIf="
                             lang.key.localId == translateService.currentLang
                           "
-                            nz-icon
-                            nzType="check"
-                            nzTheme="outline"
+                          nz-icon
+                          nzType="check"
+                          nzTheme="outline"
                         ></i>
                       </li>
                     </ul>
@@ -225,18 +228,14 @@ export class PageComponent implements OnInit {
     sub2: false,
   };
 
-  isHomeList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__HOME)
-  );
+  isHomeList = computed(() => true);
+  isAccountList = computed(() => true);
+  isAgentList = computed(() => true);
   // isMemberList = computed(() =>
   //   this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
   // );
-  isMemberList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
-  )
-  isRoomList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__ROOM__LIST)
-  );
+  isMemberList = computed(() => true);
+  isRoomList = computed(() => true);
   isSettingList = computed(
     () =>
       this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST) ||
@@ -247,17 +246,23 @@ export class PageComponent implements OnInit {
       this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__LIST) ||
       this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM_TYPE__LIST) ||
       this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__LIST) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__SETTING__MEMBER_GROUP__LIST
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__SETTING__MEMBER_LEVEL__LIST
+      ) ||
       this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__LIST) ||
       this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__LIST) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__SETTING__REPORT_GROUP__LIST
+      ) ||
       this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_CHARGE__LIST) ||
       this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE__LIST) ||
       this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__LIST) ||
       this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__LIST)
   );
-  isReportList = computed(() =>
+  isReportList = signal(() =>
     this.authService.isAuthorized(AuthKeys.APP__REPORT)
   );
 

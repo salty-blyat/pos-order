@@ -15,23 +15,15 @@ import { CurrencyListComponent } from "./pages/currency/currency-list.component"
 import { AutoNumberListComponent } from "./pages/auto-number/auto-number-list.component";
 import { ReportViewComponent } from "./pages/report/report-view.component";
 import { ReportGroupMenuComponent } from "./pages/report-group/report-group-menu.component";
-import { BlockListComponent } from "./pages/block/block-list.component";
-import { RoomTypeListComponent } from "./pages/room-type/room-type-list.component";
-import { RoomListComponent } from "./pages/room/room-list.component";
+import { BlockListComponent } from "./pages/block/block-list.component"; 
 import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
-import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
-import { UnitListComponent } from "./pages/unit/unit-list.component";
-import { ChargeListComponent } from "./pages/charge/charge-list.component";
+import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component"; 
 import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
 import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
 import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
-import { RoomChargeListComponent } from "./pages/room-charge/room-charge-list.component";
-import {BillingComponent} from "./pages/billing/billing.component";
-import {BillingCycleListComponent} from "./pages/billing/billing-cycle/billing-cycle-list.component";
-import {MeterReadingListComponent} from "./pages/billing/meter-reading/meter-reading-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -47,29 +39,6 @@ const routes: Routes = [
       {
         path: "member",
         component: MemberListComponent,
-      },
-      {
-        path: "room",
-        component: RoomListComponent,
-      },
-      {
-        path: "billing",
-        component: BillingComponent,
-        children: [
-          {
-            path: '',
-            redirectTo: 'cycle',
-            pathMatch: 'full'
-          },
-          {
-            path: "cycle",
-            component: BillingCycleListComponent
-          },
-          {
-            path: "reading",
-            component: MeterReadingListComponent
-          }
-        ]
       },
       {
         path: "setting",
@@ -165,15 +134,7 @@ const routes: Routes = [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "AutoNumber", url: null },
         ],
-      },
-      {
-        path: "setting/room-type",
-        component: RoomTypeListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "RoomType", url: null },
-        ],
-      },
+      }, 
       {
         path: "setting/block",
         component: BlockListComponent,
@@ -206,14 +167,7 @@ const routes: Routes = [
           { index: 1, label: "MemberGroup", url: null },
         ],
       },
-      {
-        path: "setting/unit",
-        component: UnitListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Unit", url: null },
-        ],
-      },
+      
       {
         path: "setting/item",
         component: ItemListComponent,
@@ -229,15 +183,7 @@ const routes: Routes = [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "ItemType", url: null },
         ],
-      },
-      {
-        path: "setting/charge",
-        component: ChargeListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Charge", url: null },
-        ],
-      },
+      }, 
     ],
   },
   {
