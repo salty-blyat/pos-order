@@ -1,45 +1,39 @@
-import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
-import { BaseListComponent } from "../../utils/components/base-list.component";
-import { Item, ItemService } from "./item.service";
-import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { ItemUiService } from "./item-ui.service";
+import {
+  Component,
+  computed,
+  signal,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { delay, Observable } from "rxjs";
+import { OfferGroup, OfferGroupService } from "./offer-group.service";
+import { BaseListComponent } from "../../utils/components/base-list.component";
+import { OfferGroupUiService } from "./offer-group-ui.service";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
-import { Filter } from "../../utils/services/base-api.service";
 import { AuthService } from "../../helpers/auth.service";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
+import { LookupItem } from "../lookup/lookup-item/lookup-item.service";
 
 @Component({
-  selector: "app-item-list",
+  selector: "app-offer-group-list",
   template: `
     <nz-layout>
-      <app-breadcrumb
-        *ngIf="breadcrumbData()"
-        [data]="breadcrumbData()"
-      ></app-breadcrumb>
       <nz-header>
         <div nz-row>
           <div nz-col>
             <app-filter-input
-              storageKey="item-list-search"
+              storageKey="offer-group-list"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
-            ></app-filter-input>
-          </div>
-          <div nz-col>
-            <app-item-type-select
-              [showAllOption]="true"
-              storageKey="item-list-item-type-filter"
-              (valueChanged)="
-                itemTypeId.set($event); param().pageIndex = 1; search()
-              "
-            ></app-item-type-select>
+            >
+            </app-filter-input>
           </div>
         </div>
         <div>
           <button
-            *ngIf="isItemAdd()"
+            *ngIf="isOfferGroupAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -52,9 +46,9 @@ import { AuthService } from "../../helpers/auth.service";
       <nz-content>
         <nz-table
           nzSize="small"
+          nzTableLayout="fixed"
           nzShowSizeChanger
           #fixedTable
-          nzTableLayout="fixed"
           [nzPageSizeOptions]="pageSizeOption()"
           [nzData]="lists()"
           [nzLoading]="isLoading()"
@@ -71,14 +65,15 @@ import { AuthService } from "../../helpers/auth.service";
           <thead>
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-              <th nzWidth="60px" nzAlign="center">{{ "Image" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="120px">{{ "ItemType" | translate }}</th>
-              <th nzWidth="120px" nzAlign="center">
-                {{ "IsTrackSerial" | translate }}
+              <th [nzWidth]="SIZE_COLUMNS.IMAGE" nzEllipsis nzAlign="center">
+                {{ "Image" | translate }}
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NAME" nzEllipsis>
+                {{ "Name" | translate }}
+              </th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE" nzEllipsis>
+                {{ "Note" | translate }}
+              </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -112,39 +107,36 @@ import { AuthService } from "../../helpers/auth.service";
               </td>
               <td nzEllipsis>
                 <a
-                  *ngIf="isItemView()"
+                  *ngIf="isOfferGroupView()"
                   (click)="uiService.showView(data.id!)"
-                  >{{ data.code }}</a
+                  >{{ data.name }}</a
                 >
-                <span *ngIf="!isItemView()">{{ data.code }}</span>
+                <span *ngIf="!isOfferGroupView()">{{ data.name }}</span>
               </td>
-              <td nzEllipsis>{{ data.name }}</td>
-              <td nzEllipsis>{{ data.itemTypeName }}</td>
-              <td nzAlign="center">
-                <label
-                  nz-checkbox
-                  [ngModel]="data.isTrackSerial"
-                  [nzDisabled]="true"
-                ></label>
+              <td nzEllipsis>
+                <span>{{ data.note }}</span>
               </td>
-              <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isItemEdit()">
+                  <ng-container *ngIf="isOfferGroupEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
-                      <i nz-icon nzType="edit" nzTheme="outline"></i>
+                      <i
+                        nz-icon
+                        nzType="edit"
+                        nzTheme="outline"
+                        class="edit"
+                      ></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isItemRemove()">
+                  <ng-container *ngIf="isOfferGroupRemove()">
                     <a
                       *nzSpaceItem
-                      (click)="uiService.showDelete(data.id || 0)"
-                      nz-typography
                       class="delete"
+                      (click)="uiService.showDelete(data.id || 0)"
                     >
                       <i nz-icon nzType="delete" nzTheme="outline"></i>
                       {{ "Delete" | translate }}
@@ -164,45 +156,36 @@ import { AuthService } from "../../helpers/auth.service";
       .image {
         padding: 0 !important;
       }
-
       .image-list {
         height: 38px;
         object-fit: scale-down;
+      }
+
+      .color-box {
+        width: 22px;
+        height: 22px;
+        margin-right: 4px;
       }
     `,
   ],
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class ItemListComponent extends BaseListComponent<Item> {
+export class OfferGroupListComponent extends BaseListComponent<OfferGroup> {
   constructor(
-    service: ItemService,
-    uiService: ItemUiService,
-    sessionStorageService: SessionStorageService, 
-    private authService: AuthService,
-    private activated: ActivatedRoute
+    public override uiService: OfferGroupUiService,
+    service: OfferGroupService,
+    sessionStorageService: SessionStorageService,
+    private activated: ActivatedRoute,
+    public authService: AuthService
   ) {
-    super(service, uiService, sessionStorageService, "item-list");
+    super(service, uiService, sessionStorageService, "offer-group-list");
   }
 
-  itemTypeId = signal<number>(0);
+  isOfferGroupAdd = computed(() => true);
+  isOfferGroupEdit = computed(() => true);
+  isOfferGroupRemove = computed(() => true);
+  isOfferGroupView = computed(() => true);
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
-  breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isItemAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__ADD));
-  isItemEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__EDIT));
-  isItemRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__REMOVE)); 
-  isItemView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__VIEW));
-
-  override search() {
-    let filters: Filter[] = [];
-    if (this.itemTypeId()) {
-      filters.push({
-        field: "itemTypeId",
-        operator: "eq",
-        value: this.itemTypeId(),
-      });
-    }
-    super.search(filters, 100);
-  }
 }

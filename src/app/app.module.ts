@@ -122,22 +122,14 @@ import { NzFlexDirective } from "ng-zorro-antd/flex";
 import { InputNumberComponent } from "./utils/components/input-number.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { MemberOperationComponent } from "./pages/member/member-operation.component";
-import { ItemListComponent } from "./pages/item/item-list.component";
-import { ItemOperationComponent } from "./pages/item/item-operation.component";
-import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
-import { ItemTypeOperationComponent } from "./pages/item-type/item-type-operation.component";
-import { ItemTypeDeleteComponent } from "./pages/item-type/item-type-delete.component";
-import { ItemTypeSelectComponent } from "./pages/item-type/item-type-select.component";
-import { ItemDeleteComponent } from "./pages/item/item-delete.component";
 import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
-import { MemberUnitSelectComponent } from "./pages/member-unit/member-unit-select.component"; 
+import { MemberUnitSelectComponent } from "./pages/member-unit/member-unit-select.component";
 import { MemberUnitDeleteComponent } from "./pages/member-unit/member-unit-delete.component";
 import { MemberUnitOperationComponent } from "./pages/member-unit/member-unit-operation.component";
 import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
 import { MemberDeleteComponent } from "./pages/member/member-delete.component";
 import { MemberPullComponent } from "./pages/member/member-pull.component";
 import { MemberUnitPullComponent } from "./pages/member-unit/member-unit-pull.component";
-import { ItemSelectComponent } from "./pages/item/item-select.component";
 import { MemberSelectComponent } from "./pages/member/member-select.component";
 import { TransparentPipe } from "./utils/pipes/transparent.pipe";
 import { LocationListComponent } from "./pages/location/location-list.component";
@@ -155,6 +147,11 @@ import { AgentDeleteComponent } from "./pages/agent/agent-delete.component";
 import { MemberClassListComponent } from "./pages/member-class/member-class-list.component";
 import { MemberClassDeleteComponent } from "./pages/member-class/member-class-delete.component";
 import { MemberClassOperationComponent } from "./pages/member-class/member-class-operation.component";
+import { MemberClassSelectComponent } from "./pages/member-class/member-class-select.component";
+import { OfferGroupListComponent } from "./pages/offer-group/offer-group-list.component";
+import { OfferGroupOperationComponent } from "./pages/offer-group/offer-group-operation.component";
+import { ItemUploadComponent } from "./pages/offer-group/item-upload.component";
+import { OfferGroupDeleteComponent } from "./pages/offer-group/offer-group-delete.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -294,22 +291,10 @@ export class CustomTranslate implements TranslateLoader {
 
     //member
     MemberListComponent,
-    MemberOperationComponent, 
+    MemberOperationComponent,
     MemberDeleteComponent,
     MemberPullComponent,
     MemberSelectComponent,
-
-    // Item
-    ItemListComponent,
-    ItemOperationComponent,
-    ItemDeleteComponent,
-    ItemSelectComponent,
-
-    // Item Type
-    ItemTypeListComponent,
-    ItemTypeOperationComponent,
-    ItemTypeDeleteComponent,
-    ItemTypeSelectComponent,
 
     // Member unit
     MemberUnitListComponent,
@@ -334,7 +319,15 @@ export class CustomTranslate implements TranslateLoader {
     // member class
     MemberClassListComponent,
     MemberClassOperationComponent,
+    MemberClassSelectComponent,
     MemberClassDeleteComponent,
+
+    // offer group
+    OfferGroupListComponent,
+    OfferGroupOperationComponent,
+    // OfferGroupSelectComponent,
+    OfferGroupDeleteComponent,
+    ItemUploadComponent,
 
     // agent
     AgentListComponent,

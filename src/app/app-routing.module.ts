@@ -16,13 +16,11 @@ import { AutoNumberListComponent } from "./pages/auto-number/auto-number-list.co
 import { ReportViewComponent } from "./pages/report/report-view.component";
 import { ReportGroupMenuComponent } from "./pages/report-group/report-group-menu.component";
 import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
-import { MemberListComponent } from "./pages/member/member-list.component";
-import { ItemListComponent } from "./pages/item/item-list.component";
-import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
 import { LocationListComponent } from "./pages/location/location-list.component";
 import { BranchListComponent } from "./pages/branch/branch-list.component";
 import { AgentListComponent } from "./pages/agent/agent-list.component";
 import { MemberClassListComponent } from "./pages/member-class/member-class-list.component";
+import { OfferGroupListComponent } from "./pages/offer-group/offer-group-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -68,6 +66,14 @@ const routes: Routes = [
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Lookup", url: null },
+        ],
+      },
+      {
+        path: "setting/offer-group",
+        component: OfferGroupListComponent, 
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "OfferGroup", url: null },
         ],
       },
       {
@@ -156,23 +162,6 @@ const routes: Routes = [
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "Branch", url: null },
-        ],
-      },
-
-      {
-        path: "setting/item",
-        component: ItemListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Item", url: null },
-        ],
-      },
-      {
-        path: "setting/item-type",
-        component: ItemTypeListComponent,
-        data: [
-          { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "ItemType", url: null },
         ],
       },
     ],

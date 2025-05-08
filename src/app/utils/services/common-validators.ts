@@ -4,10 +4,10 @@ import {
   UntypedFormGroup,
   ValidatorFn,
   Validators,
-} from '@angular/forms';
-import { NzSafeAny } from 'ng-zorro-antd/core/types';
+} from "@angular/forms";
+import { NzSafeAny } from "ng-zorro-antd/core/types";
 // @ts-ignore
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer } from "rxjs";
 
 export type MyErrorsOptions = { km: string; en: string } & Record<
   string,
@@ -15,21 +15,21 @@ export type MyErrorsOptions = { km: string; en: string } & Record<
 >;
 export type MyValidationErrors = Record<string, MyErrorsOptions>;
 export enum control {
-  name = 'name',
-  nameEn = 'nameEn',
+  name = "name",
+  nameEn = "nameEn",
 }
 export class CommonValidators extends Validators {
   static autoTips: Record<string, Record<string, string>> = {
     km: {
-      required: 'ទាមទារការបញ្ចូល!',
+      required: "ទាមទារការបញ្ចូល!",
     },
     en: {
-      required: 'Input is required!',
+      required: "Input is required!",
     },
     default: {},
   };
-  public name: string = 'name';
-  public nameEn: string = 'nameEn';
+  public name: string = "name";
+  public nameEn: string = "nameEn";
   // static override maxLength(maxLength: number): ValidatorFn {
   //   return (control: AbstractControl): MyValidationErrors | null => {
   //     if (Validators.maxLength(maxLength)(control) === null) {
@@ -38,6 +38,25 @@ export class CommonValidators extends Validators {
   //     return {maxlength: { km_KH: `មិនត្រូវបញ្ចូលលើសពី ${maxLength}តួអក្សរទេ!`, en: `Must not exceed ${maxLength} characters!`}};
   //   };
   // }
+  static imageValidator(control: AbstractControl): MyValidationErrors | null {
+    const value = control.value;
+    const isImageUrl =
+      /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|bmp|webp|svg))$/i.test(value);
+    const isBase64Image =
+      /^data:image\/(png|jpg|jpeg|gif|bmp|webp|svg);base64,[A-Za-z0-9+/]+={0,2}$/.test(
+        value
+      );
+
+    if (!isImageUrl && !isBase64Image) {
+      return {
+        base64ImageValidator: {
+          km: `ទិន្នន័យមិនត្រឹមត្រូវ!`,
+          en: `data is not valid!`,
+        },
+      };
+    }
+    return null;
+  }
   static codeMaxLengthValidator(maxLength: number = 50): ValidatorFn {
     return (control: AbstractControl): MyValidationErrors | null => {
       if (Validators.maxLength(maxLength)(control) === null) {
@@ -80,9 +99,9 @@ export class CommonValidators extends Validators {
   static withOtherExistsValidator(
     service: any,
     id: number = 0,
-    controlName: string = '',
-    otherControlName: string = '',
-    message: string = ''
+    controlName: string = "",
+    otherControlName: string = "",
+    message: string = ""
   ): any {
     return (control: UntypedFormControl) =>
       new Observable((observer: Observer<Validators | null>) => {
@@ -102,7 +121,7 @@ export class CommonValidators extends Validators {
               let otherValue = control.parent?.value[otherControlName];
               params.push({
                 key: otherControlName,
-                val: otherValue ?? '',
+                val: otherValue ?? "",
               });
             }
             if (controlName) {
@@ -111,12 +130,12 @@ export class CommonValidators extends Validators {
                 val: control.value,
               });
             }
-            service.exists('', id, params).subscribe((result: boolean) => {
+            service.exists("", id, params).subscribe((result: boolean) => {
               if (result) {
                 observer.next({
                   duplicated: {
-                    km: message || 'មានរួចហើយ!',
-                    en: message || 'Already exists!',
+                    km: message || "មានរួចហើយ!",
+                    en: message || "Already exists!",
                   },
                 });
               } else {
@@ -131,9 +150,9 @@ export class CommonValidators extends Validators {
   static nameExistValidator(
     service: any,
     id: number = 0,
-    controlName: string = '',
+    controlName: string = "",
     parentId: number = 0,
-    message: string = ''
+    message: string = ""
   ): any {
     return (control: UntypedFormControl) =>
       new Observable((observer: Observer<Validators | null>) => {
@@ -149,7 +168,7 @@ export class CommonValidators extends Validators {
             const params = [];
             if (parentId) {
               params.push({
-                key: 'parentId',
+                key: "parentId",
                 val: parentId,
               });
             }
@@ -165,8 +184,8 @@ export class CommonValidators extends Validators {
                 if (result) {
                   observer.next({
                     duplicated: {
-                      km: message || 'ឈ្មោះមានរួចហើយ!',
-                      en: message || 'Name already exists!',
+                      km: message || "ឈ្មោះមានរួចហើយ!",
+                      en: message || "Name already exists!",
                     },
                   });
                 } else {
@@ -182,7 +201,7 @@ export class CommonValidators extends Validators {
     service: any,
     id: number = 0,
     parentId: number = 0,
-    message: string = ''
+    message: string = ""
   ): any {
     return (control: UntypedFormControl) =>
       new Observable((observer: Observer<Validators | null>) => {
@@ -197,22 +216,22 @@ export class CommonValidators extends Validators {
           if (control.value && control.status) {
             const params = [
               {
-                key: 'code',
+                key: "code",
                 val: control.value,
               },
             ];
             if (parentId) {
               params.push({
-                key: 'parentId',
+                key: "parentId",
                 val: parentId,
               });
             }
-            service.exists('', id, params).subscribe((result: boolean) => {
+            service.exists("", id, params).subscribe((result: boolean) => {
               if (result) {
                 observer.next({
                   duplicated: {
-                    km: message || 'កូដមានរួចហើយ!',
-                    en: message || 'Code already exists!',
+                    km: message || "កូដមានរួចហើយ!",
+                    en: message || "Code already exists!",
                   },
                 });
               } else {
@@ -227,7 +246,7 @@ export class CommonValidators extends Validators {
   static phoneExistValidator(
     service: any,
     id: number = 0,
-    message: string = ''
+    message: string = ""
   ): any {
     return (control: UntypedFormControl) =>
       new Observable((observer: Observer<Validators | null>) => {
@@ -242,16 +261,16 @@ export class CommonValidators extends Validators {
           if (control.value && control.status) {
             const params = [
               {
-                key: 'phone',
+                key: "phone",
                 val: control.value,
               },
             ];
-            service.exists('', id, params).subscribe((result: boolean) => {
+            service.exists("", id, params).subscribe((result: boolean) => {
               if (result) {
                 observer.next({
                   duplicated: {
-                    km: message || 'លេខទូរស័ព្ទមានរួចហើយ!',
-                    en: message || 'Phone number is already exists!',
+                    km: message || "លេខទូរស័ព្ទមានរួចហើយ!",
+                    en: message || "Phone number is already exists!",
                   },
                 });
               } else {
@@ -266,7 +285,7 @@ export class CommonValidators extends Validators {
   static emailExistValidator(
     service: any,
     id: number = 0,
-    message: string = ''
+    message: string = ""
   ): any {
     return (control: UntypedFormControl) =>
       new Observable((observer: Observer<Validators | null>) => {
@@ -281,16 +300,16 @@ export class CommonValidators extends Validators {
           if (control.value && control.status) {
             const params = [
               {
-                key: 'email',
+                key: "email",
                 val: control.value,
               },
             ];
-            service.exists('', id, params).subscribe((result: boolean) => {
+            service.exists("", id, params).subscribe((result: boolean) => {
               if (result) {
                 observer.next({
                   duplicated: {
-                    km: message || 'អុីមែលមានរួចហើយ!',
-                    en: message || 'email is already exists!',
+                    km: message || "អុីមែលមានរួចហើយ!",
+                    en: message || "email is already exists!",
                   },
                 });
               } else {
@@ -305,7 +324,7 @@ export class CommonValidators extends Validators {
   static barcodeExistValidator(
     service: any,
     id: number = 0,
-    message: string = ''
+    message: string = ""
   ): any {
     return (control: UntypedFormControl) =>
       new Observable((observer: Observer<Validators | null>) => {
@@ -320,16 +339,16 @@ export class CommonValidators extends Validators {
           if (control.value && control.status) {
             const params = [
               {
-                key: 'barcode',
+                key: "barcode",
                 val: control.value,
               },
             ];
-            service.exists('', id, params).subscribe((result: boolean) => {
+            service.exists("", id, params).subscribe((result: boolean) => {
               if (result) {
                 observer.next({
                   duplicated: {
-                    km: message || 'បាកូដមានរួចហើយ!',
-                    en: message || 'Barcode already exists!',
+                    km: message || "បាកូដមានរួចហើយ!",
+                    en: message || "Barcode already exists!",
                   },
                 });
               } else {
@@ -347,7 +366,7 @@ export class CommonValidators extends Validators {
       return value == null || value.length === 0;
     }
     function isInteger(value: any): boolean {
-      return typeof value === 'string' && /^\d+$/.test(value);
+      return typeof value === "string" && /^\d+$/.test(value);
     }
     if (isEmptyInputValue(control.value)) {
       return null;
@@ -355,11 +374,11 @@ export class CommonValidators extends Validators {
     return isInteger(control.value?.toString())
       ? null
       : {
-        integerValidator: {
-          km: `ការបញ្ចូលមិនត្រឹមត្រូវ!`,
-          en: `Input is not valid!`,
-        },
-      };
+          integerValidator: {
+            km: `ការបញ្ចូលមិនត្រឹមត្រូវ!`,
+            en: `Input is not valid!`,
+          },
+        };
   }
 
   static notSpaceValidator(
@@ -369,7 +388,7 @@ export class CommonValidators extends Validators {
       return value == null || value.length === 0;
     }
     function isInteger(value: any): boolean {
-      return typeof value === 'string' && /^\S*$/.test(value);
+      return typeof value === "string" && /^\S*$/.test(value);
     }
     if (isEmptyInputValue(control.value)) {
       return null;
@@ -377,11 +396,11 @@ export class CommonValidators extends Validators {
     return isInteger(control.value)
       ? null
       : {
-        integerValidator: {
-          km: `ការបញ្ចូលមិនអាចដកឃ្លា!`,
-          en: `Input cannot be spaces!`,
-        },
-      };
+          integerValidator: {
+            km: `ការបញ្ចូលមិនអាចដកឃ្លា!`,
+            en: `Input cannot be spaces!`,
+          },
+        };
   }
 
   static emailValidator(control: AbstractControl): MyValidationErrors | null {
@@ -390,7 +409,7 @@ export class CommonValidators extends Validators {
     }
     function isEmail(value: string): boolean {
       return (
-        typeof value === 'string' &&
+        typeof value === "string" &&
         /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value)
       );
     }
@@ -400,11 +419,11 @@ export class CommonValidators extends Validators {
     return isEmail(control.value)
       ? null
       : {
-        emailValidator: {
-          km: `អុីមែលមិនត្រឹមត្រូវ!`,
-          en: `Email is not valid!`,
-        },
-      };
+          emailValidator: {
+            km: `អុីមែលមិនត្រឹមត្រូវ!`,
+            en: `Email is not valid!`,
+          },
+        };
   }
 
   static priceValidator(control: AbstractControl): MyValidationErrors | null {
@@ -412,7 +431,7 @@ export class CommonValidators extends Validators {
       return value == null || value.length === 0;
     }
     function isPrice(value: any): boolean {
-      return typeof value === 'string' && /^\d+(.\d{1,6})?$/.test(value);
+      return typeof value === "string" && /^\d+(.\d{1,6})?$/.test(value);
     }
     if (isEmptyInputValue(control.value)) {
       return null;
@@ -420,11 +439,11 @@ export class CommonValidators extends Validators {
     return isPrice(control.value)
       ? null
       : {
-        integerValidator: {
-          km: `ការបញ្ចូលមិនត្រឹមត្រូវ!`,
-          en: `Input is not valid!`,
-        },
-      };
+          integerValidator: {
+            km: `ការបញ្ចូលមិនត្រឹមត្រូវ!`,
+            en: `Input is not valid!`,
+          },
+        };
   }
 
   static decimalValidator(control: AbstractControl): MyValidationErrors | null {
@@ -432,10 +451,10 @@ export class CommonValidators extends Validators {
       return value == null || value.length === 0;
     }
     function isDecimal(value: any): boolean {
-      if (typeof value === 'number') {
+      if (typeof value === "number") {
         return true;
       }
-      value = (value || '').replace(/[, ]/g, '');
+      value = (value || "").replace(/[, ]/g, "");
       return /^([-+]?)+\d+([.]\d*)?$/.test(value);
     }
     if (isEmptyInputValue(control.value)) {
@@ -444,11 +463,11 @@ export class CommonValidators extends Validators {
     return isDecimal(control.value)
       ? null
       : {
-        decimalValidator: {
-          km: `ការបញ្ចូលមិនត្រឹមត្រូវ!`,
-          en: `Input is not valid!`,
-        },
-      };
+          decimalValidator: {
+            km: `ការបញ្ចូលមិនត្រឹមត្រូវ!`,
+            en: `Input is not valid!`,
+          },
+        };
   }
 
   static singlePhoneValidator(
@@ -460,8 +479,8 @@ export class CommonValidators extends Validators {
     function isPhoneNumber(value: any): boolean {
       // /^((\+\d{1,3}|0)(\d{2})(\d{6,7})(([\/])(\+\d{1,3}|0)(\d{2})(\d{6,7}))*)*$/ for multiple phone input
       return (
-        typeof (value === 'string' || value === 'number') &&
-        /^((\+\d{1,3}|0)(\d{2})(\d{6,7}))$/.test(value.replace(/ /g, ''))
+        typeof (value === "string" || value === "number") &&
+        /^((\+\d{1,3}|0)(\d{2})(\d{6,7}))$/.test(value.replace(/ /g, ""))
       );
     }
     if (isEmptyInputValue(control.value)) {
@@ -470,11 +489,11 @@ export class CommonValidators extends Validators {
     return isPhoneNumber(control.value)
       ? null
       : {
-        phoneValidator: {
-          km: `លេខទូរសព្ទមិនត្រឹមត្រូវ!`,
-          en: `Phone number is not valid!`,
-        },
-      };
+          phoneValidator: {
+            km: `លេខទូរសព្ទមិនត្រឹមត្រូវ!`,
+            en: `Phone number is not valid!`,
+          },
+        };
   }
 
   static multiplePhoneValidator(
@@ -486,9 +505,9 @@ export class CommonValidators extends Validators {
     function isPhoneNumber(value: any): boolean {
       // /^((\+\d{1,3}|0)(\d{2})(\d{6,7})(([\/])(\+\d{1,3}|0)(\d{2})(\d{6,7}))*)*$/ for multiple phone input
       return (
-        typeof (value === 'string' || value === 'number') &&
+        typeof (value === "string" || value === "number") &&
         /^((\+\d{1,3}|0)(\d{2})(\d{6,7})(([\/])(\+\d{1,3}|0)(\d{2})(\d{6,7}))*)*$/.test(
-          value.replace(/ /g, '')
+          value.replace(/ /g, "")
         )
       );
     }
@@ -498,19 +517,19 @@ export class CommonValidators extends Validators {
     return isPhoneNumber(control.value)
       ? null
       : {
-        phoneValidator: {
-          km: `លេខទូរសព្ទមិនត្រឹមត្រូវ!`,
-          en: `Phone number is not valid!`,
-        },
-      };
+          phoneValidator: {
+            km: `លេខទូរសព្ទមិនត្រឹមត្រូវ!`,
+            en: `Phone number is not valid!`,
+          },
+        };
   }
-  static mustBiggerDateValidator(starDate: Date, message: string = ''): any {
+  static mustBiggerDateValidator(starDate: Date, message: string = ""): any {
     return (control: AbstractControl): MyValidationErrors | null => {
       if (control.value && starDate > control.value) {
         return {
           dateInvalid: {
-            km: message || 'ថ្ងៃបញ្ចប់ត្រូវតែធំជាងថ្ងៃចាប់ផ្តើម!',
-            en: message || 'End Date must be bigger than Start Date!',
+            km: message || "ថ្ងៃបញ្ចប់ត្រូវតែធំជាងថ្ងៃចាប់ផ្តើម!",
+            en: message || "End Date must be bigger than Start Date!",
           },
         };
       }
@@ -523,7 +542,7 @@ export class CommonValidators extends Validators {
       const control = formGroup.controls[controlName];
       const matchingControl = formGroup.controls[matchingControlName];
 
-      if (matchingControl.errors && !matchingControl.errors['mustMatch']) {
+      if (matchingControl.errors && !matchingControl.errors["mustMatch"]) {
         return;
       }
 
@@ -531,8 +550,8 @@ export class CommonValidators extends Validators {
       if (control.value !== matchingControl.value) {
         matchingControl.setErrors({
           mustMatch: {
-            km: 'ពាក្យសម្ងាត់និងបញ្ជាក់ពាក្យសម្ងាត់មិនត្រូវគ្នា!',
-            en: 'Password and confirm not match!',
+            km: "ពាក្យសម្ងាត់និងបញ្ជាក់ពាក្យសម្ងាត់មិនត្រូវគ្នា!",
+            en: "Password and confirm not match!",
           },
         });
       } else {
@@ -544,7 +563,7 @@ export class CommonValidators extends Validators {
 
   static startLessThanEnd(
     startControlName: string,
-    endControlName: string,
+    endControlName: string
   ): ValidatorFn {
     return (group: AbstractControl): MyValidationErrors | null => {
       const startControl = group.get(startControlName);
@@ -554,11 +573,15 @@ export class CommonValidators extends Validators {
         return null;
       }
 
-      if (startControl.value !== null && endControl.value !== null && startControl.value > endControl.value) {
+      if (
+        startControl.value !== null &&
+        endControl.value !== null &&
+        startControl.value > endControl.value
+      ) {
         startControl.setErrors({
           rangeError: {
-            km: 'លេខចាប់ផ្តើមមិនអាចធំជាងលេខបញ្ចប់!',
-            en: 'Start number cannot be greater than end number!',
+            km: "លេខចាប់ផ្តើមមិនអាចធំជាងលេខបញ្ចប់!",
+            en: "Start number cannot be greater than end number!",
           },
         });
       } else {
@@ -569,5 +592,4 @@ export class CommonValidators extends Validators {
       return null;
     };
   }
-
 }

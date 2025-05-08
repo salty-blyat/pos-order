@@ -25,7 +25,7 @@ import { MemberClassUiService } from "./member-class-ui.service";
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
-          </div>
+          </div> 
           <div *ngIf="draged()">
             <button
               style="width: 100%"

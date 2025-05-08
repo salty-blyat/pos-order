@@ -71,6 +71,7 @@ export class SettingComponent implements OnInit {
     });
   }
   isMemberClassList = computed(() => true);
+  isOfferGroupList   = computed(() => true);
   isLookupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST));
   isCurrencyList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST));
   isReportList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST));
@@ -113,7 +114,19 @@ export class SettingComponent implements OnInit {
         ],
       },
       {
-        groupName: "MemberUnit",
+        groupName: "Offer",
+        subName: [ 
+          {
+            icon: "container",
+            url: `${this.urlPart}/offer-group`,
+            label: "OfferGroup",
+            isList: this.isOfferGroupList(),
+          },
+        
+        ],
+      },
+      {
+        groupName: "Member",
         subName: [ 
           {
             icon: "container",

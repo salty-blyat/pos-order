@@ -1,14 +1,13 @@
-import {Component, OnInit, ViewEncapsulation} from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { Component, ViewEncapsulation } from "@angular/core";
+import { BaseDeleteComponent } from "../../utils/components/base-delete.component"; 
+import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
-import { ItemService } from "./item.service";
-import { Item } from "./item.service";
-import { ItemUiService } from "./item-ui.service";
+import { OfferGroup, OfferGroupService } from "./offer-group.service";
+import { OfferGroupUiService } from "./offer-group-ui.service";
 
 @Component({
-  selector: "app-item-type-delete",
+  selector: "app-offer-group-delete",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="modal?.id"
@@ -17,28 +16,26 @@ import { ItemUiService } from "./item-ui.service";
       >
     </div>
     <div class="modal-content">
-      <app-loading
-        *ngIf="isLoading()"
-      ></app-loading>
-
-      <div *ngIf="errMessage() && !isLoading()" class="delete-error-message ">
-        <span nz-typography nzType="danger">{{ errMessage() | translate }}</span>
+      <app-loading *ngIf="isLoading()"></app-loading>
+      <div  class="delete-error-message ">
+        <span *ngIf="errMessage() && !isLoading()" nz-typography nzType="danger">{{
+          errMessage() | translate
+        }}</span>
       </div>
-
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>{{
-            "Name" | translate
-          }}</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Name" | translate }}
+          </nz-form-label>
           <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="">
             <input nz-input formControlName="name" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24">{{
-            "Note" | translate
-          }}</nz-form-label>
+          <nz-form-label [nzSm]="6" [nzXs]="24"
+            >{{ "Note" | translate }}
+          </nz-form-label>
           <nz-form-control [nzSm]="15" [nzXs]="24" nzErrorTip="">
             <textarea
               nz-input
@@ -71,28 +68,27 @@ import { ItemUiService } from "./item-ui.service";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class ItemDeleteComponent extends BaseDeleteComponent<Item> {
+export class OfferGroupDeleteComponent extends BaseDeleteComponent<OfferGroup> {
   constructor(
-    service: ItemService,
-    uiService: ItemUiService,
-    ref: NzModalRef<ItemDeleteComponent>,
+    service: OfferGroupService,
+    uiService: OfferGroupUiService,
+    ref: NzModalRef<OfferGroupDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);
   }
-
   override initControl(): void {
-    const { noteMaxLengthValidator } = CommonValidators;
+    const { noteMaxLengthValidator, required } = CommonValidators;
     this.frm = this.fb.group({
-      name: [{ value: null, disabled: true }, [Validators.required]],
+        name: [{ value: null, disabled: true }, [required]],
       note: [null, [noteMaxLengthValidator()]],
     });
   }
 
   override setFormValue() {
     this.frm.setValue({
-      name: this.model.name,
-      note: "",
+        name: this.model.name,
+      note: this.model.note,
     });
   }
 }
