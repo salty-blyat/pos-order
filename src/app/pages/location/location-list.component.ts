@@ -13,6 +13,7 @@ import { Location, LocationService } from "./location.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { LocationUiService } from "./location-ui.service";
 import { SIZE_COLUMNS } from "../../const";
+import { Filter } from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-location-list",
@@ -32,13 +33,21 @@ import { SIZE_COLUMNS } from "../../const";
               "
             ></app-filter-input>
           </div>
+          <div nz-col>
+            <app-branch-select
+              [showAllOption]="true"
+              (valueChanged)="
+                branchId.set($event); param().pageIndex = 1; search()
+              "
+            ></app-branch-select>
+          </div>
         </div>
         <div>
           <button
             *ngIf="isLocationAdd()"
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd()"
+            (click)="uiService.showAdd(branchId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Add" | translate }}
@@ -152,9 +161,23 @@ export class LocationListComponent extends BaseListComponent<Location> {
     super(service, uiService, sessionStorageService, "location-list");
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
+  readonly branchKey = this.sessionStorageService.getValue("branch-filter");
+  branchId = signal<number>(0);
   isLocationAdd = signal<boolean>(true);
   isLocationEdit = signal<boolean>(true);
   isLocationRemove = signal<boolean>(true);
   isLocationView = signal<boolean>(true);
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
+
+  override search() {
+    const filter: Filter[] = [];
+    if (this.branchId()) {
+      filter.push({
+        field: "branchId",
+        operator: "eq",
+        value: this.branchId(),
+      });
+    }
+    super.search(filter);
+  }
 }

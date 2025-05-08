@@ -129,26 +129,14 @@ import { ItemTypeOperationComponent } from "./pages/item-type/item-type-operatio
 import { ItemTypeDeleteComponent } from "./pages/item-type/item-type-delete.component";
 import { ItemTypeSelectComponent } from "./pages/item-type/item-type-select.component";
 import { ItemDeleteComponent } from "./pages/item/item-delete.component";
-import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
-import { MemberLevelOperationComponent } from "./pages/member-level/member-level-operation.component";
-import { MemberLevelDeleteComponent } from "./pages/member-level/member-level-delete.component";
-import { MemberGroupDeleteComponent } from "./pages/member-group/member-group-delete.component";
-import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
-import { MemberGroupOperationComponent } from "./pages/member-group/member-group-operation.component";
-import { MemberGroupSelectComponent } from "./pages/member-group/member-group-select.component";
 import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
-import { MemberLevelSelectComponent } from "./pages/member-level/member-level-select.component";
-import { MemberUnitSelectComponent } from "./pages/member-unit/member-unit-select.component";
-import { MemberAdvancedFilterComponent } from "./pages/member/member-advanced-filter.component";
+import { MemberUnitSelectComponent } from "./pages/member-unit/member-unit-select.component"; 
 import { MemberUnitDeleteComponent } from "./pages/member-unit/member-unit-delete.component";
 import { MemberUnitOperationComponent } from "./pages/member-unit/member-unit-operation.component";
 import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
-import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
 import { MemberDeleteComponent } from "./pages/member/member-delete.component";
 import { MemberPullComponent } from "./pages/member/member-pull.component";
 import { MemberUnitPullComponent } from "./pages/member-unit/member-unit-pull.component";
-import { MemberGroupPullComponent } from "./pages/member-group/member-group-pull.component";
-import { MemberLevelPullComponent } from "./pages/member-level/member-level-pull.component";
 import { ItemSelectComponent } from "./pages/item/item-select.component";
 import { MemberSelectComponent } from "./pages/member/member-select.component";
 import { TransparentPipe } from "./utils/pipes/transparent.pipe";
@@ -164,6 +152,9 @@ import { BranchDeleteComponent } from "./pages/branch/branch-delete.component";
 import { AgentListComponent } from "./pages/agent/agent-list.component";
 import { AgentOperationComponent } from "./pages/agent/agent-operation.component";
 import { AgentDeleteComponent } from "./pages/agent/agent-delete.component";
+import { MemberClassListComponent } from "./pages/member-class/member-class-list.component";
+import { MemberClassDeleteComponent } from "./pages/member-class/member-class-delete.component";
+import { MemberClassOperationComponent } from "./pages/member-class/member-class-operation.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -241,7 +232,6 @@ export class CustomTranslate implements TranslateLoader {
     NoResultFoundComponent,
     // system setting sections
     CompanySectionComponent,
-    OtherAppSectionComponent,
     AutoNumberSectionComponent,
 
     CodeEditorComponent,
@@ -304,18 +294,10 @@ export class CustomTranslate implements TranslateLoader {
 
     //member
     MemberListComponent,
-    MemberOperationComponent,
-    MemberAdvancedFilterComponent,
+    MemberOperationComponent, 
     MemberDeleteComponent,
     MemberPullComponent,
     MemberSelectComponent,
-
-    // member level
-    MemberLevelListComponent,
-    MemberLevelOperationComponent,
-    MemberLevelDeleteComponent,
-    MemberLevelSelectComponent,
-    MemberLevelPullComponent,
 
     // Item
     ItemListComponent,
@@ -336,13 +318,6 @@ export class CustomTranslate implements TranslateLoader {
     MemberUnitSelectComponent,
     MemberUnitPullComponent,
 
-    // Group
-    MemberGroupListComponent,
-    MemberGroupOperationComponent,
-    MemberGroupDeleteComponent,
-    MemberGroupSelectComponent,
-    MemberGroupPullComponent,
-
     // location
     LocationListComponent,
     LocationOperationComponent,
@@ -355,6 +330,11 @@ export class CustomTranslate implements TranslateLoader {
     BranchDeleteComponent,
     UserPopupSelectComponent,
     BranchSelectComponent,
+
+    // member class
+    MemberClassListComponent,
+    MemberClassOperationComponent,
+    MemberClassDeleteComponent,
 
     // agent
     AgentListComponent,

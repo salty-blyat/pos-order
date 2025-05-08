@@ -70,7 +70,7 @@ export class SettingComponent implements OnInit {
       value: route,
     });
   }
-
+  isMemberClassList = computed(() => true);
   isLookupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST));
   isCurrencyList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST));
   isReportList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST));
@@ -112,24 +112,18 @@ export class SettingComponent implements OnInit {
           }, 
         ],
       },
-      // {
-      //   groupName: "MemberUnit",
-      //   subName: [
-          
-      //     {
-      //       icon: "container",
-      //       url: `${this.urlPart}/member-group`,
-      //       label: "MemberGroup",
-      //       isList: this.isMemberGroupList(),
-      //     },
-      //     {
-      //       icon: "container",
-      //       url: `${this.urlPart}/member-level`,
-      //       label: "MemberLevel",
-      //       isList: this.isMemberLevelList(),
-      //     },
-      //   ],
-      // },
+      {
+        groupName: "MemberUnit",
+        subName: [ 
+          {
+            icon: "container",
+            url: `${this.urlPart}/member-class`,
+            label: "MemberClass",
+            isList: this.isMemberClassList(),
+          },
+        
+        ],
+      },
       {
         groupName: "Location",
         subName: [

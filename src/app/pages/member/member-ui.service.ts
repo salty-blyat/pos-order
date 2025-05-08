@@ -3,19 +3,18 @@ import { BaseUiService } from "../../utils/services/base-ui.service";
 import { NzModalService } from "ng-zorro-antd/modal";
 import { MemberOperationComponent } from "./member-operation.component";
 import { MainPageService } from "../../utils/services/main-page.service";
-import {MemberAdvancedFilterComponent} from "./member-advanced-filter.component";
-import {MemberDeleteComponent} from "./member-delete.component";
-import {MemberPullComponent} from "./member-pull.component";
+import { MemberDeleteComponent } from "./member-delete.component";
+import { MemberPullComponent } from "./member-pull.component";
 
 @Injectable({ providedIn: "root" })
 export class MemberUiService extends BaseUiService {
   constructor(
     modalService: NzModalService,
-    private mainPageService: MainPageService,
+    private mainPageService: MainPageService
   ) {
     super(
       modalService,
-      MemberOperationComponent, 
+      MemberOperationComponent,
       MemberDeleteComponent,
       "580px",
       "580px",
@@ -24,18 +23,22 @@ export class MemberUiService extends BaseUiService {
     );
   }
 
-  override showAdd(memberUnitId?: number, memberLevelId?: number, componentId: any = ''): void {
+  override showAdd(
+    memberUnitId?: number,
+    memberLevelId?: number,
+    componentId: any = ""
+  ): void {
     this.modalService.create({
       nzContent: MemberOperationComponent,
       nzFooter: null,
       nzClosable: true,
-      nzData: {memberUnitId , memberLevelId},
-      nzWidth: '100%',
+      nzData: { memberUnitId, memberLevelId },
+      nzWidth: "100%",
       nzBodyStyle: { ...this.mainPageService.getModalBodyStyle() },
       nzStyle: this.mainPageService.getModalFullPageSize(),
       nzMaskClosable: false,
       nzOnOk: (e) => {
-        this.refresher.emit({ key: 'added', value: e.model, componentId });
+        this.refresher.emit({ key: "added", value: e.model, componentId });
       },
     });
   }
@@ -46,12 +49,12 @@ export class MemberUiService extends BaseUiService {
       nzData: { id, isEdit: true },
       nzFooter: null,
       nzClosable: true,
-      nzWidth: '100%',
+      nzWidth: "100%",
       nzBodyStyle: { ...this.mainPageService.getModalBodyStyle() },
       nzStyle: this.mainPageService.getModalFullPageSize(),
       nzMaskClosable: false,
       nzOnOk: (e) => {
-        this.refresher.emit({ key: 'edited', value: e.model });
+        this.refresher.emit({ key: "edited", value: e.model });
       },
     });
   }
@@ -61,7 +64,7 @@ export class MemberUiService extends BaseUiService {
       nzContent: MemberOperationComponent,
       nzData: { id, isView: true },
       nzClosable: true,
-      nzWidth: '100%',
+      nzWidth: "100%",
       nzBodyStyle: { ...this.mainPageService.getModalBodyStyle() },
       nzStyle: this.mainPageService.getModalFullPageSize(),
       nzMaskClosable: false,
@@ -72,32 +75,32 @@ export class MemberUiService extends BaseUiService {
     this.modalService.create({
       nzContent: MemberPullComponent,
       nzClosable: true,
-      nzWidth: '350px',
-      nzBodyStyle: { paddingBottom: '10px' },
+      nzWidth: "350px",
+      nzBodyStyle: { paddingBottom: "10px" },
       nzMaskClosable: false,
       nzOnOk: (e) => {
-        this.refresher.emit({ key: 'pull', value: e.model });
-      }
-    });
-  } 
-
-  showAdvancedFilter(storageKey: string, componentId: any = '',  filterTypes?: { roomStatus?: boolean }): void {
-    this.modalService.create({
-      nzContent: MemberAdvancedFilterComponent,
-      nzData: { filterTypes, storageKey },
-      nzFooter: null,
-      nzClosable: true,
-      nzWidth: '400px',
-      nzBodyStyle: { minHeight: '100px' },
-      nzMaskClosable: false,
-      nzOnOk: (e) => {
-        this.refresher.emit({
-          key: 'advanced-filter-member',
-          value: e.frm.getRawValue(),
-          componentId: componentId
-
-        });
+        this.refresher.emit({ key: "pull", value: e.model });
       },
     });
   }
+
+  // showAdvancedFilter(storageKey: string, componentId: any = '',  filterTypes?: { roomStatus?: boolean }): void {
+  //   this.modalService.create({
+  //     nzContent: MemberAdvancedFilterComponent,
+  //     nzData: { filterTypes, storageKey },
+  //     nzFooter: null,
+  //     nzClosable: true,
+  //     nzWidth: '400px',
+  //     nzBodyStyle: { minHeight: '100px' },
+  //     nzMaskClosable: false,
+  //     nzOnOk: (e) => {
+  //       this.refresher.emit({
+  //         key: 'advanced-filter-member',
+  //         value: e.frm.getRawValue(),
+  //         componentId: componentId
+
+  //       });
+  //     },
+  //   });
+  // }
 }

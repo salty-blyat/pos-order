@@ -17,4 +17,18 @@ export class LocationUiService extends BaseUiService {
       "450px"
     );
   }
+
+  override showAdd(branchId: number, componentId: any = ""): void {
+    this.modalService.create({
+      nzContent: LocationOperationComponent,
+      nzFooter: null,
+      nzData: { branchId },
+      nzClosable: true,
+      nzWidth: "450px",
+      nzMaskClosable: false,
+      nzOnOk: (e: any) => {
+        this.refresher.emit({ key: "added", value: e.model, componentId });
+      },
+    });
+  }
 }

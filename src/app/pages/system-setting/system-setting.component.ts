@@ -1,4 +1,10 @@
-import { Component, computed, OnInit, signal, ViewEncapsulation } from "@angular/core";
+import {
+  Component,
+  computed,
+  OnInit,
+  signal,
+  ViewEncapsulation,
+} from "@angular/core";
 import { Observable } from "rxjs";
 import { ActivatedRoute, Data, Router } from "@angular/router";
 import { AuthService } from "../../helpers/auth.service";
@@ -23,7 +29,8 @@ import { AuthKeys } from "../../const";
           <div nz-col nzSpan="6" class="main-content-setting">
             <nz-sider nzWidth="200px" nzTheme="light">
               <ul nz-menu nzMode="inline" class="menu-custom-setting">
-                <li *ngIf="isCompany()"
+                <li
+                  *ngIf="isCompany()"
                   style="margin-top: 0"
                   nz-menu-item
                   routerLink="/setting/system-setting/company-section"
@@ -32,25 +39,18 @@ import { AuthKeys } from "../../const";
                   <i nz-icon nzType="profile"></i>
                   <span>{{ "CompanySetting" | translate }}</span>
                 </li>
-                <li *ngIf="isAutoNumber()"
+                <li
+                  *ngIf="isAutoNumber()"
                   nz-menu-item
                   routerLink="/setting/system-setting/auto-number-section"
                   [nzMatchRouter]="true"
                 >
                   <i nz-icon nzType="profile"></i>
                   <span>{{ "AutoNumber" | translate }}</span>
-                </li>
-                <li  *ngIf="isOtherApp()"
-                  nz-menu-item
-                  routerLink="/setting/system-setting/other-app-section"
-                  [nzMatchRouter]="true"
-                >
-                  <i nz-icon nzType="appstore-add"></i>
-                  <span>{{ "OtherApp" | translate }}</span>
-                </li>
+                </li> 
               </ul>
             </nz-sider>
-          </div> 
+          </div>
           <div nz-col nzSpan="18">
             <nz-content class="menu-content-setting">
               <router-outlet></router-outlet>
@@ -80,11 +80,22 @@ import { AuthKeys } from "../../const";
   encapsulation: ViewEncapsulation.None,
 })
 export class SystemSettingComponent implements OnInit {
-  constructor(private authService: AuthService, private activated: ActivatedRoute, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private activated: ActivatedRoute,
+    private router: Router
+  ) {}
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
-  isCompany = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING));
-  isAutoNumber = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER));
-  isOtherApp = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__OTHER_APP));
+  isCompany = computed(() =>
+    this.authService.isAuthorized(
+      AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING
+    )
+  );
+  isAutoNumber = computed(() =>
+    this.authService.isAuthorized(
+      AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER
+    )
+  );
 
   ngOnInit(): void {
     this.router

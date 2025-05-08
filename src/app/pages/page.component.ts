@@ -82,6 +82,17 @@ export interface Type {
               <span>{{ "Home" | translate }}</span>
             </li>
             <li
+              *ngIf="isMemberList()"
+              nz-menu-item
+              [nzMatchRouter]="isActive()"
+              routerLink="/member"
+            >
+              <i nz-icon nzType="user"></i>
+              <span>{{ "Member" | translate }}</span>
+            </li>
+
+
+            <li
               *ngIf="isAccountList()"
               nz-menu-item
               [nzMatchRouter]="isActive()"

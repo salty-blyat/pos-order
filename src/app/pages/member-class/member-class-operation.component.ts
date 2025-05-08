@@ -1,32 +1,37 @@
-import { Component, computed, ViewEncapsulation } from "@angular/core";
-import { BaseOperationComponent } from "../../utils/components/base-operation.component";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { CommonValidators } from "../../utils/services/common-validators";
 import { NzModalRef } from "ng-zorro-antd/modal";
-import { MemberGroupUiService } from "./member-group-ui.service";
-import { MemberGroup, MemberGroupService } from "./member-group.service";
 import { AuthService } from "../../helpers/auth.service";
-import { AuthKeys } from "../../const";
+import { CommonValidators } from "../../utils/services/common-validators";
+import { BaseOperationComponent } from "../../utils/components/base-operation.component";
+import { MemberClass, MemberClassService } from "./member-class.service";
+import { MemberClassUiService } from "./member-class-ui.service";
 
 @Component({
-  selector: "app-member-group-unit-operation",
+  selector: "app-member-class-operation",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
       <span *ngIf="modal?.id && !modal?.isView"
         >{{ "Edit" | translate }}
-        {{ model?.name || ("Loading" | translate) }}</span
+        {{ model?.code || ("Loading" | translate) }}</span
       >
       <span *ngIf="modal?.id && modal?.isView">{{
-        model?.name || ("Loading" | translate)
+        model?.code || ("Loading" | translate)
       }}</span>
     </div>
     <div class="modal-content">
-      <nz-spin
-        *ngIf="isLoading()"
-        style="position: absolute; top: 50%; left: 50%"
-      ></nz-spin>
+      <app-loading *ngIf="isLoading()"></app-loading>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Code" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+            <input nz-input formControlName="code" />
+          </nz-form-control>
+        </nz-form-item>
+
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "Name" | translate }}
@@ -34,13 +39,14 @@ import { AuthKeys } from "../../const";
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
             <input nz-input formControlName="name" />
           </nz-form-control>
-        </nz-form-item>
+        </nz-form-item> 
+        
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24"
             >{{ "Note" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
-            <textarea nz-input rows="3" formControlName="note"></textarea>
+            <textarea nz-input formControlName="note" rows="3"></textarea>
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -63,27 +69,27 @@ import { AuthKeys } from "../../const";
       <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isMemberGroupEdit()"
+          *ngIf="!isLoading() && isMemberClassEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isMemberGroupEdit()"
+          *ngIf="!isLoading() && isMemberClassEdit()"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isMemberGroupRemove()"
+          *ngIf="!isLoading() && isMemberClassRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isMemberGroupRemove()"
+          *ngIf="!isLoading() && isMemberClassRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -93,38 +99,50 @@ import { AuthKeys } from "../../const";
     </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
-  encapsulation: ViewEncapsulation.None,
   standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
-export class MemberGroupOperationComponent extends BaseOperationComponent<MemberGroup> {
+
+export class MemberClassOperationComponent extends BaseOperationComponent<MemberClass> {
   constructor(
     fb: FormBuilder,
-    ref: NzModalRef<MemberGroupOperationComponent>,
+    ref: NzModalRef<MemberClassOperationComponent>,
     private authService: AuthService,
-    service: MemberGroupService,
-    uiService: MemberGroupUiService
+    service: MemberClassService,
+    uiService: MemberClassUiService
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isMemberGroupEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__EDIT));
-  isMemberGroupRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__REMOVE));
+  isMemberClassEdit = signal<boolean>(true);
+  isMemberClassRemove = signal<boolean>(true);
 
-  override initControl(): void {
-    const { required, noteMaxLengthValidator, nameExistValidator } =
-      CommonValidators;
+  override initControl() {
+    const {
+      codeExistValidator,
+      noteMaxLengthValidator,
+      nameMaxLengthValidator,
+      nameExistValidator,
+      required,
+    } = CommonValidators;
     this.frm = this.fb.group({
+      code: [
+        null,
+        [required, nameMaxLengthValidator],
+        [codeExistValidator(this.service, this.modal?.id)],
+      ],
       name: [
         null,
-        [required, noteMaxLengthValidator()],
+        [required, nameMaxLengthValidator],
         [nameExistValidator(this.service, this.modal?.id)],
-      ],
-      note: [null],
+      ], 
+      note: [null, [noteMaxLengthValidator]],
     });
   }
 
   override setFormValue() {
     this.frm.setValue({
+      code: this.model.code,
       name: this.model.name,
       note: this.model.note,
     });

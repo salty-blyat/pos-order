@@ -147,6 +147,13 @@ export class LocationOperationComponent extends BaseOperationComponent<Location>
       branchId: [null],
       note: [null, [noteMaxLengthValidator]],
     });
+    setTimeout(() => {
+      this.isLoading.set(true);
+      if (this.modal.branchId !== 0) {
+        this.frm.patchValue({ branchId: this.modal.branchId });
+      }
+      this.isLoading.set(false);
+    }, 50);
   }
 
   override setFormValue() {

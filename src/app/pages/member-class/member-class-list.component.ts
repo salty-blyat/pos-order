@@ -1,21 +1,15 @@
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
-import { BaseListComponent } from "../../utils/components/base-list.component";
-import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { ActivatedRoute } from "@angular/router";
-import { AuthKeys, SIZE_COLUMNS } from "../../const";
-import { Observable } from "rxjs";
-import { MemberGroup, MemberGroupService } from "./member-group.service";
-import { MemberGroupUiService } from "./member-group-ui.service";
-import {
-  SETTING_KEY,
-  SystemSetting,
-  SystemSettingService,
-} from "../system-setting/system-setting.service";
 import { AuthService } from "../../helpers/auth.service";
-import { NotificationService } from "../../utils/services/notification.service";
+import { ActivatedRoute } from "@angular/router";
+import { Observable } from "rxjs";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { BaseListComponent } from "../../utils/components/base-list.component";
+import { SIZE_COLUMNS } from "../../const";
+import { MemberClass, MemberClassService } from "./member-class.service";
+import { MemberClassUiService } from "./member-class-ui.service";
 
 @Component({
-  selector: "app-member-group-list",
+  selector: "app-member-class-list",
   template: `
     <nz-layout>
       <app-breadcrumb
@@ -26,7 +20,7 @@ import { NotificationService } from "../../utils/services/notification.service";
         <div nz-row>
           <div nz-col>
             <app-filter-input
-              storageKey="member-group-list-search"
+              storageKey="member-class-list-search"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
@@ -34,6 +28,7 @@ import { NotificationService } from "../../utils/services/notification.service";
           </div>
           <div *ngIf="draged()">
             <button
+              style="width: 100%"
               nz-button
               nzType="primary"
               (click)="saveOrdering()"
@@ -43,18 +38,9 @@ import { NotificationService } from "../../utils/services/notification.service";
             </button>
           </div>
         </div>
-        <div nz-flex nzGap="4px" nzAlign="center">
+        <div>
           <button
-            *ngIf="pavrEnable()"
-            nz-button
-            nzType="primary"
-            (click)="uiService.showPull()"
-          >
-            <i nz-icon nzType="arrow-down" nzTheme="outline"></i>
-            {{ "Pull" | translate }}
-          </button>
-          <button
-            *ngIf="isMemberGroupAdd()"
+            *ngIf="isMemberClassAdd()"
             nz-button
             nzType="primary"
             (click)="uiService.showAdd()"
@@ -68,6 +54,7 @@ import { NotificationService } from "../../utils/services/notification.service";
         <nz-table
           nzSize="small"
           nzShowSizeChanger
+          #fixedTable
           nzTableLayout="fixed"
           [nzPageSizeOptions]="pageSizeOption()"
           [nzData]="lists()"
@@ -86,9 +73,10 @@ import { NotificationService } from "../../utils/services/notification.service";
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION" nzAlign="right"></th>
             </tr>
           </thead>
           <tbody
@@ -97,11 +85,17 @@ import { NotificationService } from "../../utils/services/notification.service";
             (cdkDropListDropped)="drop($event)"
             [cdkDropListData]="lists()"
           >
-            <tr *ngFor="let data of lists(); let i = index" cdkDrag>
-              <td style=" cursor: move;" cdkDragHandle>
-                <span nz-icon nzType="holder" nzTheme="outline"></span>
+            <tr cdkDrag *ngFor="let data of lists(); let i = index">
+              <td nzEllipsis style="flex: 0.25">
+                <span
+                  class="drag-handle"
+                  nz-icon
+                  nzType="holder"
+                  nzTheme="outline"
+                  cdkDragHandle
+                ></span>
               </td>
-              <td nzEllipsis>
+              <td nzEllipsis style="flex: 0.5">
                 {{
                   i
                     | rowNumber
@@ -111,35 +105,47 @@ import { NotificationService } from "../../utils/services/notification.service";
                         }
                 }}
               </td>
-              <td nzEllipsis title="{{ data.name }}">
+              <td nzEllipsis style="flex: 1">
                 <a
-                  *ngIf="isMemberGroupView()"
+                  *ngIf="isMemberClassView()"
                   (click)="uiService.showView(data.id!)"
-                  >{{ data.name }}</a
+                  >{{ data.code }}</a
                 >
-                <span *ngIf="!isMemberGroupView()">{{ data.name }}</span>
+                <span *ngIf="!isMemberClassView()"> {{ data.code }}</span>
               </td>
-              <td nzEllipsis title="{{ data.note }}">
-                {{ data.note }}
+              <td nzEllipsis style="flex: 3">
+                {{ data.name }}
               </td>
+              <td nzEllipsis style="flex: 3">{{ data.note }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
-                  <ng-container *ngIf="isMemberGroupEdit()">
+                  <ng-container *ngIf="isMemberClassEdit()">
                     <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
-                      <i nz-icon nzType="edit" nzTheme="outline"></i>
+                      <i
+                        nz-icon
+                        nzType="edit"
+                        nzTheme="outline"
+                        class="edit"
+                      ></i>
                       {{ "Edit" | translate }}
                     </a>
                   </ng-container>
-                  <ng-container *ngIf="isMemberGroupRemove()">
+                  <ng-container *ngIf="isMemberClassRemove()">
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
+                      nz-typography
                       class="delete"
                     >
-                      <i nz-icon nzType="delete" nzTheme="outline"></i>
+                      <i
+                        nz-icon
+                        nzType="delete"
+                        nzTheme="outline"
+                        style="padding-right: 5px"
+                      ></i>
                       {{ "Delete" | translate }}
                     </a>
                   </ng-container>
@@ -155,51 +161,22 @@ import { NotificationService } from "../../utils/services/notification.service";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class MemberGroupListComponent extends BaseListComponent<MemberGroup> {
+export class MemberClassListComponent extends BaseListComponent<MemberClass> {
   constructor(
-    notificationService: NotificationService,
-    service: MemberGroupService,
-    public override uiService: MemberGroupUiService,
+    service: MemberClassService,
     sessionStorageService: SessionStorageService,
-    public systemSettingService: SystemSettingService,
+    public override uiService: MemberClassUiService,
     private activated: ActivatedRoute,
     private authService: AuthService
   ) {
-    super(
-      service,
-      uiService,
-      sessionStorageService,
-      "member-group-list",
-      // notificationService
-    );
+    super(service, uiService, sessionStorageService, "member-class-list");
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isMemberGroupAdd = computed<boolean>(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__ADD)
-  );
-  isMemberGroupEdit = computed<boolean>(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__EDIT)
-  );
-  isMemberGroupRemove = computed<boolean>(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__REMOVE)
-  );
-  isMemberGroupView = computed<boolean>(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__VIEW)
-  );
-  pavrEnable = signal<boolean>(false);
-
+  readonly branchKey = this.sessionStorageService.getValue("branch-filter");
+  branchId = signal<number>(0);
+  isMemberClassAdd = signal<boolean>(true);
+  isMemberClassEdit = signal<boolean>(true);
+  isMemberClassRemove = signal<boolean>(true);
+  isMemberClassView = signal<boolean>(true);
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
-
-  override ngOnInit(): void {
-    this.systemSettingService.find(SETTING_KEY.PavrEnable).subscribe({
-      next: (value?: string) => {
-        value === "true"
-          ? this.pavrEnable.set(true)
-          : this.pavrEnable.set(false);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
-  }
 }

@@ -27,7 +27,7 @@ import { AuthService } from "../../helpers/auth.service";
               "
             ></app-filter-input>
           </div>
-          <div nz-col nzSpan="5">
+          <!-- <div nz-col nzSpan="5">
             <app-member-level-select
               [showAllOption]="true"
               storageKey="member-list-member-level-filter"
@@ -44,8 +44,8 @@ import { AuthService } from "../../helpers/auth.service";
                 memberUnitId.set($event); param().pageIndex = 1; search()
               "
             ></app-member-unit-select>
-          </div>
-          <div>
+          </div> -->
+          <!-- <div>
             <nz-badge [nzDot]="hasAdvancedFilter()">
               <button
                 nz-button
@@ -55,18 +55,9 @@ import { AuthService } from "../../helpers/auth.service";
                 <a nz-icon nzType="align-right" nzTheme="outline"></a>
               </button>
             </nz-badge>
-          </div>
+          </div> -->
         </div>
         <div style="margin-left:auto" nz-flex nzGap="4px" nzAlign="center">
-          <button
-            *ngIf="pavrEnable()"
-            nz-button
-            nzType="primary"
-            (click)="uiService.showPull()"
-          >
-            <i nz-icon nzType="arrow-down" nzTheme="outline"></i>
-            {{ "Pull" | translate }}
-          </button>
           <button
             *ngIf="isMemberAdd()"
             nz-button
@@ -103,21 +94,29 @@ import { AuthService } from "../../helpers/auth.service";
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.CODE">
                 {{ "Code" | translate }}
               </th>
-              <th nzEllipsis nzWidth="140px">{{ "Name" | translate }}</th>
-              <th nzEllipsis nzWidth="100px">{{ "Phone" | translate }}</th>
-              <th nzEllipsis nzWidth="70px">{{ "Sex" | translate }}</th>
-              <th nzEllipsis nzWidth="130px">
-                {{ "MemberLevel" | translate }}
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
+                {{ "Name" | translate }}
               </th>
-              <th nzEllipsis nzWidth="130px">
-                {{ "MemberGroup" | translate }}
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
+                {{ "LatinName" | translate }}
               </th>
-              <th nzEllipsis>{{ "MemberUnit" | translate }}</th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.PHONE">
+                {{ "Phone" | translate }}
+              </th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.SMALL">
+                {{ "BirthDate" | translate }}
+              </th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
+                {{ "MemberClassName" | translate }}
+              </th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
+                {{ "AgentName" | translate }}
+              </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of lists(); let i = index">
+            <!-- <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
                 {{
                   i
@@ -185,7 +184,7 @@ import { AuthService } from "../../helpers/auth.service";
                   </ng-container>
                 </nz-space>
               </td>
-            </tr>
+            </tr> -->
           </tbody>
         </nz-table>
       </nz-content>
@@ -215,63 +214,15 @@ export class MemberListComponent extends BaseListComponent<Member> {
   nationalityId = signal<number>(0);
   pavrEnable = signal<boolean>(false);
 
-  isMemberAdd = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD)
-  );
-  isMemberEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__EDIT)
-  );
-  isMemberRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE)
-  );
-  isMemberView = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW)
-  );
+  isMemberAdd = computed(() => true);
+  isMemberEdit = computed(() => true);
+  isMemberRemove = computed(() => true);
+  isMemberView = computed(() => true);
 
   setAdvancedFilter(advancedFilter: MemberAdvancedFilter) {
     this.sexId.set(advancedFilter.sexId);
     this.memberGroupId.set(advancedFilter.memberGroupId);
     this.nationalityId.set(advancedFilter.nationalityId);
-  }
-
-  override search() {
-    let filters: Filter[] = [];
-    if (this.memberUnitId()) {
-      filters.push({
-        field: "memberUnitId",
-        operator: "eq",
-        value: this.memberUnitId(),
-      });
-    }
-    if (this.memberLevelId()) {
-      filters.push({
-        field: "memberLevelId",
-        operator: "eq",
-        value: this.memberLevelId(),
-      });
-    }
-    if (this.memberGroupId()) {
-      filters.push({
-        field: "memberGroupId",
-        operator: "eq",
-        value: this.memberGroupId(),
-      });
-    }
-    if (this.nationalityId()) {
-      filters.push({
-        field: "nationalityId",
-        operator: "eq",
-        value: this.nationalityId(),
-      });
-    }
-    if (this.sexId()) {
-      filters.push({
-        field: "sexId",
-        operator: "eq",
-        value: this.sexId(),
-      });
-    }
-    super.search(filters, 100);
   }
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
