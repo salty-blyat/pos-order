@@ -26,6 +26,7 @@ import { MemberGroupListComponent } from "./pages/member-group/member-group-list
 import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
 import { LocationListComponent } from "./pages/location/location-list.component";
 import { BranchListComponent } from "./pages/branch/branch-list.component";
+import { AgentListComponent } from "./pages/agent/agent-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -41,6 +42,10 @@ const routes: Routes = [
       {
         path: "member",
         component: MemberListComponent,
+      },
+      {
+        path: "agent",
+        component: AgentListComponent,
       },
       {
         path: "setting",

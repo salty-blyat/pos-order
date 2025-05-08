@@ -161,6 +161,9 @@ import { BranchListComponent } from "./pages/branch/branch-list.component";
 import { BranchOperationComponent } from "./pages/branch/branch-operation.component";
 import { UserPopupSelectComponent } from "./pages/branch/user-popup-select.component";
 import { BranchDeleteComponent } from "./pages/branch/branch-delete.component";
+import { AgentListComponent } from "./pages/agent/agent-list.component";
+import { AgentOperationComponent } from "./pages/agent/agent-operation.component";
+import { AgentDeleteComponent } from "./pages/agent/agent-delete.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -351,7 +354,12 @@ export class CustomTranslate implements TranslateLoader {
     BranchOperationComponent,
     BranchDeleteComponent,
     UserPopupSelectComponent,
-    BranchSelectComponent
+    BranchSelectComponent,
+
+    // agent
+    AgentListComponent,
+    AgentOperationComponent,
+    AgentDeleteComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

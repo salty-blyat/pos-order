@@ -90,6 +90,7 @@ export interface Type {
               <i nz-icon nzType="user"></i>
               <span>{{ "Account" | translate }}</span>
             </li>
+
             <li
               *ngIf="isAgentList()"
               nz-menu-item
@@ -98,6 +99,15 @@ export interface Type {
             >
               <i nz-icon nzType="shop"></i>
               <span>{{ "Agent" | translate }}</span>
+            </li>
+            <li
+              *ngIf="isOfferList()"
+              nz-menu-item
+              [nzMatchRouter]="isActive()"
+              routerLink="/offer"
+            >
+              <i nz-icon nzType="shop"></i>
+              <span>{{ "Offer" | translate }}</span>
             </li>
             <li
               *ngIf="isSettingList()"
@@ -231,6 +241,7 @@ export class PageComponent implements OnInit {
   isHomeList = computed(() => true);
   isAccountList = computed(() => true);
   isAgentList = computed(() => true);
+  isOfferList = computed(() => true);
   // isMemberList = computed(() =>
   //   this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
   // );

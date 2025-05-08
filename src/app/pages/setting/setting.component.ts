@@ -112,24 +112,24 @@ export class SettingComponent implements OnInit {
           }, 
         ],
       },
-      {
-        groupName: "MemberUnit",
-        subName: [
+      // {
+      //   groupName: "MemberUnit",
+      //   subName: [
           
-          {
-            icon: "container",
-            url: `${this.urlPart}/member-group`,
-            label: "MemberGroup",
-            isList: this.isMemberGroupList(),
-          },
-          {
-            icon: "container",
-            url: `${this.urlPart}/member-level`,
-            label: "MemberLevel",
-            isList: this.isMemberLevelList(),
-          },
-        ],
-      },
+      //     {
+      //       icon: "container",
+      //       url: `${this.urlPart}/member-group`,
+      //       label: "MemberGroup",
+      //       isList: this.isMemberGroupList(),
+      //     },
+      //     {
+      //       icon: "container",
+      //       url: `${this.urlPart}/member-level`,
+      //       label: "MemberLevel",
+      //       isList: this.isMemberLevelList(),
+      //     },
+      //   ],
+      // },
       {
         groupName: "Location",
         subName: [
