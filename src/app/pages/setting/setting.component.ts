@@ -136,7 +136,7 @@ export class SettingComponent implements OnInit {
           {
             icon: "container",
             url: `${this.urlPart}/location`,
-            label: "Block",
+            label: "Location",
             isList: this.isLocationList(),
           },
           {

@@ -1,13 +1,13 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
-import { NzModalRef } from "ng-zorro-antd/modal";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
+import { Location, LocationService } from "./location.service";
+import { LocationUiService } from "./location-ui.service";
+import { FormBuilder } from "@angular/forms";
+import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { Currency, CurrencyService } from "./currency.service";
-import { CurrencyUiService } from "./currency-ui.service";
 
 @Component({
-  selector: "app-currency-delete",
+  selector: "app-location-delete",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="modal?.id"
@@ -17,13 +17,8 @@ import { CurrencyUiService } from "./currency-ui.service";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <div
-        *ngIf="errMessage() && !isLoading()"
-        nz-row
-        nzJustify="center"
-        style="margin:2px 0"
-      >
-        <span nz-typography nzType="danger" style="position: absolute">{{
+      <div  class="delete-error-message ">
+        <span *ngIf="errMessage() && !isLoading()" nz-typography nzType="danger">{{
           errMessage() | translate
         }}</span>
       </div>
@@ -73,20 +68,19 @@ import { CurrencyUiService } from "./currency-ui.service";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class CurrencyDeleteComponent extends BaseDeleteComponent<Currency> {
+export class LocationDeleteComponent extends BaseDeleteComponent<Location> {
   constructor(
-    service: CurrencyService,
-    uiService: CurrencyUiService,
-    ref: NzModalRef<CurrencyDeleteComponent>,
+    service: LocationService,
+    uiService: LocationUiService,
+    ref: NzModalRef<LocationDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);
   }
-
   override initControl(): void {
-    const { noteMaxLengthValidator } = CommonValidators;
+    const { noteMaxLengthValidator, required } = CommonValidators;
     this.frm = this.fb.group({
-      code: [{ value: null, disabled: true }, [Validators.required]],
+      code: [{ value: null, disabled: true }, [required]],
       note: [null, [noteMaxLengthValidator()]],
     });
   }
@@ -94,7 +88,7 @@ export class CurrencyDeleteComponent extends BaseDeleteComponent<Currency> {
   override setFormValue() {
     this.frm.setValue({
       code: this.model.code,
-      note: "",
+      note: this.model.note,
     });
   }
 }

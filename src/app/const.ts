@@ -105,7 +105,7 @@ export const SIZE_COLUMNS = {
   TOTAL: "150px",
   DROP: "8px",
   ICON: "30px",
-  NOTE: "400px",
+  NOTE: "350px",
   PHONE: "200px",
   IMAGE: "80px",
   Amenity: "400px",
@@ -113,6 +113,9 @@ export const SIZE_COLUMNS = {
   NORMAL: "12%",
   FORMAT: "150px",
   COLOR: "100px", 
+  SMALL: "50px",
+  MEDIUM: "150px",
+  LARGE: "300px"
 };
 export const AuthKeys = {
   APP : 37000,

@@ -5,7 +5,7 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { MemberUiService } from "./member-ui.service";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { TranslateService } from "@ngx-translate/core";
-import { Filter } from "../../utils/services/base-api.service"; 
+import { Filter } from "../../utils/services/base-api.service";
 import {
   SETTING_KEY,
   SystemSetting,
@@ -226,8 +226,8 @@ export class MemberListComponent extends BaseListComponent<Member> {
   );
   isMemberView = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW)
-  ); 
- 
+  );
+
   setAdvancedFilter(advancedFilter: MemberAdvancedFilter) {
     this.sexId.set(advancedFilter.sexId);
     this.memberGroupId.set(advancedFilter.memberGroupId);

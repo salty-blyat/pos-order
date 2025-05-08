@@ -1,13 +1,13 @@
 import { Component, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
-import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
+import { Branch, BranchService } from "./branch.service";
+import { BranchUiService } from "./branch-ui.service";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { Currency, CurrencyService } from "./currency.service";
-import { CurrencyUiService } from "./currency-ui.service";
+import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
 
 @Component({
-  selector: "app-currency-delete",
+  selector: "app-branch-delete",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="modal?.id"
@@ -73,11 +73,11 @@ import { CurrencyUiService } from "./currency-ui.service";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class CurrencyDeleteComponent extends BaseDeleteComponent<Currency> {
+export class BranchDeleteComponent extends BaseDeleteComponent<Branch> {
   constructor(
-    service: CurrencyService,
-    uiService: CurrencyUiService,
-    ref: NzModalRef<CurrencyDeleteComponent>,
+    service: BranchService,
+    uiService: BranchUiService,
+    ref: NzModalRef<BranchDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);

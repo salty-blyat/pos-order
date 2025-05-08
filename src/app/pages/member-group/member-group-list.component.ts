@@ -170,7 +170,7 @@ export class MemberGroupListComponent extends BaseListComponent<MemberGroup> {
       uiService,
       sessionStorageService,
       "member-group-list",
-      notificationService
+      // notificationService
     );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);

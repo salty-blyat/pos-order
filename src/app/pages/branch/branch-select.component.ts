@@ -1,24 +1,26 @@
 import {
   Component,
+  computed,
   forwardRef,
   signal,
   ViewEncapsulation,
 } from "@angular/core";
-import { BaseSelectComponent } from "../../utils/components/base-select.component";
-import { Member, MemberService } from "./member.service";
-import { MemberUiService } from "./member-ui.service";
-import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { BaseSelectComponent } from "../../utils/components/base-select.component";
+import { AuthService } from "../../helpers/auth.service";
+import { Branch, BranchService } from "./branch.service";
+import { BranchUiService } from "./branch-ui.service";
 
 @Component({
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => MemberSelectComponent),
+      useExisting: forwardRef(() => BranchSelectComponent),
       multi: true,
     },
   ],
-  selector: "app-member-select",
+  selector: "app-branch-select",
   template: `
     <nz-select
       nzShowSearch
@@ -32,20 +34,13 @@ import { NG_VALUE_ACCESSOR } from "@angular/forms";
       <nz-option
         *ngIf="showAllOption()"
         [nzValue]="0"
-        [nzLabel]="'AllMember' | translate"
+        [nzLabel]="'AllBranch' | translate"
       ></nz-option>
       <nz-option
         *ngFor="let item of lists()"
-        nzCustomContent
         [nzValue]="item.id"
         [nzLabel]="item?.name + ''"
       >
-        <div nz-flex nzAlign="center" nzGap="small">
-          <nz-avatar [nzSrc]="item.photo"></nz-avatar>
-          <div>
-            <span class="b-name"> {{ item.name }} {{ item.nameEn }} </span>
-          </div>
-        </div>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
         <i nz-icon nzType="loading" class="loading-icon"></i>
@@ -53,8 +48,8 @@ import { NG_VALUE_ACCESSOR } from "@angular/forms";
       </nz-option>
       <ng-template #actionItem>
         <a
-          *ngIf="addOption() && isMemberAdd()"
-          (click)="uiService.showAdd(componentId)"
+          *ngIf="addOption() && isBranchAdd()"
+          (click)="uiService.showAdd()"
           class="item-action"
         >
           <i nz-icon nzType="plus"></i> {{ "Add" | translate }}
@@ -62,46 +57,30 @@ import { NG_VALUE_ACCESSOR } from "@angular/forms";
       </ng-template>
     </nz-select>
   `,
-  standalone: false,
   styles: [
     `
       nz-select {
         width: 100%;
       }
-      .item-action {
-        flex: 0 0 auto;
-        padding: 6px 8px;
-        display: block;
-      }
-      .b-code {
-        font-weight: bolder;
-      }
-      .b-name {
-        font-size: 12px;
-        padding-left: 5px;
-      }
-      ::ng-deep cdk-virtual-scroll-viewport {
-        min-height: 34px;
-      }
     `,
   ],
-
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
-export class MemberSelectComponent extends BaseSelectComponent<Member> {
+export class BranchSelectComponent extends BaseSelectComponent<Branch> {
   constructor(
-    service: MemberService,
-    uiService: MemberUiService,
+    service: BranchService,
+    override uiService: BranchUiService,
+    private authService: AuthService,
     sessionStorageService: SessionStorageService
   ) {
     super(
       service,
       uiService,
       sessionStorageService,
-      "member-filter",
-      "all-member"
+      "branch-filter",
+      "branch-floor"
     );
   }
-
-  isMemberAdd = signal<boolean>(true);
+  isBranchAdd = signal<boolean>(true);
 }

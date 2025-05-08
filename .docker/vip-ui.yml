@@ -4,7 +4,7 @@ services:
     image: dkr.sgx.bz/vip-ui
     restart: always
     ports:
-      - "60344:80"
+      - "60346:80"
     environment:
       - "LANG_URL=https://core.sgx.bz/files/langs/vip"
       - "BASE_API_URL=https://latest.sgx.bz/vip/api"

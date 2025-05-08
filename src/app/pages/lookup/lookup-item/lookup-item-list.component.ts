@@ -75,18 +75,18 @@ import { AuthService } from "../../../helpers/auth.service";
           </ng-template>
           <thead>
             <tr>
-              <th [nzWidth]="SIZE_COLUMNS.DRAG" ></th>
+              <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.IMAGE" nzAlign="center">
+              <th [nzWidth]="SIZE_COLUMNS.IMAGE" nzEllipsis nzAlign="center">
                 {{ "Image" | translate }}
               </th>
-              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
+              <th [nzWidth]="SIZE_COLUMNS.NAME" nzEllipsis>
                 {{ "Name" | translate }}
               </th>
-              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
+              <th [nzWidth]="SIZE_COLUMNS.NAME" nzEllipsis>
                 {{ "NameEn" | translate }}
               </th>
-              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.COLOR">
+              <th [nzWidth]="SIZE_COLUMNS.COLOR" nzEllipsis>
                 {{ "Color" | translate }}
               </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
@@ -99,7 +99,7 @@ import { AuthService } from "../../../helpers/auth.service";
             [cdkDropListData]="lists()"
           >
             <tr cdkDrag *ngFor="let data of lists(); let i = index">
-              <td nzEllipsis style="flex:0.5">
+              <td nzEllipsis style="flex: 0.25">
                 <span
                   class="drag-handle"
                   nz-icon
@@ -109,7 +109,7 @@ import { AuthService } from "../../../helpers/auth.service";
                 ></span>
               </td>
 
-              <td nzEllipsis style="flex:0.25">
+              <td nzEllipsis style="flex: 0.5">
                 {{
                   i
                     | rowNumber
@@ -119,7 +119,7 @@ import { AuthService } from "../../../helpers/auth.service";
                         }
                 }}
               </td>
-              <td nzEllipsis class="image" style="flex:0.5" nzAlign="center">
+              <td nzEllipsis class="image" nzAlign="center" style="flex: 1">
                 <img
                   *ngIf="data.image"
                   class="image-list"
@@ -135,7 +135,7 @@ import { AuthService } from "../../../helpers/auth.service";
                   alt=""
                 />
               </td>
-              <td nzEllipsis style="flex:2">
+              <td nzEllipsis style="flex: 3">
                 <a
                   *ngIf="isLookupView()"
                   (click)="uiService.showView(data.id!)"
@@ -143,8 +143,8 @@ import { AuthService } from "../../../helpers/auth.service";
                 >
                 <span *ngIf="!isLookupView()">{{ data.name }}</span>
               </td>
-              <td nzEllipsis style="flex:2">{{ data.nameEn }}</td>
-              <td nzEllipsis style="flex:1">
+              <td nzEllipsis style="flex: 3">{{ data.nameEn }}</td>
+              <td nzEllipsis>
                 <div nz-flex>
                   <div
                     [ngStyle]="{ backgroundColor: data.color ?? 'white' }"
@@ -152,8 +152,8 @@ import { AuthService } from "../../../helpers/auth.service";
                   ></div>
                   <span>{{ data.color | transparent }}</span>
                 </div>
-              </td> 
-              <td class="col-action" style="flex:1">
+              </td>
+              <td class="col-action" style="flex: 4">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
                     <nz-divider nzType="vertical"></nz-divider>

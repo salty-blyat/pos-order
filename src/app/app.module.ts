@@ -151,9 +151,16 @@ import { MemberGroupPullComponent } from "./pages/member-group/member-group-pull
 import { MemberLevelPullComponent } from "./pages/member-level/member-level-pull.component";
 import { ItemSelectComponent } from "./pages/item/item-select.component";
 import { MemberSelectComponent } from "./pages/member/member-select.component";
-import {
-  TransparentPipe
-} from "./utils/pipes/transparent.pipe";
+import { TransparentPipe } from "./utils/pipes/transparent.pipe";
+import { LocationListComponent } from "./pages/location/location-list.component";
+import { LocationOperationComponent } from "./pages/location/location-operation.component";
+import { LocationDeleteComponent } from "./pages/location/location-delete.component";
+import { LocationSelectComponent } from "./pages/location/location-select.component";
+import { BranchSelectComponent } from "./pages/branch/branch-select.component";
+import { BranchListComponent } from "./pages/branch/branch-list.component";
+import { BranchOperationComponent } from "./pages/branch/branch-operation.component";
+import { UserPopupSelectComponent } from "./pages/branch/user-popup-select.component";
+import { BranchDeleteComponent } from "./pages/branch/branch-delete.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -332,6 +339,19 @@ export class CustomTranslate implements TranslateLoader {
     MemberGroupDeleteComponent,
     MemberGroupSelectComponent,
     MemberGroupPullComponent,
+
+    // location
+    LocationListComponent,
+    LocationOperationComponent,
+    LocationDeleteComponent,
+    LocationSelectComponent,
+
+    // branch
+    BranchListComponent,
+    BranchOperationComponent,
+    BranchDeleteComponent,
+    UserPopupSelectComponent,
+    BranchSelectComponent
   ],
   bootstrap: [AppComponent],
   imports: [

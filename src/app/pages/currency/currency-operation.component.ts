@@ -6,8 +6,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
 import { Currency, CurrencyService } from "./currency.service";
 import { CurrencyUiService } from "./currency-ui.service";
 import { AuthService } from "../../helpers/auth.service";
-import { AuthKeys } from "../../const";
-import { NzSelectOptionInterface } from "ng-zorro-antd/select";
+import { AuthKeys } from "../../const"; 
 
 @Component({
   selector: "app-currency-operation",
@@ -81,7 +80,7 @@ import { NzSelectOptionInterface } from "ng-zorro-antd/select";
             [nzXs]="24"
             nzRequired
             nzFor="denominations"
-            >{{ "Denomination" | translate }}</nz-form-label
+            >{{ "Denormination" | translate }}</nz-form-label
           >
           <nz-form-control [nzSm]="17" [nzXs]="24">
             <nz-select 
@@ -180,8 +179,6 @@ export class CurrencyOperationComponent extends BaseOperationComponent<Currency>
   }
 
   override setFormValue() {
-    console.log(this.model.denominations	);
-    
     this.frm.setValue({
       code: this.model.code,
       symbol: this.model.symbol,

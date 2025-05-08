@@ -1,47 +1,57 @@
-import { Component, computed, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
+import { Location, LocationService } from "./location.service";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
-import { BaseOperationComponent } from "../../utils/components/base-operation.component";
-import { CommonValidators } from "../../utils/services/common-validators";
-import { Floor, FloorService } from "./floor.service";
-import { FloorUiService } from "./floor-ui.service";
+import { LocationUiService } from "./location-ui.service";
 import { AuthService } from "../../helpers/auth.service";
-import { AuthKeys } from "../../const";
+import { CommonValidators } from "../../utils/services/common-validators";
+import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 
 @Component({
-  selector: "app-floor-operation",
+  selector: "app-location-operation",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
       <span *ngIf="modal?.id && !modal?.isView"
         >{{ "Edit" | translate }}
-        {{ model?.name || ("Loading" | translate) }}</span
+        {{ model?.code || ("Loading" | translate) }}</span
       >
       <span *ngIf="modal?.id && modal?.isView">{{
-        model?.name || ("Loading" | translate)
+        model?.code || ("Loading" | translate)
       }}</span>
     </div>
     <div class="modal-content">
-      <app-loading *ngIf="isLoading()" />
+      <app-loading *ngIf="isLoading()"></app-loading>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
-          <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired
-            >{{ "Block" | translate }}
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Code" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip="">
-            <app-block-select formControlName="blockId"></app-block-select>
+          <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+            <input nz-input formControlName="code" />
           </nz-form-control>
         </nz-form-item>
+
         <nz-form-item>
-          <nz-form-label [nzSm]="5" [nzXs]="24" nzRequired
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
             >{{ "Name" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
             <input nz-input formControlName="name" />
           </nz-form-control>
         </nz-form-item>
+
         <nz-form-item>
-          <nz-form-label [nzSm]="5" [nzXs]="24"
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+            >{{ "Branch" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzXs]="24">
+            <app-branch-select formControlName="branchId"></app-branch-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24"
             >{{ "Note" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="17" [nzXs]="24">
@@ -67,28 +77,28 @@ import { AuthKeys } from "../../const";
       </div>
       <div *ngIf="modal?.isView">
         <a
-          *ngIf="!isLoading() && isFloorEdit()"
-          (click)="uiService.showEdit(model.id!)"
+          (click)="uiService.showEdit(model.id || 0)"
+          *ngIf="!isLoading() && isLocationEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isFloorEdit()"
+          *ngIf="!isLoading() && isLocationEdit()"
         ></nz-divider>
         <a
           nz-typography
           nzType="danger"
-          *ngIf="!isLoading() && isFloorRemove()"
-          (click)="uiService.showDelete(model.id!)"
+          (click)="uiService.showDelete(model.id || 0)"
+          *ngIf="!isLoading() && isLocationRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isFloorRemove()"
+          *ngIf="!isLoading() && isLocationRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -101,59 +111,49 @@ import { AuthKeys } from "../../const";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class FloorOperationComponent extends BaseOperationComponent<Floor> {
+export class LocationOperationComponent extends BaseOperationComponent<Location> {
   constructor(
     fb: FormBuilder,
-    ref: NzModalRef<FloorOperationComponent>,
-    override service: FloorService,
+    ref: NzModalRef<LocationOperationComponent>,
     private authService: AuthService,
-    override uiService: FloorUiService
+    service: LocationService,
+    uiService: LocationUiService
   ) {
     super(fb, ref, service, uiService);
   }
 
-  isFloorRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__REMOVE)
-  );
-  isFloorEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__EDIT)
-  );
+  isLocationEdit = signal<boolean>(true);
+  isLocationRemove = signal<boolean>(true);
 
-  override initControl(): void {
-    const { required, nameMaxLengthValidator, nameExistValidator } =
-      CommonValidators;
-
+  override initControl() {
+    const {
+      codeExistValidator,
+      noteMaxLengthValidator,
+      nameMaxLengthValidator,
+      nameExistValidator,
+      required,
+    } = CommonValidators;
     this.frm = this.fb.group({
+      code: [
+        null,
+        [required, nameMaxLengthValidator],
+        [codeExistValidator(this.service, this.modal?.id)],
+      ],
       name: [
         null,
         [required, nameMaxLengthValidator],
-        [
-          nameExistValidator(
-            this.service,
-            this.modal?.id,
-            "name",
-            this.modal?.blockId
-          ),
-        ],
+        [nameExistValidator(this.service, this.modal?.id)],
       ],
-      blockId: [{ value: this.modal?.blockId, disabled: false }],
-      note: [null],
-    });
-    this.frm.get('blockId')?.valueChanges.subscribe((newBlockId: number) => {
-      const nameControl = this.frm.get('name');
-      if (nameControl) {
-        nameControl.setAsyncValidators([
-          nameExistValidator(this.service, this.modal?.id, 'name', newBlockId),
-        ]);
-        nameControl.updateValueAndValidity(); // re-run the validator
-      }
+      branchId: [null],
+      note: [null, [noteMaxLengthValidator]],
     });
   }
 
-  override setFormValue(): void {
+  override setFormValue() {
     this.frm.setValue({
+      code: this.model.code,
+      branchId: this.model.branchId,
       name: this.model.name,
-      blockId: this.model.blockId,
       note: this.model.note,
     });
   }

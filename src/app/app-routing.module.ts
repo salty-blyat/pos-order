@@ -15,15 +15,17 @@ import { CurrencyListComponent } from "./pages/currency/currency-list.component"
 import { AutoNumberListComponent } from "./pages/auto-number/auto-number-list.component";
 import { ReportViewComponent } from "./pages/report/report-view.component";
 import { ReportGroupMenuComponent } from "./pages/report-group/report-group-menu.component";
-import { BlockListComponent } from "./pages/block/block-list.component"; 
+import { BlockListComponent } from "./pages/block/block-list.component";
 import { TagGroupListComponent } from "./pages/tag/tag-group-list.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { ItemListComponent } from "./pages/item/item-list.component";
 import { ItemTypeListComponent } from "./pages/item-type/item-type-list.component";
-import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component"; 
+import { MemberLevelListComponent } from "./pages/member-level/member-level-list.component";
 import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
 import { MemberGroupListComponent } from "./pages/member-group/member-group-list.component";
 import { OtherAppSectionComponent } from "./pages/system-setting/other-app-section.component";
+import { LocationListComponent } from "./pages/location/location-list.component";
+import { BranchListComponent } from "./pages/branch/branch-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -134,13 +136,29 @@ const routes: Routes = [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "AutoNumber", url: null },
         ],
-      }, 
+      },
+      // {
+      //   path: "setting/block",
+      //   component: BlockListComponent,
+      //   data: [
+      //     { index: 0, label: "Setting", url: "/setting" },
+      //     { index: 1, label: "Block", url: null },
+      //   ],
+      // },
       {
-        path: "setting/block",
-        component: BlockListComponent,
+        path: "setting/location",
+        component: LocationListComponent,
         data: [
           { index: 0, label: "Setting", url: "/setting" },
-          { index: 1, label: "Block", url: null },
+          { index: 1, label: "Location", url: null },
+        ],
+      },
+      {
+        path: "setting/branch",
+        component: BranchListComponent,
+        data: [
+          { index: 0, label: "Setting", url: "/setting" },
+          { index: 1, label: "Branch", url: null },
         ],
       },
       {
@@ -167,7 +185,7 @@ const routes: Routes = [
           { index: 1, label: "MemberGroup", url: null },
         ],
       },
-      
+
       {
         path: "setting/item",
         component: ItemListComponent,
@@ -183,7 +201,7 @@ const routes: Routes = [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "ItemType", url: null },
         ],
-      }, 
+      },
     ],
   },
   {
