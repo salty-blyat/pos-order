@@ -1,68 +1,54 @@
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
-import { Member, MemberAdvancedFilter, MemberService } from "./member.service";
+import { Member, MemberService } from "./member.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { MemberUiService } from "./member-ui.service";
-import { AuthKeys, SIZE_COLUMNS } from "../../const";
+import { SIZE_COLUMNS } from "../../const";
 import { TranslateService } from "@ngx-translate/core";
-import { Filter } from "../../utils/services/base-api.service";
-import {
-  SETTING_KEY,
-  SystemSetting,
-  SystemSettingService,
-} from "../system-setting/system-setting.service";
 import { AuthService } from "../../helpers/auth.service";
+import { MemberClass } from "../member-class/member-class.service";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-member-list",
   template: `
     <nz-layout>
-      <nz-header>
+      <nz-header >
         <div nz-row>
-          <div nz-col nzSpan="5">
+          <div nz-col>
             <app-filter-input
-              storageKey="member-list-search"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
           </div>
-          <!-- <div nz-col nzSpan="5">
-            <app-member-level-select
-              [showAllOption]="true"
-              storageKey="member-list-member-level-filter"
+          <div nz-col>
+            <app-member-class-select
+              storageKey="member-class-list-search"
               (valueChanged)="
-                memberLevelId.set($event); param().pageIndex = 1; search()
+                memberClassId.set($event); param().pageIndex = 1; search()
               "
-            ></app-member-level-select>
+              [showAllOption]="true"
+            >
+            </app-member-class-select>
           </div>
-          <div nz-col nzSpan="5">
-            <app-member-unit-select
+          <div nz-col>
+            <app-agent-select
+              storageKey="agent-list-search"
               [showAllOption]="true"
-              storageKey="member-list-unit-filter"
               (valueChanged)="
-                memberUnitId.set($event); param().pageIndex = 1; search()
+                agentId.set($event); param().pageIndex = 1; search()
               "
-            ></app-member-unit-select>
-          </div> -->
-          <!-- <div>
-            <nz-badge [nzDot]="hasAdvancedFilter()">
-              <button
-                nz-button
-                nzType="default"
-                (click)="uiService.showAdvancedFilter(advancedStoreKey)"
-              >
-                <a nz-icon nzType="align-right" nzTheme="outline"></a>
-              </button>
-            </nz-badge>
-          </div> -->
+            >
+            </app-agent-select>
+          </div>
         </div>
         <div style="margin-left:auto" nz-flex nzGap="4px" nzAlign="center">
           <button
             *ngIf="isMemberAdd()"
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd(memberUnitId(), memberLevelId())"
+            (click)="uiService.showAdd(memberClassId(), agentId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Add" | translate }}
@@ -97,26 +83,20 @@ import { AuthService } from "../../helpers/auth.service";
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
                 {{ "Name" | translate }}
               </th>
-              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
-                {{ "LatinName" | translate }}
-              </th>
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.PHONE">
                 {{ "Phone" | translate }}
               </th>
-              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.SMALL">
-                {{ "BirthDate" | translate }}
+              <th nzEllipsis nzWidth="200px">
+                {{ "MemberClass" | translate }}
               </th>
-              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
-                {{ "MemberClassName" | translate }}
-              </th>
-              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.NAME">
-                {{ "AgentName" | translate }}
+              <th nzEllipsis nzWidth="150px">
+                {{ "Agent" | translate }}
               </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
-            <!-- <tr *ngFor="let data of lists(); let i = index">
+            <tr *ngFor="let data of lists(); let i = index">
               <td nzEllipsis>
                 {{
                   i
@@ -134,33 +114,11 @@ import { AuthService } from "../../helpers/auth.service";
                 <span>{{ data.code }}</span>
                 }
               </td>
-              <td nzEllipsis title="{{ data.name }}">
-                {{ data.name }} {{ data.nameEn }}
-              </td>
-              <td nzEllipsis title="{{ data.phone }}">{{ data.phone }}</td>
-              <td
-                nzEllipsis
-                title="{{
-                  translate.currentLang == 'km'
-                    ? data.sexName || data.sexNameEn
-                    : data.sexNameEn || data.sexName
-                }}"
-              >
-                {{
-                  translate.currentLang == "km"
-                    ? data.sexName || data.sexNameEn
-                    : data.sexNameEn || data.sexName
-                }}
-              </td>
-              <td nzEllipsis title="{{ data.memberLevelName }}">
-                {{ data.memberLevelName }}
-              </td>
-              <td nzEllipsis title="{{ data.memberGroupName }}">
-                {{ data.memberGroupName }}
-              </td>
-              <td nzEllipsis title="{{ data.memberUnitName }}">
-                {{ data.memberUnitName }}
-              </td>
+              <td nzEllipsis>{{ data.name }}/{{ data.latinName }}</td>
+              <td nzEllipsis>{{ data.phone }}</td>
+              <td nzEllipsis>{{ data.memberClassName }}</td>
+              <td nzEllipsis>{{ data.agentName }}</td>
+
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
@@ -184,7 +142,7 @@ import { AuthService } from "../../helpers/auth.service";
                   </ng-container>
                 </nz-space>
               </td>
-            </tr> -->
+            </tr>
           </tbody>
         </nz-table>
       </nz-content>
@@ -200,29 +158,43 @@ export class MemberListComponent extends BaseListComponent<Member> {
     override uiService: MemberUiService,
     sessionStorageService: SessionStorageService,
     protected translate: TranslateService,
-    private authService: AuthService,
-    private systemSettingService: SystemSettingService
+    private authService: AuthService
   ) {
     super(service, uiService, sessionStorageService, "member-list");
   }
-  readonly advancedStoreKey = "member-list-advanced-filter";
-  memberUnitId = signal<number>(0);
-  memberLevelId = signal<number>(0);
-  hasAdvancedFilter = signal<boolean>(false);
-  sexId = signal<number>(0);
-  memberGroupId = signal<number>(0);
-  nationalityId = signal<number>(0);
-  pavrEnable = signal<boolean>(false);
+  readonly agentIdKey = "agent-list-search";
+  readonly memberClassIdKey = "member-class-list-search";
+  agentId = signal(
+    parseInt(this.sessionStorageService.getValue(this.agentIdKey) ?? 0)
+  );
+  memberClassId = signal(
+    parseInt(this.sessionStorageService.getValue(this.memberClassIdKey) ?? 0)
+  );
 
   isMemberAdd = computed(() => true);
   isMemberEdit = computed(() => true);
   isMemberRemove = computed(() => true);
   isMemberView = computed(() => true);
 
-  setAdvancedFilter(advancedFilter: MemberAdvancedFilter) {
-    this.sexId.set(advancedFilter.sexId);
-    this.memberGroupId.set(advancedFilter.memberGroupId);
-    this.nationalityId.set(advancedFilter.nationalityId);
+  override search() {
+    const filters: Filter[] = [];
+    if (this.agentId()) {
+      filters.push({
+        field: "agentId",
+        operator: "eq",
+        value: this.agentId(),
+      });
+    }
+
+    if (this.memberClassId()) {
+      filters.push({
+        field: "memberClassId",
+        operator: "eq",
+        value: this.memberClassId(),
+      });
+    }
+
+    super.search(filters);
   }
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;

@@ -1,48 +1,59 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BaseApiService } from '../../utils/services/base-api.service';
-import { SettingService } from '../../app-setting';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { BaseApiService } from "../../utils/services/base-api.service";
+import { SettingService } from "../../app-setting";
 
 export enum LOOKUP_TYPE {
-  SexId = 1,
+  Gender = 1,
   Nationality = 2,
-  Status = 36001,
-  ChargeType = 36002,
+  AccountType = 38001,
+  TransactionType = 38002,
+  CardStatus = 38003,
+  OfferTypes = 38004,
+  RedeemStatuses = 38005,
+}
+export enum AccountTypes {
+  Wallet = 1,
+  Point = 2,
+  Cashback = 3,
+}
+export enum TransactionTypes {
+  Adjust = 1,
+  Topup = 101,
+  Order = 102,
+  Earn = 201,
+  Redeem = 202,
 }
 
-export enum Status {
-  Vacant = 1,
-  Occupied = 2,
-  Reserved = 3,
-  OutOfOrder = 4,
-  OutOfService = 5,
-  Blocked = 6
+export enum CardStatuses {
+  Pending = 1,
+  Active = 2,
+  Suspended = 3,
+  Expired = 5,
+  Removed = 4,
 }
 
-export enum ChargeType {
-  Meter = 1,
-  Fixed = 2,
-  GrossArea = 3,
-  NetArea = 4,
+export enum OfferTypes {
+  Gift = 1,
+  Coupon = 2,
+  Voucher = 3,
 }
 
-export enum RoomChargeStatus
-{
-  Active = 1,
-  Inactive = 2,
+export enum RedeemStatuses {
+  Processing = 1,
+  Used = 2,
+  Removed = 4,
 }
-
-
 export interface LookupType {
   id?: number;
   name?: string;
   nameEn?: string;
 }
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class LookupTypeService extends BaseApiService<any> {
   constructor(http: HttpClient, settingService: SettingService) {
-    super('lookuptype', http, settingService);
+    super("lookuptype", http, settingService);
   }
 }

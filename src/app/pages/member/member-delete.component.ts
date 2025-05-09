@@ -16,8 +16,8 @@ import { FormBuilder } from "@angular/forms";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <div *ngIf="errMessage() && !isLoading()"  class="delete-error-message ">
-        <span nz-typography nzType="danger" style="position: absolute">{{
+      <div *ngIf="errMessage() && !isLoading()"  class="delete-error-message">
+        <span nz-typography nzType="danger" >{{
           errMessage() | translate
         }}</span>
       </div>

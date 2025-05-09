@@ -34,7 +34,7 @@ import { AuthKeys } from "../../../const";
         [nzValue]="0"
         [nzLabel]="typeLabelAll() ? typeLabelAll() : (showAll() | translate)"
       ></nz-option>
-      <ng-container *ngIf="lookupType() !== LOOKUP_TYPE.ChargeType">
+      <ng-container *ngIf="lookupType() !== LOOKUP_TYPE.Gender">
         <nz-option
           *ngFor="let item of lists()"
           [nzValue]="item.valueId"
@@ -51,7 +51,7 @@ import { AuthKeys } from "../../../const";
           </div>
         </nz-option>
       </ng-container>
-      <ng-container *ngIf="lookupType() == LOOKUP_TYPE.ChargeType">
+      <ng-container *ngIf="lookupType() == LOOKUP_TYPE.Gender">
         <nz-option
           *ngFor="let item of lists(); let i = index"
           nzCustomContent
@@ -135,7 +135,7 @@ export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem>{
 
   showAll = input<string>('All');
   allowClear = input<boolean>(false);
-  lookupType = input<LOOKUP_TYPE>(LOOKUP_TYPE.ChargeType);
+  lookupType = input<LOOKUP_TYPE>(LOOKUP_TYPE.Gender);
   statuses = input<number[]>([]);
   typeLabelAll = input<string>('')
   isLookupAdd = signal(false); 

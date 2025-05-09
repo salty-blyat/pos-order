@@ -41,9 +41,8 @@ import { NG_VALUE_ACCESSOR } from "@angular/forms";
         [nzLabel]="item?.name + ''"
       >
         <div nz-flex nzAlign="center" nzGap="small">
-          <nz-avatar [nzSrc]="item.photo"></nz-avatar>
           <div>
-            <span class="b-name"> {{ item.name }} {{ item.nameEn }} </span>
+            <span class="b-name"> {{ item.name }} </span>
           </div>
         </div>
       </nz-option>

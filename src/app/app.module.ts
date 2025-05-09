@@ -123,19 +123,13 @@ import { InputNumberComponent } from "./utils/components/input-number.component"
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { MemberOperationComponent } from "./pages/member/member-operation.component";
 import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
-import { MemberUnitSelectComponent } from "./pages/member-unit/member-unit-select.component";
-import { MemberUnitDeleteComponent } from "./pages/member-unit/member-unit-delete.component";
-import { MemberUnitOperationComponent } from "./pages/member-unit/member-unit-operation.component";
-import { MemberUnitListComponent } from "./pages/member-unit/member-unit-list.component";
 import { MemberDeleteComponent } from "./pages/member/member-delete.component";
 import { MemberPullComponent } from "./pages/member/member-pull.component";
-import { MemberUnitPullComponent } from "./pages/member-unit/member-unit-pull.component";
 import { MemberSelectComponent } from "./pages/member/member-select.component";
 import { TransparentPipe } from "./utils/pipes/transparent.pipe";
 import { LocationListComponent } from "./pages/location/location-list.component";
 import { LocationOperationComponent } from "./pages/location/location-operation.component";
 import { LocationDeleteComponent } from "./pages/location/location-delete.component";
-import { LocationSelectComponent } from "./pages/location/location-select.component";
 import { BranchSelectComponent } from "./pages/branch/branch-select.component";
 import { BranchListComponent } from "./pages/branch/branch-list.component";
 import { BranchOperationComponent } from "./pages/branch/branch-operation.component";
@@ -152,6 +146,11 @@ import { OfferGroupListComponent } from "./pages/offer-group/offer-group-list.co
 import { OfferGroupOperationComponent } from "./pages/offer-group/offer-group-operation.component";
 import { ItemUploadComponent } from "./pages/offer-group/item-upload.component";
 import { OfferGroupDeleteComponent } from "./pages/offer-group/offer-group-delete.component";
+import { OfferGroupSelectComponent } from "./pages/offer-group/offer-group-select.component";
+import { AgentSelectComponent } from "./pages/agent/agent-select.component";
+import { AccountDeleteComponent } from "./pages/account/account-delete.component";
+import { AccountListComponent } from "./pages/account/account-list.component";
+import { AccountOperationComponent } from "./pages/account/account-operation.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -296,18 +295,10 @@ export class CustomTranslate implements TranslateLoader {
     MemberPullComponent,
     MemberSelectComponent,
 
-    // Member unit
-    MemberUnitListComponent,
-    MemberUnitOperationComponent,
-    MemberUnitDeleteComponent,
-    MemberUnitSelectComponent,
-    MemberUnitPullComponent,
-
     // location
     LocationListComponent,
     LocationOperationComponent,
     LocationDeleteComponent,
-    LocationSelectComponent,
 
     // branch
     BranchListComponent,
@@ -325,7 +316,7 @@ export class CustomTranslate implements TranslateLoader {
     // offer group
     OfferGroupListComponent,
     OfferGroupOperationComponent,
-    // OfferGroupSelectComponent,
+    OfferGroupSelectComponent,
     OfferGroupDeleteComponent,
     ItemUploadComponent,
 
@@ -333,6 +324,12 @@ export class CustomTranslate implements TranslateLoader {
     AgentListComponent,
     AgentOperationComponent,
     AgentDeleteComponent,
+    AgentSelectComponent,
+
+    // account
+    AccountDeleteComponent,
+    AccountListComponent,
+    AccountOperationComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

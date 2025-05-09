@@ -15,7 +15,7 @@ import { AutoNumberUiService } from "./auto-number-ui.service";
         <div class="modal-content">
             <nz-spin *ngIf="isLoading()" style="position: absolute; top: 50%; left: 50%"></nz-spin>
             <div *ngIf="errMessage() && !isLoading()" nz-row nzJustify="center" style="margin:2px 0">
-                <span nz-typography nzType="danger" style="position: absolute">{{ errMessage() | translate }}</span>
+                <span nz-typography nzType="danger">{{ errMessage() | translate }}</span>
             </div>
             <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
                 <nz-form-item>

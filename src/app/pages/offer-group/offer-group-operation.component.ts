@@ -77,7 +77,7 @@ import { Observable } from "rxjs";
                   [nzAction]="uploadUrl"
                   nzListType="picture-card"
                   [(nzFileList)]="file"
-                  (nzChange)="handleUploadOfferGroupItem($event)"
+                  (nzChange)="handleUpload($event)"
                   [nzShowButton]="file.length < 1"
                   [nzShowUploadList]="nzShowUploadList"
                   [nzDisabled]="true"
@@ -94,7 +94,7 @@ import { Observable } from "rxjs";
                   [nzAction]="uploadUrl"
                   nzListType="picture-card"
                   [(nzFileList)]="file"
-                  (nzChange)="handleUploadOfferGroupItem($event)"
+                  (nzChange)="handleUpload($event)"
                   [nzShowUploadList]="nzShowIconList"
                   [nzShowButton]="file.length < 1"
                 >
@@ -158,21 +158,7 @@ import { Observable } from "rxjs";
     </div>
   `,
   styles: [
-    `
-      .image-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 104px;
-        height: 104px;
-        border: 1px solid #d9d9d9;
-        overflow: hidden;
-      }
-      .view-image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
+    `  
       .image-upload {
         border: 2px dotted #ddd;
         border-radius: 6px;
@@ -255,7 +241,7 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     });
   }
 
-  handleUploadOfferGroupItem(info: NzUploadChangeParam): void {
+  handleUpload(info: NzUploadChangeParam): void {
     let fileListOfferGroupItems = [...info.fileList];
     // 1. Limit 5 number of uploaded files
     fileListOfferGroupItems = fileListOfferGroupItems.slice(-5);

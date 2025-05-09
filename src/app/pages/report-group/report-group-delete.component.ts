@@ -14,7 +14,7 @@ import {ReportGroupUiService} from "./report-group-ui.service";
       <div class="modal-content">
           <app-loading *ngIf="isLoading()"></app-loading>
           <div *ngIf="errMessage() && !isLoading()" nz-row nzJustify="center" style="margin:2px 0">
-              <span nz-typography nzType="danger" style="position: absolute">{{ errMessage() | translate }}</span>
+              <span nz-typography nzType="danger">{{ errMessage() | translate }}</span>
           </div>
           <form nz-form [formGroup]="frm" (ngSubmit)="onSubmit()" [nzAutoTips]="autoTips">
               <nz-form-item>

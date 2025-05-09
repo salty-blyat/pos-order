@@ -14,11 +14,16 @@ import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { AuthService } from "../../helpers/auth.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { LookupItem } from "../lookup/lookup-item/lookup-item.service";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-offer-group-list",
   template: `
     <nz-layout>
+      <app-breadcrumb
+        *ngIf="breadcrumbData()"
+        [data]="breadcrumbData()"
+      ></app-breadcrumb>
       <nz-header>
         <div nz-row>
           <div nz-col>
@@ -181,7 +186,7 @@ export class OfferGroupListComponent extends BaseListComponent<OfferGroup> {
   ) {
     super(service, uiService, sessionStorageService, "offer-group-list");
   }
-
+  breadcrumbData = computed<Observable<any>>(() => this.activated.data); 
   isOfferGroupAdd = computed(() => true);
   isOfferGroupEdit = computed(() => true);
   isOfferGroupRemove = computed(() => true);

@@ -6,34 +6,23 @@ import {
 } from "../../utils/services/base-api.service";
 import { HttpClient } from "@angular/common/http";
 import { SettingService } from "../../app-setting";
-import { Observable } from "rxjs";
 
 export interface Member {
   id?: number;
   code?: string;
   name?: string;
-  sexId?: number;
-  phone?: string;
-  nameEn?: string;
-  photo?: string;
+  latinName?: string;
   email?: string;
-  birthDate?: string;
-  idNo?: string;
-  nssfId?: string;
+  phone?: string;
   address?: string;
-  memberUnitId?: number;
-  memberGroupId?: number;
-  nationalityId?: number;
-  memberLevelId?: number;
+  birthDate?: string;
+  agentId?: string;
+  defaultAccountId?: string;
+  memberClassId?: string;
   note?: string;
-  attachments?: Attachment[];
-  sexName?: string;
-  sexNameEn?: string;
-  nationalityName?: string;
-  nationalityNameEn?: string;
-  memberUnitName?: string;
-  memberGroupName?: string;
-  memberLevelName?: string;
+  memberClassName?: string;
+  agentName?: string;
+  photo?: string;
 }
 
 export interface Attachment {
@@ -43,13 +32,6 @@ export interface Attachment {
   type?: string;
   date?: Date;
   by?: string;
-}
-
-export interface MemberAdvancedFilter {
-  sexId: number;
-  memberGroupId: number;
-  nationalityId: number;
-  isAdvancedFilter: boolean;
 }
 
 @Injectable({ providedIn: "root" })

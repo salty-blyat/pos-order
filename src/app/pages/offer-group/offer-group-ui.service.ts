@@ -37,8 +37,7 @@ export class OfferGroupUiService extends BaseUiService {
         maxSize,
       },
       nzOnOk: (e) => {
-        this.refresher.emit({ key: "upload", value: e.file });
-        console.log(e.file);
+        this.refresher.emit({ key: "upload", value: e.file }); 
       },
     });
   }

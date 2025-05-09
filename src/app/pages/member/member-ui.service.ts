@@ -5,6 +5,7 @@ import { MemberOperationComponent } from "./member-operation.component";
 import { MainPageService } from "../../utils/services/main-page.service";
 import { MemberDeleteComponent } from "./member-delete.component";
 import { MemberPullComponent } from "./member-pull.component";
+import { ItemUploadComponent } from "../offer-group/item-upload.component";
 
 @Injectable({ providedIn: "root" })
 export class MemberUiService extends BaseUiService {
@@ -16,26 +17,24 @@ export class MemberUiService extends BaseUiService {
       modalService,
       MemberOperationComponent,
       MemberDeleteComponent,
-      "580px",
-      "580px",
-      "580px",
+      "740px",
+      "740px",
+      "740px",
       "450px"
     );
   }
-
   override showAdd(
-    memberUnitId?: number,
-    memberLevelId?: number,
+    memberClassId: number = 0,
+    agentId: number = 0,
     componentId: any = ""
   ): void {
     this.modalService.create({
       nzContent: MemberOperationComponent,
       nzFooter: null,
       nzClosable: true,
-      nzData: { memberUnitId, memberLevelId },
-      nzWidth: "100%",
-      nzBodyStyle: { ...this.mainPageService.getModalBodyStyle() },
-      nzStyle: this.mainPageService.getModalFullPageSize(),
+      nzWidth: "970px",
+      nzCentered: true,
+      nzData: { memberClassId, agentId },
       nzMaskClosable: false,
       nzOnOk: (e) => {
         this.refresher.emit({ key: "added", value: e.model, componentId });
@@ -43,64 +42,28 @@ export class MemberUiService extends BaseUiService {
     });
   }
 
-  override showEdit(id: number): void {
+
+  showUpload(
+    multiple: boolean = false,
+    limit: number = 1,
+    extension: string = "image/*, application/pdf",
+    maxSize: number = 1024
+  ) {
     this.modalService.create({
-      nzContent: MemberOperationComponent,
-      nzData: { id, isEdit: true },
+      nzContent: ItemUploadComponent,
       nzFooter: null,
       nzClosable: true,
-      nzWidth: "100%",
-      nzBodyStyle: { ...this.mainPageService.getModalBodyStyle() },
-      nzStyle: this.mainPageService.getModalFullPageSize(),
+      nzWidth: "450px",
       nzMaskClosable: false,
+      nzData: {
+        multiple,
+        limit,
+        extension,
+        maxSize,
+      },
       nzOnOk: (e) => {
-        this.refresher.emit({ key: "edited", value: e.model });
+        this.refresher.emit({ key: "upload", value: e.file }); 
       },
     });
   }
-
-  override showView(id: number): void {
-    this.modalService.create({
-      nzContent: MemberOperationComponent,
-      nzData: { id, isView: true },
-      nzClosable: true,
-      nzWidth: "100%",
-      nzBodyStyle: { ...this.mainPageService.getModalBodyStyle() },
-      nzStyle: this.mainPageService.getModalFullPageSize(),
-      nzMaskClosable: false,
-    });
-  }
-
-  showPull(): void {
-    this.modalService.create({
-      nzContent: MemberPullComponent,
-      nzClosable: true,
-      nzWidth: "350px",
-      nzBodyStyle: { paddingBottom: "10px" },
-      nzMaskClosable: false,
-      nzOnOk: (e) => {
-        this.refresher.emit({ key: "pull", value: e.model });
-      },
-    });
-  }
-
-  // showAdvancedFilter(storageKey: string, componentId: any = '',  filterTypes?: { roomStatus?: boolean }): void {
-  //   this.modalService.create({
-  //     nzContent: MemberAdvancedFilterComponent,
-  //     nzData: { filterTypes, storageKey },
-  //     nzFooter: null,
-  //     nzClosable: true,
-  //     nzWidth: '400px',
-  //     nzBodyStyle: { minHeight: '100px' },
-  //     nzMaskClosable: false,
-  //     nzOnOk: (e) => {
-  //       this.refresher.emit({
-  //         key: 'advanced-filter-member',
-  //         value: e.frm.getRawValue(),
-  //         componentId: componentId
-
-  //       });
-  //     },
-  //   });
-  // }
 }

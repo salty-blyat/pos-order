@@ -1,24 +1,26 @@
 import {
   Component,
+  computed,
   forwardRef,
   signal,
   ViewEncapsulation,
 } from "@angular/core";
-import { BaseSelectComponent } from "../../utils/components/base-select.component";
-import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { OfferGroup, OfferGroupService } from "./offer-group.service";
-import { OfferGroupUiService } from "./offer-group-ui.service";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { BaseSelectComponent } from "../../utils/components/base-select.component";
+import { AuthService } from "../../helpers/auth.service";
+import { Agent, AgentService } from "./agent.service";
+import { AgentUiService } from "./agent-ui.service";
 
 @Component({
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => OfferGroupSelectComponent),
+      useExisting: forwardRef(() => AgentSelectComponent),
       multi: true,
     },
   ],
-  selector: "app-offer-group-select",
+  selector: "app-agent-select",
   template: `
     <nz-select
       nzShowSearch
@@ -32,20 +34,13 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
       <nz-option
         *ngIf="showAllOption()"
         [nzValue]="0"
-        [nzLabel]="'AllOfferGroup' | translate"
+        [nzLabel]="'AllAgent' | translate"
       ></nz-option>
       <nz-option
         *ngFor="let item of lists()"
-        nzCustomContent
         [nzValue]="item.id"
         [nzLabel]="item?.name + ''"
       >
-        <div nz-flex nzAlign="center" nzGap="small">
-          <nz-avatar [nzSrc]="item.image"></nz-avatar>
-          <div>
-            <span class="b-name"> {{ item.name }} </span>
-          </div>
-        </div>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
         <i nz-icon nzType="loading" class="loading-icon"></i>
@@ -53,8 +48,8 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
       </nz-option>
       <ng-template #actionItem>
         <a
-          *ngIf="addOption() && isOfferGroupAdd()"
-          (click)="uiService.showAdd(componentId)"
+          *ngIf="addOption() && isAgentAdd()"
+          (click)="uiService.showAdd()"
           class="item-action"
         >
           <i nz-icon nzType="plus"></i> {{ "Add" | translate }}
@@ -62,45 +57,30 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
       </ng-template>
     </nz-select>
   `,
-  standalone: false,
   styles: [
     `
       nz-select {
         width: 100%;
       }
-      .item-action {
-        flex: 0 0 auto;
-        padding: 6px 8px;
-        display: block;
-      }
-      .b-code {
-        font-weight: bolder;
-      }
-      .b-name {
-        font-size: 12px;
-        padding-left: 5px;
-      }
-      ::ng-deep cdk-virtual-scroll-viewport {
-        min-height: 34px;
-      }
     `,
-  ], 
+  ],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
-export class OfferGroupSelectComponent extends BaseSelectComponent<OfferGroup> {
+export class AgentSelectComponent extends BaseSelectComponent<Agent> {
   constructor(
-    service: OfferGroupService,
-    uiService: OfferGroupUiService,
+    service: AgentService,
+    override uiService: AgentUiService,
+    private authService: AuthService,
     sessionStorageService: SessionStorageService
   ) {
     super(
       service,
       uiService,
       sessionStorageService,
-      "offer-group-filter",
-      "all-offer-group"
+      "agent-filter",
+      "all-agent"
     );
   }
-
-  isOfferGroupAdd = signal<boolean>(true);
+  isAgentAdd = signal<boolean>(true);
 }

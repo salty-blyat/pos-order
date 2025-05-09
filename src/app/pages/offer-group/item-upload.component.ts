@@ -4,8 +4,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  signal,
-  ViewEncapsulation,
+  signal
 } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
@@ -55,11 +54,11 @@ import { UploadFile, UploadService } from "../../utils/services/upload.service";
             ></i>
             @if(isHover()){
             <p>
-              {{ "PleaseClickOrDropImageToUpload" | translate }}
+              {{ "PleaseDropToUploadImage" | translate }}
             </p>
             } @else {
             <p>
-              {{ "PleaseDropToUploadImage" | translate }}
+              {{ "PleaseClickOrDropImageToUpload" | translate }}
             </p>
             }
           </div>

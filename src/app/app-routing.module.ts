@@ -21,6 +21,8 @@ import { BranchListComponent } from "./pages/branch/branch-list.component";
 import { AgentListComponent } from "./pages/agent/agent-list.component";
 import { MemberClassListComponent } from "./pages/member-class/member-class-list.component";
 import { OfferGroupListComponent } from "./pages/offer-group/offer-group-list.component";
+import { MemberListComponent } from "./pages/member/member-list.component";
+import { AccountListComponent } from "./pages/account/account-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -50,6 +52,14 @@ const routes: Routes = [
         component: ReportGroupMenuComponent,
       },
       {
+        path: "account",
+        component: AccountListComponent,
+      },
+      {
+        path: "member",
+        component: MemberListComponent,
+      },
+      {
         path: "report/:id",
         component: ReportViewComponent,
       },
@@ -70,7 +80,7 @@ const routes: Routes = [
       },
       {
         path: "setting/offer-group",
-        component: OfferGroupListComponent, 
+        component: OfferGroupListComponent,
         data: [
           { index: 0, label: "Setting", url: "/setting" },
           { index: 1, label: "OfferGroup", url: null },

@@ -17,7 +17,7 @@ import { ReportUiService } from "./report-ui.service";
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
       <div *ngIf="errMessage() && !isLoading()" class="delete-error-message ">
-        <span nz-typography nzType="danger" style="position: absolute">{{
+        <span nz-typography nzType="danger">{{
           errMessage() | translate
         }}</span>
       </div>

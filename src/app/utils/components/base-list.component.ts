@@ -1,6 +1,6 @@
 import {Component, Inject, OnDestroy, OnInit, signal} from "@angular/core";
 import { SessionStorageService } from "../services/sessionStorage.service";
-import { Subscription } from "rxjs";
+import { filter, Subscription } from "rxjs";
 import { PAGE_SIZE_OPTION } from "../../const";
 import {BaseApiService, Filter, QueryParam} from "../services/base-api.service";
 import { NzTableQueryParams } from "ng-zorro-antd/table";
@@ -47,22 +47,22 @@ export class BaseListComponent<T extends SharedDomain> implements OnInit, OnDest
     this.refreshSub = this.uiService?.refresher?.subscribe(() => {
       this.search();
     });
-    this.search();
-
+    this.search(); 
   }
   
-  search(filters: Filter[] = [], delay: number = 50, ) {
-    if (this.isLoading()) return;
+  search(filters: Filter[] = [], delay: number = 50) {     
     this.isLoading.set(true);
     setTimeout(() => {
       filters?.unshift({
         field: "search",
         operator: "contains",
         value: this.searchText(),
-      });
+      });  
+      
       filters?.map((filter: Filter) => {
         return  {field: filter.field, operator: filter.operator, value: filter.value};
       });
+      
       this.param().filters = JSON.stringify(filters);
       this.service.search(this.param()).subscribe({
         next: (result: { results: T[]; param: QueryParam }) => {
