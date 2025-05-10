@@ -9,7 +9,7 @@ export enum LOOKUP_TYPE {
   AccountType = 38001,
   TransactionType = 38002,
   CardStatus = 38003,
-  OfferTypes = 38004,
+  OfferType = 38004,
   RedeemStatuses = 38005,
 }
 export enum AccountTypes {
@@ -33,7 +33,7 @@ export enum CardStatuses {
   Removed = 4,
 }
 
-export enum OfferTypes {
+export enum OfferType {
   Gift = 1,
   Coupon = 2,
   Voucher = 3,

@@ -20,6 +20,7 @@ import { AuthKeys } from "../../../const";
   template: `
     <nz-select
       nzShowSearch
+      [nzPlaceHolder]="placeHolder()"
       [nzDropdownRender]="actionItem"
       [nzServerSearch]="true"
       [nzAllowClear]="allowClear()"
@@ -139,6 +140,7 @@ export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem>{
   statuses = input<number[]>([]);
   typeLabelAll = input<string>('')
   isLookupAdd = signal(false); 
+  placeHolder = input<string>('');
 
   override search() {
     this.isLoading.set(true);
@@ -168,6 +170,48 @@ export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem>{
     }, 50);
 
   }
+  override ngOnInit(): void {
+    this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
+      if (e.key === 'added' && e.componentId === this.componentId) {
+        this.isLoading.set(true);
+        this.selected.set(e.value.id);
+        this.service.find(this.selected()).subscribe((result: any) => {
+          this.isLoading.set(false);
+          this.lists.update((value) => [...value, result,]);
+          this.onModalChange();
+        });
+      }
+    });
+    if (this.isLoading()) return;
+    if (this.showAllOption()) this.selected.set(0);
+    if (this.storageKey()) {​
+      let recentFilters:any[] = this.sessionStorageService.getValue("lookup-item-filter") ?? [];
+      const recentFilter = recentFilters.filter(
+        (item: any) => item.key === this.storageKey()
+      )[0]; 
+      this.selected.set(recentFilter.value.valueId ?? 0);
+      if (this.selected() !== 0) this.lists.update(value => [...value, recentFilter?.value]);
+      this.valueChanged.emit(this.selected());
+      this.onChangeCallback(this.selected());
+      this.onTouchedCallback(this.selected());
+    }
+  }
+   override setStorageKey(filter: any): void {
+    if (this.storageKey()) {
+      let item: any = this.lists().filter((item: LookupItem) => item.valueId === filter)[0];
+      if (filter === 0) item = { id: 0, name: 'all-lookup-item' };
+      let value: any[] = this.sessionStorageService.getValue('lookup-item-filter') || [];
+      const index = value.findIndex((e: any) => e.key === this.storageKey());
+      index !== -1
+        ? (value[index].value = item)
+        : value.push({ key: this.storageKey(), value: item });
+      this.sessionStorageService.setValue({
+        key: 'lookup-item-filter',
+        value,
+      });
+    }
+  }
+
     isLookupItemAdd = computed(() =>this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__ADD));
     protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }

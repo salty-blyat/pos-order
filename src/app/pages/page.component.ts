@@ -81,7 +81,7 @@ export interface Type {
               <i nz-icon nzType="home"></i>
               <span>{{ "Home" | translate }}</span>
             </li>
-            
+
             <li
               *ngIf="isMemberList()"
               nz-menu-item
@@ -91,7 +91,15 @@ export interface Type {
               <i nz-icon nzType="idcard"></i>
               <span>{{ "Member" | translate }}</span>
             </li>
-
+            <li
+              *ngIf="isOfferList()"
+              nz-menu-item
+              [nzMatchRouter]="isActive()"
+              routerLink="/offer"
+            >
+              <i nz-icon nzType="shop"></i>
+              <span>{{ "Offer" | translate }}</span>
+            </li>
             <!-- <li
               *ngIf="isAccountList()"
               nz-menu-item
@@ -111,15 +119,7 @@ export interface Type {
               <i nz-icon nzType="shop"></i>
               <span>{{ "Agent" | translate }}</span>
             </li>
-            <!-- <li
-              *ngIf="isOfferList()"
-              nz-menu-item
-              [nzMatchRouter]="isActive()"
-              routerLink="/offer"
-            >
-              <i nz-icon nzType="shop"></i>
-              <span>{{ "Offer" | translate }}</span>
-            </li> -->
+
             <li
               *ngIf="isSettingList()"
               nz-menu-item

@@ -23,6 +23,7 @@ import { MemberClassListComponent } from "./pages/member-class/member-class-list
 import { OfferGroupListComponent } from "./pages/offer-group/offer-group-list.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { AccountListComponent } from "./pages/account/account-list.component";
+import { OfferListComponent } from "./pages/offer/offer-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -50,6 +51,10 @@ const routes: Routes = [
       {
         path: "report",
         component: ReportGroupMenuComponent,
+      },
+      {
+        path: "offer",
+        component: OfferListComponent,
       },
       {
         path: "account",

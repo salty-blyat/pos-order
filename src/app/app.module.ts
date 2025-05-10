@@ -151,6 +151,9 @@ import { AgentSelectComponent } from "./pages/agent/agent-select.component";
 import { AccountDeleteComponent } from "./pages/account/account-delete.component";
 import { AccountListComponent } from "./pages/account/account-list.component";
 import { AccountOperationComponent } from "./pages/account/account-operation.component";
+import { OfferListComponent } from "./pages/offer/offer-list.component";
+import { OfferOperationComponent } from "./pages/offer/offer-operation.component";
+import { OfferDeleteComponent } from "./pages/offer/offer-delete.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -319,6 +322,11 @@ export class CustomTranslate implements TranslateLoader {
     OfferGroupSelectComponent,
     OfferGroupDeleteComponent,
     ItemUploadComponent,
+
+    //offer
+    OfferListComponent,
+    OfferOperationComponent,
+    OfferDeleteComponent,
 
     // agent
     AgentListComponent,

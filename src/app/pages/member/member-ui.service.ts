@@ -54,6 +54,7 @@ export class MemberUiService extends BaseUiService {
       nzFooter: null,
       nzClosable: true,
       nzWidth: "450px",
+      nzCentered: true,
       nzMaskClosable: false,
       nzData: {
         multiple,

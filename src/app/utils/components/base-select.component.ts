@@ -62,7 +62,8 @@ export class BaseSelectComponent<T extends SharedDomain> implements OnInit, Cont
       let recentFilters:any[] = this.sessionStorageService.getValue(this.parentStorageKey) ?? [];
       const recentFilter = recentFilters.filter(
         (item: any) => item.key === this.storageKey()
-      )[0];
+      )[0]; 
+      
       this.selected.set(recentFilter?.value.id ?? 0);
       if (this.selected() !== 0) this.lists.update(value => [...value, recentFilter?.value]);
       this.valueChanged.emit(this.selected());

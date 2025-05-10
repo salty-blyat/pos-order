@@ -6,7 +6,7 @@ import {DatePipe} from '@angular/common';
     standalone: false
 })
 export class CustomDatePipe implements PipeTransform{
-  transform(value: any, format: string = 'yyyy-MM-dd', ...args: unknown[]): unknown {
+  transform(value: any, format: string = 'dd-MM-yyyy', ...args: unknown[]): unknown {
     return !value ? '-' : new DatePipe('en-US').transform(value, format);
   }
 }

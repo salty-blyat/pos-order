@@ -41,10 +41,8 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
         [nzLabel]="item?.name + ''"
       >
         <div nz-flex nzAlign="center" nzGap="small">
-          <nz-avatar [nzSrc]="item.image"></nz-avatar>
-          <div>
-            <span class="b-name"> {{ item.name }} </span>
-          </div>
+          <!-- <nz-avatar [nzSrc]="item.image"></nz-avatar>  -->
+            <span class="b-name"> {{ item.name }} </span> 
         </div>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
@@ -84,7 +82,7 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
         min-height: 34px;
       }
     `,
-  ], 
+  ],
   encapsulation: ViewEncapsulation.None,
 })
 export class OfferGroupSelectComponent extends BaseSelectComponent<OfferGroup> {

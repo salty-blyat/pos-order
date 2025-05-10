@@ -29,7 +29,7 @@ import { UploadFile, UploadService } from "../../utils/services/upload.service";
     >
       <app-loading *ngIf="loading"></app-loading>
       <div
-        (dragover)="isHover.set(true)"
+        (dragover)="isHover.set(true); $event.preventDefault()"
         (dragleave)="isHover.set(false)"
         (drop)="isHover.set(false)"
       >
@@ -51,16 +51,10 @@ import { UploadFile, UploadService } from "../../utils/services/upload.service";
               nz-icon
               nzType="cloud-upload"
               nzTheme="outline"
-            ></i>
-            @if(isHover()){
-            <p>
-              {{ "PleaseDropToUploadImage" | translate }}
-            </p>
-            } @else {
+            ></i> 
             <p>
               {{ "PleaseClickOrDropImageToUpload" | translate }}
-            </p>
-            }
+            </p> 
           </div>
         </nz-upload>
       </div>

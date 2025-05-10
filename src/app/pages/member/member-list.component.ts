@@ -13,17 +13,25 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
   selector: "app-member-list",
   template: `
     <nz-layout>
-      <nz-header >
-        <div nz-row>
-          <div nz-col>
+      <nz-header>
+        <div
+          nz-flex
+          nzWrap="nowrap"
+          nzJustify="space-between"
+          nzAlign="center"
+          nzGap="middle"
+          style="width:100%"
+        >
+          <div nz-flex nzGap="small">
             <app-filter-input
+              class="fixed-width-select"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
-          </div>
-          <div nz-col>
+
             <app-member-class-select
+              class="fixed-width-select"
               storageKey="member-class-list-search"
               (valueChanged)="
                 memberClassId.set($event); param().pageIndex = 1; search()
@@ -31,10 +39,10 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
               [showAllOption]="true"
             >
             </app-member-class-select>
-          </div>
-          <div nz-col>
+
             <app-agent-select
               storageKey="agent-list-search"
+              class="fixed-width-select"
               [showAllOption]="true"
               (valueChanged)="
                 agentId.set($event); param().pageIndex = 1; search()
@@ -42,8 +50,7 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
             >
             </app-agent-select>
           </div>
-        </div>
-        <div style="margin-left:auto" nz-flex nzGap="4px" nzAlign="center">
+
           <button
             *ngIf="isMemberAdd()"
             nz-button
