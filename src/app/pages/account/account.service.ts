@@ -1,7 +1,12 @@
-import { BaseApiService } from "../../utils/services/base-api.service";
-import { HttpClient } from "@angular/common/http";
+import {
+  BaseApiService,
+  QueryParam,
+  SearchResult,
+} from "../../utils/services/base-api.service";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { SettingService } from "../../app-setting";
+import { Observable } from "rxjs";
 
 export interface Account {
   memberId?: number;
@@ -14,11 +19,61 @@ export interface Account {
   accountTypeNameEn?: string;
   note?: string;
 }
+
+export interface Transaction {
+  transNo?: string;
+  transDate?: string;
+  accountId?: number;
+  amount?: number;
+  type?: number;
+  note?: string;
+  refNo?: string;
+  id?: number;
+  memberId?: number;
+  memberCode?: string;
+  typeNameKh?: string;
+  typeNameEn?: string;
+}
+
 @Injectable({
   providedIn: "root",
 })
 export class AccountService extends BaseApiService<Account> {
-  constructor(private http: HttpClient, settingService: SettingService) {
+  constructor(http: HttpClient, settingService: SettingService) {
     super("account", http, settingService);
+  }
+
+  // all transactions PER ACCOUNT
+  getTransactions(
+    id: number,
+    query: QueryParam
+  ): Observable<SearchResult<Transaction>> {
+    return this.httpClient.get<SearchResult<Transaction>>(
+      `${this.settingService.setting.BASE_API_URL}/account/${id}/transactions`,
+      {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+        }),
+        params: new HttpParams()
+          .append("pageIndex", `${query.pageIndex}`)
+          .append("pageSize", `${query.pageSize}`)
+          .append("sorts", `${query.sorts === undefined ? "" : query.sorts}`)
+          .append(
+            "filters",
+            `${query.filters === undefined ? "" : query.filters}`
+          ),
+      }
+    );
+  }
+  // individual transaction
+  showTransaction(id: number): Observable<SearchResult<Transaction>> {
+    return this.httpClient.get<SearchResult<Transaction>>(
+      `${this.settingService.setting.BASE_API_URL}/account/transaction/${id}`,
+      {
+        headers: new HttpHeaders({
+          "Content-Type": "application/json",
+        }),
+      }
+    );
   }
 }

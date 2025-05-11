@@ -28,4 +28,6 @@ export class LookupItemService extends BaseApiService<any> {
   constructor(private http: HttpClient, settingService: SettingService) {
     super("lookupitem", http, settingService);
   }
+
+  // getAllAccountType
 }

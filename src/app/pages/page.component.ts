@@ -97,19 +97,9 @@ export interface Type {
               [nzMatchRouter]="isActive()"
               routerLink="/offer"
             >
-              <i nz-icon nzType="shop"></i>
+              <nz-icon nzType="tags" nzTheme="outline" />
               <span>{{ "Offer" | translate }}</span>
-            </li>
-            <!-- <li
-              *ngIf="isAccountList()"
-              nz-menu-item
-              [nzMatchRouter]="isActive()"
-              routerLink="/account"
-            >
-              <i nz-icon nzType="user"></i>
-              <span>{{ "Account" | translate }}</span>
-            </li> -->
-
+            </li> 
             <li
               *ngIf="isAgentList()"
               nz-menu-item

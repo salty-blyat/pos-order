@@ -4,10 +4,16 @@ import { Injectable } from "@angular/core";
 import { SettingService } from "../../app-setting";
 
 export interface Agent {
-  id?: number;
-  name?: string;
   code?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  joinDate?: string;
+  parentId?: number;
+  pathName?: string;
   note?: string;
+  id?: number;
 }
 
 @Injectable({

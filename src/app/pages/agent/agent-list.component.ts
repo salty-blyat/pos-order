@@ -11,7 +11,7 @@ import { AgentUiService } from "./agent-ui.service";
 @Component({
   selector: "app-agent-list",
   template: `
-    <nz-layout> 
+    <nz-layout>
       <nz-header>
         <div nz-row>
           <div nz-col>
@@ -59,6 +59,12 @@ import { AgentUiService } from "./agent-ui.service";
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
+              <th nzWidth="100px" nzAlign="center">
+                {{ "JoinDate" | translate }}
+              </th>
+              <th nzWidth="100px">{{ "Email" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.PHONE">{{ "Phone" | translate }}</th>
+              <th nzWidth="100px">{{ "Address" | translate }}</th> 
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION" nzAlign="right"></th>
             </tr>
@@ -84,6 +90,12 @@ import { AgentUiService } from "./agent-ui.service";
                 <span *ngIf="!isAgentView()">{{ data.code }}</span>
               </td>
               <td nzEllipsis>{{ data.name }}</td>
+              <td nzEllipsis nzAlign="center">
+                {{ data.joinDate | customDate }}
+              </td>
+              <td nzEllipsis>{{ data.email }}</td>
+              <td nzEllipsis>{{ data.phone }}</td>
+              <td nzEllipsis>{{ data.address }}</td> 
               <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
@@ -138,7 +150,7 @@ export class AgentListComponent extends BaseListComponent<Agent> {
     private authService: AuthService
   ) {
     super(service, uiService, sessionStorageService, "agent-list");
-  } 
+  }
   isAgentAdd = signal<boolean>(true);
   isAgentEdit = signal<boolean>(true);
   isAgentRemove = signal<boolean>(true);

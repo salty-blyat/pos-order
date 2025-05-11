@@ -6,6 +6,7 @@ import { MainPageService } from "../../utils/services/main-page.service";
 import { MemberDeleteComponent } from "./member-delete.component";
 import { MemberPullComponent } from "./member-pull.component";
 import { ItemUploadComponent } from "../offer-group/item-upload.component";
+import { TransactionListComponent } from "../transaction/transaction-list.component";
 
 @Injectable({ providedIn: "root" })
 export class MemberUiService extends BaseUiService {
@@ -32,9 +33,10 @@ export class MemberUiService extends BaseUiService {
       nzContent: MemberOperationComponent,
       nzFooter: null,
       nzClosable: true,
-      nzWidth: "970px",
-      nzCentered: true,
-      nzData: { memberClassId, agentId },
+      nzWidth: "100%",
+      nzBodyStyle: this.mainPageService.getModalBodyStyle(),
+      nzStyle: this.mainPageService.getModalFullPageSize(),
+      nzData: { memberClassId, agentId, isAdd: true },
       nzMaskClosable: false,
       nzOnOk: (e) => {
         this.refresher.emit({ key: "added", value: e.model, componentId });
@@ -42,6 +44,47 @@ export class MemberUiService extends BaseUiService {
     });
   }
 
+  override showEdit(id: number): void {
+    this.modalService.create({
+      nzContent: MemberOperationComponent,
+      nzFooter: null,
+      nzData: { id },
+      nzClosable: true,
+      nzWidth: "100%",
+      nzBodyStyle: this.mainPageService.getModalBodyStyle(),
+      nzStyle: this.mainPageService.getModalFullPageSize(),
+      nzMaskClosable: false,
+      nzOnOk: (e: any) => {
+        this.refresher.emit({ key: "edited", value: e.model });
+      },
+    });
+  }
+
+  override showView(id: number): any {
+    this.modalService.create({
+      nzContent: MemberOperationComponent,
+      nzFooter: null,
+      nzData: { id, isView: true },
+      nzClosable: true,
+      nzWidth: "100%",
+      nzBodyStyle: this.mainPageService.getModalBodyStyle(),
+      nzStyle: this.mainPageService.getModalFullPageSize(),
+      nzMaskClosable: false,
+    });
+  }
+
+  showTransaction(id: number): any {
+    this.modalService.create({
+      nzContent: TransactionListComponent,
+      nzFooter: null,
+      nzData: { id },
+      nzClosable: true,
+      nzWidth: "100%",
+      nzBodyStyle: this.mainPageService.getModalBodyStyle(),
+      nzStyle: this.mainPageService.getModalFullPageSize(),
+      nzMaskClosable: false,
+    });
+  }
 
   showUpload(
     multiple: boolean = false,
@@ -54,7 +97,6 @@ export class MemberUiService extends BaseUiService {
       nzFooter: null,
       nzClosable: true,
       nzWidth: "450px",
-      nzCentered: true,
       nzMaskClosable: false,
       nzData: {
         multiple,
@@ -63,7 +105,7 @@ export class MemberUiService extends BaseUiService {
         maxSize,
       },
       nzOnOk: (e) => {
-        this.refresher.emit({ key: "upload", value: e.file }); 
+        this.refresher.emit({ key: "upload", value: e.file });
       },
     });
   }

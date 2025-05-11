@@ -75,6 +75,7 @@ export class BaseApiService<T extends SharedDomain> {
         ),
     });
   }
+  
 
   public find(id: number): Observable<T> {
     return this.httpClient.get<T>(

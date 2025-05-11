@@ -171,6 +171,7 @@ import { Observable } from "rxjs";
             <nz-input-group nz-input [nzAddOnAfter]="nzAddOnAfter">
               <ng-template #nzAddOnAfter>
                 <app-lookup-item-select
+                  class="redeem-cost"
                   formControlName="redeemWith"
                   [lookupType]="LOOKUP_TYPE.AccountType"
                 ></app-lookup-item-select>
@@ -251,6 +252,15 @@ import { Observable } from "rxjs";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
   styles: `
+// html.cdk-global-scrollblock body div.cdk-overlay-container div.cdk-global-overlay-wrapper div#cdk-overlay-0.cdk-overlay-pane nz-modal-container.ng-tns-c3531571346-5.ng-trigger.ng-trigger-modalContainer.ng-star-inserted.ant-modal-wrap div.cdk-drag.ant-modal.ng-tns-c3531571346-5.cdk-drag-disabled div.ant-modal-content.ng-tns-c3531571346-5 div.ant-modal-body.ng-tns-c3531571346-5 app-offer-operation.ng-star-inserted div.modal-content form.ant-form.ng-untouched.ng-pristine.ant-form-horizontal nz-form-item.ant-form-item.ant-row nz-form-control.ant-form-item-control.ng-tns-c742983017-16.ng-star-inserted.ant-col.ant-col-sm-5 div.ant-form-item-control-input.ng-tns-c742983017-16 div.ant-form-item-control-input-content.ng-tns-c742983017-16 nz-input-group.ng-tns-c742983017-16.ant-input-group-wrapper span.ant-input-wrapper.ant-input-group.ng-star-inserted span.ant-input-group-addon.ng-star-inserted app-lookup-item-select.redeem-cost.ng-untouched.ng-pristine.ng-star-inserted nz-select.ant-select.ng-tns-c2061626568-22.ant-select-in-form-item.ant-select-show-arrow.ant-select-disabled.ant-select-single.ng-untouched.ng-pristine.ng-valid.ng-star-inserted nz-select-top-control.ant-select-selector.ng-tns-c2061626568-22 {  
+//   padding: 0 !important; 
+// }
+.redeem-cost .ant-select .ant-select-selector {
+  padding: 0 !important;
+}
+
+
+ 
   .ant-input-group-addon {
     width: 90px;
     padding: 0px;
@@ -380,7 +390,6 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       codeMaxLengthValidator,
       codeExistValidator,
       integerValidator,
-      mustBiggerDateValidator,
     } = CommonValidators;
     this.frm = this.fb.group({
       name: [

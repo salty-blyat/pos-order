@@ -1,8 +1,6 @@
 import { Injectable } from "@angular/core";
 import {
-  BaseApiService,
-  PullResult,
-  Summary,
+  BaseApiService
 } from "../../utils/services/base-api.service";
 import { HttpClient } from "@angular/common/http";
 import { SettingService } from "../../app-setting";
@@ -17,7 +15,6 @@ export interface Member {
   address?: string;
   birthDate?: string;
   agentId?: string;
-  defaultAccountId?: string;
   memberClassId?: string;
   note?: string;
   memberClassName?: string;

@@ -34,7 +34,8 @@ import { Observable } from "rxjs";
         <nz-sider nzTheme="light" class="sider-member" nzWidth="220px">
           @if(file.length == 0 ){
           <div class="photo">
-            <div  class="image-upload"
+            <div
+              class="image-upload"
               (click)="uiService.showUpload()"
               role="button"
               aria-label="Upload image"
@@ -49,6 +50,7 @@ import { Observable } from "rxjs";
               [nzAction]="uploadUrl"
               nzListType="picture-card"
               [(nzFileList)]="file"
+              [nzDisabled]="modal.isView"
               (nzChange)="handleUpload($event)"
               [nzShowUploadList]="nzShowIconList"
               [nzShowButton]="file.length < 1"
@@ -57,157 +59,204 @@ import { Observable } from "rxjs";
           </div>
           }
           <div class="member-name">
-            <p>
-              {{ memberNameEn || "MemberName" | translate }}
+            <p *ngIf="memberName === ''">
+              {{ memberNameEn || "NewMember" | translate }}
             </p>
-            <p *ngIf="memberName !== ''">{{ memberNameEn }}</p>
+            <p *ngIf="memberName !== ''">{{ memberName }}</p>
           </div>
 
           <ul class="menu-item" nz-menu nzTheme="light" nzMode="inline">
-            <li nz-menu-item [nzSelected]="true">
+            <li
+              nz-menu-item
+              [nzSelected]="current == 1"
+              (click)="switchCurrent(1)"
+            >
               <i nz-icon nzType="user"></i>
               <span>{{ "Information" | translate }}</span>
             </li>
+            @if(!modal.isAdd) {
+            <li
+              nz-menu-item
+              [nzSelected]="current == 2"
+              (click)="switchCurrent(2)"
+            >
+              <i nz-icon nzType="bank"></i>
+              <span>{{ "Account" | translate }}</span>
+            </li>
+            <!-- <li
+              nz-menu-item
+              [nzSelected]="current == 3"
+              (click)="switchCurrent(2)"
+            >
+              <i nz-icon nzType="transaction"></i>
+              <span>{{ "Redeem" | translate }}</span>
+            </li> -->
+            }
           </ul>
         </nz-sider>
 
         <nz-content>
           <app-loading *ngIf="isLoading()"></app-loading>
-          <form
-            nz-form
-            [formGroup]="frm"
-            [style.height.%]="100"
-            [nzAutoTips]="autoTips"
-          >
-            <div nz-row>
-              <div nz-col [nzXs]="24">
+          <div [ngSwitch]="current" [style.height.%]="100">
+            <div *ngSwitchCase="1" ngCase>
+              <form
+                nz-form
+                [formGroup]="frm"
+                [style.height.%]="100"
+                [nzAutoTips]="autoTips"
+              >
                 <div nz-row>
-                  <div nz-col [nzXs]="12">
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                        >{{ "Code" | translate }}
-                      </nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
-                        <input
-                          [autofocus]="true"
-                          nz-input
-                          formControlName="code"
-                          [placeholder]="
-                            frm.controls['code'].disabled
-                              ? ('NewCode' | translate)
-                              : ''
-                          "
-                        />
-                      </nz-form-control>
-                    </nz-form-item>
-                  </div>
-                  <div nz-col [nzXs]="12">
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="8" [nzXs]="24"
-                        >{{ "DateOfBirth" | translate }}
-                      </nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
-                        <nz-date-picker
-                          formControlName="birthDate"
-                        ></nz-date-picker>
-                      </nz-form-control>
-                    </nz-form-item>
-                  </div>
-                </div>
+                  <div nz-col [nzXs]="24">
+                    <div nz-row>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                            >{{ "Code" | translate }}
+                          </nz-form-label>
+                          <nz-form-control
+                            [nzSm]="14"
+                            [nzXs]="24"
+                            nzHasFeedback
+                          >
+                            <input
+                              [autofocus]="true"
+                              nz-input
+                              formControlName="code"
+                              [placeholder]="
+                                frm.controls['code'].disabled
+                                  ? ('NewCode' | translate)
+                                  : ''
+                              "
+                            />
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired=""
+                            >{{ "DateOfBirth" | translate }}
+                          </nz-form-label>
+                          <nz-form-control
+                            [nzSm]="14"
+                            [nzXs]="24"
+                            nzErrorTip=""
+                          >
+                            <nz-date-picker
+                              formControlName="birthDate"
+                            ></nz-date-picker>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
 
-                <div nz-row>
-                  <div nz-col [nzXs]="12">
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                        >{{ "Name" | translate }}
-                      </nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="24">
-                        <input nz-input formControlName="name" />
-                      </nz-form-control>
-                    </nz-form-item>
-                  </div>
-                  <div nz-col [nzXs]="12">
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="8" [nzXs]="24"
-                        >{{ "LatinName" | translate }}
-                      </nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="24">
-                        <input nz-input formControlName="latinName" />
-                      </nz-form-control>
-                    </nz-form-item>
-                  </div>
-                </div>
+                    <div nz-row>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                            >{{ "Name" | translate }}
+                          </nz-form-label>
+                          <nz-form-control
+                            [nzSm]="14"
+                            [nzXs]="24"
+                            nzHasFeedback
+                          >
+                            <input nz-input formControlName="name" />
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24"
+                            >{{ "LatinName" | translate }}
+                          </nz-form-label>
+                          <nz-form-control [nzSm]="14" [nzXs]="24">
+                            <input nz-input formControlName="latinName" />
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
 
-                <div nz-row>
-                  <div nz-col [nzXs]="12">
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                        >{{ "Phone" | translate }}
-                      </nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
-                        <input nz-input formControlName="phone" />
-                      </nz-form-control>
-                    </nz-form-item>
-                  </div>
-                  <div nz-col [nzXs]="12">
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="8" [nzXs]="24"
-                        >{{ "Email" | translate }}
-                      </nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
-                        <input nz-input formControlName="email" />
-                      </nz-form-control>
-                    </nz-form-item>
-                  </div>
-                </div>
+                    <div nz-row>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                            >{{ "Phone" | translate }}
+                          </nz-form-label>
+                          <nz-form-control
+                            [nzSm]="14"
+                            [nzXs]="24"
+                            nzErrorTip=""
+                          >
+                            <input nz-input formControlName="phone" />
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24"
+                            >{{ "Email" | translate }}
+                          </nz-form-label>
+                          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
+                            <input nz-input formControlName="email" />
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
 
-                <div nz-row>
-                  <div nz-col [nzXs]="12">
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="8" [nzXs]="24"
-                        >{{ "MemberClass" | translate }}
-                      </nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="24">
-                        <app-member-class-select
-                          formControlName="memberClassId"
-                        ></app-member-class-select>
-                      </nz-form-control>
-                    </nz-form-item>
-                  </div>
-                  <div nz-col [nzXs]="12">
-                    <nz-form-item>
-                      <nz-form-label [nzSm]="8" [nzXs]="24"
-                        >{{ "Agent" | translate }}
-                      </nz-form-label>
-                      <nz-form-control [nzSm]="14" [nzXs]="24">
-                        <app-agent-select
-                          formControlName="agentId"
-                        ></app-agent-select>
-                      </nz-form-control>
-                    </nz-form-item>
-                  </div>
-                </div>
+                    <div nz-row>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired=""
+                            >{{ "MemberClass" | translate }}
+                          </nz-form-label>
+                          <nz-form-control [nzSm]="14" [nzXs]="24">
+                            <app-member-class-select
+                              formControlName="memberClassId"
+                            ></app-member-class-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired=""
+                            >{{ "Agent" | translate }}
+                          </nz-form-label>
+                          <nz-form-control [nzSm]="14" [nzXs]="24">
+                            <app-agent-select
+                              formControlName="agentId"
+                            ></app-agent-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
 
-                <div nz-row>
-                  <div nz-col [nzSpan]="24">
-                    <nz-form-item>
-                      <nz-form-label [nzSpan]="4"
-                        >{{ "Address" | translate }}
-                      </nz-form-label>
-                      <nz-form-control [nzXs]="19">
-                        <textarea
-                          nz-input
-                          type="text"
-                          formControlName="address"
-                          rows="3"
-                        ></textarea>
-                      </nz-form-control>
-                    </nz-form-item>
+                    <div nz-row>
+                      <div nz-col [nzSpan]="24">
+                        <nz-form-item>
+                          <nz-form-label [nzSpan]="4"
+                            >{{ "Address" | translate }}
+                          </nz-form-label>
+                          <nz-form-control [nzXs]="19">
+                            <textarea
+                              nz-input
+                              type="text"
+                              formControlName="address"
+                              rows="3"
+                            ></textarea>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
-          </form>
+
+            <div *ngSwitchCase="2" ngCase class="tab-content">
+              <app-account-tab [memberId]="model?.id || 0"></app-account-tab>
+            </div>
+            <div *ngSwitchCase="3" ngCase></div>
+          </div>
         </nz-content>
       </nz-layout>
     </div>
@@ -226,7 +275,7 @@ import { Observable } from "rxjs";
           {{ "Cancel" | translate }}
         </button>
       </div>
-      <!-- <div *ngIf="modal?.isView">
+      <div *ngIf="modal?.isView">
         <a
           (click)="uiService.showEdit(model.id || 0)"
           *ngIf="!isLoading() && isMemberEdit()"
@@ -255,25 +304,38 @@ import { Observable } from "rxjs";
           <i nz-icon nzType="close" nzTheme="outline"></i>
           <span class="action-text"> {{ "Close" | translate }}</span>
         </a>
-      </div> -->
+      </div>
     </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
-      .image-upload {
-        border: 2px dotted #ddd;
-        border-radius: 6px;
-        cursor: pointer; 
-        transition: border-color 0.3s ease; /* Smooth transition */
+      nz-layout {
+        height: calc(100vh - 180px);
+        nz-content {
+          overflow-y: scroll;
+        }
+        nz-sider {
+          border-right: 1px solid #d9d9d9;
+        }
+      }
+
+      .tab-content {
+        loverflow-y: scroll;
+        padding: 32px;
       }
       .ant-modal-body {
-        padding: 0px;
+        height: auto !important;
       }
       .ant-upload-list-picture-card-container {
         margin: 0 !important;
       }
+
+      .ant-upload-list-item {
+        padding: 0px !important;
+      }
       .photo {
+        cursor: pointer;
         width: 108px;
         height: auto;
         padding: 1px;
@@ -286,15 +348,7 @@ import { Observable } from "rxjs";
           width: 100%;
         }
       }
-      .image-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 104px;
-        height: 104px;
-        border: 1px solid #d9d9d9;
-        overflow: hidden;
-      }
+
       .member-name {
         text-align: center;
 
@@ -306,11 +360,6 @@ import { Observable } from "rxjs";
 
       .menu-item {
         background: #fff;
-      }
-
-      .sider-member {
-        height: 420px;
-        border-right: 1px solid #d9d9d9;
       }
 
       [profile] {
@@ -350,6 +399,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   fileLists: NzUploadFile[] = [];
   memberName = "";
   memberNameEn = "";
+  current: number = 1;
   isMemberEdit = computed(() => true);
   isMemberRemove = computed(() => true);
 
@@ -396,6 +446,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       multiplePhoneValidator,
       codeMaxLengthValidator,
       emailValidator,
+      nameExistValidator,
     } = CommonValidators;
     this.frm = this.fb.group({
       code: [
@@ -403,16 +454,19 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
         [required, codeMaxLengthValidator],
         [codeExistValidator(this.service, this.modal?.id)],
       ],
-      name: [null, [required, nameMaxLengthValidator]],
+      name: [
+        null,
+        [required, nameMaxLengthValidator],
+        [nameExistValidator(this.service, this.modal?.id)],
+      ],
       latinName: [null, [nameMaxLengthValidator]],
-      birthDate: [null],
+      birthDate: [null, [required]],
       address: [null],
       phone: [null, [required, multiplePhoneValidator]],
       email: [null, [emailValidator]],
-      agentId: [null],
-      memberClassId: [null],
+      agentId: [null, [required]],
+      memberClassId: [null, [required]],
       photo: [null],
-      defaultAccountId: [0],
     });
     setTimeout(() => {
       if (this.modal.memberClassId !== 0 && this.modal.memberClassId)
@@ -423,22 +477,22 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   }
 
   override setFormValue(model?: Member) {
-    if (model) {
-      this.frm.patchValue({
-        id: model?.id,
-        code: model?.code,
-        name: model?.name,
-        latinName: model?.latinName,
-        email: model?.email,
-        phone: model?.phone,
-        address: model?.address,
-        birthDate: model?.birthDate,
-        agentId: model?.agentId,
-        defaultAccountId: model?.defaultAccountId,
-        memberClassId: model?.memberClassId,
-        photo: model?.photo,
-      });
-    }
+    console.log(this.model);
+
+    this.frm.patchValue({
+      id: this.model?.id,
+      code: this.model?.code,
+      name: this.model?.name,
+      latinName: this.model?.latinName,
+      email: this.model?.email,
+      phone: this.model?.phone,
+      address: this.model?.address,
+      birthDate: this.model?.birthDate,
+      agentId: this.model?.agentId,
+      memberClassId: this.model?.memberClassId,
+      photo: this.model?.photo,
+    });
+
     if (this.model.photo) {
       this.file = [];
       this.file.push({
@@ -448,12 +502,12 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       });
     }
   }
-  override onSubmit(e: any): void { 
+  override onSubmit(e: any): void {
     if (this.frm.valid && !this.isLoading()) {
       this.isLoading.set(true);
       if (this.file.length > 0) {
         this.frm.patchValue({
-          image: this.file[0].url,
+          photo: this.file[0].url,
         });
       }
       let operation$: Observable<Member> = this.service.add(
@@ -481,6 +535,22 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
           },
         });
       }
+    }
+  }
+  switchCurrent(index: number) {
+    switch (index) {
+      case 1:
+        this.current = 1;
+        break;
+      case 2:
+        this.current = 2;
+        break;
+      case 3:
+        this.current = 3;
+        break;
+      case 4:
+        this.current = 4;
+        break;
     }
   }
 
