@@ -321,8 +321,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       if (e.key === "upload") {
         this.file = [];
         if (e?.value) {
-          this.file.push(e.value);
-          console.log(e.value);
+          this.file.push(e.value); 
         }
       }
     });
@@ -344,9 +343,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
     });
     this.file = fileListOfferGroupItems;
   }
-  override onSubmit(e: any): void {
-    console.log(this.file);
-
+  override onSubmit(e: any): void { 
     if (this.frm.valid && !this.isLoading()) {
       this.isLoading.set(true);
       if (this.file.length > 0) {

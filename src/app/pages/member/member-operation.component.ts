@@ -1,4 +1,3 @@
-import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
@@ -15,6 +14,7 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { Observable } from "rxjs";
 import { AccountService } from "../account/account.service";
 import { TranslateService } from "@ngx-translate/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 
 @Component({
   selector: "app-member-operation",
@@ -34,30 +34,7 @@ import { TranslateService } from "@ngx-translate/core";
     <div class="modal-content">
       <nz-layout>
         <nz-sider nzTheme="light" class="sider-member" nzWidth="220px">
-          @if (file.length == 0 && modal.isView){
-          @if (file.length == 0 && modal.isView){
-          <div class="photo">
-            <div
-              role="button"
-              aria-label="Upload image"
-              *ngIf="file.length == 0"
-            >
-              <img src="./assets/image/man.png" alt="Photo" />
-            </div>
-          </div>
-
-          }@else if(file.length == 0 ){
-          <div class="image-upload">
-            <div
-              role="button"
-              aria-label="Upload image"
-              *ngIf="file.length == 0"
-            >
-              <img src="./assets/image/man.png" alt="Photo" />
-            </div>
-          </div>
-
-          }@else if(file.length == 0 ){
+          @if (file.length == 0 && modal.isView) {
           <div class="image-upload">
             <div
               (click)="uiService.showUpload()"
@@ -143,7 +120,6 @@ import { TranslateService } from "@ngx-translate/core";
                 </div>
               </div>
             </li>
-
             }
           </ul>
         </nz-sider>
@@ -491,15 +467,13 @@ import { TranslateService } from "@ngx-translate/core";
   ],
   standalone: false,
   encapsulation: ViewEncapsulation.None,
-});
-
+})
 export class MemberOperationComponent extends BaseOperationComponent<Member> {
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<MemberOperationComponent>,
     service: MemberService,
     override uiService: MemberUiService,
-    public accountService: AccountService,
     public accountService: AccountService,
     private settingService: SettingService,
     private systemSettingService: SystemSettingService,
@@ -591,9 +565,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     }, 50);
   }
 
-  override setFormValue(model?: Member) {
-    console.log(this.model);
-
+  override setFormValue(model?: Member) {  
     this.frm.patchValue({
       id: this.model?.id,
       code: this.model?.code,

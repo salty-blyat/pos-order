@@ -121,7 +121,6 @@ import { AppVersionService } from "./utils/services/app-version.service";
 import { NzFlexDirective } from "ng-zorro-antd/flex";
 import { InputNumberComponent } from "./utils/components/input-number.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
-import { MemberOperationComponent } from "./pages/member/member-operation.component";
 import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
 import { MemberDeleteComponent } from "./pages/member/member-delete.component";
 import { MemberPullComponent } from "./pages/member/member-pull.component";
@@ -154,9 +153,10 @@ import { AccountOperationComponent } from "./pages/account/account-operation.com
 import { OfferListComponent } from "./pages/offer/offer-list.component";
 import { OfferOperationComponent } from "./pages/offer/offer-operation.component";
 import { OfferDeleteComponent } from "./pages/offer/offer-delete.component";
-import { TransactionListComponent } from "./pages/transaction/transaction-list.component"; 
+import { TransactionListComponent } from "./pages/transaction/transaction-list.component";
 import { RedemptionDeleteComponent } from "./pages/redemption/redemption-delete.component";
 import { RedemptionListComponent } from "./pages/redemption/redemption-list.component";
+import { MemberOperationComponent } from "./pages/member/member-operation.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -300,7 +300,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberOperationComponent,
     MemberDeleteComponent,
     MemberPullComponent,
-    MemberSelectComponent, 
+    MemberSelectComponent,
 
     // location
     LocationListComponent,
@@ -344,9 +344,8 @@ export class CustomTranslate implements TranslateLoader {
     AccountOperationComponent,
 
     //redem
-    RedemptionDeleteComponent  ,
+    RedemptionDeleteComponent,
     RedemptionListComponent,
- 
   ],
   bootstrap: [AppComponent],
   imports: [

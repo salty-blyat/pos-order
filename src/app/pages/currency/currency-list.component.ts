@@ -163,8 +163,7 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
     this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__VIEW)
   );
 override ngOnInit(): void {
-  super.ngOnInit();
-  console.log(this.lists());
+  super.ngOnInit(); 
   
 }
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
