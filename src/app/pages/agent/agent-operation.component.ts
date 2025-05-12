@@ -1,5 +1,5 @@
 import { Component, computed, ViewEncapsulation } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { EmailValidator, FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
@@ -23,36 +23,130 @@ import { AgentUiService } from "./agent-ui.service";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
-        <nz-form-item>
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired
-            >{{ "Code" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="code" />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired
-            >{{ "Name" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="name" />
-          </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="7" [nzXs]="24"
-            >{{ "Note" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <textarea
-              nz-input
-              type="text"
-              formControlName="note"
-              rows="3"
-            ></textarea>
-          </nz-form-control>
-        </nz-form-item>
+      <form
+        nz-form
+        [formGroup]="frm"
+        [style.height.%]="100"
+        [nzAutoTips]="autoTips"
+      >
+        <div nz-row>
+          <div nz-col [nzXs]="24">
+            <div nz-row>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                    >{{ "Code" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <input
+                      [autofocus]="true"
+                      nz-input
+                      formControlName="code"
+                      [placeholder]="
+                        frm.controls['code'].disabled
+                          ? ('NewCode' | translate)
+                          : ''
+                      "
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired=""
+                    >{{ "JoinDate" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
+                    <nz-date-picker formControlName="joinDate"></nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-row>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                    >{{ "Name" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <input nz-input formControlName="name" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                    >{{ "Phone" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
+                    <input nz-input formControlName="phone" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-row>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24"
+                    >{{ "Email" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
+                    <input nz-input formControlName="email" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <!-- <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24"
+                    >{{ "PathName" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
+                    <input nz-input formControlName="pathName" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div> -->
+            </div>
+
+            <div nz-row>
+              <div nz-col [nzSpan]="24">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="4"
+                    >{{ "Address" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzXs]="19">
+                    <textarea
+                      nz-input
+                      type="text"
+                      formControlName="address"
+                      rows="3"
+                    ></textarea>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+            <div nz-row>
+              <div nz-col [nzSpan]="24">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="4"
+                    >{{ "Note" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzXs]="19">
+                    <textarea
+                      nz-input
+                      type="text"
+                      formControlName="note"
+                      rows="3"
+                    ></textarea>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
     <div *nzModalFooter>
@@ -128,6 +222,8 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
       codeMaxLengthValidator,
       codeExistValidator,
       required,
+      emailValidator,
+      multiplePhoneValidator,
     } = CommonValidators;
     this.frm = this.fb.group({
       code: [
@@ -140,6 +236,13 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
         [nameMaxLengthValidator, required],
         [nameExistValidator(this.service, this.modal?.id)],
       ],
+      email: [null, [emailValidator, required]],
+      phone: [null, [multiplePhoneValidator, required]],
+      address: [null],
+      joinDate: [null],
+      // pathName: [null],
+      // parentId: 0,
+      // pathName: [],
       note: [null, [noteMaxLengthValidator()]],
     });
   }
@@ -148,6 +251,10 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
     this.frm.setValue({
       code: this.model.code,
       name: this.model.name,
+      email: this.model.email,
+      phone: this.model.phone,
+      address: this.model.address,
+      joinDate: this.model.joinDate,
       note: this.model.note,
     });
   }

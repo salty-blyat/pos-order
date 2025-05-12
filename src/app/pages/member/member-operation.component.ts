@@ -13,6 +13,7 @@ import { NzMessageService } from "ng-zorro-antd/message";
 import { AuthService } from "../../helpers/auth.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Observable } from "rxjs";
+import { AccountService } from "../account/account.service";
 
 @Component({
   selector: "app-member-operation",
@@ -32,10 +33,20 @@ import { Observable } from "rxjs";
     <div class="modal-content">
       <nz-layout>
         <nz-sider nzTheme="light" class="sider-member" nzWidth="220px">
-          @if(file.length == 0 ){
+          @if (file.length == 0 && modal.isView){
           <div class="photo">
             <div
-              class="image-upload"
+              role="button"
+              aria-label="Upload image"
+              *ngIf="file.length == 0"
+            >
+              <img src="./assets/image/man.png" alt="Photo" />
+            </div>
+          </div>
+
+          }@else if(file.length == 0 ){
+          <div class="image-upload">
+            <div
               (click)="uiService.showUpload()"
               role="button"
               aria-label="Upload image"
@@ -52,7 +63,9 @@ import { Observable } from "rxjs";
               [(nzFileList)]="file"
               [nzDisabled]="modal.isView"
               (nzChange)="handleUpload($event)"
-              [nzShowUploadList]="nzShowIconList"
+              [nzShowUploadList]="
+                modal.isView ? nzShowUploadList : nzShowIconList
+              "
               [nzShowButton]="file.length < 1"
             >
             </nz-upload>
@@ -70,28 +83,11 @@ import { Observable } from "rxjs";
               nz-menu-item
               [nzSelected]="current == 1"
               (click)="switchCurrent(1)"
+              style="font-weight: bold;"
             >
               <i nz-icon nzType="user"></i>
               <span>{{ "Information" | translate }}</span>
             </li>
-            @if(!modal.isAdd) {
-            <li
-              nz-menu-item
-              [nzSelected]="current == 2"
-              (click)="switchCurrent(2)"
-            >
-              <i nz-icon nzType="bank"></i>
-              <span>{{ "Account" | translate }}</span>
-            </li>
-            <!-- <li
-              nz-menu-item
-              [nzSelected]="current == 3"
-              (click)="switchCurrent(2)"
-            >
-              <i nz-icon nzType="transaction"></i>
-              <span>{{ "Redeem" | translate }}</span>
-            </li> -->
-            }
           </ul>
         </nz-sider>
 
@@ -251,11 +247,6 @@ import { Observable } from "rxjs";
                 </div>
               </form>
             </div>
-
-            <div *ngSwitchCase="2" ngCase class="tab-content">
-              <app-account-tab [memberId]="model?.id || 0"></app-account-tab>
-            </div>
-            <div *ngSwitchCase="3" ngCase></div>
           </div>
         </nz-content>
       </nz-layout>
@@ -319,10 +310,28 @@ import { Observable } from "rxjs";
           border-right: 1px solid #d9d9d9;
         }
       }
+      .image-upload {
+        cursor: pointer;
+        width: 108px;
+        height: auto;
+        padding: 1px;
+        min-height: 2cm;
+        margin: 16px auto 0;
+        border: 2px dotted #d9d9d9;
+        border-radius: 6px;
+        transition: border-color 0.3s ease;
+
+        img {
+          width: 100%;
+        }
+        &:hover {
+          border-color: #4976c4;
+        }
+      }
 
       .tab-content {
         loverflow-y: scroll;
-        padding: 32px;
+        padding: 8px;
       }
       .ant-modal-body {
         height: auto !important;
@@ -342,7 +351,8 @@ import { Observable } from "rxjs";
         min-height: 2cm;
         margin: 16px auto 0;
         border: 1px solid #d0cfcf;
-        border-radius: 4px;
+        border-radius: 6px;
+        transition: border-color 0.3s ease;
 
         img {
           width: 100%;
@@ -388,6 +398,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     ref: NzModalRef<MemberOperationComponent>,
     service: MemberService,
     override uiService: MemberUiService,
+    public accountService: AccountService,
     private settingService: SettingService,
     private systemSettingService: SystemSettingService,
     private msg: NzMessageService,
@@ -544,12 +555,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
         break;
       case 2:
         this.current = 2;
-        break;
-      case 3:
-        this.current = 3;
-        break;
-      case 4:
-        this.current = 4;
         break;
     }
   }

@@ -99,7 +99,17 @@ export interface Type {
             >
               <nz-icon nzType="tags" nzTheme="outline" />
               <span>{{ "Offer" | translate }}</span>
-            </li> 
+            </li>
+            <li
+              *ngIf="isAgentList()"
+              nz-menu-item
+              [nzMatchRouter]="isActive()"
+              routerLink="/redemption"
+            >
+              <i nz-icon nzType="shop"></i>
+              <span>{{ "Redemption" | translate }}</span>
+            </li>
+
             <li
               *ngIf="isAgentList()"
               nz-menu-item

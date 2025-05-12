@@ -21,66 +21,67 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
   selector: "app-transaction-list",
   standalone: false,
   template: `
-    <div *nzModalTitle class="modal-header-ellipsis">
-      {{ "TransactionHistory" | translate }}
-    </div>
-    <div class="modal-content">
-      <nz-layout style="padding: 12px;">
-        <nz-header>
-          <div nz-row>
-            <div nz-col>
-              <app-filter-input
-                storageKey="transaction-list-search"
-                (filterChanged)="
-                  searchText.set($event); param().pageIndex = 1; search()
-                "
-              >
-              </app-filter-input>
-            </div>
+    <nz-layout>
+      <nz-header>
+        <div nz-row>
+          <div nz-col>
+            <app-filter-input
+              storageKey="transaction-list-search"
+              (filterChanged)="
+                searchText.set($event); param().pageIndex = 1; search()
+              "
+            >
+            </app-filter-input>
           </div>
-        </nz-header>
-
-        <nz-content>
-          <nz-table
-            nzSize="small"
-            nzShowSizeChanger
-            nzTableLayout="fixed"
-            [nzPageSizeOptions]="pageSizeOption()"
-            [nzData]="lists()"
-            [nzLoading]="isLoading()"
-            [nzTotal]="param().rowCount || 0"
-            [nzPageSize]="param().pageSize || 0"
-            [nzPageIndex]="param().pageIndex || 0"
-            [nzNoResult]="noResult"
-            [nzFrontPagination]="false"
-            (nzQueryParams)="onQueryParamsChange($event)"
+        </div>
+        <div style="margin-left:auto ">
+          <span style=" margin-right: 16px">
+            {{ "Amount" | translate }}: {{ lists()[0]?.amount || 0 }}</span
           >
-            <ng-template #noResult>
-              <app-no-result-found></app-no-result-found>
-            </ng-template>
-            <thead>
-              <tr>
-                <th [nzWidth]="SIZE_COLUMNS.ID" class="col-header col-rowno">
-                  #
-                </th>
-                <th [nzWidth]="SIZE_COLUMNS.NAME">
-                  {{ "TransNo" | translate }}
-                </th>
-                <th nzWidth="100px">
-                  {{ "TransDate" | translate }}
-                </th>
-                <th nzWidth="100px">
-                  {{ "Amount" | translate }}
-                </th>
-                <th nzWidth="100px">
-                  {{ "RefNo" | translate }}
-                </th>
-                <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-              </tr>
-            </thead>
+        </div>
+      </nz-header>
 
-            <tbody>
-              <!-- <tr *ngFor="let data of lists(); let i = index">
+      <nz-content>
+        <nz-table
+          nzSize="small"
+          nzShowSizeChanger
+          nzTableLayout="fixed"
+          [nzPageSizeOptions]="pageSizeOption()"
+          [nzData]="lists()"
+          [nzLoading]="isLoading()"
+          [nzTotal]="param().rowCount || 0"
+          [nzPageSize]="param().pageSize || 0"
+          [nzPageIndex]="param().pageIndex || 0"
+          [nzNoResult]="noResult"
+          [nzFrontPagination]="false"
+          (nzQueryParams)="onQueryParamsChange($event)"
+        >
+          <ng-template #noResult>
+            <app-no-result-found></app-no-result-found>
+          </ng-template>
+          <thead>
+            <tr>
+              <th [nzWidth]="SIZE_COLUMNS.ID" class="col-header col-rowno">
+                #
+              </th>
+              <th [nzWidth]="SIZE_COLUMNS.NAME">
+                {{ "TransNo" | translate }}
+              </th>
+              <th nzWidth="100px">
+                {{ "TransDate" | translate }}
+              </th>
+              <th nzWidth="100px">
+                {{ "Amount" | translate }}
+              </th>
+              <th nzWidth="100px">
+                {{ "RefNo" | translate }}
+              </th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- <tr *ngFor="let data of lists(); let i = index">
                 <td nzEllipsis>
                   {{
                     i
@@ -102,17 +103,10 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
                 <td nzEllipsis>{{ data.format }}</td>
                 <td nzEllipsis>{{ data.note }}</td>
               </tr> -->
-            </tbody>
-          </nz-table>
-        </nz-content>
-      </nz-layout>
-    </div>
-    <div *nzModalFooter>
-      <a nz-typography (click)="cancel()" style="color: gray;">
-        <i nz-icon nzType="close" nzTheme="outline"></i>
-        <span class="action-text"> {{ "Close" | translate }}</span>
-      </a>
-    </div>
+          </tbody>
+        </nz-table>
+      </nz-content>
+    </nz-layout>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: `
@@ -137,6 +131,7 @@ export class TransactionListComponent extends BaseListComponent<Transaction> {
   }
   readonly modal: any = inject(NZ_MODAL_DATA);
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
+  accountTypeId = input<number>(0);
   isTransactionView = computed(() => true);
   cancel() {
     this.ref.triggerCancel().then();
@@ -163,16 +158,18 @@ export class TransactionListComponent extends BaseListComponent<Transaction> {
       });
 
       this.param().filters = JSON.stringify(filters);
-      this.service.getTransactions(this.modal?.id, this.param()).subscribe({
-        next: (result: { results: Transaction[]; param: QueryParam }) => {
-          this.lists.set(result.results);
-          this.param.set(result.param);
-          this.isLoading.set(false);
-        },
-        error: () => {
-          this.isLoading.set(false);
-        },
-      });
+      this.service
+        .getTransactions(this.accountTypeId(), this.param())
+        .subscribe({
+          next: (result: { results: Transaction[]; param: QueryParam }) => {
+            this.lists.set(result.results);
+            this.param.set(result.param);
+            this.isLoading.set(false);
+          },
+          error: () => {
+            this.isLoading.set(false);
+          },
+        });
     }, delay);
   }
 }
