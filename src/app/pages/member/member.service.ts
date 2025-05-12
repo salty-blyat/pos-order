@@ -1,7 +1,5 @@
 import { Injectable } from "@angular/core";
-import {
-  BaseApiService
-} from "../../utils/services/base-api.service";
+import { BaseApiService } from "../../utils/services/base-api.service";
 import { HttpClient } from "@angular/common/http";
 import { SettingService } from "../../app-setting";
 
@@ -20,6 +18,14 @@ export interface Member {
   memberClassName?: string;
   agentName?: string;
   photo?: string;
+  accounts?: Account[];
+}
+
+interface Account {
+  accountId?: number;
+  balance?: number;
+  accountTypeNameKh?: string;
+  accountTypeNameEn?: string;
 }
 
 export interface Attachment {

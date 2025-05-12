@@ -154,8 +154,9 @@ import { AccountOperationComponent } from "./pages/account/account-operation.com
 import { OfferListComponent } from "./pages/offer/offer-list.component";
 import { OfferOperationComponent } from "./pages/offer/offer-operation.component";
 import { OfferDeleteComponent } from "./pages/offer/offer-delete.component";
-import { TransactionListComponent } from "./pages/transaction/transaction-list.component";
-import { AccountTabComponent } from "./pages/member/account-tab.component";
+import { TransactionListComponent } from "./pages/transaction/transaction-list.component"; 
+import { RedemptionDeleteComponent } from "./pages/redemption/redemption-delete.component";
+import { RedemptionListComponent } from "./pages/redemption/redemption-list.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -299,9 +300,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberOperationComponent,
     MemberDeleteComponent,
     MemberPullComponent,
-    MemberSelectComponent,
-    AccountTabComponent, 
-
+    MemberSelectComponent, 
 
     // location
     LocationListComponent,
@@ -343,6 +342,11 @@ export class CustomTranslate implements TranslateLoader {
     AccountDeleteComponent,
     AccountListComponent,
     AccountOperationComponent,
+
+    //redem
+    RedemptionDeleteComponent  ,
+    RedemptionListComponent,
+ 
   ],
   bootstrap: [AppComponent],
   imports: [

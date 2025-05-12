@@ -4,7 +4,6 @@ import { NzModalService } from "ng-zorro-antd/modal";
 import { MemberOperationComponent } from "./member-operation.component";
 import { MainPageService } from "../../utils/services/main-page.service";
 import { MemberDeleteComponent } from "./member-delete.component";
-import { MemberPullComponent } from "./member-pull.component";
 import { ItemUploadComponent } from "../offer-group/item-upload.component";
 import { TransactionListComponent } from "../transaction/transaction-list.component";
 

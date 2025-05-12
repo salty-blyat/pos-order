@@ -1,4 +1,4 @@
-import { Component, computed, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
@@ -13,6 +13,8 @@ import { NzMessageService } from "ng-zorro-antd/message";
 import { AuthService } from "../../helpers/auth.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Observable } from "rxjs";
+import { AccountService } from "../account/account.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-member-operation",
@@ -74,23 +76,45 @@ import { Observable } from "rxjs";
               <i nz-icon nzType="user"></i>
               <span>{{ "Information" | translate }}</span>
             </li>
+
             @if(!modal.isAdd) {
             <li
+              style="height:auto; padding-bottom:12px"
               nz-menu-item
               [nzSelected]="current == 2"
               (click)="switchCurrent(2)"
             >
-              <i nz-icon nzType="bank"></i>
-              <span>{{ "Account" | translate }}</span>
+              <div>
+                {{ "Account" | translate }}
+              </div>
+
+              <div
+                *ngFor="let account of model?.accounts"
+                style="display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
+              >
+                <i
+                  nz-icon
+                  [nzType]="
+                    account.accountTypeNameEn === 'Wallet' ? 'wallet' : 'star'
+                  "
+                  nzTheme="outline"
+                  style="margin-right: 8px;"
+                ></i>
+                <div>
+                  {{
+                    account.accountTypeNameEn === "Wallet"
+                      ? "$ " +
+                        (account.balance != null
+                          ? account.balance.toFixed(2)
+                          : "0.00")
+                      : account.balance != null
+                      ? account.balance
+                      : 0
+                  }}
+                </div>
+              </div>
             </li>
-            <!-- <li
-              nz-menu-item
-              [nzSelected]="current == 3"
-              (click)="switchCurrent(2)"
-            >
-              <i nz-icon nzType="transaction"></i>
-              <span>{{ "Redeem" | translate }}</span>
-            </li> -->
+
             }
           </ul>
         </nz-sider>
@@ -252,9 +276,24 @@ import { Observable } from "rxjs";
               </form>
             </div>
 
-            <div *ngSwitchCase="2" ngCase class="tab-content">
-              <app-account-tab [memberId]="model?.id || 0"></app-account-tab>
+            <div *ngSwitchCase="2" class="tab-content">
+              <nz-tabset style="margin: 0 8px;">
+                <nz-tab
+                  *ngFor="let account of model.accounts"
+                  [nzTitle]="
+                    translateService.currentLang == 'km'
+                      ? account.accountTypeNameKh ?? ''
+                      : account.accountTypeNameEn ?? ''
+                  "
+                  style="margin-right: 8px;"
+                >
+                  <app-transaction-list
+                    [accountId]="account.accountId || 0"
+                  ></app-transaction-list>
+                </nz-tab>
+              </nz-tabset>
             </div>
+
             <div *ngSwitchCase="3" ngCase></div>
           </div>
         </nz-content>
@@ -322,7 +361,7 @@ import { Observable } from "rxjs";
 
       .tab-content {
         loverflow-y: scroll;
-        padding: 32px;
+        padding: 8px;
       }
       .ant-modal-body {
         height: auto !important;
@@ -359,6 +398,8 @@ import { Observable } from "rxjs";
       }
 
       .menu-item {
+        display: flex;
+        flex-direction: column;
         background: #fff;
       }
 
@@ -388,11 +429,12 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     ref: NzModalRef<MemberOperationComponent>,
     service: MemberService,
     override uiService: MemberUiService,
+    public accountService: AccountService,
     private settingService: SettingService,
     private systemSettingService: SystemSettingService,
-    private msg: NzMessageService,
     private sessionStorageService: SessionStorageService,
-    private authService: AuthService
+    private authService: AuthService,
+    public translateService: TranslateService
   ) {
     super(fb, ref, service, uiService);
   }
@@ -402,6 +444,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   current: number = 1;
   isMemberEdit = computed(() => true);
   isMemberRemove = computed(() => true);
+  selectedAccount = signal<number>(0);
 
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
@@ -417,6 +460,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
 
   override ngOnInit(): void {
     super.ngOnInit();
+
     this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];
@@ -537,6 +581,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       }
     }
   }
+
   switchCurrent(index: number) {
     switch (index) {
       case 1:

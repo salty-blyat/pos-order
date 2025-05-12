@@ -1,21 +1,20 @@
 import { Injectable } from "@angular/core";
 import { NzModalService } from "ng-zorro-antd/modal";
 import { BaseUiService } from "../../utils/services/base-ui.service";
-import { AgentOperationComponent } from "./agent-operation.component";
-import { AgentDeleteComponent } from "./agent-delete.component";
+import { RedemptionDeleteComponent } from "./redemption-delete.component";
 
 @Injectable({
   providedIn: "root",
 })
-export class AgentUiService extends BaseUiService {
+export class RedemptionUiService extends BaseUiService {
   constructor(modalService: NzModalService) {
     super(
       modalService,
-      AgentOperationComponent,
-      AgentDeleteComponent,
-      "720px",
-      "720px",
-      "720px",
+      "RedeemptionOperationComponent",
+      RedemptionDeleteComponent,
+      "480px",
+      "480px",
+      "480px",
       "450px"
     );
   }

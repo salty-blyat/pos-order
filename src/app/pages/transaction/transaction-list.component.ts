@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  effect,
   inject,
   input,
   OnInit,
@@ -12,7 +13,6 @@ import { AuthService } from "../../helpers/auth.service";
 import { ActivatedRoute } from "@angular/router";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { SIZE_COLUMNS } from "../../const";
-import { MemberService } from "../member/member.service";
 import { AccountService, Transaction } from "../account/account.service";
 import { MemberUiService } from "../member/member-ui.service";
 import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
@@ -25,7 +25,7 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
       {{ "TransactionHistory" | translate }}
     </div>
     <div class="modal-content">
-      <nz-layout style="padding: 12px;">
+      <nz-layout>
         <nz-header>
           <div nz-row>
             <div nz-col>
@@ -39,9 +39,9 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
             </div>
           </div>
         </nz-header>
-
         <nz-content>
           <nz-table
+            style="height:auto"
             nzSize="small"
             nzShowSizeChanger
             nzTableLayout="fixed"
@@ -67,7 +67,7 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
                   {{ "TransNo" | translate }}
                 </th>
                 <th nzWidth="100px">
-                  {{ "TransDate" | translate }}
+                  {{ "Date" | translate }}
                 </th>
                 <th nzWidth="100px">
                   {{ "Amount" | translate }}
@@ -115,13 +115,7 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
     </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
-  styles: `
 
-  // TODO: adjust table height 
-   nz-content nz-table {
-    height: auto;
-   }
-  `,
   encapsulation: ViewEncapsulation.None,
 })
 export class TransactionListComponent extends BaseListComponent<Transaction> {
@@ -134,9 +128,13 @@ export class TransactionListComponent extends BaseListComponent<Transaction> {
     private activated: ActivatedRoute
   ) {
     super(service, uiService, sessionStorageService, "transaction-list");
+    effect(() => {
+      console.log(this.accountId());
+    });
   }
   readonly modal: any = inject(NZ_MODAL_DATA);
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
+  accountId = input<number>(0);
   isTransactionView = computed(() => true);
   cancel() {
     this.ref.triggerCancel().then();
@@ -163,7 +161,7 @@ export class TransactionListComponent extends BaseListComponent<Transaction> {
       });
 
       this.param().filters = JSON.stringify(filters);
-      this.service.getTransactions(this.modal?.id, this.param()).subscribe({
+      this.service.getTransactions(this.accountId(), this.param()).subscribe({
         next: (result: { results: Transaction[]; param: QueryParam }) => {
           this.lists.set(result.results);
           this.param.set(result.param);

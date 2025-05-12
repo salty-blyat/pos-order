@@ -1,0 +1,843 @@
+[33mcommit 04d7094816ef250d34a8c9ec28da5d03d576ee10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Mon May 12 10:41:35 2025 +0700
+
+    update agent operation
+
+[33mcommit e733b36e9b386443596b5318b3e8fe94632c57bd[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Sun May 11 15:50:32 2025 +0700
+
+    finish account tab in member
+
+[33mcommit e0cd805c11858e743b07d2cf6b7043afe46498f4[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Sat May 10 13:34:13 2025 +0700
+
+    Offer
+
+[33mcommit af7817f150bffba2b1c0f18e5c60579f1ffeb7dd[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri May 9 14:53:52 2025 +0700
+
+    member
+
+[33mcommit 27a3d707a02d73286956ec2ed5224e373e9963b9[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu May 8 15:04:49 2025 +0700
+
+    Offer group
+
+[33mcommit 7c2614a1a103e52ac791b8b601e8eda67992e40b[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu May 8 11:12:25 2025 +0700
+
+    Member Class
+
+[33mcommit 88e7ee603c19a8104032d803835c58748fecb2ed[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu May 8 10:04:18 2025 +0700
+
+    agent
+
+[33mcommit bf78e01c29855b244a0f1c0af823db2d31dc82cd[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu May 8 09:18:58 2025 +0700
+
+    finish off branch delete
+
+[33mcommit 1ef7429f7ec7e73ef0b2214b9db99922788665c4[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed May 7 13:50:12 2025 +0700
+
+    Lookup
+
+[33mcommit c96ad5d896c2f96b06d728d24d7452be8367d873[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed May 7 11:01:16 2025 +0700
+
+    first commit
+
+[33mcommit 453fc4420a052e6c78be0c826de883e70c7ead86[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed May 7 10:59:01 2025 +0700
+
+    first commit
+
+[33mcommit 4cf118fcbc87ca244cde1110c617c3bccd09ba78[m
+Merge: 352557a 0ae051a
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Tue May 6 11:54:13 2025 +0700
+
+    Merge branch 'main' of github.com:ryrith/pbs-ui
+
+[33mcommit 352557a45f46806983a6bac967f045f9515a5af1[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Tue May 6 11:53:58 2025 +0700
+
+    fix select in member list
+
+[33mcommit 0ae051acd21ed212a286076fcce46ac21bbea634[m
+Merge: e3aa1a0 9c772f3
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Tue May 6 10:16:05 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit e3aa1a0f13748aca6e8c3419cd5eda7db1d17272[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Tue May 6 10:15:58 2025 +0700
+
+    - updated billing cycle
+
+[33mcommit 9c772f3138fe65b512bbc831020df72401b2c215[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Tue May 6 08:45:25 2025 +0700
+
+    fix small ui
+
+[33mcommit b4848fc7dfafe74f0af20c729e15a9521b7aeece[m
+Merge: 1e15fde 7c85d93
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Mon May 5 16:44:01 2025 +0700
+
+    fix bugs and adjust ui
+
+[33mcommit 1e15fded8a63a80c27f9e3f36c1d8d569df57015[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Mon May 5 16:40:09 2025 +0700
+
+    fix bugs and adjust ui
+
+[33mcommit 7c85d93aa8212ce580734e4dc9093ee170b55472[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Mon May 5 16:36:31 2025 +0700
+
+    - updated billing cycle
+    - updated meter reading
+
+[33mcommit 2ca703b4decbc74dbc7c4afe2f4f2e61997d59d4[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Mon May 5 09:57:50 2025 +0700
+
+    - updated global style (border-radius, color-disabled)
+    - updated menu billing
+
+[33mcommit 76dfe4d0ab147c6ef51dfc25541d6d5317268854[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Mon May 5 09:57:46 2025 +0700
+
+    - updated global style (border-radius, color-disabled)
+    - updated menu billing
+
+[33mcommit 96f659167e9c9476e9af2869a5849ef0bd9c25c4[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri May 2 17:59:59 2025 +0700
+
+    - updated version build
+
+[33mcommit c5537bb306cc1c039695203b2c77af364a9974a5[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri May 2 17:54:20 2025 +0700
+
+    - updated menu billing icon
+
+[33mcommit 3115eed6bae01d55f4ce1099c98201d969050d6b[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri May 2 17:41:07 2025 +0700
+
+    - fixed style setting and page icon down
+
+[33mcommit 60d618e0a21d77e64db8ac28c82e4a901ebe10e3[m
+Merge: e2c5cf8 016f387
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri May 2 17:34:35 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit e2c5cf87730a7eae5971b39b07dcf01bab0cf19d[m
+Merge: 3c1d35e 1a29a30
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri May 2 16:06:33 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+    
+    # Conflicts:
+    #       src/app/pages/tag/tag-group-list.component.ts
+
+[33mcommit 016f38799cbe8319f6526c704aff5b137a25fea8[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri May 2 15:44:44 2025 +0700
+
+    final update on permission
+
+[33mcommit 3c1d35ee82ea39a10cef5e50455359d51832c8a3[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri May 2 15:36:01 2025 +0700
+
+    - updated room inventory
+    - updated room member
+
+[33mcommit 1a29a3022a20e67af542cdb31d48345dc125ca55[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri May 2 15:30:25 2025 +0700
+
+    fix
+
+[33mcommit ecdb4f57fd89199a347a9345c7d51603680a731c[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri May 2 15:29:12 2025 +0700
+
+    Fix member unit select
+
+[33mcommit ebc2042ae4599f447206654a117cd845a5b2a9f9[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri May 2 15:11:30 2025 +0700
+
+    Permission on all Select componenets
+
+[33mcommit 065d61572fe289d371df586d667f5de5d856d6ab[m
+Merge: 5e89a56 36508ca
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri May 2 15:06:39 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+    
+    # Conflicts:
+    #       src/app/pages/lookup/lookup-item/lookup-item-list.component.ts
+    #       src/app/pages/page.component.ts
+    #       src/app/pages/setting/setting.component.ts
+    #       src/app/pages/system-setting/system-setting.service.ts
+
+[33mcommit 5e89a56b0a5ad5c3f4f988b59f659389630213cf[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri May 2 15:01:18 2025 +0700
+
+    - updated room inventory
+    - updated room member
+
+[33mcommit 36508ca48da0528ac331d4847dbbecd253515606[m
+Merge: a3bb833 4ce97a8
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri May 2 14:11:19 2025 +0700
+
+    Merge branch 'main' of github.com:ryrith/pbs-ui
+
+[33mcommit a3bb83397a86d255af417bd662d11b73d14c44f1[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri May 2 14:10:57 2025 +0700
+
+    Set permission to all
+
+[33mcommit 4ce97a84ae1f0663c3e0831912a0e0f156768853[m
+Merge: e453426 31ad576
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu May 1 17:50:43 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit e4534262743e8f0e9c89482c1dc1e429abae8a27[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu May 1 17:50:27 2025 +0700
+
+    - updated room member
+
+[33mcommit 31ad5769ea8358ad421cfa970862c9eadcdb0f79[m
+Merge: 388880f 4c6fd5d
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu May 1 17:47:46 2025 +0700
+
+    Merge branch 'main' of github.com:ryrith/pbs-ui
+
+[33mcommit 388880f21e371c95824cb14ddf18b19046625bfd[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu May 1 17:40:03 2025 +0700
+
+    Pavr button disable/enable, permission on lookup/currency
+
+[33mcommit 4c6fd5d1fb674222835c9a8b83f93aa01ee08702[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu May 1 17:01:31 2025 +0700
+
+    - updated room charge
+
+[33mcommit bc65595e2471e5b23e47c27d9b6cab0c39fb242f[m
+Merge: 5adbb9d 19ffaee
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu May 1 16:32:25 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+    
+    # Conflicts:
+    #       src/app/pages/room-charge/room-charge-operation.component.ts
+
+[33mcommit 5adbb9d538c8278a14bf0b6274b2de557faa4c4b[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu May 1 16:31:15 2025 +0700
+
+    - updated room charge
+
+[33mcommit 19ffaeeaeaf5f44d0651db4dbf1f9b202d6bd25e[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu May 1 15:58:44 2025 +0700
+
+    ordering to itemtype
+
+[33mcommit 988f6ac95a39f82e8e676b52faacd1750d66d19d[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu May 1 15:18:30 2025 +0700
+
+    All autonumber in setting done
+
+[33mcommit b12281f945a002f1a0100cfae06609766d628338[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu May 1 14:22:31 2025 +0700
+
+    ItemAutoNumber
+
+[33mcommit 387868e63989985c2feeb3cdd98d10089c354195[m
+Merge: 2415ce8 cefd3d2
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu May 1 11:11:33 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+    
+    # Conflicts:
+    #       src/app/app.module.ts
+
+[33mcommit 2415ce8e495fb82e0fea70b44ac76d2844ccc284[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu May 1 11:10:45 2025 +0700
+
+    - updated room view and fixed base select when on initializing is call to api twice
+
+[33mcommit cefd3d29996e1df2a032da2c5d1b84b4c96407c0[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu May 1 10:52:18 2025 +0700
+
+    RoomCharge
+
+[33mcommit 8c7716ac0c62d7421d9875441bdd744a83f1ad5f[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Wed Apr 30 20:06:30 2025 +0700
+
+    - fixed style table list
+
+[33mcommit 07c474cc854fb297564aada86d10f6363c909b6a[m
+Merge: 2b490f6 6efc9cd
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 17:14:35 2025 +0700
+
+    Merge branch 'main' of github.com:ryrith/pbs-ui
+
+[33mcommit 2b490f6f4531a0ace089782d431e0398eef6b3cf[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 17:14:24 2025 +0700
+
+    Member Level autonumber
+
+[33mcommit 6efc9cd075dc7232e85ac50337ec2ecc4ac06262[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Wed Apr 30 17:11:14 2025 +0700
+
+    - update tag group
+
+[33mcommit 50fcda633952121e8638d9b59ed548e900c2b10a[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 16:19:33 2025 +0700
+
+    Charge Auto number
+
+[33mcommit 632e7a5a800f86d69d0a1ebdba4c5ad4c1d661fb[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 11:53:50 2025 +0700
+
+    clean up on translattion
+
+[33mcommit ec470b8d81c3557d33eba88c4b96fbffbdbcbec9[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 11:35:40 2025 +0700
+
+    Member Level pull
+
+[33mcommit cb16515ab16e347803182896648cb2aeeb2d5e99[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 11:29:19 2025 +0700
+
+    Member Group Pull
+
+[33mcommit 0ae87089e6a123bbe92156d8c814026615534b89[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 11:14:01 2025 +0700
+
+    Member unit pull
+
+[33mcommit bb116d51d31a2beede3e90a26edf83ba20ac581f[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 10:24:36 2025 +0700
+
+    Pavr and remember path
+
+[33mcommit 827ee8ccdbcf7db102d20e09d17ec700e850dc00[m
+Merge: a290486 20518fd
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 10:18:45 2025 +0700
+
+    t Merge branch 'main' of github.com:ryrith/pbs-ui
+
+[33mcommit a2904863ee7217e3595e11d0475ee7a4b630bda3[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 10:18:30 2025 +0700
+
+    pavr
+
+[33mcommit 20518fd30c399694f7c37185bd36618fef2672bd[m
+Merge: 6426b2d 41e9f8a
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Wed Apr 30 10:00:52 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit 6426b2dc7b42ed04acab5594d573241a0dada655[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Wed Apr 30 10:00:40 2025 +0700
+
+    - update room
+
+[33mcommit 41e9f8a8436977e157bcf3b507fe2392508acfa7[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 09:59:59 2025 +0700
+
+    pavr
+
+[33mcommit 704039c6359604d39ed226dc681d5b69303f0cf1[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 30 09:49:28 2025 +0700
+
+    pavr
+
+[33mcommit 6dd420312683486c8038cc46f7e6acc4a86c70d5[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Wed Apr 30 08:36:21 2025 +0700
+
+    updated member pull
+
+[33mcommit 32cdcae892c2fd661626dbbc880777a79ba8f27a[m
+Merge: 5e3dd4f 43ede93
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Tue Apr 29 20:45:15 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+    
+    # Conflicts:
+    #       src/app/app.module.ts
+    #       src/app/pages/member/member-operation.component.ts
+    #       src/app/pages/member/member.service.ts
+    #       src/app/pages/unit/unit-list.component.ts
+
+[33mcommit 5e3dd4f60f7b2e1f0e33661c4fe47f41c090810c[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Tue Apr 29 20:40:20 2025 +0700
+
+    updated member operation
+
+[33mcommit 43ede93f9412927494a5f218bbdd488b6bbdd54e[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Tue Apr 29 16:21:05 2025 +0700
+
+    align button save in other-app-section to the right
+
+[33mcommit 2a717ce712b866373288f6c59b7031af6bc25d02[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Tue Apr 29 16:15:48 2025 +0700
+
+    Other App Setting: Test Pavr Url
+
+[33mcommit 00dd471b5d47e9695de457f0134c2bf78af41d7e[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Tue Apr 29 13:31:19 2025 +0700
+
+    Rename Group => MemberGroup
+
+[33mcommit bf1d2f9c7db0ab483208fedb6479cf0492cc0b09[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Tue Apr 29 13:07:38 2025 +0700
+
+    Rename ItemUnit => Unit
+
+[33mcommit ae993f157e3537ad28536626141498e6ba3890b5[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Tue Apr 29 11:35:04 2025 +0700
+
+    Add floor select to room charge type and rename unit -> member unit
+
+[33mcommit a69bef3336537eb866d35e7591afbe432858532d[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Mon Apr 28 22:25:16 2025 +0700
+
+    fixed and merge code
+
+[33mcommit 07c8e1fc9ac5556dacd67ffe21dc672933ea4508[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Mon Apr 28 22:22:56 2025 +0700
+
+    fixed and merge code
+
+[33mcommit ef3539f274ce1cdd7303ca047bb1a2a4c5fb1f0e[m
+Merge: ae244ac e236e7b
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Mon Apr 28 22:21:31 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+    
+    # Conflicts:
+    #       src/app/app.module.ts
+    #       src/app/utils/services/common-validators.ts
+
+[33mcommit ae244acb9a38f3e8de585ad6412f9075bec076ad[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Mon Apr 28 22:20:14 2025 +0700
+
+    fixed style and operation for a report, report group, member, member level
+
+[33mcommit e236e7b2a80435e0bbdca4e1cf7a0c5b636c53fa[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Mon Apr 28 17:07:48 2025 +0700
+
+    add Room Select in Room Charge Type List
+
+[33mcommit 2df05eff6d214915009d22c3ae1807caf6e4eee5[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Mon Apr 28 16:37:34 2025 +0700
+
+    add note to charge
+
+[33mcommit 89eb12513fccc0453060e89822a5d5f10c31d970[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Mon Apr 28 15:26:46 2025 +0700
+
+    fix and add filter in Charge List
+
+[33mcommit 46ab47a1cb5c957cb8b345a23be847c29145e074[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Mon Apr 28 14:50:50 2025 +0700
+
+    Charge (crud)
+
+[33mcommit d34eb5e46c077da2d278f459e45f8e0856cd00d9[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Mon Apr 28 14:09:38 2025 +0700
+
+    updated member operation
+
+[33mcommit f5a061d1685f364420e03c039c96daef0a768008[m
+Merge: ad49e2b db1bcf9
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Mon Apr 28 14:03:11 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+    
+    # Conflicts:
+    #       src/app/app.module.ts
+    #       src/app/pages/member/member-list.component.ts
+    #       src/app/pages/member/member-operation.component.ts
+    #       src/app/pages/member/member.service.ts
+
+[33mcommit ad49e2b06d637c86c6feea45eb23731ad6f84b29[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Mon Apr 28 14:00:11 2025 +0700
+
+    updated member operation
+
+[33mcommit db1bcf906d098778d67b651de7b6e3bfc8dc266c[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Mon Apr 28 13:59:37 2025 +0700
+
+    Group select
+
+[33mcommit 3b9bd1c4a09cd1f773398d5d94932c9f7b22aa58[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Mon Apr 28 12:08:21 2025 +0700
+
+    Charge List
+
+[33mcommit 9ab6cbfea736178e07faae0557d7f77ab74eab2e[m
+Merge: 95720d8 641ed8a
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Mon Apr 28 11:12:30 2025 +0700
+
+    Charge list
+
+[33mcommit 641ed8a3c0050fc78e0c7d790ac665d03b677dbf[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Sun Apr 27 23:22:49 2025 +0700
+
+    updated and fixed operation and style
+
+[33mcommit ecfdeb04a614cb16623f1328a26053084c2bf99e[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Sun Apr 27 18:00:25 2025 +0700
+
+    updated nginx.conf with no cache from version.json
+
+[33mcommit 132944edd18ac56552db9e7d4d70538cb5b69b7d[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Sun Apr 27 17:49:15 2025 +0700
+
+    fixed style and operation
+
+[33mcommit 95720d869b84a033862bec869bd1edbd3193a145[m
+Merge: df31a09 14cabea
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Sat Apr 26 11:42:44 2025 +0700
+
+    Fix width table
+
+[33mcommit df31a095fe9131a42ba973f04480a4b92c18c242[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Sat Apr 26 10:08:04 2025 +0700
+
+    fix tables width
+
+[33mcommit 14cabea9da9dfce4b0bb826c7be4df411c541c6e[m
+Merge: a600e5f eb8157c
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri Apr 25 17:53:09 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit a600e5f9b1f4fed0423f04ae7c9aca047930b1a5[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri Apr 25 17:53:01 2025 +0700
+
+    fixed style and operation
+
+[33mcommit eb8157cec7f210cfde7cc727cd9aeed0ed572899[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri Apr 25 16:38:24 2025 +0700
+
+    Update Block
+
+[33mcommit 0cbc641b4875e429ef473c75157539c0875d100e[m
+Merge: ab26685 6f09333
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri Apr 25 15:03:37 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+    
+    # Conflicts:
+    #       src/app/pages/item-type/item-type-operation.component.ts
+
+[33mcommit ab26685dc792d0416a353e4d5744f254c3504949[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri Apr 25 15:03:15 2025 +0700
+
+    update floor and block with clean-up code
+
+[33mcommit 6f093335d6f352fecd6d2c05205ad8c870a8071d[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri Apr 25 14:43:53 2025 +0700
+
+    Group (CRUD)
+
+[33mcommit b5035cd3e9c3b09ee381101875c1b8e7fedb98cc[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri Apr 25 14:20:48 2025 +0700
+
+    Item Unit (CRUD)
+
+[33mcommit 7feb2ca01d0d174d67e02a26865727f75b0929a8[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri Apr 25 13:50:16 2025 +0700
+
+    Unit (CRUD)
+
+[33mcommit a6fdd74084d1e853c57a0b38dc99fd499eb4c7a7[m
+Merge: 7bffb88 5c84959
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri Apr 25 11:56:45 2025 +0700
+
+    Merge branch 'main' of github.com:ryrith/pbs-ui
+
+[33mcommit 7bffb88abc84294b088044cb924174ca7b98eb58[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri Apr 25 11:56:29 2025 +0700
+
+    update minor style
+
+[33mcommit 5c84959f03b8cf8ff529881da01adc663557ee86[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri Apr 25 11:31:58 2025 +0700
+
+    update style layout
+
+[33mcommit 18285601700386e9dd8b2b0430d103a6a9c8203c[m
+Merge: 40de35f 138dd4f
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri Apr 25 10:52:27 2025 +0700
+
+    Merge branch 'main' of github.com:ryrith/pbs-ui
+
+[33mcommit 40de35f9e0a14b0c4ef99e93aae5aa036ddea261[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri Apr 25 10:52:13 2025 +0700
+
+    Member Level (CRUD) in setting
+
+[33mcommit 138dd4fb934329fff2f794a950b70d8b497bd059[m
+Merge: 57c9859 5c01603
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri Apr 25 08:56:55 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+
+[33mcommit 57c98596fc772ccd9a41a9853ae23c0684943949[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Fri Apr 25 08:56:44 2025 +0700
+
+    style drop down page
+
+[33mcommit 5c01603112be4e99bf7d42a87225e41b897bb553[m
+Merge: c72ef1a cadb118
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri Apr 25 08:55:00 2025 +0700
+
+    Update Item
+
+[33mcommit c72ef1a649ff3b285e9cf1f79b058dbd7f285483[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Fri Apr 25 08:40:00 2025 +0700
+
+    Update Item
+
+[33mcommit cadb118fd11c3a95ed1015d6fe8e27353d8ea5ec[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu Apr 24 23:07:21 2025 +0700
+
+    updated base delete and style also
+
+[33mcommit 10cd1abc3df042a9971c679f204b8ebf47ceca34[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu Apr 24 21:49:11 2025 +0700
+
+    updated style
+
+[33mcommit d68849a02f3f4ccccf5af2e1c10df34204948aa9[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu Apr 24 15:13:50 2025 +0700
+
+    merge and fix to use signal
+
+[33mcommit 170045a431b572f0de79861f5561e6ba11f84876[m
+Merge: 75d29db 599c186
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu Apr 24 14:41:48 2025 +0700
+
+    Merge branch 'main' of github.com:ryrith/pbs-ui
+
+[33mcommit 75d29dbdc5f3b4ea996c7985ec139f66abf22d07[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu Apr 24 14:39:57 2025 +0700
+
+    ItemType CRUD
+
+[33mcommit 5520bbeb07d63d0399c0fc978b80b73e3be7c185[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Thu Apr 24 14:20:11 2025 +0700
+
+    Full crud on ItemType
+
+[33mcommit 599c186305640949b28a709198d4e16d77a4ce86[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu Apr 24 14:11:05 2025 +0700
+
+    updated base list component with signal
+
+[33mcommit 41cb71953b6f0fa4e3377b0cd9436697371e1e2f[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Thu Apr 24 13:56:04 2025 +0700
+
+    updated base list component with signal
+
+[33mcommit ca8b3b7ead74613420d261653ef2c0344e502439[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 23 16:43:43 2025 +0700
+
+    ui for Item in setting (still missing functionality)
+
+[33mcommit 8d499afcf20d7feec3b741dd923313f36dea0793[m
+Merge: 2e240e4 c973738
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 23 12:19:03 2025 +0700
+
+    move room from setting to sidebar and add member with mockup data
+
+[33mcommit 2e240e4ff1564c107f2ff2e92bfc466dd34310df[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Wed Apr 23 12:18:02 2025 +0700
+
+    move room from setting to sidebar and add member with mockup data
+
+[33mcommit c973738ebead57b83436294ade47293ff21a2ab3[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Wed Apr 23 10:30:49 2025 +0700
+
+    updated the .gitignore file
+
+[33mcommit 770d7ec455b68d07a3446f6cc0b7610649137f43[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Wed Apr 23 10:29:22 2025 +0700
+
+    updated setting and docker build
+
+[33mcommit a6bfc9b00daa2f3ddff0f8a3313d7e4b02153a1b[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Wed Apr 23 08:53:56 2025 +0700
+
+    updated setting
+
+[33mcommit ce7d0264f4bba3b2c4229b1372ff9545d615322d[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Tue Apr 22 16:55:40 2025 +0700
+
+    updated page
+
+[33mcommit 786cb9052464be0878b213b5ff4a34f39cfb7271[m
+Merge: 05cbf85 325449a
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Tue Apr 22 16:49:15 2025 +0700
+
+    Merge remote-tracking branch 'origin/main'
+    
+    # Conflicts:
+    #       src/app/pages/page.component.ts
+
+[33mcommit 05cbf8581fca233c3b07bf3d2283f1215de60fec[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Tue Apr 22 16:45:38 2025 +0700
+
+    updated page
+
+[33mcommit 325449a777468efb6d94fd12a03827537a19659b[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Tue Apr 22 16:45:17 2025 +0700
+
+    update ui profile and add building CRUD in setting
+
+[33mcommit c6705ef00ffbf158d85f9004d1479e62c801d56a[m
+Author: salty_blyat <hokheng12123@example.com>
+Date:   Tue Apr 22 12:24:02 2025 +0700
+
+    update profile ui
+
+[33mcommit 209913c6af35cbb2b0fd3b73e5a9512cfa976f95[m
+Author: onsidet <80875053+onsidet@users.noreply.github.com>
+Date:   Tue Apr 22 11:02:23 2025 +0700
+
+    Update README.md
+
+[33mcommit 3a63622987411b4c71eda5e9ab3aa18e1a3ba89c[m
+Author: onsidet <“sidetone0004@gmail.com”>
+Date:   Tue Apr 22 11:01:23 2025 +0700
+
+    first commit

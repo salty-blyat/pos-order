@@ -24,6 +24,8 @@ import { OfferGroupListComponent } from "./pages/offer-group/offer-group-list.co
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { AccountListComponent } from "./pages/account/account-list.component";
 import { OfferListComponent } from "./pages/offer/offer-list.component";
+import { RedemptionDeleteComponent } from "./pages/redemption/redemption-delete.component";
+import { RedemptionListComponent } from "./pages/redemption/redemption-list.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -67,6 +69,10 @@ const routes: Routes = [
       {
         path: "report/:id",
         component: ReportViewComponent,
+      },
+      {
+        path: "redemption",
+        component: RedemptionListComponent,
       },
       {
         path: "setting/lookup",
