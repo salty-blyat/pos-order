@@ -71,6 +71,10 @@ const routes: Routes = [
         component: RedemptionListComponent,
       },
       {
+        path: "redemption",
+        component: RedemptionListComponent,
+      },
+      {
         path: "report/:id",
         component: ReportViewComponent,
       },

@@ -81,6 +81,8 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 
           <tbody>
             <!-- <tr *ngFor="let data of lists(); let i = index">
+          <tbody>
+            <!-- <tr *ngFor="let data of lists(); let i = index">
                 <td nzEllipsis>
                   {{
                     i
@@ -102,6 +104,10 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
                 <td nzEllipsis>{{ data.format }}</td>
                 <td nzEllipsis>{{ data.note }}</td>
               </tr> -->
+          </tbody>
+        </nz-table>
+      </nz-content>
+    </nz-layout>
           </tbody>
         </nz-table>
       </nz-content>
