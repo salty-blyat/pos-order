@@ -1,5 +1,5 @@
 import { Component, computed, ViewEncapsulation } from "@angular/core";
-import { EmailValidator, FormBuilder } from "@angular/forms";
+import {   FormBuilder } from "@angular/forms"; 
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
@@ -231,7 +231,7 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
       email: this.model.email,
       phone: this.model.phone,
       address: this.model.address,
-      joinDate: this.model.joinDate,
+      joinDate: this.model.joinDate, 
       note: this.model.note,
     });
   }

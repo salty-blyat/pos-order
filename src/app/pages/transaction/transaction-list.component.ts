@@ -79,8 +79,8 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
               </tr>
             </thead>
 
-            <tbody>
-              <!-- <tr *ngFor="let data of lists(); let i = index">
+          <tbody>
+            <!-- <tr *ngFor="let data of lists(); let i = index">
                 <td nzEllipsis>
                   {{
                     i
@@ -102,17 +102,10 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
                 <td nzEllipsis>{{ data.format }}</td>
                 <td nzEllipsis>{{ data.note }}</td>
               </tr> -->
-            </tbody>
-          </nz-table>
-        </nz-content>
-      </nz-layout>
-    </div>
-    <div *nzModalFooter>
-      <a nz-typography (click)="cancel()" style="color: gray;">
-        <i nz-icon nzType="close" nzTheme="outline"></i>
-        <span class="action-text"> {{ "Close" | translate }}</span>
-      </a>
-    </div>
+          </tbody>
+        </nz-table>
+      </nz-content>
+    </nz-layout>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
 

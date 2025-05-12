@@ -24,7 +24,7 @@ import { TranslateService } from "@ngx-translate/core";
             >
             </app-filter-input>
           </div>
-        </div> 
+        </div>
       </nz-header>
       <nz-content>
         <nz-table

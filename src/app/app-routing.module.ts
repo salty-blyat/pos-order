@@ -67,6 +67,10 @@ const routes: Routes = [
         component: MemberListComponent,
       },
       {
+        path: "redemption",
+        component: RedemptionListComponent,
+      },
+      {
         path: "report/:id",
         component: ReportViewComponent,
       },
