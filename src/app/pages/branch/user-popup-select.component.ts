@@ -5,6 +5,7 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-user-popup-select",
@@ -98,7 +99,7 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
   standalone: false,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
-    ` 
+    `
       .modal-content {
         padding: 0 24px;
       }
@@ -113,14 +114,21 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
     `,
   ],
 })
-export class UserPopupSelectComponent extends BaseListComponent<User> {
+export class UserPopupSelectComponent extends BaseListComponent<any> {
   constructor(
     override service: BranchService,
     sessionStorageService: SessionStorageService,
     public override uiService: BranchUiService,
-    private ref: NzModalRef<UserPopupSelectComponent>
+    private ref: NzModalRef<UserPopupSelectComponent>,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "user-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "user-list",
+      notificationService
+    );
   }
   readonly modal = inject(NZ_MODAL_DATA);
   setOfCheckedId = new Set<string>();
@@ -171,37 +179,37 @@ export class UserPopupSelectComponent extends BaseListComponent<User> {
   //     });
   //   }, 50);
   // }
-  override search(filters: Filter[] = [], delay: number = 50) {
-    if (this.isLoading()) return;
-    this.isLoading.set(true);
-    setTimeout(() => {
-      filters?.unshift({
-        field: "search",
-        operator: "contains",
-        value: this.searchText(),
-      });
-      filters?.map((filter: Filter) => {
-        return {
-          field: filter.field,
-          operator: filter.operator,
-          value: filter.value,
-        };
-      });
-      this.param().filters = JSON.stringify(filters);
-      this.service.getAllUsers(this.param()).subscribe({
-        next: (result: { results: User[]; param: QueryParam }) => {
-          this.lists.set(result.results);
-          console.log(result);
+  // override search(filters: Filter[] = [], delay: number = 50) {
+  //   if (this.isLoading()) return;
+  //   this.isLoading.set(true);
+  //   setTimeout(() => {
+  //     filters?.unshift({
+  //       field: "search",
+  //       operator: "contains",
+  //       value: this.searchText(),
+  //     });
+  //     filters?.map((filter: Filter) => {
+  //       return {
+  //         field: filter.field,
+  //         operator: filter.operator,
+  //         value: filter.value,
+  //       };
+  //     });
+  //     this.param().filters = JSON.stringify(filters);
+  //     this.service.getAllUsers(this.param()).subscribe({
+  //       next: (result: { results: User[]; param: QueryParam }) => {
+  //         this.lists.set(result.results);
+  //         console.log(result);
 
-          this.param.set(result.param);
-          this.isLoading.set(false);
-        },
-        error: () => {
-          this.isLoading.set(false);
-        },
-      });
-    }, delay);
-  }
+  //         this.param.set(result.param);
+  //         this.isLoading.set(false);
+  //       },
+  //       error: () => {
+  //         this.isLoading.set(false);
+  //       },
+  //     });
+  //   }, delay);
+  // }
 
   ok() {
     this.requestData = this.lists().filter((data) =>

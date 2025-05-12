@@ -1,10 +1,17 @@
-import { Component, computed, input, OnChanges, SimpleChanges } from "@angular/core";
+import {
+  Component,
+  computed,
+  input,
+  OnChanges,
+  SimpleChanges,
+} from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Floor, FloorService } from "./floor.service";
 import { FloorUiService } from "./floor-ui.service";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { AuthService } from "../../helpers/auth.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-floor-list",
@@ -34,7 +41,8 @@ import { AuthService } from "../../helpers/auth.service";
         <div>
           <button
             nz-button
-            nzType="primary" *ngIf="isFloorAdd()"
+            nzType="primary"
+            *ngIf="isFloorAdd()"
             (click)="uiService.showAdd(this.blockId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
@@ -66,7 +74,7 @@ import { AuthService } from "../../helpers/auth.service";
               <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.NOTE"> {{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -93,9 +101,13 @@ import { AuthService } from "../../helpers/auth.service";
                         }
                 }}
               </td>
-              <td nzEllipsis style="flex:2"> 
-                <span *ngIf="!isFloorAdd()" >{{ data.name }}</span>
-                <a  *ngIf="isFloorAdd()" (click)="uiService.showView(data.id!)">{{ data.name }}</a>
+              <td nzEllipsis style="flex:2">
+                <span *ngIf="!isFloorAdd()">{{ data.name }}</span>
+                <a
+                  *ngIf="isFloorAdd()"
+                  (click)="uiService.showView(data.id!)"
+                  >{{ data.name }}</a
+                >
               </td>
               <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
@@ -118,7 +130,7 @@ import { AuthService } from "../../helpers/auth.service";
                     <a
                       *nzSpaceItem
                       (click)="uiService.showDelete(data.id || 0)"
-                      nz-typography 
+                      nz-typography
                       style="color: #F31313"
                     >
                       <i
@@ -143,14 +155,22 @@ import { AuthService } from "../../helpers/auth.service";
 })
 export class FloorListComponent
   extends BaseListComponent<Floor>
-  implements OnChanges {
+  implements OnChanges
+{
   constructor(
     override service: FloorService,
     uiService: FloorUiService,
     sessionStorageService: SessionStorageService,
     private authService: AuthService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "floor-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "floor-list",
+      notificationService
+    );
   }
 
   blockId = input<number>(0);
@@ -161,21 +181,29 @@ export class FloorListComponent
     }
   }
 
-  isFloorAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__ADD));
-  isFloorView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__VIEW));
-  isFloorRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__REMOVE));
-  isFloorEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__EDIT));
+  isFloorAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__ADD)
+  );
+  isFloorView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__VIEW)
+  );
+  isFloorRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__REMOVE)
+  );
+  isFloorEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__EDIT)
+  );
 
-  override search(blockId?: any): void {
-      let filters = [
-        {
-          field: "blockId",
-          operator: "eq",
-          value: blockId,
-        }
-      ];
-    super.search(filters);
-  }
+  // override search(blockId?: any): void {
+  //     let filters = [
+  //       {
+  //         field: "blockId",
+  //         operator: "eq",
+  //         value: blockId,
+  //       }
+  //     ];
+  //   super.search(filters);
+  // }
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

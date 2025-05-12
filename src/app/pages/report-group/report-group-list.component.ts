@@ -1,4 +1,4 @@
-import { Component, computed, signal, ViewEncapsulation, } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
@@ -11,6 +11,7 @@ import { Block } from "../block/block.service";
 import { QueryParam } from "../../utils/services/base-api.service";
 import { AuthKeys } from "../../const";
 import { AuthService } from "../../helpers/auth.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-report-new-list",
@@ -36,7 +37,7 @@ import { AuthService } from "../../helpers/auth.service";
               nz-menu
               nzMode="inline"
               class="menu-custom-report-group"
-              cdkDropList 
+              cdkDropList
               cdkDropListLockAxis="y"
               (cdkDropListDropped)="drop($event)"
               [cdkDropListData]="lists()"
@@ -52,32 +53,32 @@ import { AuthService } from "../../helpers/auth.service";
                   [nzSelected]="reportGroupId() === data.id!"
                   style="padding-left: 36px"
                 >
-                    <span
-                            nz-icon
-                            nzType="holder"
-                            nzTheme="outline"
-                            class="drag-handle"
-                            cdkDragHandle
-                    ></span>
+                  <span
+                    nz-icon
+                    nzType="holder"
+                    nzTheme="outline"
+                    class="drag-handle"
+                    cdkDragHandle
+                  ></span>
                   {{ data.name }}
-                    <a
-                            [nzDropdownMenu]="menu"
-                            class="action-button menu-dropdown"
-                            nz-dropdown
-                            *ngIf="isReportGroupAdd() || isReportGroupEdit() "
-                            nzTrigger="click"
-                            nzPlacement="bottomRight"
-                    >
-                        <i  
-                                nz-icon
-                                nzType="ellipsis"
-                                nzTheme="outline"
-                                style="font-size: 22px"
-                        ></i>
-                    </a>
+                  <a
+                    [nzDropdownMenu]="menu"
+                    class="action-button menu-dropdown"
+                    nz-dropdown
+                    *ngIf="isReportGroupAdd() || isReportGroupEdit()"
+                    nzTrigger="click"
+                    nzPlacement="bottomRight"
+                  >
+                    <i
+                      nz-icon
+                      nzType="ellipsis"
+                      nzTheme="outline"
+                      style="font-size: 22px"
+                    ></i>
+                  </a>
                 </li>
                 <nz-dropdown-menu #menu="nzDropdownMenu">
-                  <ul nz-menu nzSelectable> 
+                  <ul nz-menu nzSelectable>
                     <li
                       *ngIf="isReportGroupEdit()"
                       class="menu-item edit"
@@ -147,7 +148,7 @@ import { AuthService } from "../../helpers/auth.service";
   encapsulation: ViewEncapsulation.None,
   styles: [
     `
-      .inner-content-report-list{
+      .inner-content-report-list {
         padding: 0 0 0 14px;
         border-left: 1px solid var(--ant-border-color);
       }
@@ -162,7 +163,7 @@ import { AuthService } from "../../helpers/auth.service";
         height: 91.7%;
         background: #fff;
       }
-      
+
       .menu-dropdown {
         position: absolute;
         right: 10px;
@@ -179,7 +180,7 @@ import { AuthService } from "../../helpers/auth.service";
 
         > ul {
           height: 44px;
-           li {
+          li {
             margin: 0;
           }
         }
@@ -198,16 +199,33 @@ export class ReportGroupListComponent extends BaseListComponent<Report> {
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute,
     private authService: AuthService,
-    public translate: TranslateService
+    public translate: TranslateService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "report_group_list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "report_group_list",
+      notificationService
+    );
   }
   readonly reportGroupSelectedKey = "report-group-selected-key";
 
-  isReportGroupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__ADD));
-  isReportGroupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__EDIT));
-  isReportGroupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__REMOVE));
-  reportGroupId = signal<number>(parseInt(this.sessionStorageService.getValue(this.reportGroupSelectedKey) ?? 0) ?? 0);
+  isReportGroupAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__ADD)
+  );
+  isReportGroupEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__EDIT)
+  );
+  isReportGroupRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__REMOVE)
+  );
+  reportGroupId = signal<number>(
+    parseInt(
+      this.sessionStorageService.getValue(this.reportGroupSelectedKey) ?? 0
+    ) ?? 0
+  );
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
 
   changeGroupId(id: number) {
@@ -222,11 +240,13 @@ export class ReportGroupListComponent extends BaseListComponent<Report> {
     if (this.isLoading()) return;
     this.isLoading.set(true);
     setTimeout(() => {
-      let filters: any[] = [{
-        field: "search",
-        operator: "contains",
-        value: this.searchText(),
-      }];
+      let filters: any[] = [
+        {
+          field: "search",
+          operator: "contains",
+          value: this.searchText(),
+        },
+      ];
       this.param().filters = JSON.stringify(filters);
       this.service.search(this.param()).subscribe({
         next: (result: { results: Block[]; param: QueryParam }) => {

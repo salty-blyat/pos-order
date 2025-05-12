@@ -7,6 +7,7 @@ import { Observable } from "rxjs";
 import { TagGroupUiService } from "./tag-group-ui.service";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { AuthService } from "../../helpers/auth.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-tag-group-list",
@@ -146,9 +147,16 @@ export class TagGroupListComponent extends BaseListComponent<TagGroup> {
     uiService: TagGroupUiService,
     sessionStorageService: SessionStorageService,
     private authService: AuthService,
-    private activated: ActivatedRoute
+    private activated: ActivatedRoute,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "tag-group-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "tag-group-list",
+      notificationService
+    );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
 

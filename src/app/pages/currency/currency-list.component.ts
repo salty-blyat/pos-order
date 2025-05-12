@@ -7,6 +7,7 @@ import { Currency, CurrencyService } from "./currency.service";
 import { CurrencyUiService } from "./currency-ui.service";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { AuthService } from "../../helpers/auth.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-currency",
@@ -66,7 +67,7 @@ import { AuthService } from "../../helpers/auth.service";
               <th nzWidth="80px">{{ "Symbol" | translate }}</th>
               <th nzWidth="100px">{{ "Format" | translate }}</th>
               <th nzWidth="100px">{{ "Rounding" | translate }}</th>
-              <th nzWidth="100px">{{ "ExchangeRate" | translate }}</th> 
+              <th nzWidth="100px">{{ "ExchangeRate" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -94,7 +95,7 @@ import { AuthService } from "../../helpers/auth.service";
               <td nzEllipsis>{{ data.symbol }}</td>
               <td nzEllipsis>{{ data.format }}</td>
               <td nzEllipsis>{{ data.rounding }}</td>
-              <td nzEllipsis>{{ data.exchangeRate }}</td> 
+              <td nzEllipsis>{{ data.exchangeRate }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
@@ -145,9 +146,16 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
     sessionStorageService: SessionStorageService,
     public override uiService: CurrencyUiService,
     private activated: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "currency-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "currency-list",
+      notificationService
+    );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isCurrencyAdd = computed(() =>
@@ -162,9 +170,8 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
   isCurrencyView = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__VIEW)
   );
-override ngOnInit(): void {
-  super.ngOnInit(); 
-  
-}
+  override ngOnInit(): void {
+    super.ngOnInit();
+  }
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

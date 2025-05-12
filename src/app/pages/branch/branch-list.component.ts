@@ -1,8 +1,4 @@
-import {
-    Component,
-    computed, signal,
-    ViewEncapsulation
-} from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { AuthService } from "../../helpers/auth.service";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
@@ -11,6 +7,7 @@ import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SIZE_COLUMNS } from "../../const";
 import { Branch, BranchService } from "./branch.service";
 import { BranchUiService } from "./branch-ui.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-branch-list",
@@ -149,9 +146,16 @@ export class BranchListComponent extends BaseListComponent<Branch> {
     sessionStorageService: SessionStorageService,
     public override uiService: BranchUiService,
     private activated: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "branch-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "branch-list",
+      notificationService
+    );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isBranchAdd = signal<boolean>(true);

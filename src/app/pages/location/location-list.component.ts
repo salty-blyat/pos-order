@@ -14,6 +14,7 @@ import { BaseListComponent } from "../../utils/components/base-list.component";
 import { LocationUiService } from "./location-ui.service";
 import { SIZE_COLUMNS } from "../../const";
 import { Filter } from "../../utils/services/base-api.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-location-list",
@@ -156,9 +157,16 @@ export class LocationListComponent extends BaseListComponent<Location> {
     sessionStorageService: SessionStorageService,
     public override uiService: LocationUiService,
     private activated: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "location-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "location-list",
+      notificationService
+    );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   readonly branchKey = this.sessionStorageService.getValue("branch-filter");
@@ -169,15 +177,17 @@ export class LocationListComponent extends BaseListComponent<Location> {
   isLocationView = signal<boolean>(true);
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 
-  override search() {
-    const filter: Filter[] = [];
+  protected override getCustomFilters(): Filter[] {
+    const filters: Filter[] = [
+      { field: "search", operator: "contains", value: this.searchText() },
+    ];
     if (this.branchId()) {
-      filter.push({
+      filters.push({
         field: "branchId",
         operator: "eq",
         value: this.branchId(),
       });
     }
-    super.search(filter);
+    return filters;
   }
 }

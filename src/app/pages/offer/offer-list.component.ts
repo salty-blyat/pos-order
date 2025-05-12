@@ -10,6 +10,7 @@ import { OfferUiService } from "./offer-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Filter } from "../../utils/services/base-api.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { NotificationService } from "../../utils/services/notification.service";
 @Component({
   selector: "app-offer-list",
   template: `
@@ -260,9 +261,16 @@ export class OfferListComponent extends BaseListComponent<Offer> {
     private authService: AuthService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "offer-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "offer-list",
+      notificationService
+    );
   }
 
   readonly offerGroupKey = "offer-group-list-search";
@@ -280,7 +288,7 @@ export class OfferListComponent extends BaseListComponent<Offer> {
     parseInt(this.sessionStorageService.getValue(this.offerTypeKey) ?? 0)
   );
 
-  override search() {
+  protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
     if (this.offerTypeId()) {
       filters.push({
@@ -304,8 +312,7 @@ export class OfferListComponent extends BaseListComponent<Offer> {
         value: this.offerGroupId(),
       });
     }
-
-    super.search(filters);
+    return filters;
   }
   isOfferAdd = computed(() => true);
   isOfferEdit = computed(() => true);

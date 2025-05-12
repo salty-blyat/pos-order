@@ -8,6 +8,7 @@ import { AuthService } from "../../helpers/auth.service";
 import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
 import { TranslateService } from "@ngx-translate/core";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-redemption-list",
@@ -131,9 +132,16 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
     private authService: AuthService,
     public translateService: TranslateService,
     sessionStorageService: SessionStorageService,
-    private activated: ActivatedRoute
+    private activated: ActivatedRoute,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "redemption-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "redemption-list",
+      notificationService
+    );
   }
 
   isRedemptionAdd = computed(() => true);

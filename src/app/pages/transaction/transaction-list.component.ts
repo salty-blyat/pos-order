@@ -4,18 +4,17 @@ import {
   effect,
   inject,
   input,
-  OnInit,
   ViewEncapsulation,
 } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { AuthService } from "../../helpers/auth.service";
 import { ActivatedRoute } from "@angular/router";
-import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { SIZE_COLUMNS } from "../../const";
 import { AccountService, Transaction } from "../account/account.service";
 import { MemberUiService } from "../member/member-ui.service";
 import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-transaction-list",
@@ -121,9 +120,16 @@ export class TransactionListComponent extends BaseListComponent<Transaction> {
     private authService: AuthService,
     private ref: NzModalRef,
     sessionStorageService: SessionStorageService,
-    private activated: ActivatedRoute
+    private activated: ActivatedRoute,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "transaction-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "transaction-list",
+      notificationService
+    );
     effect(() => {
       console.log(this.accountId());
     });
@@ -139,34 +145,34 @@ export class TransactionListComponent extends BaseListComponent<Transaction> {
     this.search();
   }
 
-  override search(filters: Filter[] = [], delay: number = 50) {
-    this.isLoading.set(true);
-    setTimeout(() => {
-      filters?.unshift({
-        field: "search",
-        operator: "contains",
-        value: this.searchText(),
-      });
+  // override search(filters: Filter[] = [], delay: number = 50) {
+  //   this.isLoading.set(true);
+  //   setTimeout(() => {
+  //     filters?.unshift({
+  //       field: "search",
+  //       operator: "contains",
+  //       value: this.searchText(),
+  //     });
 
-      filters?.map((filter: Filter) => {
-        return {
-          field: filter.field,
-          operator: filter.operator,
-          value: filter.value,
-        };
-      });
+  //     filters?.map((filter: Filter) => {
+  //       return {
+  //         field: filter.field,
+  //         operator: filter.operator,
+  //         value: filter.value,
+  //       };
+  //     });
 
-      this.param().filters = JSON.stringify(filters);
-      this.service.getTransactions(this.accountId(), this.param()).subscribe({
-        next: (result: { results: Transaction[]; param: QueryParam }) => {
-          this.lists.set(result.results);
-          this.param.set(result.param);
-          this.isLoading.set(false);
-        },
-        error: () => {
-          this.isLoading.set(false);
-        },
-      });
-    }, delay);
-  }
+  //     this.param().filters = JSON.stringify(filters);
+  //     this.service.getTransactions(this.accountId(), this.param()).subscribe({
+  //       next: (result: { results: Transaction[]; param: QueryParam }) => {
+  //         this.lists.set(result.results);
+  //         this.param.set(result.param);
+  //         this.isLoading.set(false);
+  //       },
+  //       error: () => {
+  //         this.isLoading.set(false);
+  //       },
+  //     });
+  //   }, delay);
+  // }
 }

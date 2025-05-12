@@ -7,6 +7,7 @@ import { AutoNumberUiService } from "./auto-number-ui.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { AuthService } from "../../helpers/auth.service";
+import { NotificationService } from "../../utils/services/notification.service";
 @Component({
   selector: "app-auto-number-list",
   template: `
@@ -143,15 +144,30 @@ export class AutoNumberListComponent extends BaseListComponent<AutoNumber> {
     uiService: AutoNumberUiService,
     private authService: AuthService,
     sessionStorageService: SessionStorageService,
-    private activated: ActivatedRoute
+    private activated: ActivatedRoute,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "auto-number-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "auto-number-list",
+      notificationService
+    );
   }
 
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isAutoNumberAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__ADD));
-  isAutoNumberEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__EDIT));
-  isAutoNumberRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__REMOVE));
-  isAutoNumberView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__VIEW));
+  isAutoNumberAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__ADD)
+  );
+  isAutoNumberEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__EDIT)
+  );
+  isAutoNumberRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__REMOVE)
+  );
+  isAutoNumberView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__VIEW)
+  );
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

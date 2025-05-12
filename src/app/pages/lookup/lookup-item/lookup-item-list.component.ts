@@ -14,6 +14,7 @@ import { SessionStorageService } from "../../../utils/services/sessionStorage.se
 import { FilterInputComponent } from "../../../utils/components/filter-input.component";
 import { BaseListComponent } from "../../../utils/components/base-list.component";
 import { AuthService } from "../../../helpers/auth.service";
+import { NotificationService } from "../../../utils/services/notification.service";
 
 @Component({
   selector: "app-lookup-item",
@@ -216,9 +217,9 @@ export class LookupItemListComponent extends BaseListComponent<LookupItem> {
     service: LookupItemService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute,
-    public authService: AuthService
+    public authService: AuthService,notificationService:NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "lookup-item-list");
+    super(service, uiService, sessionStorageService, "lookup-item-list",notificationService);
   }
 
   lookupTypeId = signal<number>(0);
@@ -245,23 +246,26 @@ export class LookupItemListComponent extends BaseListComponent<LookupItem> {
       this.lookupTypeId.set(parseInt(<string>param.get("id")));
     });
   }
+  protected override getCustomFilters(): Filter[] {
+    const filters: Filter[] = [
+      { field: "search", operator: "contains", value: this.searchText() },
+    ];
+    if (this.lookupTypeId()) {
+      filters.push({
+        field: "lookupTypeId",
+        operator: "eq",
+        value: this.lookupTypeId(),
+      });
+    }
+    return filters;
+  }
 
   override search() {
     if (this.lookupTypeId()) {
       if (this.isLoading()) return;
       this.isLoading.set(true);
       setTimeout(() => {
-        const filters: Filter[] = [
-          { field: "search", operator: "contains", value: this.searchText() },
-        ];
-        if (this.lookupTypeId()) {
-          filters.push({
-            field: "lookupTypeId",
-            operator: "eq",
-            value: this.lookupTypeId(),
-          });
-        }
-        this.param().filters = JSON.stringify(filters);
+        this.param().filters = this.buildFilters();
         this.service.search(this.param()).subscribe({
           next: (result: { results: LookupItem[]; param: QueryParam }) => {
             this.isLoading.set(true);

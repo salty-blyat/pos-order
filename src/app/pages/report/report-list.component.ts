@@ -182,9 +182,16 @@ export class ReportListComponent
     uiService: ReportUiService,
     private activated: ActivatedRoute,
     sessionStorageService: SessionStorageService,
-    private authService: AuthService
+    private authService: AuthService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "report-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "report-list",
+      notificationService
+    );
   }
 
   reportGroupId = input<number>(0);
@@ -208,15 +215,14 @@ export class ReportListComponent
     }
   }
 
-  override search(reportGroupId?: any) {
-    const filters = [
+  protected override getCustomFilters(): Filter[] {
+    return [
       {
         field: "reportGroupId",
         operator: "eq",
         value: this.reportGroupId(),
       },
     ];
-    super.search(filters, 100);
   }
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;

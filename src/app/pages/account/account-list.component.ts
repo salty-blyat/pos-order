@@ -8,6 +8,7 @@ import { SIZE_COLUMNS } from "../../const";
 import { AccountUiService } from "./account-ui.service";
 import { Account, AccountService } from "./account.service";
 import { TranslateService } from "@ngx-translate/core";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-account-list",
@@ -99,7 +100,7 @@ import { TranslateService } from "@ngx-translate/core";
 
               <td class="col-action">
                 <a
-                  *ngIf="isAccountRemove()" 
+                  *ngIf="isAccountRemove()"
                   (click)="uiService.showDelete(data.id || 0)"
                   nz-typography
                   class="delete"
@@ -130,9 +131,16 @@ export class AccountListComponent extends BaseListComponent<Account> {
     public override uiService: AccountUiService,
     private activated: ActivatedRoute,
     private authService: AuthService,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "location-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "location-list",
+      notificationService
+    );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   readonly branchKey = this.sessionStorageService.getValue("branch-filter");

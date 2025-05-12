@@ -7,6 +7,7 @@ import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SIZE_COLUMNS } from "../../const";
 import { MemberClass, MemberClassService } from "./member-class.service";
 import { MemberClassUiService } from "./member-class-ui.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-member-class-list",
@@ -25,7 +26,7 @@ import { MemberClassUiService } from "./member-class-ui.service";
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
-          </div> 
+          </div>
           <div *ngIf="draged()">
             <button
               style="width: 100%"
@@ -167,9 +168,16 @@ export class MemberClassListComponent extends BaseListComponent<MemberClass> {
     sessionStorageService: SessionStorageService,
     public override uiService: MemberClassUiService,
     private activated: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "member-class-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "member-class-list",
+      notificationService
+    );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   readonly branchKey = this.sessionStorageService.getValue("branch-filter");

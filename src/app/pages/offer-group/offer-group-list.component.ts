@@ -15,6 +15,7 @@ import { AuthService } from "../../helpers/auth.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { LookupItem } from "../lookup/lookup-item/lookup-item.service";
 import { Observable } from "rxjs";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-offer-group-list",
@@ -182,11 +183,18 @@ export class OfferGroupListComponent extends BaseListComponent<OfferGroup> {
     service: OfferGroupService,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute,
-    public authService: AuthService
+    public authService: AuthService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "offer-group-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "offer-group-list",
+      notificationService
+    );
   }
-  breadcrumbData = computed<Observable<any>>(() => this.activated.data); 
+  breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   isOfferGroupAdd = computed(() => true);
   isOfferGroupEdit = computed(() => true);
   isOfferGroupRemove = computed(() => true);

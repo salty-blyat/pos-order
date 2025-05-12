@@ -7,6 +7,7 @@ import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SIZE_COLUMNS } from "../../const";
 import { Agent, AgentService } from "./agent.service";
 import { AgentUiService } from "./agent-ui.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-agent-list",
@@ -64,7 +65,7 @@ import { AgentUiService } from "./agent-ui.service";
               </th>
               <th nzWidth="100px">{{ "Email" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.PHONE">{{ "Phone" | translate }}</th>
-              <th nzWidth="100px">{{ "Address" | translate }}</th> 
+              <th nzWidth="100px">{{ "Address" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION" nzAlign="right"></th>
             </tr>
@@ -95,7 +96,7 @@ import { AgentUiService } from "./agent-ui.service";
               </td>
               <td nzEllipsis>{{ data.email }}</td>
               <td nzEllipsis>{{ data.phone }}</td>
-              <td nzEllipsis>{{ data.address }}</td> 
+              <td nzEllipsis>{{ data.address }}</td>
               <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
@@ -147,9 +148,16 @@ export class AgentListComponent extends BaseListComponent<Agent> {
     sessionStorageService: SessionStorageService,
     public override uiService: AgentUiService,
     private activated: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "agent-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "agent-list",
+      notificationService
+    );
   }
   isAgentAdd = signal<boolean>(true);
   isAgentEdit = signal<boolean>(true);

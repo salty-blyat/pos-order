@@ -1,5 +1,5 @@
-import {Filter} from "../services/base-api.service";
-import {signal} from "@angular/core";
+import { Filter } from "../services/base-api.service";
+import { signal } from "@angular/core";
 
 export class BaseFilterComponent {
   searchText = signal<string>("");
@@ -22,7 +22,11 @@ export class BaseFilterComponent {
 
     const customFilters = this.getCustomFilters();
 
-    const allFilters = [...baseFilters, ...customFilters, ...(extraFilters ?? [])];
+    const allFilters = [
+      ...baseFilters,
+      ...customFilters,
+      ...(extraFilters ?? []),
+    ];
 
     return JSON.stringify(allFilters);
   }

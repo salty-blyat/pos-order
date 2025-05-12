@@ -8,6 +8,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../helpers/auth.service";
 import { MemberClass } from "../member-class/member-class.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
+import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
   selector: "app-member-list",
@@ -165,9 +166,16 @@ export class MemberListComponent extends BaseListComponent<Member> {
     override uiService: MemberUiService,
     sessionStorageService: SessionStorageService,
     protected translate: TranslateService,
-    private authService: AuthService
+    private authService: AuthService,
+    notificationService: NotificationService
   ) {
-    super(service, uiService, sessionStorageService, "member-list");
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "member-list",
+      notificationService
+    );
   }
   readonly agentIdKey = "agent-list-search";
   readonly memberClassIdKey = "member-class-list-search";
@@ -183,7 +191,7 @@ export class MemberListComponent extends BaseListComponent<Member> {
   isMemberRemove = computed(() => true);
   isMemberView = computed(() => true);
 
-  override search() {
+  protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
     if (this.agentId()) {
       filters.push({
@@ -201,7 +209,7 @@ export class MemberListComponent extends BaseListComponent<Member> {
       });
     }
 
-    super.search(filters);
+    return filters;
   }
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
