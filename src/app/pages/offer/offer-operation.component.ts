@@ -27,8 +27,7 @@ import { Observable } from "rxjs";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
-        <!-- basic info  -->
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">  
         <div nz-row nzJustify="center" nzGutter="12">
           <div nz-col nzSpan="14">
             <nz-form-item>
@@ -112,19 +111,7 @@ import { Observable } from "rxjs";
             </div>
           </div>
         </div>
-
-        <!-- offer -->
-        <!-- <nz-form-item>
-          <nz-form-label [nzSm]="6" nzRequired>{{
-            "OfferGroup " | translate
-          }}</nz-form-label>
-          <nz-form-control [nzSm]="15">
-            <app-offer-group-select
-              formControlName="offerGroupId"
-            ></app-offer-group-select>
-          </nz-form-control>
-        </nz-form-item> -->
-
+ 
         <nz-form-item>
           <nz-form-label [nzSpan]="6" nzRequired>{{
             "MaxQty" | translate
@@ -144,8 +131,7 @@ import { Observable } from "rxjs";
             </app-lookup-item-select>
           </nz-form-control>
         </nz-form-item>
-
-        <!-- period -->
+ 
         <nz-form-item>
           <nz-form-label [nzSm]="6" nzRequired
             >{{ "StartAt" | translate }}
@@ -162,7 +148,7 @@ import { Observable } from "rxjs";
           </nz-form-control>
         </nz-form-item>
 
-        <!-- Rules -->
+     
         <nz-form-item>
           <nz-form-label [nzSm]="6" nzRequired>{{
             "RedeemCost" | translate
@@ -188,7 +174,7 @@ import { Observable } from "rxjs";
           </nz-form-control>
         </nz-form-item>
 
-        <!-- note -->
+        
         <nz-form-item>
           <nz-form-label [nzSpan]="6">{{ "Note" | translate }}</nz-form-label>
           <nz-form-control [nzSpan]="15">
@@ -321,7 +307,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       if (e.key === "upload") {
         this.file = [];
         if (e?.value) {
-          this.file.push(e.value); 
+          this.file.push(e.value);
         }
       }
     });
@@ -343,7 +329,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
     });
     this.file = fileListOfferGroupItems;
   }
-  override onSubmit(e: any): void { 
+  override onSubmit(e: any): void {
     if (this.frm.valid && !this.isLoading()) {
       this.isLoading.set(true);
       if (this.file.length > 0) {

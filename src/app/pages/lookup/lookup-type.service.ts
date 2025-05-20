@@ -10,7 +10,7 @@ export enum LOOKUP_TYPE {
   TransactionType = 38002,
   CardStatus = 38003,
   OfferType = 38004,
-  RedeemStatuses = 38005,
+  RedeemStatus = 38005,
 }
 export enum AccountTypes {
   Wallet = 1,

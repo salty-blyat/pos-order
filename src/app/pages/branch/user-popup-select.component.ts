@@ -150,6 +150,23 @@ export class UserPopupSelectComponent extends BaseListComponent<any> {
 
     super.ngOnInit();
   }
+   override search(delay: number = 50) {
+    if (this.isLoading()) return;
+    this.isLoading.set(true);
+    setTimeout(() => {
+      this.param().filters = this.buildFilters();
+      this.service.getAllUsers(this.param()).subscribe({
+        next: (result: { results: any; param: QueryParam }) => {
+          this.lists.set(result.results);
+          this.param.set(result.param);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+        },
+      });
+    }, delay);
+  }
 
   // override search() {
   //   if (this.isLoading()) {

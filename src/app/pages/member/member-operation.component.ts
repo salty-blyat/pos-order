@@ -76,8 +76,6 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               nz-menu-item
               [nzSelected]="current == 1"
               (click)="switchCurrent(1)"
-              style="font-weight: bold;"
-              style="font-weight: bold;"
             >
               <i nz-icon nzType="user"></i>
               <span>{{ "Information" | translate }}</span>
@@ -565,7 +563,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     }, 50);
   }
 
-  override setFormValue(model?: Member) {  
+  override setFormValue(model?: Member) {
     this.frm.patchValue({
       id: this.model?.id,
       code: this.model?.code,

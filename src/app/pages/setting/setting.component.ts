@@ -61,7 +61,10 @@ interface Setting {
   encapsulation: ViewEncapsulation.None,
 })
 export class SettingComponent implements OnInit {
-  constructor(private localStorageService: LocalStorageService, private authService: AuthService) { }
+  constructor(
+    private localStorageService: LocalStorageService,
+    private authService: AuthService
+  ) {}
   setting: Setting[] = [];
   urlPart = "/setting";
   setLastVisited(route: string) {
@@ -71,29 +74,25 @@ export class SettingComponent implements OnInit {
     });
   }
   isMemberClassList = computed(() => true);
-  isOfferGroupList   = computed(() => true);
-  isLookupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST));
-  isCurrencyList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST));
-  isReportList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST));
-  isMemberLevelList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_LEVEL__LIST));
-  isMemberUnitList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__LIST));
-  isUnitList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__LIST));
-  isAutoNumberList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST));
-  isBlockList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__LIST));
-  isRoomTypeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE__LIST));
-  isItemList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__LIST));
-  isRoomCharge = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_CHARGE__LIST));
-  isChargeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__LIST));
-  isItemTypeList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM_TYPE__LIST));
-  isMemberGroupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_GROUP__LIST));
-  isTagsList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__LIST));
-  isSystemSettingList = computed(() =>  
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING__VIEW) ||
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER__VIEW) ||
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__OTHER_APP__VIEW) 
-  ); 
-  isLocationList = computed(() => true );
-  isBranchList = computed(() => true );
+  isOfferGroupList = computed(() => true);
+  isLookupList = computed(() => true);
+  isCurrencyList = computed(() => true);
+  isReportList = computed(() => true);
+  isMemberLevelList = computed(() => true);
+  isMemberUnitList = computed(() => true);
+  isUnitList = computed(() => true);
+  isAutoNumberList = computed(() => true);
+  isBlockList = computed(() => true);
+  isRoomTypeList = computed(() => true);
+  isItemList = computed(() => true);
+  isRoomCharge = computed(() => true);
+  isChargeList = computed(() => true);
+  isItemTypeList = computed(() => true);
+  isMemberGroupList = computed(() => true);
+  isTagsList = computed(() => true);
+  isSystemSettingList = computed(() => true);
+  isLocationList = computed(() => true);
+  isBranchList = computed(() => true);
   ngOnInit(): void {
     this.setting = [
       {
@@ -110,31 +109,29 @@ export class SettingComponent implements OnInit {
             url: `${this.urlPart}/currency`,
             label: "Currency",
             isList: this.isCurrencyList(),
-          }, 
+          },
         ],
       },
       {
         groupName: "Offer",
-        subName: [ 
+        subName: [
           {
             icon: "container",
             url: `${this.urlPart}/offer-group`,
             label: "OfferGroup",
             isList: this.isOfferGroupList(),
           },
-        
         ],
       },
       {
         groupName: "Member",
-        subName: [ 
+        subName: [
           {
             icon: "container",
             url: `${this.urlPart}/member-class`,
             label: "MemberClass",
             isList: this.isMemberClassList(),
           },
-        
         ],
       },
       {
@@ -151,9 +148,9 @@ export class SettingComponent implements OnInit {
             url: `${this.urlPart}/branch`,
             label: "Branch",
             isList: this.isBranchList(),
-          }, 
+          },
         ],
-      }, 
+      },
       {
         groupName: "SystemSetting",
         subName: [

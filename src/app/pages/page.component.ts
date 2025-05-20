@@ -257,32 +257,7 @@ export class PageComponent implements OnInit {
   // );
   isMemberList = computed(() => true);
   isRoomList = computed(() => true);
-  isSettingList = computed(
-    () =>
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__CHARGE__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__ITEM_TYPE__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__SETTING__MEMBER_GROUP__LIST
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__SETTING__MEMBER_LEVEL__LIST
-      ) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_UNIT__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__SETTING__REPORT_GROUP__LIST
-      ) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_CHARGE__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__ROOM_TYPE__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__UNIT__LIST)
-  );
+  isSettingList = computed(() => true);
   isReportList = signal(() =>
     this.authService.isAuthorized(AuthKeys.APP__REPORT)
   );

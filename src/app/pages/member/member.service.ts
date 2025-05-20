@@ -42,4 +42,5 @@ export class MemberService extends BaseApiService<Member> {
   constructor(private http: HttpClient, settingService: SettingService) {
     super("member", http, settingService);
   }
+  
 }

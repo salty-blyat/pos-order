@@ -9,22 +9,73 @@ import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { NotificationService } from "../../utils/services/notification.service";
+import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { Filter } from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-redemption-list",
   template: `
     <nz-layout>
       <nz-header>
-        <div nz-row>
-          <div nz-col>
+        <div
+          nz-flex
+          nzWrap="nowrap"
+          nzJustify="space-between"
+          nzAlign="center"
+          nzGap="middle"
+          style="width:100%"
+        >
+          <div nz-flex nzGap="small">
             <app-filter-input
               storageKey="redemption-list-search"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
+            ></app-filter-input>
+            <!-- <app-lookup-item-select
+              class="fixed-width-select"
+              showAll="AllOfferType"
+              [showAllOption]="true"
+              storageKey="redemption-offer-type-list-search"
+              [lookupType]="LOOKUP_TYPE.OfferType"
+              (valueChanged)="
+                offerTypeId.set($event); param().pageIndex = 1; search()
+              "
             >
-            </app-filter-input>
-          </div>
+            </app-lookup-item-select>
+
+            <app-offer-group-select
+              class="fixed-width-select"
+              [showAllOption]="true"
+              storageKey="redemption-offer-group-list-search"
+              (valueChanged)="
+                offerGroupId.set($event); param().pageIndex = 1; search()
+              "
+            >
+            </app-offer-group-select>
+
+            <app-lookup-item-select
+              class="fixed-width-select"
+              showAll="AllAccountType"
+              storageKey="redemption-account-type-list-search"
+              [showAllOption]="true"
+              [lookupType]="LOOKUP_TYPE.AccountType"
+              (valueChanged)="
+                accountTypeId.set($event); param().pageIndex = 1; search()
+              "
+            ></app-lookup-item-select> -->
+          </div> 
+          <button
+            *ngIf="isRedemptionAdd()"
+            nz-button
+            nzType="primary"
+            (click)="
+              uiService.showAdd()
+            "
+          >
+            <i nz-icon nzType="plus" nzTheme="outline"></i
+            >{{ "Add" | translate }}
+          </button>
         </div>
       </nz-header>
       <nz-content>
@@ -57,12 +108,12 @@ import { NotificationService } from "../../utils/services/notification.service";
               <th [nzWidth]="SIZE_COLUMNS.NAME">
                 {{ "Offer" | translate }}
               </th>
-              <th nzWidth="150px">{{ "Status" | translate }}</th>
-              <th nzWidth="75px">{{ "Qty" | translate }}</th>
+              <th nzWidth="150px">{{ "Status" | translate }}</th> 
               <th nzWidth="100px">{{ "Amount" | translate }}</th>
               <th nzWidth="120px">{{ "Location" | translate }}</th>
               <th nzWidth="150px">{{ "RedeemedDate" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+              <th nzWidth="150px">{{ "Note" | translate }}</th>
+              <th nzWidth="150px"></th>
             </tr>
           </thead>
           <tbody>
@@ -93,27 +144,44 @@ import { NotificationService } from "../../utils/services/notification.service";
                     : data.statusNameEn
                 }}
               </td>
-              <td nzEllipsis>{{ data.qty }}</td>
+              <!-- <td nzEllipsis>{{ data.qty }}</td> -->
               <td nzEllipsis>{{ data.amount }}</td>
               <td nzEllipsis>{{ data.locationName }}</td>
               <td nzEllipsis>{{ data.redeemedDate | customDate }}</td>
               <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
-                F
-                <a
-                  *nzSpaceItem
-                  nz-typography
-                  style="color: #F31313"
-                  (click)="uiService.showDelete(data.id || 0)"
-                >
-                  <i
-                    nz-icon
-                    nzType="delete"
-                    nzTheme="outline"
-                    style="padding-right: 5px"
-                  ></i>
-                  {{ "Delete" | translate }}
-                </a>
+                <nz-space [nzSplit]="spaceSplit">
+                  <ng-template #spaceSplit>
+                    <nz-divider nzType="vertical"></nz-divider>
+                  </ng-template>
+                  <!-- <ng-container *ngIf="isRedemptionEdit()">
+                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
+                      <i
+                        nz-icon
+                        nzType="edit"
+                        nzTheme="outline"
+                        class="edit"
+                      ></i>
+                      {{ "Edit" | translate }}
+                    </a>
+                  </ng-container> -->
+                  <ng-container *ngIf="isRedemptionRemove()">
+                    <a
+                      *nzSpaceItem
+                      (click)="uiService.showDelete(data.id || 0)"
+                      nz-typography
+                      class="delete"
+                    >
+                      <i
+                        nz-icon
+                        nzType="delete"
+                        nzTheme="outline"
+                        style="padding-right: 5px"
+                      ></i>
+                      {{ "Delete" | translate }}
+                    </a>
+                  </ng-container>
+                </nz-space>
               </td>
             </tr>
           </tbody>
@@ -143,7 +211,46 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
       notificationService
     );
   }
+  readonly offerGroupKey = "redemption-offer-group-list-search";
+  readonly offerTypeKey = "redemption-offer-type-list-search";
+  readonly accountTypeKey = "redemption-account-type-list-search";
+  readonly LOOKUP_TYPE = LOOKUP_TYPE;
+  accountTypeId = signal(
+    parseInt(this.sessionStorageService.getValue(this.accountTypeKey) ?? 0)
+  );
+  offerGroupId = signal(
+    parseInt(this.sessionStorageService.getValue(this.offerGroupKey) ?? 0)
+  );
+  offerTypeId = signal(
+    parseInt(this.sessionStorageService.getValue(this.offerTypeKey) ?? 0)
+  );
 
+  protected override getCustomFilters(): Filter[] {
+    const filters: Filter[] = [];
+    if (this.offerTypeId()) {
+      filters.push({
+        field: "OfferType",
+        operator: "eq",
+        value: this.offerTypeId(),
+      });
+    }
+    if (this.accountTypeId()) {
+      filters.push({
+        field: "redeemWith",
+        operator: "eq",
+        value: this.accountTypeId(),
+      });
+    }
+
+    if (this.offerGroupId()) {
+      filters.push({
+        field: "offerGroupId",
+        operator: "eq",
+        value: this.offerGroupId(),
+      });
+    }
+    return filters;
+  }
   isRedemptionAdd = computed(() => true);
   isRedemptionEdit = computed(() => true);
   isRedemptionRemove = computed(() => true);

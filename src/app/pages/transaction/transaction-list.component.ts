@@ -81,7 +81,7 @@ import { NotificationService } from "../../utils/services/notification.service";
             <tbody>
               <!-- <tr *ngFor="let data of lists(); let i = index">
           <tbody>
-            <!-- <tr *ngFor="let data of lists(); let i = index">
+         <tr *ngFor="let data of lists(); let i = index">
                 <td nzEllipsis>
                   {{
                     i
