@@ -139,15 +139,15 @@ export class SettingComponent implements OnInit {
         subName: [
           {
             icon: "container",
-            url: `${this.urlPart}/location`,
-            label: "Location",
-            isList: this.isLocationList(),
-          },
-          {
-            icon: "container",
             url: `${this.urlPart}/branch`,
             label: "Branch",
             isList: this.isBranchList(),
+          },
+          {
+            icon: "container",
+            url: `${this.urlPart}/location`,
+            label: "Location",
+            isList: this.isLocationList(),
           },
         ],
       },
