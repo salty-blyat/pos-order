@@ -36,9 +36,7 @@ import { AuthKeys } from "../../const";
             <input
               nz-input
               formControlName="code"
-              placeholder="{{
-                editableCode ? ('NewCode' | translate) : ''
-              }}"
+              placeholder="{{ editableCode ? ('NewCode' | translate) : '' }}"
             />
           </nz-form-control>
         </nz-form-item>
@@ -85,16 +83,26 @@ import { AuthKeys } from "../../const";
         </button>
       </div>
       <div *ngIf="modal?.isView">
-        <a *ngIf="!isLoading() && isBlockEdit()" >
+        <a *ngIf="!isLoading() && isBlockEdit()">
           <i nz-icon nzType="edit" nzTheme="outline"></i>
           <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading()  && isBlockEdit()"></nz-divider>
-        <a nz-typography nzType="danger" *ngIf="!isLoading() && isBlockRemove()">
+        <nz-divider
+          nzType="vertical"
+          *ngIf="!isLoading() && isBlockEdit()"
+        ></nz-divider>
+        <a
+          nz-typography
+          nzType="danger"
+          *ngIf="!isLoading() && isBlockRemove()"
+        >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
-        <nz-divider nzType="vertical" *ngIf="!isLoading() && isBlockRemove()"></nz-divider>
+        <nz-divider
+          nzType="vertical"
+          *ngIf="!isLoading() && isBlockRemove()"
+        ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
           <span class="action-text"> {{ "Close" | translate }}</span>
@@ -118,9 +126,9 @@ export class BlockOperationComponent extends BaseOperationComponent<Block> {
     super(fb, ref, service, uiService);
   }
 
-  isBlockRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__REMOVE));
-  isBlockEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__EDIT));
- 
+  isBlockRemove = computed(() => true);
+  isBlockEdit = computed(() => true);
+
   editableCode: boolean = false;
 
   override ngOnInit(): void {

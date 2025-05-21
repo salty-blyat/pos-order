@@ -6,7 +6,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
 import { Currency, CurrencyService } from "./currency.service";
 import { CurrencyUiService } from "./currency-ui.service";
 import { AuthService } from "../../helpers/auth.service";
-import { AuthKeys } from "../../const"; 
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-currency-operation",
@@ -83,10 +83,10 @@ import { AuthKeys } from "../../const";
             >{{ "Denormination" | translate }}</nz-form-label
           >
           <nz-form-control [nzSm]="17" [nzXs]="24">
-            <nz-select 
+            <nz-select
               formControlName="denominations"
               nzMode="tags"
-            ></nz-select> 
+            ></nz-select>
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -153,12 +153,8 @@ export class CurrencyOperationComponent extends BaseOperationComponent<Currency>
     super(fb, ref, service, uiService);
   }
 
-  isCurrencyEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__EDIT)
-  );
-  isCurrencyRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__REMOVE)
-  );
+  isCurrencyEdit = computed(() => true);
+  isCurrencyRemove = computed(() => true);
 
   override initControl() {
     const { codeExistValidator, nameMaxLengthValidator, required } =
@@ -174,7 +170,7 @@ export class CurrencyOperationComponent extends BaseOperationComponent<Currency>
       format: [null, [required]],
       exchangeRate: [null, [required]],
       rounding: [null, [required]],
-      denominations	: [[], [required]],
+      denominations: [[], [required]],
     });
   }
 
@@ -186,7 +182,7 @@ export class CurrencyOperationComponent extends BaseOperationComponent<Currency>
       format: this.model.format,
       rounding: this.model.rounding,
       exchangeRate: this.model.exchangeRate,
-      denominations	: this.model.denominations	,
+      denominations: this.model.denominations,
     });
   }
 }

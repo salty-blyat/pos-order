@@ -158,18 +158,10 @@ export class CurrencyListComponent extends BaseListComponent<Currency> {
     );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isCurrencyAdd = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__ADD)
-  );
-  isCurrencyEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__EDIT)
-  );
-  isCurrencyRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__REMOVE)
-  );
-  isCurrencyView = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__VIEW)
-  );
+  isCurrencyAdd = computed(() => true);
+  isCurrencyEdit = computed(() => true);
+  isCurrencyRemove = computed(() => true);
+  isCurrencyView = computed(() => true);
   override ngOnInit(): void {
     super.ngOnInit();
   }

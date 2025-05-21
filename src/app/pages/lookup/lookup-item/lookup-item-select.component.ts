@@ -214,8 +214,6 @@ export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem> {
       });
     }, 50);
   }
-  isLookupItemAdd = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__ADD)
-  );
+  isLookupItemAdd = computed(() => true);
   protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }

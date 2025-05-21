@@ -1,50 +1,53 @@
-import {Component, computed, ViewChild, ViewEncapsulation} from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { NzModalRef } from 'ng-zorro-antd/modal';
-import { CommonValidators } from '../../utils/services/common-validators';
+import {
+  Component,
+  computed,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
+import { FormArray, FormBuilder, FormGroup } from "@angular/forms";
+import { NzModalRef } from "ng-zorro-antd/modal";
+import { CommonValidators } from "../../utils/services/common-validators";
 import {
   Report,
   ReportParam,
   ReportService,
   TAB_INDEX_REPORT,
-} from './report.service';
-import { ReportUiService } from './report-ui.service';
+} from "./report.service";
+import { ReportUiService } from "./report-ui.service";
 import {
   AuthKeys,
   Orientation,
   PageSize,
   ReportParamDisplay,
-} from '../../const';
-import { AuthService } from '../../helpers/auth.service';
-import { LookupMultipleSelectComponent } from '../lookup/lookup-item/lookup-multiple-select.component';
-import { StaticDropdownMultipleSelectComponent } from './static-dropdown-multiple-select.component';
-import { StaticDropdownSingleSelectComponent } from './static-dropdown-single-select.component';
-import { DateRangeInputReportComponent } from '../../utils/components/date-range-input-report.component';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { timer } from 'rxjs';
-import { NotificationService } from '../../utils/services/notification.service';
-import {BaseOperationComponent} from "../../utils/components/base-operation.component";
-
+} from "../../const";
+import { AuthService } from "../../helpers/auth.service";
+import { LookupMultipleSelectComponent } from "../lookup/lookup-item/lookup-multiple-select.component";
+import { StaticDropdownMultipleSelectComponent } from "./static-dropdown-multiple-select.component";
+import { StaticDropdownSingleSelectComponent } from "./static-dropdown-single-select.component";
+import { DateRangeInputReportComponent } from "../../utils/components/date-range-input-report.component";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { timer } from "rxjs";
+import { NotificationService } from "../../utils/services/notification.service";
+import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 
 export let ParamSelectComponent = {
   StatusType: LookupMultipleSelectComponent,
   StaticDropdownMultipleSelect: StaticDropdownMultipleSelectComponent,
   StaticDropdownSingleSelect: StaticDropdownSingleSelectComponent,
   DateRange: DateRangeInputReportComponent,
-
 };
 
 @Component({
-    selector: 'app-report-operation',
-    template: `
+  selector: "app-report-operation",
+  template: `
     <div *nzModalTitle class="modal-header-ellipsis">
-      <span *ngIf="!modal?.id">{{ 'Add' | translate }}</span>
+      <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
       <span *ngIf="modal.id && !modal?.isView"
-        >{{ 'Edit' | translate }}
-        {{ model?.name || ('loading' | translate) }}</span
+        >{{ "Edit" | translate }}
+        {{ model?.name || ("loading" | translate) }}</span
       >
       <span *ngIf="modal?.id && modal?.isView">{{
-        model?.name || ('Loading' | translate)
+        model?.name || ("Loading" | translate)
       }}</span>
     </div>
     <div class="modal-content">
@@ -58,11 +61,11 @@ export let ParamSelectComponent = {
         <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
           <nz-tab [nzTitle]="generalTitle">
             <ng-template #generalTitle>
-              {{ 'General' | translate }}
+              {{ "General" | translate }}
             </ng-template>
             <nz-form-item>
               <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
-                'Name' | translate
+                "Name" | translate
               }}</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
                 <input nz-input formControlName="name" />
@@ -70,7 +73,7 @@ export let ParamSelectComponent = {
             </nz-form-item>
             <nz-form-item>
               <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
-                'Label' | translate
+                "Label" | translate
               }}</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
                 <input nz-input formControlName="label" />
@@ -78,7 +81,7 @@ export let ParamSelectComponent = {
             </nz-form-item>
             <nz-form-item>
               <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
-                'Permission Key' | translate
+                "Permission Key" | translate
               }}</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
                 <div nz-row style="align-items: center">
@@ -89,7 +92,7 @@ export let ParamSelectComponent = {
                   </div>
                   <div nz-col [nzSpan]="12" [nzOffset]="1">
                     <label nz-checkbox formControlName="isHidden">{{
-                      'Hidden' | translate
+                      "Hidden" | translate
                     }}</label>
                   </div>
                 </div>
@@ -97,7 +100,7 @@ export let ParamSelectComponent = {
             </nz-form-item>
             <nz-form-item>
               <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
-                'Report Group' | translate
+                "Report Group" | translate
               }}</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
                 <app-report-group-select
@@ -107,7 +110,7 @@ export let ParamSelectComponent = {
             </nz-form-item>
             <nz-form-item formGroupName="printOption">
               <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
-                'Paper Format' | translate
+                "Paper Format" | translate
               }}</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
                 <div nz-row>
@@ -152,7 +155,7 @@ export let ParamSelectComponent = {
             </nz-form-item>
             <nz-form-item>
               <nz-form-label [nzSm]="7" [nzXs]="24">{{
-                'Note' | translate
+                "Note" | translate
               }}</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
                 <textarea
@@ -167,7 +170,7 @@ export let ParamSelectComponent = {
 
           <nz-tab [nzTitle]="paramTitle">
             <ng-template #paramTitle>
-              {{ 'Filter' | translate }}
+              {{ "Filter" | translate }}
             </ng-template>
             <nz-modal
               [(nzVisible)]="paramFrmModal.isVisible"
@@ -176,20 +179,20 @@ export let ParamSelectComponent = {
               (nzOnCancel)="cancelParamFrmModal()"
             >
               <div *nzModalTitle>
-                <span *ngIf="!modal?.id">{{ 'Add' | translate }}</span>
+                <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
                 <span *ngIf="modal?.id && !modal?.isView"
-                  >{{ 'Edit' | translate }}
-                  {{ model?.name || ('Loading' | translate) }}</span
+                  >{{ "Edit" | translate }}
+                  {{ model?.name || ("Loading" | translate) }}</span
                 >
                 <span *ngIf="modal?.id && modal?.isView">{{
-                  model?.name || ('Loading' | translate)
+                  model?.name || ("Loading" | translate)
                 }}</span>
               </div>
               <div *nzModalContent>
                 <form nz-form [formGroup]="paramFrm" [nzAutoTips]="autoTips">
                   <nz-form-item>
                     <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
-                      'Key' | translate
+                      "Key" | translate
                     }}</nz-form-label>
                     <nz-form-control [nzSm]="14" [nzXs]="24">
                       <input nz-input formControlName="key" />
@@ -197,7 +200,7 @@ export let ParamSelectComponent = {
                   </nz-form-item>
                   <nz-form-item>
                     <nz-form-label [nzSm]="7" [nzXs]="24">{{
-                      'Label' | translate
+                      "Label" | translate
                     }}</nz-form-label>
                     <nz-form-control [nzSm]="14" [nzXs]="24">
                       <input nz-input formControlName="label" />
@@ -206,7 +209,7 @@ export let ParamSelectComponent = {
 
                   <nz-form-item>
                     <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
-                      'Display Format' | translate
+                      "Display Format" | translate
                     }}</nz-form-label>
                     <nz-form-control [nzSm]="14" [nzXs]="24">
                       <nz-select formControlName="display">
@@ -223,7 +226,7 @@ export let ParamSelectComponent = {
                   </nz-form-item>
                   <nz-form-item>
                     <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>{{
-                      'Type' | translate
+                      "Type" | translate
                     }}</nz-form-label>
                     <nz-form-control [nzSm]="14" [nzXs]="24">
                       <nz-select formControlName="type">
@@ -240,7 +243,7 @@ export let ParamSelectComponent = {
                   </nz-form-item>
                   <nz-form-item>
                     <nz-form-label [nzSm]="7" [nzXs]="24">{{
-                      'Default Value' | translate
+                      "Default Value" | translate
                     }}</nz-form-label>
                     <nz-form-control [nzSm]="14" [nzXs]="24">
                       <input nz-input formControlName="defaultValue" />
@@ -248,7 +251,7 @@ export let ParamSelectComponent = {
                   </nz-form-item>
                   <nz-form-item>
                     <nz-form-label [nzSm]="7" [nzXs]="24">{{
-                      'Init Param' | translate
+                      "Init Param" | translate
                     }}</nz-form-label>
                     <nz-form-control [nzSm]="14" [nzXs]="24">
                       <textarea
@@ -274,24 +277,27 @@ export let ParamSelectComponent = {
                     "
                   >
                     <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
-                    {{ 'Save' | translate }}
+                    {{ "Save" | translate }}
                   </button>
                   <button
                     nz-button
                     nzType="default"
                     (click)="cancelParamFrmModal()"
                   >
-                    {{ 'Cancel' | translate }}
+                    {{ "Cancel" | translate }}
                   </button>
                 </div>
               </div>
             </nz-modal>
             <cdk-virtual-scroll-viewport
               itemSize="50"
-              [ngStyle]="{ height: modal?.isView ? '365px' : 'calc(100vh - 240px)' }"
+              [ngStyle]="{
+                height: modal?.isView ? '365px' : 'calc(100vh - 240px)'
+              }"
             >
               <div
-                cdkDropList cdkDropListLockAxis="y"
+                cdkDropList
+                cdkDropListLockAxis="y"
                 (cdkDropListDropped)="drop($event)"
                 style="margin-right: 5px"
               >
@@ -365,7 +371,7 @@ export let ParamSelectComponent = {
                   (click)="showParamFrmModal('Add')"
                 >
                   <i nz-icon nzType="plus"></i>
-                  {{ 'Add' | translate }}
+                  {{ "Add" | translate }}
                 </button>
               </div>
             </cdk-virtual-scroll-viewport>
@@ -373,7 +379,7 @@ export let ParamSelectComponent = {
 
           <nz-tab [nzTitle]="templateTitle">
             <ng-template #templateTitle>
-              {{ 'Template' | translate }}
+              {{ "Template" | translate }}
             </ng-template>
             <nz-form-item>
               <nz-form-control [nzSm]="24" [nzXs]="24">
@@ -388,7 +394,7 @@ export let ParamSelectComponent = {
 
           <nz-tab [nzTitle]="commandTitle">
             <ng-template #commandTitle>
-              {{ 'Command' | translate }}
+              {{ "Command" | translate }}
             </ng-template>
             <nz-form-item>
               <nz-form-control [nzSm]="24" [nzXs]="24">
@@ -412,10 +418,10 @@ export let ParamSelectComponent = {
           (click)="onSubmit($event)"
         >
           <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
-          {{ 'Save' | translate }}
+          {{ "Save" | translate }}
         </button>
         <button nz-button nzType="default" (click)="cancel()">
-          {{ 'Cancel' | translate }}
+          {{ "Cancel" | translate }}
         </button>
       </div>
       <div *ngIf="modal?.isView">
@@ -425,7 +431,7 @@ export let ParamSelectComponent = {
           *ngIf="!isLoading() && isReportEdit()"
         >
           <i nz-icon nzType="edit" nzTheme="outline"></i>
-          <span class="action-text"> {{ 'Edit' | translate }}</span>
+          <span class="action-text"> {{ "Edit" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
@@ -438,7 +444,7 @@ export let ParamSelectComponent = {
           *ngIf="!isLoading() && isReportRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
-          <span class="action-text"> {{ 'Delete' | translate }}</span>
+          <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
@@ -446,14 +452,14 @@ export let ParamSelectComponent = {
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
-          <span class="action-text"> {{ 'Close' | translate }}</span>
+          <span class="action-text"> {{ "Close" | translate }}</span>
         </a>
       </div>
     </div>
   `,
-    styleUrls: ['../../../assets/scss/operation.style.scss'],
-    styles: [
-        `
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
+  styles: [
+    `
       :host ::ng-deep .ant-tabs-tab {
         margin-right: 32px !important;
       }
@@ -487,11 +493,11 @@ export let ParamSelectComponent = {
         bottom: 0px;
       }
     `,
-    ],
-    standalone: false,
-    encapsulation: ViewEncapsulation.None
+  ],
+  standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
-export class ReportOperationComponent extends BaseOperationComponent<Report>{
+export class ReportOperationComponent extends BaseOperationComponent<Report> {
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<ReportOperationComponent>,
@@ -500,17 +506,17 @@ export class ReportOperationComponent extends BaseOperationComponent<Report>{
     private authService: AuthService,
     private notificationService: NotificationService
   ) {
-    super(fb, ref,service,uiService);
+    super(fb, ref, service, uiService);
   }
 
-  @ViewChild('codeEditorTemplate', { static: false }) codeEditorTemplate?: any;
-  @ViewChild('codeEditorCommand', { static: false }) codeEditorCommand?: any;
+  @ViewChild("codeEditorTemplate", { static: false }) codeEditorTemplate?: any;
+  @ViewChild("codeEditorCommand", { static: false }) codeEditorCommand?: any;
   printOption = { pageSize: PageSize, orientation: Orientation };
   paramDisplay = ReportParamDisplay;
   paramFrm!: FormGroup;
   paramFrmModal: { isVisible: boolean; operation: string; index: number } = {
     isVisible: false,
-    operation: 'Add',
+    operation: "Add",
     index: -1,
   };
   paramSelectComponent: { value: any; label: any }[] = Object.keys(
@@ -519,8 +525,8 @@ export class ReportOperationComponent extends BaseOperationComponent<Report>{
     return { value: x, label: x };
   });
 
-  isReportEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT));
-  isReportRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE));
+  isReportEdit = computed(() => true);
+  isReportRemove = computed(() => true);
 
   type: any;
 
@@ -568,11 +574,11 @@ export class ReportOperationComponent extends BaseOperationComponent<Report>{
     });
   }
   paramFrmOperation(operation: string, index: number = -1) {
-    if (operation == 'Add') {
+    if (operation == "Add") {
       this.paramFrmArray.push(this.getParamControl(this.paramFrm.value));
-    } else if (operation == 'Edit') {
+    } else if (operation == "Edit") {
       this.paramFrmArray.at(index).patchValue(this.paramFrm.value);
-    } else if (operation == 'Delete') {
+    } else if (operation == "Delete") {
       this.paramFrmArray.removeAt(index);
     }
     this.cancelParamFrmModal();
@@ -588,12 +594,12 @@ export class ReportOperationComponent extends BaseOperationComponent<Report>{
     this.paramFrmModal.isVisible = true;
     this.paramFrmModal.operation = operation;
     this.paramFrm.enable();
-    if (operation == 'Add') {
+    if (operation == "Add") {
       this.paramFrmModal.index = -1;
-    } else if (operation == 'Edit') {
+    } else if (operation == "Edit") {
       this.paramFrm.setValue(setValue);
       this.paramFrmModal.index = index;
-    } else if (operation == 'View') {
+    } else if (operation == "View") {
       this.paramFrm.setValue(setValue);
       this.paramFrm.disable();
       this.paramFrmModal.index = index;
@@ -615,11 +621,14 @@ export class ReportOperationComponent extends BaseOperationComponent<Report>{
     }
   }
 
-  override onSubmit(e:any) {
+  override onSubmit(e: any) {
     if (this.frm.valid && !this.isLoading()) {
       let operation$ = this.service.add(this.frm.value);
       if (this.modal?.id) {
-        operation$ = this.service.edit({ ...this.frm.value, id: this.modal?.id });
+        operation$ = this.service.edit({
+          ...this.frm.value,
+          id: this.modal?.id,
+        });
       }
       if (e.detail === 1 || e.detail === 0) {
         this.isLoading.set(true);
@@ -627,7 +636,7 @@ export class ReportOperationComponent extends BaseOperationComponent<Report>{
           next: (result: Report) => {
             this.isLoading.set(false);
             this.model = result;
-            this.notificationService.updateNotification('Successfully Updated');
+            this.notificationService.updateNotification("Successfully Updated");
             if (!this.modal.id) {
               this.ref.triggerOk().then();
             } else {
@@ -647,7 +656,7 @@ export class ReportOperationComponent extends BaseOperationComponent<Report>{
     this.ref.triggerCancel().then();
   }
   cancelParamFrmModal() {
-    this.paramFrmModal = { isVisible: false, operation: 'Add', index: -1 };
+    this.paramFrmModal = { isVisible: false, operation: "Add", index: -1 };
     this.paramFrm.reset();
   }
 
@@ -669,7 +678,7 @@ export class ReportOperationComponent extends BaseOperationComponent<Report>{
   }
 
   get paramFrmArray() {
-    return this.frm.get('params') as FormArray;
+    return this.frm.get("params") as FormArray;
   }
 
   drop(event: CdkDragDrop<string[]>) {

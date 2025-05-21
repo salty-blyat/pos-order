@@ -80,13 +80,20 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               <i nz-icon nzType="user"></i>
               <span>{{ "Information" | translate }}</span>
             </li>
-
+            <!-- <li
+              nz-menu-item
+              [nzSelected]="current == 2"
+              (click)="switchCurrent(2)"
+            >
+              <i nz-icon nzType="credit-card"></i>
+              <span>{{ "Card" | translate }}</span>
+            </li> -->
             @if(!modal.isAdd) {
             <li
               style="height:auto; padding-bottom:12px"
               nz-menu-item
-              [nzSelected]="current == 2"
-              (click)="switchCurrent(2)"
+              [nzSelected]="current == 3"
+              (click)="switchCurrent(3)"
             >
               <div>
                 {{ "Account" | translate }}
@@ -279,7 +286,11 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               </form>
             </div>
 
-            <div *ngSwitchCase="2" class="tab-content">
+            <div *ngSwitchCase="2" ngCase>
+              <!-- <app-card-operation />  -->
+            </div>
+
+            <div *ngSwitchCase="3" class="tab-content">
               <nz-tabset style="margin: 0 8px;">
                 <nz-tab
                   *ngFor="let account of model.accounts"
@@ -630,6 +641,9 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
         break;
       case 2:
         this.current = 2;
+        break;
+      case 3:
+        this.current = 3;
         break;
     }
   }

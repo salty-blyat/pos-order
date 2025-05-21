@@ -212,15 +212,9 @@ export class ReportGroupListComponent extends BaseListComponent<Report> {
   }
   readonly reportGroupSelectedKey = "report-group-selected-key";
 
-  isReportGroupAdd = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__ADD)
-  );
-  isReportGroupEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__EDIT)
-  );
-  isReportGroupRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__REMOVE)
-  );
+  isReportGroupAdd = computed(() => true);
+  isReportGroupEdit = computed(() => true);
+  isReportGroupRemove = computed(() => true);
   reportGroupId = signal<number>(
     parseInt(
       this.sessionStorageService.getValue(this.reportGroupSelectedKey) ?? 0

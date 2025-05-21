@@ -181,18 +181,10 @@ export class FloorListComponent
     }
   }
 
-  isFloorAdd = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__ADD)
-  );
-  isFloorView = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__VIEW)
-  );
-  isFloorRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__REMOVE)
-  );
-  isFloorEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__EDIT)
-  );
+  isFloorAdd = computed(() => true);
+  isFloorView = computed(() => true);
+  isFloorRemove = computed(() => true);
+  isFloorEdit = computed(() => true);
 
   // override search(blockId?: any): void {
   //     let filters = [

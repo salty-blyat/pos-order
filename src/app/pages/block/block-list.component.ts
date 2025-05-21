@@ -111,7 +111,8 @@ import { AuthService } from "../../helpers/auth.service";
               </button>
             </div>
             <div *ngIf="draged()">
-              <button style="width: 100%"
+              <button
+                style="width: 100%"
                 nz-button
                 nzType="primary"
                 (click)="saveOrdering()"
@@ -206,15 +207,9 @@ export class BlockListComponent extends BaseListComponent<Block> {
     this.changeBlockId(this.blockId());
   }
 
-  isBlockAdd = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__ADD)
-  );
-  isBlockRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__REMOVE)
-  );
-  isBlockEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__BLOCK__EDIT)
-  );
+  isBlockAdd = computed(() => true);
+  isBlockRemove = computed(() => true);
+  isBlockEdit = computed(() => true);
 
   changeBlockId(id: number) {
     this.sessionStorageService.setValue({

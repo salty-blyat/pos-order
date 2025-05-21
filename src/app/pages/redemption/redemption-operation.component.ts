@@ -72,7 +72,7 @@ import { TranslateService } from "@ngx-translate/core";
           <nz-form-label [nzSpan]="6" nzRequired>
             {{ "Account" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSpan]="15">
+          <!-- <nz-form-control [nzSpan]="15">
             <div style="display: flex; gap: 8px; width: 100%;">
               <app-member-select
                 (valueChanged)="getMembers($event)"
@@ -90,7 +90,7 @@ import { TranslateService } from "@ngx-translate/core";
                 ></nz-option>
               </nz-select>
             </div>
-          </nz-form-control>
+          </nz-form-control> -->
         </nz-form-item>
 
         <!-- Row: Offer ID | Amount -->
@@ -221,14 +221,13 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   isRedemptionRemove = computed(() => true);
 
   override initControl(): void {
-    const date = Date.now();
     const { noteMaxLengthValidator, required, integerValidator } =
       CommonValidators;
     this.frm = this.fb.group({
       redeemNo: [null, [required]],
       refNo: [null],
       accountId: [null, required],
-      redeemedDate: [date, required],
+      redeemedDate: [null, required],
       offerId: [null, [required]],
       qty: [1, [required]],
       amount: [0, [required, integerValidator]],

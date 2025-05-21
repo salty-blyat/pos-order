@@ -112,12 +112,8 @@ export class FloorOperationComponent extends BaseOperationComponent<Floor> {
     super(fb, ref, service, uiService);
   }
 
-  isFloorRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__REMOVE)
-  );
-  isFloorEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__EDIT)
-  );
+  isFloorRemove = computed(() => true);
+  isFloorEdit = computed(() => true);
 
   override initControl(): void {
     const { required, nameMaxLengthValidator, nameExistValidator } =
@@ -139,11 +135,11 @@ export class FloorOperationComponent extends BaseOperationComponent<Floor> {
       blockId: [{ value: this.modal?.blockId, disabled: false }],
       note: [null],
     });
-    this.frm.get('blockId')?.valueChanges.subscribe((newBlockId: number) => {
-      const nameControl = this.frm.get('name');
+    this.frm.get("blockId")?.valueChanges.subscribe((newBlockId: number) => {
+      const nameControl = this.frm.get("name");
       if (nameControl) {
         nameControl.setAsyncValidators([
-          nameExistValidator(this.service, this.modal?.id, 'name', newBlockId),
+          nameExistValidator(this.service, this.modal?.id, "name", newBlockId),
         ]);
         nameControl.updateValueAndValidity(); // re-run the validator
       }

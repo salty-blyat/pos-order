@@ -65,7 +65,7 @@ import { Filter } from "../../utils/services/base-api.service";
               "
             ></app-lookup-item-select> -->
           </div> 
-          <button
+          <!-- <button
             *ngIf="isRedemptionAdd()"
             nz-button
             nzType="primary"
@@ -75,7 +75,7 @@ import { Filter } from "../../utils/services/base-api.service";
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i
             >{{ "Add" | translate }}
-          </button>
+          </button> -->
         </div>
       </nz-header>
       <nz-content>

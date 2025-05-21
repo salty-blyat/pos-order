@@ -4,7 +4,6 @@ import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { AuthService } from "../../helpers/auth.service";
-import { AuthKeys } from "../../const";
 import { OfferUiService } from "./offer-ui.service";
 import { Offer, OfferService } from "./offer.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
@@ -27,7 +26,7 @@ import { Observable } from "rxjs";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">  
+      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <div nz-row nzJustify="center" nzGutter="12">
           <div nz-col nzSpan="14">
             <nz-form-item>
@@ -111,7 +110,7 @@ import { Observable } from "rxjs";
             </div>
           </div>
         </div>
- 
+
         <nz-form-item>
           <nz-form-label [nzSpan]="6" nzRequired>{{
             "MaxQty" | translate
@@ -131,7 +130,7 @@ import { Observable } from "rxjs";
             </app-lookup-item-select>
           </nz-form-control>
         </nz-form-item>
- 
+
         <nz-form-item>
           <nz-form-label [nzSm]="6" nzRequired
             >{{ "StartAt" | translate }}
@@ -148,7 +147,6 @@ import { Observable } from "rxjs";
           </nz-form-control>
         </nz-form-item>
 
-     
         <nz-form-item>
           <nz-form-label [nzSm]="6" nzRequired>{{
             "RedeemCost" | translate
@@ -174,7 +172,6 @@ import { Observable } from "rxjs";
           </nz-form-control>
         </nz-form-item>
 
-        
         <nz-form-item>
           <nz-form-label [nzSpan]="6">{{ "Note" | translate }}</nz-form-label>
           <nz-form-control [nzSpan]="15">
@@ -378,7 +375,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       name: [
         null,
         [nameMaxLengthValidator(), required],
-        [nameExistValidator(this.service, this.modal?.id)],
+        nameExistValidator(this.service, this.modal?.id),
       ],
       code: [
         null,

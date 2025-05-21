@@ -110,8 +110,8 @@ export class ReportGroupOperationComponent extends BaseOperationComponent<Report
     super(fb, ref, service, uiService)
   }
 
-  isReportGroupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__EDIT));
-  isReportGroupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT_GROUP__REMOVE)); 
+  isReportGroupEdit = computed(() =>  true);
+  isReportGroupRemove = computed(() => true);
 
   override ngOnInit(): void {  
     this.initControl();   

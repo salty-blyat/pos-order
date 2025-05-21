@@ -160,18 +160,10 @@ export class TagGroupListComponent extends BaseListComponent<TagGroup> {
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
 
-  isTagGroupAdd = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__ADD)
-  );
-  isTagGroupEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__EDIT)
-  );
-  isTagGroupRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__REMOVE)
-  );
-  isTagGroupView = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__TAG__VIEW)
-  );
+  isTagGroupAdd = computed(() => true);
+  isTagGroupEdit = computed(() => true);
+  isTagGroupRemove = computed(() => true);
+  isTagGroupView = computed(() => true);
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

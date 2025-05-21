@@ -196,18 +196,10 @@ export class ReportListComponent
 
   reportGroupId = input<number>(0);
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
-  isReportAdd = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__ADD)
-  );
-  isReportEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT)
-  );
-  isReportRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE)
-  );
-  isReportView = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__VIEW)
-  );
+  isReportAdd = computed(() => true);
+  isReportEdit = computed(() => true);
+  isReportRemove = computed(() => true);
+  isReportView = computed(() => true);
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["reportGroupId"]) {

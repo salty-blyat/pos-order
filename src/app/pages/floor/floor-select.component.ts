@@ -1,23 +1,29 @@
-import {Component, computed, forwardRef, signal, ViewEncapsulation} from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { SessionStorageService } from '../../utils/services/sessionStorage.service';
-import { FloorUiService } from './floor-ui.service';
-import { Floor, FloorService } from './floor.service';
-import {BaseSelectComponent} from "../../utils/components/base-select.component";
-import { AuthKeys } from '../../const';
-import { AuthService } from '../../helpers/auth.service';
+import {
+  Component,
+  computed,
+  forwardRef,
+  signal,
+  ViewEncapsulation,
+} from "@angular/core";
+import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { FloorUiService } from "./floor-ui.service";
+import { Floor, FloorService } from "./floor.service";
+import { BaseSelectComponent } from "../../utils/components/base-select.component";
+import { AuthKeys } from "../../const";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => FloorSelectComponent),
-            multi: true,
-        },
-    ],
-    selector: 'app-floor-select',
-    template: `
-   <nz-select
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => FloorSelectComponent),
+      multi: true,
+    },
+  ],
+  selector: "app-floor-select",
+  template: `
+    <nz-select
       nzShowSearch
       [nzDropdownRender]="actionItem"
       [nzServerSearch]="true"
@@ -39,37 +45,43 @@ import { AuthService } from '../../helpers/auth.service';
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
         <i nz-icon nzType="loading" class="loading-icon"></i>
-        {{ 'Loading' | translate }}
+        {{ "Loading" | translate }}
       </nz-option>
       <ng-template #actionItem>
         <a
           *ngIf="addOption() && isFloorAdd()"
-          (click)="uiService.showAdd(0 ,componentId)"
+          (click)="uiService.showAdd(0, componentId)"
           class="item-action"
         >
-          <i nz-icon nzType="plus"></i> {{ 'Add' | translate }}
+          <i nz-icon nzType="plus"></i> {{ "Add" | translate }}
         </a>
       </ng-template>
     </nz-select>
   `,
-    styles: [`
+  styles: [
+    `
       nz-select {
         width: 100%;
-      }`
-    ],
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+      }
+    `,
+  ],
+  encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class FloorSelectComponent extends BaseSelectComponent<Floor> {
   constructor(
-       service: FloorService,
-       override uiService: FloorUiService,         
-       private authService: AuthService,
-       sessionStorageService: SessionStorageService,
+    service: FloorService,
+    override uiService: FloorUiService,
+    private authService: AuthService,
+    sessionStorageService: SessionStorageService
   ) {
-    super(service, uiService, sessionStorageService, 'floor-filter', 'all-floor')
+    super(
+      service,
+      uiService,
+      sessionStorageService,
+      "floor-filter",
+      "all-floor"
+    );
   }
-  isFloorAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__FLOOR__ADD));
+  isFloorAdd = computed<boolean>(() => true);
 }
-
-

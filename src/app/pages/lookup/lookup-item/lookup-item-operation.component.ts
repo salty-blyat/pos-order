@@ -204,12 +204,8 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     super(fb, ref, service, uiService);
   }
 
-  isLookupEdit = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__EDIT)
-  );
-  isLookupRemove = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__REMOVE)
-  );
+  isLookupEdit = computed(() => true);
+  isLookupRemove = computed(() => true);
 
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
@@ -229,7 +225,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
       nameExistValidator,
       required,
       noteMaxLengthValidator,
-    } = CommonValidators; 
+    } = CommonValidators;
 
     this.frm = this.fb.group({
       lookupTypeId: [this.modal?.lookupTypeId],
@@ -281,7 +277,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     });
     this.file = fileListLookupItems;
   }
-  override onSubmit(e: any): void { 
+  override onSubmit(e: any): void {
     if (this.frm.valid) {
       this.isLoading.set(true);
 

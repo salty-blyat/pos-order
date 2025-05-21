@@ -168,7 +168,7 @@ export class AutoNumberSectionComponent extends BaseSettingSectionComponent {
     SETTING_KEY.MemberAutoId,
   ];
 
-  isAutoNumberEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER__EDIT));
+  isAutoNumberEdit = computed(() =>  true);
 
   override ngOnInit() {
     super.ngOnInit();

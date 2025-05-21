@@ -91,7 +91,7 @@ export class CurrencySelectComponent extends BaseSelectComponent<Currency> {
     );
   }
 
-  isCurrencyAdd = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__ADD));
+  isCurrencyAdd = computed(() => true);
 
   id = signal<number>(0);
 

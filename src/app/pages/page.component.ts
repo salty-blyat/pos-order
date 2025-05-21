@@ -251,6 +251,8 @@ export class PageComponent implements OnInit {
   isAccountList = computed(() => true);
   isAgentList = computed(() => true);
   isOfferList = computed(() => true);
+  isCardList = computed(() => true);
+
   isRedemptionList = computed(() => true);
   // isMemberList = computed(() =>
   //   this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
@@ -258,9 +260,7 @@ export class PageComponent implements OnInit {
   isMemberList = computed(() => true);
   isRoomList = computed(() => true);
   isSettingList = computed(() => true);
-  isReportList = signal(() =>
-    this.authService.isAuthorized(AuthKeys.APP__REPORT)
-  );
+  isReportList = signal(() => true);
 
   constructor(
     private router: Router,

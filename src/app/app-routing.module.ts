@@ -65,10 +65,7 @@ const routes: Routes = [
         path: "member",
         component: MemberListComponent,
       },
-      {
-        path: "redemption",
-        component: RedemptionListComponent,
-      },
+      
       {
         path: "redemption",
         component: RedemptionListComponent,
