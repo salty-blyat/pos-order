@@ -64,22 +64,8 @@ import { AuthService } from "../../helpers/auth.service";
             showAllLabel="-"
           ></app-auto-number-select>
         </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ "CardAutoNo" | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <app-auto-number-select
-            formControlName="{{ SettingKey.CardAutoId }}"
-            [addOption]="canAddAutoNo"
-            [showAllOption]="true"
-            showAllLabel="-"
-          ></app-auto-number-select>
-        </nz-form-control>
-      </nz-form-item>
-
+      </nz-form-item> 
+      
       <nz-form-item>
         <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
           {{ "OfferAutoNo" | translate }}
@@ -162,7 +148,6 @@ export class AutoNumberSectionComponent extends BaseSettingSectionComponent {
     SETTING_KEY.MemberAutoId,
     SETTING_KEY.RedemptionAutoId,
     SETTING_KEY.AgentAutoId,
-    SETTING_KEY.CardAutoId,
     SETTING_KEY.OfferAutoId,
     SETTING_KEY.TransNoAutoId,
   ];

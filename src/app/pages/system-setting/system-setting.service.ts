@@ -59,14 +59,13 @@ export const SETTING_KEY = {
   ExchangeRate: "SecondaryCurrencyExchangeRate",
   ExchangeRateDisplay: "ExchangeRateDisplay",
   CustomerDefaultId: "DefaultCustomerId",
-  BlockAutoId: "BlockAutoId", 
+  BlockAutoId: "BlockAutoId",
   PavrEnable: "PavrEnable",
-  PavrUrl: "PavrUrl",  
-  
+  PavrUrl: "PavrUrl",
+
   MemberAutoId: "MemberAutoId",
   RedemptionAutoId: "RedemptionAutoId",
   AgentAutoId: "AgentAutoId",
-  CardAutoId: "CardAutoId",
   OfferAutoId: "OfferAutoId",
   TransNoAutoId: "TransNoAutoId",
 };

@@ -162,6 +162,7 @@ import { LocationSelectComponent } from "./pages/location/location-select.compon
 import { OfferSelectComponent } from "./pages/offer/offer-select.component";
 import { RedemptionHistoryComponnet } from "./pages/redemption/redemption-history.component";
 import { TransactionViewComponent } from "./pages/transaction/transaction-view.component";
+import { CardListComponent } from "./pages/card/card-list.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -307,6 +308,9 @@ export class CustomTranslate implements TranslateLoader {
     MemberPullComponent,
     MemberSelectComponent,
     TransactionViewComponent,
+
+    // card
+    CardListComponent,
 
     // location
     LocationListComponent,

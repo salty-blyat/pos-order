@@ -80,15 +80,15 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               <i nz-icon nzType="user"></i>
               <span>{{ "Information" | translate }}</span>
             </li>
-            <!-- <li
+            @if(!modal.isAdd ) {
+            <li
               nz-menu-item
               [nzSelected]="current == 2"
               (click)="switchCurrent(2)"
             >
               <i nz-icon nzType="credit-card"></i>
               <span>{{ "Card" | translate }}</span>
-            </li> -->
-            @if(!modal.isAdd ) {
+            </li>
             <li
               style="height:auto; padding-bottom:12px"
               nz-menu-item
@@ -286,8 +286,8 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               </form>
             </div>
 
-            <div *ngSwitchCase="2" ngCase>
-              <!-- <app-card-operation />  -->
+            <div style="margin: 0 8px;" *ngSwitchCase="2" ngCase>
+              <app-card-list />
             </div>
 
             <div *ngSwitchCase="3" class="tab-content">
