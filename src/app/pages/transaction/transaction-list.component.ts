@@ -4,6 +4,8 @@ import {
   effect,
   inject,
   input,
+  OnChanges,
+  SimpleChanges,
   ViewEncapsulation,
 } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
@@ -15,6 +17,10 @@ import { AccountService, Transaction } from "../account/account.service";
 import { MemberUiService } from "../member/member-ui.service";
 import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 import { NotificationService } from "../../utils/services/notification.service";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
+import { Subscription } from "rxjs";
+import { MemberAccount } from "../member/member.service";
+import { AccountUiService } from "../account/account-ui.service";
 
 @Component({
   selector: "app-transaction-list",
@@ -59,11 +65,15 @@ import { NotificationService } from "../../utils/services/notification.service";
             </ng-template>
             <thead>
               <tr>
-                <th [nzWidth]="SIZE_COLUMNS.ID" class="col-header col-rowno">
-                  #
+                <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+                <th [nzWidth]="SIZE_COLUMNS.NAME">
+                  {{ "Type" | translate }}
                 </th>
                 <th [nzWidth]="SIZE_COLUMNS.NAME">
                   {{ "TransNo" | translate }}
+                </th>
+                <th nzWidth="100px">
+                  {{ "RefNo" | translate }}
                 </th>
                 <th nzWidth="100px">
                   {{ "Date" | translate }}
@@ -71,17 +81,12 @@ import { NotificationService } from "../../utils/services/notification.service";
                 <th nzWidth="100px">
                   {{ "Amount" | translate }}
                 </th>
-                <th nzWidth="100px">
-                  {{ "RefNo" | translate }}
-                </th>
                 <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               </tr>
             </thead>
 
             <tbody>
-              <!-- <tr *ngFor="let data of lists(); let i = index">
-          <tbody>
-         <tr *ngFor="let data of lists(); let i = index">
+              <tr *ngFor="let data of lists(); let i = index">
                 <td nzEllipsis>
                   {{
                     i
@@ -92,17 +97,22 @@ import { NotificationService } from "../../utils/services/notification.service";
                           }
                   }}
                 </td>
+                <td nzEllipsis="">
+                  {{ data.typeNameEn }}
+                </td>
+                <td nzEllipsis>{{ data.refNo }}</td>
                 <td nzEllipsis>
                   <a
                     *ngIf="isTransactionView()"
                     (click)="uiService.showView(data.id || 0)"
-                    >{{ data.name }}</a
+                    >{{ data.transNo }}</a
                   >
-                  <span *ngIf="!isTransactionView()">{{ data.name }}</span>
+                  <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
                 </td>
-                <td nzEllipsis>{{ data.format }}</td>
+                <td nzEllipsis>{{ data.transDate | customDate }}</td>
+                <td nzEllipsis>{{ data.amount }}</td>
                 <td nzEllipsis>{{ data.note }}</td>
-              </tr> -->
+              </tr>
             </tbody>
           </nz-table>
         </nz-content>
@@ -110,13 +120,15 @@ import { NotificationService } from "../../utils/services/notification.service";
     </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
-
   encapsulation: ViewEncapsulation.None,
 })
-export class TransactionListComponent extends BaseListComponent<Transaction> {
+export class TransactionListComponent
+  extends BaseListComponent<Transaction>
+  implements OnChanges
+{
   constructor(
     override service: AccountService,
-    uiService: MemberUiService,
+    uiService: AccountUiService,
     private authService: AuthService,
     private ref: NzModalRef,
     sessionStorageService: SessionStorageService,
@@ -130,49 +142,45 @@ export class TransactionListComponent extends BaseListComponent<Transaction> {
       "transaction-list",
       notificationService
     );
-    effect(() => {
-      console.log(this.accountId());
-    });
   }
   readonly modal: any = inject(NZ_MODAL_DATA);
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
-  accountId = input<number>(0);
+
+  accounts = input<MemberAccount[]>([]);
+  tabIndex = input<number>(0);
+
   isTransactionView = computed(() => true);
   cancel() {
     this.ref.triggerCancel().then();
   }
-  override ngOnInit(): void {
-    this.search();
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["tabIndex"]) {
+      this.search();
+    }
   }
+  override ngOnInit(): void {}
 
-  // override search(filters: Filter[] = [], delay: number = 50) {
-  //   this.isLoading.set(true);
-  //   setTimeout(() => {
-  //     filters?.unshift({
-  //       field: "search",
-  //       operator: "contains",
-  //       value: this.searchText(),
-  //     });
+  override search(delay: number = 50) {
+    let index = this.tabIndex();
+    if (this.isLoading() || index > 1) return; //  only wallet/cash need to search
+    let accounts = this.accounts();
 
-  //     filters?.map((filter: Filter) => {
-  //       return {
-  //         field: filter.field,
-  //         operator: filter.operator,
-  //         value: filter.value,
-  //       };
-  //     });
-
-  //     this.param().filters = JSON.stringify(filters);
-  //     this.service.getTransactions(this.accountId(), this.param()).subscribe({
-  //       next: (result: { results: Transaction[]; param: QueryParam }) => {
-  //         this.lists.set(result.results);
-  //         this.param.set(result.param);
-  //         this.isLoading.set(false);
-  //       },
-  //       error: () => {
-  //         this.isLoading.set(false);
-  //       },
-  //     });
-  //   }, delay);
-  // }
+    this.isLoading.set(true);
+    setTimeout(() => {
+      this.param().filters = this.buildFilters();
+      this.service
+        .getTransactions(accounts[index].accountId || 0, this.param())
+        .subscribe({
+          next: (result: { results: Transaction[]; param: QueryParam }) => {
+            this.lists.set(result.results);
+            this.param.set(result.param);
+            this.isLoading.set(false);
+          },
+          error: () => {
+            this.isLoading.set(false);
+          },
+        });
+    }, delay);
+  }
 }

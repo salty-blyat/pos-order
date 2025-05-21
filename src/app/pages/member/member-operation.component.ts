@@ -88,7 +88,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               <i nz-icon nzType="credit-card"></i>
               <span>{{ "Card" | translate }}</span>
             </li> -->
-            @if(!modal.isAdd) {
+            @if(!modal.isAdd ) {
             <li
               style="height:auto; padding-bottom:12px"
               nz-menu-item
@@ -291,7 +291,10 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
             </div>
 
             <div *ngSwitchCase="3" class="tab-content">
-              <nz-tabset style="margin: 0 8px;">
+              <nz-tabset
+                style="margin: 0 8px;"
+                (nzSelectedIndexChange)="selectedAccountIndex.set($event)"
+              >
                 <nz-tab
                   *ngFor="let account of model.accounts"
                   [nzTitle]="
@@ -299,11 +302,14 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
                       ? account.accountTypeNameKh ?? ''
                       : account.accountTypeNameEn ?? ''
                   "
-                  style="margin-right: 8px;"
                 >
                   <app-transaction-list
-                    [accountId]="account.accountId || 0"
+                    [accounts]="model.accounts || []"
+                    [tabIndex]="this.selectedAccountIndex()"
                   ></app-transaction-list>
+                </nz-tab>
+                <nz-tab [nzTitle]="'Redemption' | translate">
+                  <app-redemption-history [memberId]="modal.id" />
                 </nz-tab>
               </nz-tabset>
             </div>
@@ -511,6 +517,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     showRemoveIcon: true,
     showDownloadIcon: false,
   };
+  selectedAccountIndex = signal<number>(0);
 
   override ngOnInit(): void {
     super.ngOnInit();

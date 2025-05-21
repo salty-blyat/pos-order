@@ -160,6 +160,7 @@ import { MemberOperationComponent } from "./pages/member/member-operation.compon
 import { RedemptionOperationComponent } from "./pages/redemption/redemption-operation.component";
 import { LocationSelectComponent } from "./pages/location/location-select.component";
 import { OfferSelectComponent } from "./pages/offer/offer-select.component";
+import { RedemptionHistoryComponnet } from "./pages/redemption/redemption-history.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -352,6 +353,7 @@ export class CustomTranslate implements TranslateLoader {
     RedemptionDeleteComponent,
     RedemptionListComponent,
     RedemptionOperationComponent,
+    RedemptionHistoryComponnet
   ],
   bootstrap: [AppComponent],
   imports: [

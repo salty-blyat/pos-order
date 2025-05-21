@@ -60,12 +60,13 @@ import { NotificationService } from "../../utils/services/notification.service";
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
-              <th nzWidth="100px" nzAlign="center">
-                {{ "JoinDate" | translate }}
-              </th>
+
               <th [nzWidth]="SIZE_COLUMNS.PHONE">{{ "Phone" | translate }}</th>
               <th nzWidth="200px">{{ "Address" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+              <th nzWidth="100px" nzAlign="center">
+                {{ "JoinDate" | translate }}
+              </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION" nzAlign="right"></th>
             </tr>
           </thead>
@@ -90,12 +91,13 @@ import { NotificationService } from "../../utils/services/notification.service";
                 <span *ngIf="!isAgentView()">{{ data.code }}</span>
               </td>
               <td nzEllipsis>{{ data.name }}</td>
-              <td nzEllipsis nzAlign="center">
-                {{ data.joinDate | customDate }}
-              </td>
+
               <td nzEllipsis>{{ data.phone }}</td>
               <td nzEllipsis>{{ data.address }}</td>
               <td nzEllipsis>{{ data.note }}</td>
+              <td nzEllipsis nzAlign="center">
+                {{ data.joinDate | customDate }}
+              </td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>

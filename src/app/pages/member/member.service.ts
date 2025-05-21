@@ -18,10 +18,10 @@ export interface Member {
   memberClassName?: string;
   agentName?: string;
   photo?: string;
-  accounts?: Account[];
+  accounts?: MemberAccount[];
 }
 
-interface Account {
+export interface MemberAccount {
   accountId?: number;
   balance?: number;
   accountTypeNameKh?: string;
@@ -42,5 +42,4 @@ export class MemberService extends BaseApiService<Member> {
   constructor(private http: HttpClient, settingService: SettingService) {
     super("member", http, settingService);
   }
-  
 }
