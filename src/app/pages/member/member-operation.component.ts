@@ -100,7 +100,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               </div>
 
               <div
-                *ngFor="let account of model?.accounts"
+                *ngFor="let account of sortedAccounts"
                 style="display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
               >
                 <i
@@ -296,7 +296,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
                 (nzSelectedIndexChange)="selectedAccountIndex.set($event)"
               >
                 <nz-tab
-                  *ngFor="let account of model.accounts"
+                  *ngFor="let account of sortedAccounts"
                   [nzTitle]="
                     translateService.currentLang == 'km'
                       ? account.accountTypeNameKh ?? ''
@@ -369,6 +369,9 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
+      .ant-tabs-tab {
+        margin: 0 0 0 12px !important;
+      }
       nz-layout {
         height: calc(100vh - 180px);
         nz-content {
@@ -672,5 +675,14 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     });
     this.file = fileList;
   }
+
+  get sortedAccounts() {
+    return (this.model?.accounts ?? []).slice().sort((a, b) => {
+      if (a.accountTypeNameEn === "Wallet") return -1;
+      if (b.accountTypeNameEn === "Wallet") return 1;
+      return 0;
+    });
+  }
+
   protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }

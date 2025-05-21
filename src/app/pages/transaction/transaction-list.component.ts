@@ -31,7 +31,7 @@ import { AccountUiService } from "../account/account-ui.service";
     </div>
     <div class="modal-content">
       <nz-layout>
-        <nz-header>
+        <!-- <nz-header>
           <div nz-row>
             <div nz-col>
               <app-filter-input
@@ -43,7 +43,7 @@ import { AccountUiService } from "../account/account-ui.service";
               </app-filter-input>
             </div>
           </div>
-        </nz-header>
+        </nz-header> -->
         <nz-content>
           <nz-table
             style="height:auto"
@@ -67,10 +67,10 @@ import { AccountUiService } from "../account/account-ui.service";
               <tr>
                 <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
                 <th [nzWidth]="SIZE_COLUMNS.NAME">
-                  {{ "Type" | translate }}
+                  {{ "TransNo" | translate }}
                 </th>
                 <th [nzWidth]="SIZE_COLUMNS.NAME">
-                  {{ "TransNo" | translate }}
+                  {{ "Type" | translate }}
                 </th>
                 <th nzWidth="100px">
                   {{ "RefNo" | translate }}
@@ -97,10 +97,6 @@ import { AccountUiService } from "../account/account-ui.service";
                           }
                   }}
                 </td>
-                <td nzEllipsis="">
-                  {{ data.typeNameEn }}
-                </td>
-                <td nzEllipsis>{{ data.refNo }}</td>
                 <td nzEllipsis>
                   <a
                     *ngIf="isTransactionView()"
@@ -109,6 +105,12 @@ import { AccountUiService } from "../account/account-ui.service";
                   >
                   <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
                 </td>
+                <td nzEllipsis="">
+                  {{ data.typeNameEn }}
+                </td>
+
+                <td nzEllipsis>{{ data.refNo }}</td>
+
                 <td nzEllipsis>{{ data.transDate | customDate }}</td>
                 <td nzEllipsis>{{ data.amount }}</td>
                 <td nzEllipsis>{{ data.note }}</td>

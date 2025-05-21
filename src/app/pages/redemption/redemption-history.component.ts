@@ -26,7 +26,7 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
   selector: "app-redemption-history",
   template: `
     <nz-layout>
-      <nz-header>
+      <!-- <nz-header>
         <div
           nz-flex
           nzWrap="nowrap"
@@ -43,7 +43,7 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
               "
             ></app-filter-input>
           </div>
-          <!-- <button
+          <button
             *ngIf="isRedemptionAdd()"
             nz-button
             nzType="primary"
@@ -53,9 +53,9 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i
             >{{ "Add" | translate }}
-          </button> -->
+          </button>
         </div>
-      </nz-header>
+      </nz-header> -->
       <nz-content>
         <nz-table
           nzSize="small"
@@ -79,11 +79,12 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">
-                {{ "Type" | translate }}
-              </th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">
                 {{ "TransNo" | translate }}
               </th>
+              <th [nzWidth]="SIZE_COLUMNS.NAME">
+                {{ "Type" | translate }}
+              </th>
+
               <th nzWidth="100px">
                 {{ "RefNo" | translate }}
               </th>
@@ -110,10 +111,6 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
                 }}
               </td>
               <td nzEllipsis="">
-                {{ data.typeNameEn }}
-              </td>
-              <td nzEllipsis>{{ data.refNo }}</td>
-              <td nzEllipsis>
                 <a
                   *ngIf="isRedemptionHistoryView()"
                   (click)="uiService.showView(data.id || 0)"
@@ -123,6 +120,8 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
                   data.transNo
                 }}</span>
               </td>
+              <td nzEllipsis>{{ data.typeNameEn }}</td>
+              <td nzEllipsis>{{ data.refNo }}</td>
               <td nzEllipsis>{{ data.transDate | customDate }}</td>
               <td nzEllipsis>{{ data.amount }}</td>
               <td nzEllipsis>{{ data.note }}</td>
