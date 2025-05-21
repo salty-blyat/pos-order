@@ -206,7 +206,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
 
   isLookupEdit = computed(() => true);
   isLookupRemove = computed(() => true);
-
+  image!: Image;
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   nzShowUploadList = {
@@ -280,17 +280,25 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
   override onSubmit(e: any): void {
     if (this.frm.valid) {
       this.isLoading.set(true);
+      this.file.map((item) => {
+        this.image = {
+          uid: item.uid,
+          url: item.url!,
+          name: item.name!,
+          type: item.type!,
+        };
+      });
 
       let operation$ = this.service.add({
         ...this.frm.value,
-        image: this.file[0].response.url,
+        image: this.image.url,
       });
 
       if (this.model?.id) {
         operation$ = this.service.edit({
           ...this.frm.value,
           id: this.model?.id,
-          image: this.file[0].response.url,
+          image: this.image.url,
         });
       }
       if (e.detail === 1 || e.detail === 0) {
