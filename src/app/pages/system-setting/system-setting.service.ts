@@ -1,6 +1,4 @@
-import {
-  HttpClient
-} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { SettingService } from "../../app-setting";
@@ -61,16 +59,16 @@ export const SETTING_KEY = {
   ExchangeRate: "SecondaryCurrencyExchangeRate",
   ExchangeRateDisplay: "ExchangeRateDisplay",
   CustomerDefaultId: "DefaultCustomerId",
-  BlockAutoId: "BlockAutoId",
-  StaffAutoId: "StaffAutoId",
+  BlockAutoId: "BlockAutoId", 
   PavrEnable: "PavrEnable",
-  PavrUrl: "PavrUrl",
-  MemberUnitAutoId: "MemberUnitAutoId",
-  MemberLevelAutoId: "MemberLevelAutoId",
-  ChargesAutoId: "ChargesAutoId",
-  ItemAutoId: "ItemAutoId",
+  PavrUrl: "PavrUrl",  
+  
   MemberAutoId: "MemberAutoId",
-  MeterReadingAutoId: "MeterReadingAutoId", 
+  RedemptionAutoId: "RedemptionAutoId",
+  AgentAutoId: "AgentAutoId",
+  CardAutoId: "CardAutoId",
+  OfferAutoId: "OfferAutoId",
+  TransNoAutoId: "TransNoAutoId",
 };
 
 export interface Setting {

@@ -5,7 +5,6 @@ import { BaseSettingSectionComponent } from "../../utils/components/base-setting
 import { NotificationService } from "../../utils/services/notification.service";
 import { SettingService } from "../../app-setting";
 import { AuthService } from "../../helpers/auth.service";
-import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-auto-number-section",
@@ -27,77 +26,7 @@ import { AuthKeys } from "../../const";
 
       <nz-form-item>
         <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ "BlockAutoId" | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <app-auto-number-select
-            formControlName="{{ SettingKey.BlockAutoId }}"
-            [addOption]="canAddAutoNo"
-            [showAllOption]="true"
-            showAllLabel="-"
-          ></app-auto-number-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ "MemberLevelNo" | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <app-auto-number-select
-            formControlName="{{ SettingKey.MemberLevelAutoId }}"
-            [addOption]="canAddAutoNo"
-            [showAllOption]="true"
-            showAllLabel="-"
-          ></app-auto-number-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ "ChargeAutoNo" | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <app-auto-number-select
-            formControlName="{{ SettingKey.ChargesAutoId }}"
-            [addOption]="canAddAutoNo"
-            [showAllOption]="true"
-            showAllLabel="-"
-          ></app-auto-number-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ "ItemAutoNo" | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <app-auto-number-select
-            formControlName="{{ SettingKey.ItemAutoId }}"
-            [addOption]="canAddAutoNo"
-            [showAllOption]="true"
-            showAllLabel="-"
-          ></app-auto-number-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ "MemberUnitAutoId" | translate }}
-        </nz-form-label>
-        <nz-form-control [nzSm]="8" [nzXs]="24">
-          <app-auto-number-select
-            formControlName="{{ SettingKey.MemberUnitAutoId }}"
-            [addOption]="canAddAutoNo"
-            [showAllOption]="true"
-            showAllLabel="-"
-          ></app-auto-number-select>
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-          {{ "MemberAutoId" | translate }}
+          {{ "MemberAutoNo" | translate }}
         </nz-form-label>
         <nz-form-control [nzSm]="8" [nzXs]="24">
           <app-auto-number-select
@@ -108,7 +37,77 @@ import { AuthKeys } from "../../const";
           ></app-auto-number-select>
         </nz-form-control>
       </nz-form-item>
- 
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+          {{ "RedemptionAutoNo" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24">
+          <app-auto-number-select
+            formControlName="{{ SettingKey.RedemptionAutoId }}"
+            [addOption]="canAddAutoNo"
+            [showAllOption]="true"
+            showAllLabel="-"
+          ></app-auto-number-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+          {{ "AgentAutoNo" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24">
+          <app-auto-number-select
+            formControlName="{{ SettingKey.AgentAutoId }}"
+            [addOption]="canAddAutoNo"
+            [showAllOption]="true"
+            showAllLabel="-"
+          ></app-auto-number-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+          {{ "CardAutoNo" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24">
+          <app-auto-number-select
+            formControlName="{{ SettingKey.CardAutoId }}"
+            [addOption]="canAddAutoNo"
+            [showAllOption]="true"
+            showAllLabel="-"
+          ></app-auto-number-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+          {{ "OfferAutoNo" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24">
+          <app-auto-number-select
+            formControlName="{{ SettingKey.OfferAutoId }}"
+            [addOption]="canAddAutoNo"
+            [showAllOption]="true"
+            showAllLabel="-"
+          ></app-auto-number-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+          {{ "TransNoAutoNo" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="8" [nzXs]="24">
+          <app-auto-number-select
+            formControlName="{{ SettingKey.TransNoAutoId }}"
+            [addOption]="canAddAutoNo"
+            [showAllOption]="true"
+            showAllLabel="-"
+          ></app-auto-number-select>
+        </nz-form-control>
+      </nz-form-item>
+
       <nz-form-item *ngIf="isAutoNumberEdit()">
         <nz-form-label [nzSm]="7" [nzXs]="24" nzNoColon> </nz-form-label>
         <nz-form-control [nzSm]="8" [nzXs]="24" style="text-align: right">
@@ -160,18 +159,18 @@ export class AutoNumberSectionComponent extends BaseSettingSectionComponent {
   }
   canAddAutoNo = false;
   override keys = [
-    SETTING_KEY.BlockAutoId,
-    SETTING_KEY.MemberUnitAutoId,
-    SETTING_KEY.MemberLevelAutoId,
-    SETTING_KEY.ChargesAutoId,
-    SETTING_KEY.ItemAutoId,
     SETTING_KEY.MemberAutoId,
+    SETTING_KEY.RedemptionAutoId,
+    SETTING_KEY.AgentAutoId,
+    SETTING_KEY.CardAutoId,
+    SETTING_KEY.OfferAutoId,
+    SETTING_KEY.TransNoAutoId,
   ];
 
-  isAutoNumberEdit = computed(() =>  true);
+  isAutoNumberEdit = computed(() => true);
 
   override ngOnInit() {
     super.ngOnInit();
-    this.isAutoNumberEdit() ? this.frm.enable() : this.frm.disable(); 
+    this.isAutoNumberEdit() ? this.frm.enable() : this.frm.disable();
   }
 }

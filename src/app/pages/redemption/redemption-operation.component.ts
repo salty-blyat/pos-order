@@ -72,7 +72,7 @@ import { TranslateService } from "@ngx-translate/core";
           <nz-form-label [nzSpan]="6" nzRequired>
             {{ "Account" | translate }}
           </nz-form-label>
-          <!-- <nz-form-control [nzSpan]="15">
+          <nz-form-control [nzSpan]="15">
             <div style="display: flex; gap: 8px; width: 100%;">
               <app-member-select
                 (valueChanged)="getMembers($event)"
@@ -90,7 +90,7 @@ import { TranslateService } from "@ngx-translate/core";
                 ></nz-option>
               </nz-select>
             </div>
-          </nz-form-control> -->
+          </nz-form-control>
         </nz-form-item>
 
         <!-- Row: Offer ID | Amount -->

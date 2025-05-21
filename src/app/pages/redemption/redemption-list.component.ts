@@ -64,7 +64,7 @@ import { Filter } from "../../utils/services/base-api.service";
                 accountTypeId.set($event); param().pageIndex = 1; search()
               "
             ></app-lookup-item-select> -->
-          </div> 
+          </div>
           <!-- <button
             *ngIf="isRedemptionAdd()"
             nz-button
@@ -108,7 +108,7 @@ import { Filter } from "../../utils/services/base-api.service";
               <th [nzWidth]="SIZE_COLUMNS.NAME">
                 {{ "Offer" | translate }}
               </th>
-              <th nzWidth="150px">{{ "Status" | translate }}</th> 
+              <th nzWidth="150px">{{ "Status" | translate }}</th>
               <th nzWidth="100px">{{ "Amount" | translate }}</th>
               <th nzWidth="120px">{{ "Location" | translate }}</th>
               <th nzWidth="150px">{{ "RedeemedDate" | translate }}</th>
@@ -129,12 +129,7 @@ import { Filter } from "../../utils/services/base-api.service";
                 }}
               </td>
               <td nzEllipsis>
-                <a
-                  *ngIf="isRedemptionView()"
-                  (click)="uiService.showView(data.id || 0)"
-                  >{{ data.redeemNo }}</a
-                >
-                <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
+                {{ data.redeemNo }}
               </td>
               <td nzEllipsis>{{ data.offerName }}</td>
               <td nzEllipsis>

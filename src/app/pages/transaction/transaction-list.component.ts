@@ -21,6 +21,7 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { Subscription } from "rxjs";
 import { MemberAccount } from "../member/member.service";
 import { AccountUiService } from "../account/account-ui.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-transaction-list",
@@ -107,7 +108,11 @@ import { AccountUiService } from "../account/account-ui.service";
                   <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
                 </td>
                 <td nzEllipsis="">
-                  {{ data.typeNameEn }}
+                  {{
+                    translateService.currentLang == "en"
+                      ? data.typeNameEn
+                      : data.typeNameKh
+                  }}
                 </td>
 
                 <td nzEllipsis>{{ data.refNo }}</td>
@@ -148,6 +153,7 @@ export class TransactionListComponent
     override service: AccountService,
     override uiService: AccountUiService,
     private authService: AuthService,
+    public translateService: TranslateService,
     private ref: NzModalRef,
     sessionStorageService: SessionStorageService,
     private activated: ActivatedRoute,

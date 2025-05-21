@@ -106,7 +106,7 @@ export interface Type {
               [nzMatchRouter]="isActive()"
               routerLink="/agent"
             >
-              <i nz-icon nzType="shop"></i>
+              <i nz-icon nzType="user"></i>
               <span>{{ "Agent" | translate }}</span>
             </li>
             <li
@@ -115,7 +115,7 @@ export interface Type {
               [nzMatchRouter]="isActive()"
               routerLink="/redemption"
             >
-              <i nz-icon nzType="shop"></i>
+              <i nz-icon nzType="file-sync"></i>
               <span>{{ "Redemption" | translate }}</span>
             </li>
             <li

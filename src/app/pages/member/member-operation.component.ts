@@ -426,6 +426,10 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
       .ant-modal-body {
         height: auto !important;
       }
+
+      .ant-upload {
+        margin-bottom: 0 !important;
+      }
       .ant-upload-list-picture-card-container {
         margin: 0 !important;
       }

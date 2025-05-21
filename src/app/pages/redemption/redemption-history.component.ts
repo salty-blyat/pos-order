@@ -119,7 +119,13 @@ import { Transaction } from "../account/account.service";
                   data.transNo
                 }}</span>
               </td>
-              <td nzEllipsis>{{ data.typeNameEn }}</td>
+              <td nzEllipsis>
+                {{
+                  translateService.currentLang == "en"
+                    ? data.typeNameEn
+                    : data.typeNameKh
+                }}
+              </td>
               <td nzEllipsis>{{ data.refNo }}</td>
               <td nzEllipsis>{{ data.transDate | customDate }}</td>
               <td nzEllipsis>{{ data.amount }}</td>
