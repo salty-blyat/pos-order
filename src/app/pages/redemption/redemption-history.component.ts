@@ -11,16 +11,14 @@ import { ActivatedRoute } from "@angular/router";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { AuthService } from "../../helpers/auth.service";
-import {
-  Redemption,
-  RedemptionService,
-  TransHistory,
-} from "./redemption.service";
+import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { NotificationService } from "../../utils/services/notification.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
+import { AccountUiService } from "../account/account-ui.service";
+import { Transaction } from "../account/account.service";
 
 @Component({
   selector: "app-redemption-history",
@@ -95,6 +93,7 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
                 {{ "Amount" | translate }}
               </th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
 
@@ -113,7 +112,7 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
               <td nzEllipsis="">
                 <a
                   *ngIf="isRedemptionHistoryView()"
-                  (click)="uiService.showView(data.id || 0)"
+                  (click)="uiService.showTransaction(data.id || 0)"
                   >{{ data.transNo }}</a
                 >
                 <span *ngIf="!isRedemptionHistoryView()">{{
@@ -125,6 +124,21 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
               <td nzEllipsis>{{ data.transDate | customDate }}</td>
               <td nzEllipsis>{{ data.amount }}</td>
               <td nzEllipsis>{{ data.note }}</td>
+              <td class="col-action">
+                <a
+                  (click)="uiService.showDeleteTransaction(data.id || 0)"
+                  nz-typography
+                  class="delete"
+                >
+                  <i
+                    nz-icon
+                    nzType="delete"
+                    nzTheme="outline"
+                    style="padding-right: 5px"
+                  ></i>
+                  {{ "Delete" | translate }}
+                </a>
+              </td>
             </tr>
           </tbody>
         </nz-table>
@@ -135,10 +149,10 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class RedemptionHistoryComponnet extends BaseListComponent<TransHistory> {
+export class RedemptionHistoryComponnet extends BaseListComponent<Transaction> {
   constructor(
     override service: RedemptionService,
-    uiService: RedemptionUiService,
+    override uiService: AccountUiService,
     private authService: AuthService,
     public translateService: TranslateService,
     sessionStorageService: SessionStorageService,

@@ -82,6 +82,7 @@ import { AccountUiService } from "../account/account-ui.service";
                   {{ "Amount" | translate }}
                 </th>
                 <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+                <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
               </tr>
             </thead>
 
@@ -100,7 +101,7 @@ import { AccountUiService } from "../account/account-ui.service";
                 <td nzEllipsis>
                   <a
                     *ngIf="isTransactionView()"
-                    (click)="uiService.showView(data.id || 0)"
+                    (click)="uiService.showTransaction(data.id || 0)"
                     >{{ data.transNo }}</a
                   >
                   <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
@@ -114,6 +115,21 @@ import { AccountUiService } from "../account/account-ui.service";
                 <td nzEllipsis>{{ data.transDate | customDate }}</td>
                 <td nzEllipsis>{{ data.amount }}</td>
                 <td nzEllipsis>{{ data.note }}</td>
+                <td class="col-action">
+                  <a
+                    (click)="uiService.showDeleteTransaction(data.id || 0)"
+                    nz-typography
+                    class="delete"
+                  >
+                    <i
+                      nz-icon
+                      nzType="delete"
+                      nzTheme="outline"
+                      style="padding-right: 5px"
+                    ></i>
+                    {{ "Delete" | translate }}
+                  </a>
+                </td>
               </tr>
             </tbody>
           </nz-table>
@@ -130,7 +146,7 @@ export class TransactionListComponent
 {
   constructor(
     override service: AccountService,
-    uiService: AccountUiService,
+    override uiService: AccountUiService,
     private authService: AuthService,
     private ref: NzModalRef,
     sessionStorageService: SessionStorageService,

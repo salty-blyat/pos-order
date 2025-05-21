@@ -65,15 +65,12 @@ export class AccountService extends BaseApiService<Account> {
       }
     );
   }
+
   // individual transaction
-  showTransaction(id: number): Observable<SearchResult<Transaction>> {
-    return this.httpClient.get<SearchResult<Transaction>>(
-      `${this.settingService.setting.BASE_API_URL}/account/transaction/${id}`,
-      {
-        headers: new HttpHeaders({
-          "Content-Type": "application/json",
-        }),
-      }
+  public findTransaction(id: number): Observable<Transaction> {
+    return this.httpClient.get<Transaction>(
+       `${this.settingService.setting.BASE_API_URL}/account/transaction/${id}`, 
+      this._get_httpHeader(id)
     );
   }
 }

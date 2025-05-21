@@ -27,20 +27,6 @@ export interface Redemption {
   statusNameEn?: string;
 }
 
-export interface TransHistory {
-  id?: number;
-  memberId?: number;
-  memberCode?: string;
-  typeNameKh?: string;
-  typeNameEn?: string;
-  transNo?: number;
-  transDate?: string;
-  accountId?: number;
-  amount?: number;
-  type?: number;
-  note?: string;
-  refNo?: string;
-}
 @Injectable({
   providedIn: "root",
 })
@@ -50,8 +36,8 @@ export class RedemptionService extends BaseApiService<any> {
   }
 
   // all transactions history PER ACCOUNT
-  memberHistory(query: QueryParam): Observable<SearchResult<TransHistory>> {
-    return this.httpClient.get<SearchResult<TransHistory>>(
+  memberHistory(query: QueryParam): Observable<SearchResult<Transaction>> {
+    return this.httpClient.get<SearchResult<Transaction>>(
       `${this.settingService.setting.BASE_API_URL}/redemption/history`,
       {
         headers: new HttpHeaders({

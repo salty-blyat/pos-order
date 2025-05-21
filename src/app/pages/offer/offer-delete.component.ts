@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { BaseDeleteComponent } from "../../utils/components/base-delete.component"; 
+import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -17,10 +17,13 @@ import { OfferUiService } from "./offer-ui.service";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <div  class="delete-error-message ">
-        <span *ngIf="errMessage() && !isLoading()" nz-typography nzType="danger">{{
-          errMessage() | translate
-        }}</span>
+      <div class="delete-error-message ">
+        <span
+          *ngIf="errMessage() && !isLoading()"
+          nz-typography
+          nzType="danger"
+          >{{ errMessage() | translate }}</span
+        >
       </div>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
