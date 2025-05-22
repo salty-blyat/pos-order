@@ -1,13 +1,12 @@
-import { Component, computed, Input, OnInit, Renderer2 } from '@angular/core';
-// @ts-ignore
-import { v4 as uuidv4 } from 'uuid';
-import { ProcessReportModel, Report, ReportService } from './report.service';
-import { ActivatedRoute, Data } from '@angular/router';
-import { Observable } from 'rxjs';
-import { SessionStorageService } from '../../utils/services/sessionStorage.service';
+import { Component, OnInit, signal, ViewEncapsulation } from "@angular/core";
+import { ProcessReportModel, Report, ReportService } from "./report.service";
+import { ActivatedRoute, Data } from "@angular/router";
+import { Observable } from "rxjs";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { UUID } from "uuid-generator-ts";
 @Component({
-    selector: 'app-report-view',
-    template: `
+  selector: "app-report-view",
+  template: `
     <nz-layout>
       <app-breadcrumb
         *ngIf="breadcrumbData()"
@@ -27,14 +26,14 @@ import { SessionStorageService } from '../../utils/services/sessionStorage.servi
         </div>
         <div nz-row>
           <!-- <button
-            nz-button
-            nzType="primary"
-            style="margin-right: 4px"
-            (click)="toFile('print')"
-          >
-            <i nz-icon nzType="printer" nzTheme="outline"></i>
-            {{ 'Print' | translate }}
-          </button> -->
+                      nz-button
+                      nzType="primary"
+                      style="margin-right: 4px"
+                      (click)="toFile('print')"
+                    >
+                      <i nz-icon nzType="printer" nzTheme="outline"></i>
+                      {{ 'Print' | translate }}
+                    </button> -->
           <button nz-button style="margin-right: 4px" (click)="toFile('xls')">
             <i
               nz-icon
@@ -55,84 +54,100 @@ import { SessionStorageService } from '../../utils/services/sessionStorage.servi
           </button>
         </div>
       </nz-header>
-      <nz-content [ngStyle]="{ backgroundColor: '#f0f2f5' }">
-        <app-indeterminate-bar *ngIf="loading"></app-indeterminate-bar>
+      <nz-content
+        class="content-report"
+        [ngStyle]="{ backgroundColor: '#f0f2f5' }"
+      >
+        <app-indeterminate-bar *ngIf="isLoading"></app-indeterminate-bar>
         <iframe
-          *ngIf="publicUrl"
-          [src]="publicUrl | safe"
+          *ngIf="publicUrl()"
+          [src]="publicUrl() | safe"
           style="width: 100%;height:100%;border:none"
           name="myIframe"
         ></iframe>
       </nz-content>
     </nz-layout>
   `,
-    styles: [``],
-    styleUrls: ["../../../assets/scss/list.style.scss"],
-    standalone: false
+  styles: [
+    `
+      .content-report {
+        height: calc(100vh - 120px);
+      }
+    `,
+  ],
+  styleUrls: ["../../../assets/scss/list.style.scss"],
+  standalone: false,
+  encapsulation: ViewEncapsulation.None,
 })
 export class ReportViewComponent implements OnInit {
   constructor(
     private service: ReportService,
-    private renderer: Renderer2,
     private activated: ActivatedRoute,
     private sessionStorageService: SessionStorageService
   ) {}
-  loading: boolean = false;
+  isLoading = signal(false);
   generateReportModel: ProcessReportModel = {
-    reportName: '',
-    requestId: uuidv4(),
+    reportName: "",
+    requestId: UUID.createUUID(),
     param: {},
   };
-  id: number = +(this.activated.snapshot.paramMap.get('id') || 0);
-  breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
-  publicUrl!: string;
+  id: number = +(this.activated.snapshot.paramMap.get("id") || 0);
+  breadcrumbData = signal<any>(null);
+  publicUrl = signal<string>("");
   model: Report = {};
   ngOnInit(): void {
-    this.loading = true;
-    this.service.find(this.id).subscribe(
-      (result: Report) => {
+    this.isLoading.set(true);
+    this.service.find(this.id).subscribe({
+      next: (result: Report) => {
         this.model = result;
         this.generateReportModel.reportName = this.model.name;
-        
-        this.loading = false;
+        this.breadcrumbData.set(
+          new Observable<Data>((observer) => {
+            observer.next([
+              { index: 0, label: "Report", url: "/report" },
+              { index: 1, label: this.model.label, url: null },
+            ]);
+          })
+        );
+        this.isLoading.set(false);
         this.seedParamsFromSessionStorage();
         this.search();
       },
-      () => {
-        this.loading = false;
-      }
-    );
+      error: () => {
+        this.isLoading.set(false);
+      },
+    });
   }
 
   search() {
-    if (!this.loading) {
-      this.loading = true;
-      this.publicUrl = '';
+    if (!this.isLoading()) {
+      this.isLoading.set(true);
+      this.publicUrl.set("");
       setTimeout(() => {
-        this.service.processReport(this.generateReportModel).subscribe(
-          (result) => {
-            this.service.checkUrlValidity(result.url).subscribe(
-              (response) => {
-                this.loading = false;
-                this.publicUrl = result.url;
+        this.service.processReport(this.generateReportModel).subscribe({
+          next: (result: any) => {
+            this.service.checkUrlValidity(result?.url).subscribe({
+              next: () => {
+                this.isLoading.set(false);
+                this.publicUrl.set(result?.url);
               },
-              (err) => {
-                this.publicUrl = result.url;
-                this.loading = false;
-              }
-            );
+              error: () => {
+                this.publicUrl.set(result?.url);
+                this.isLoading.set(false);
+              },
+            });
           },
-          () => {
-            this.loading = false;
-          }
-        );
+          error: () => {
+            this.isLoading.set(false);
+          },
+        });
       }, 100);
     }
   }
 
   onDateRangeChange($event: any) {
-    this.generateReportModel.param['startDate'] = $event[0];
-    this.generateReportModel.param['endDate'] = $event[1];
+    this.generateReportModel.param["startDate"] = $event[0];
+    this.generateReportModel.param["endDate"] = $event[1];
   }
 
   triggerDownload(): void {
@@ -146,7 +161,7 @@ export class ReportViewComponent implements OnInit {
   }
 
   toFile(type: any) {
-    window.open(`${this.publicUrl}?format=${type}`, '_blank');
+    window.open(`${this.publicUrl()}?format=${type}`, "_blank");
 
     // const myFrame = document.getElementsByName('myIframe')[0];
     // // @ts-ignore
@@ -157,7 +172,7 @@ export class ReportViewComponent implements OnInit {
     if (this.generateReportModel.reportName) {
       let sessionParams: any[] = [];
       sessionParams =
-        this.sessionStorageService.getValue('dynamic-report') || [];
+        this.sessionStorageService.getValue("dynamic-report") || [];
       const index = sessionParams.findIndex(
         (e) => e.key === this.generateReportModel.reportName
       );
@@ -168,14 +183,14 @@ export class ReportViewComponent implements OnInit {
             value: filter,
           });
       this.sessionStorageService.setValue({
-        key: 'dynamic-report',
+        key: "dynamic-report",
         value: sessionParams,
       });
     }
   }
   seedParamsFromSessionStorage() {
     let sessionParams =
-      (this.sessionStorageService.getValue('dynamic-report') as Array<any>) ??
+      (this.sessionStorageService.getValue("dynamic-report") as Array<any>) ??
       [];
     let filters = sessionParams.filter(
       (e) => e.key === this.generateReportModel.reportName
@@ -183,7 +198,7 @@ export class ReportViewComponent implements OnInit {
     if (filters) {
       this.model.params?.forEach(
         (item: any) =>
-          (item['defaultValue'] = filters[item.key] ?? item['defaultValue'])
+          (item["defaultValue"] = filters[item.key] ?? item["defaultValue"])
       );
     }
   }

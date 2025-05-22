@@ -131,8 +131,11 @@ import { NotificationService } from "../../utils/services/notification.service";
                 {{ "OfferGroup" | translate }}
               </th>
 
-              <th nzWidth="190px" nzAlign="center">
+              <th nzWidth="190px">
                 {{ "OfferDuration" | translate }}
+              </th>
+              <th nzWidth="190px">
+                {{ "Note" | translate }}
               </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
@@ -198,6 +201,9 @@ import { NotificationService } from "../../utils/services/notification.service";
               <td nzEllipsis nzAlign="right">
                 {{ data.offerStartAt | customDate }} ~
                 {{ data.offerEndAt | customDate }}
+              </td>
+              <td nzEllipsis>
+                {{ data.note }}
               </td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">

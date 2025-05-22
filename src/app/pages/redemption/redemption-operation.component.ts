@@ -16,6 +16,12 @@ import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
 import { Member, MemberService } from "../member/member.service";
 import { TranslateService } from "@ngx-translate/core";
+import {
+  SETTING_KEY,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
+import { LookupItem } from "../lookup/lookup-item/lookup-item.service";
+import { Offer } from "../offer/offer.service";
 
 @Component({
   selector: "app-redemption-operation",
@@ -32,106 +38,150 @@ import { TranslateService } from "@ngx-translate/core";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
-        <!-- Row: RedeemNo | RefNo -->
-        <nz-form-item>
-          <nz-form-label [nzSpan]="6" nzRequired>
-            {{ "RedeemNo" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSpan]="5" nzErrorTip>
-            <input nz-input formControlName="redeemNo" />
-          </nz-form-control>
+      <form
+        nz-form
+        [formGroup]="frm"
+        [style.height.%]="100"
+        [nzAutoTips]="autoTips"
+      >
+        <div nz-row>
+          <div nz-col [nzXs]="24">
+            <div nz-row>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                    >{{ "RedeemNo" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                    <input
+                      [autofocus]="true"
+                      nz-input
+                      formControlName="redeemNo"
+                      [placeholder]="
+                        frm.controls['redeemNo'].disabled
+                          ? ('RedeemNo' | translate)
+                          : ''
+                      "
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24"
+                    >{{ "RefNo" | translate }}
+                  </nz-form-label>
 
-          <nz-form-label [nzSpan]="5" nzRequired>
-            {{ "RefNo" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSpan]="5">
-            <input nz-input formControlName="refNo" />
-          </nz-form-control>
-        </nz-form-item>
-
-        <!-- Row: Redeemed Date | Account -->
-        <nz-form-item>
-          <nz-form-label [nzSpan]="6" nzRequired>
-            {{ "RedeemedDate" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSpan]="5" nzErrorTip>
-            <nz-date-picker formControlName="redeemedDate"></nz-date-picker>
-          </nz-form-control>
-
-          <nz-form-label [nzSpan]="5" nzRequired>
-            {{ "Location" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSpan]="5" nzErrorTip>
-            <app-location-select formControlName="locationId">
-            </app-location-select>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label [nzSpan]="6" nzRequired>
-            {{ "Account" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSpan]="15">
-            <div style="display: flex; gap: 8px; width: 100%;">
-              <app-member-select
-                (valueChanged)="getMembers($event)"
-                style="width: 50%;"
-              ></app-member-select>
-              <nz-select formControlName="accountId" style="width: 50%;">
-                <nz-option
-                  *ngFor="let account of member()?.accounts ?? []"
-                  [nzValue]="account.accountId"
-                  [nzLabel]="
-                    translateService.currentLang === 'km'
-                      ? account.accountTypeNameKh ?? ''
-                      : account.accountTypeNameEn ?? ''
-                  "
-                ></nz-option>
-              </nz-select>
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <input nz-input formControlName="refNo" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
             </div>
-          </nz-form-control>
-        </nz-form-item>
+            <div nz-row>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                    >{{ "Quantity" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
+                    <input nz-input formControlName="qty" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
 
-        <!-- Row: Offer ID | Amount -->
-        <nz-form-item>
-          <nz-form-label [nzSpan]="6" nzRequired>
-            {{ "Offer" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSpan]="5" nzErrorTip>
-            <app-offer-select formControlName="offerId"> </app-offer-select>
-          </nz-form-control>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24"
+                    >{{ "Status" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <app-lookup-item-select
+                      [lookupType]="LOOKUP_TYPE.RedeemStatus"
+                      formControlName="status"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
 
-          <nz-form-label [nzSpan]="5" nzRequired>
-            {{ "Amount" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSpan]="5">
-            <input nz-input formControlName="amount" />
-          </nz-form-control>
-        </nz-form-item>
+            <div nz-row>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                    >{{ "Member" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <app-member-select
+                      (valueChanged)="selectedMember.set($event)"
+                      nzErrorTip
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
 
-        <nz-form-item>
-          <nz-form-label [nzSpan]="6" nzRequired>
-            {{ "Status" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSpan]="5">
-            <app-lookup-item-select
-              formControlName="status"
-              [lookupType]="LOOKUP_TYPE.RedeemStatus"
-            >
-            </app-lookup-item-select>
-          </nz-form-control>
-        </nz-form-item>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                    >{{ "Offer" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <app-offer-select
+                      (valueChanged)="selectedOffer.set($event)"
+                      formControlName="offerId"
+                      nzErrorTip
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
 
-        <!-- Row: Note (Full Width) -->
-        <nz-form-item>
-          <nz-form-label [nzSpan]="6">
-            {{ "Note" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSpan]="15">
-            <textarea nz-input formControlName="note" rows="3"></textarea>
-          </nz-form-control>
-        </nz-form-item>
+            <div nz-row>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                    >{{ "AccountType" | translate }}
+                  </nz-form-label>
+                  <!-- <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <nz-select
+                      [ngModel]="selectedMember()?.accountId"
+                      formControlName="accountId"
+                      nzPlaceHolder="Select account"
+                    >
+                      <nz-option
+                        *ngFor="let acc of selectedMember()?.accounts || []"
+                        [nzValue]="acc.accountId"
+                        [nzLabel]="
+                          translateService.currentLang == 'km'
+                            ? acc.accountTypeNameKh
+                            : acc.accountTypeNameEn
+                        "
+                      ></nz-option>
+                    </nz-select>
+                  </nz-form-control> -->
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div nz-row>
+              <div nz-col [nzSpan]="24">
+                <nz-form-item>
+                  <nz-form-label [nzSpan]="4"
+                    >{{ "Note" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzXs]="19">
+                    <textarea
+                      nz-input
+                      type="text"
+                      formControlName="note"
+                      rows="3"
+                    ></textarea>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
 
@@ -194,28 +244,33 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     public translateService: TranslateService,
     public memberService: MemberService,
     private authService: AuthService,
-    private settingService: SettingService,
+    private systemSettingService: SystemSettingService,
     override uiService: RedemptionUiService
   ) {
     super(fb, ref, service, uiService);
-    effect(() => {
-      if (this.member() == null) {
-        this.frm.controls["accountId"].disable();
-      } else {
-        this.frm.controls["accountId"].enable();
-      }
-    });
   }
-  member = signal<Member | null>(null);
-  getMembers(id: number) {
-    this.memberService.find(id).subscribe({
-      next: (result) => {
-        this.member.set(result);
-        this.frm.controls["accountId"].reset();
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.systemSettingService.find(SETTING_KEY.RedemptionAutoId).subscribe({
+      next: (value?: string) => {
+        if (Number(value) !== 0) {
+          this.frm.get("redeemNo")?.disable();
+        }
       },
     });
   }
-
+  member = signal<Member | null>(null);
+  // getMembers(id: number) {
+  //   this.memberService.find(id).subscribe({
+  //     next: (result) => {
+  //       this.member.set(result);
+  //       this.frm.controls["accountId"].reset();
+  //     },
+  //   });
+  // }
+  selectedOffer = signal<Offer | null>(null);
+  selectedMember = signal<Member | null>(null);
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   isRedemptionEdit = computed(() => true);
   isRedemptionRemove = computed(() => true);
@@ -223,18 +278,38 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   override initControl(): void {
     const { noteMaxLengthValidator, required, integerValidator } =
       CommonValidators;
+
     this.frm = this.fb.group({
       redeemNo: [null, [required]],
       refNo: [null],
       accountId: [null, required],
-      redeemedDate: [null, required],
+      redeemedDate: [new Date().toISOString(), required],
       offerId: [null, [required]],
       qty: [1, [required]],
-      amount: [0, [required, integerValidator]],
+      amount: [null, [required, integerValidator]],
       note: [null, [noteMaxLengthValidator]],
       status: [null, [required, integerValidator]],
       locationId: [null, [required, integerValidator]],
     });
+
+    this.frm.controls["qty"]?.valueChanges.subscribe({
+      next: (qty) => {
+        console.log(qty);
+        const amount = this.selectedOffer()?.redeemCost! * qty;
+        this.frm.controls["amount"].setValue(amount);
+      },
+    });
+
+    this.frm.controls["offerId"]?.valueChanges.subscribe({
+      next: (offer: Offer) => {
+        const qty = this.frm.controls["qty"].value;
+        const amount = offer?.redeemCost! * qty;
+        console.log(this.selectedOffer());
+        console.log(amount);
+        this.frm.controls["amount"].setValue(amount);
+      },
+    });
+
     // setTimeout(() => {
     //   if (this.modal.offerTypeId !== 0 && this.modal.offerTypeId)
     //     this.frm.patchValue({ offerType: this.modal.offerTypeId });

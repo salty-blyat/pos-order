@@ -20,12 +20,16 @@ export class CardUiService extends BaseUiService {
     );
   }
 
-  override showAdd(memberId: number, componentId: any = ""): void {
+  override showAdd(
+    componentId: any = "",
+    accountId?: number,
+    memberId?: number
+  ): void {
     this.modalService.create({
       nzContent: CardOperationComponent,
       nzFooter: null,
       nzClosable: true,
-      nzData: { memberId: memberId, isAdd: true },
+      nzData: { memberId: memberId, isAdd: true, accountId: accountId },
       nzWidth: "450px",
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
@@ -33,10 +37,10 @@ export class CardUiService extends BaseUiService {
       },
     });
   }
-  override showEdit(id: number): void {
+  override showEdit(id: number, accountId?: number): void {
     this.modalService.create({
       nzContent: CardOperationComponent,
-      nzData: { id: id, isEdit: true },
+      nzData: { id: id, isEdit: true, accountId: accountId },
       nzFooter: null,
       nzClosable: true,
       nzWidth: "450px",

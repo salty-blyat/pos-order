@@ -36,7 +36,7 @@ import { Subscription } from "rxjs";
             nz-button
             nzType="primary"
             *ngIf="isCardAdd()"
-            (click)="uiService.showAdd(this.memberId())"
+            (click)="uiService.showAdd(accountId(), memberId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Add" | translate }}
@@ -67,11 +67,7 @@ import { Subscription } from "rxjs";
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th nzWidth="100px">
                 {{ "CardNumber" | translate }}
-              </th>
-              <th nzWidth="100px">
-                {{ "Type" | translate }}
-              </th>
-
+              </th> 
               <th [nzWidth]="SIZE_COLUMNS.NAME" nzAlign="center">
                 {{ "IssueDate" | translate }}
               </th>
@@ -99,15 +95,7 @@ import { Subscription } from "rxjs";
                 <a *ngIf="isCardAdd()" (click)="uiService.showView(data.id!)">{{
                   data.cardNumber
                 }}</a>
-              </td>
-
-              <td nzEllipsis>
-                {{
-                  translateService.currentLang == "km"
-                    ? data.accountTypeNameKh
-                    : data.accountTypeNameEn
-                }}
-              </td>
+              </td> 
 
               <td nzEllipsis nzAlign="center">
                 {{ data.issueDate | customDate }}
@@ -128,7 +116,9 @@ import { Subscription } from "rxjs";
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
                   <ng-container *ngIf="isCardEdit()">
-                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)"
+                    <a
+                      *nzSpaceItem
+                      (click)="uiService.showEdit(data.id || 0, accountId())"
                       ><i
                         nz-icon
                         nzType="edit"
@@ -171,7 +161,7 @@ export class CardListComponent
 {
   constructor(
     override service: CardService,
-    uiService: CardUiService,
+    override uiService: CardUiService,
     public translateService: TranslateService,
     sessionStorageService: SessionStorageService,
     private authService: AuthService,
@@ -186,6 +176,7 @@ export class CardListComponent
     );
   }
   memberId = input<number>(0);
+  accountId = input<number>(0);
 
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [

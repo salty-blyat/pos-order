@@ -14,6 +14,7 @@ import {
   Transaction,
 } from "../account/account.service";
 import { AccountUiService } from "../account/account-ui.service";
+import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 
 @Component({
   selector: "app-transaction-view",
@@ -44,7 +45,10 @@ import { AccountUiService } from "../account/account-ui.service";
             >{{ "Type" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="type" />
+            <app-lookup-item-select
+              [lookupType]="LOOKUP_TYPE.TransactionType"
+              formControlName="type"
+            />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -104,6 +108,7 @@ export class TransactionViewComponent extends BaseOperationComponent<Transaction
 
   isTransactionRemove = computed(() => true);
   editableCode: boolean = false;
+  readonly LOOKUP_TYPE = LOOKUP_TYPE;
 
   override ngOnInit(): void {
     if (this.isLoading()) return;

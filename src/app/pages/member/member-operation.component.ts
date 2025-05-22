@@ -82,8 +82,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 
             <!-- account -->
             @if(!modal.isAdd ) {
-            <li 
-              
+            <li
               style="height:auto; padding-bottom:12px"
               nz-menu-item
               [nzSelected]="current == 3"
@@ -93,7 +92,8 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
                 {{ "Account" | translate }}
               </div>
 
-              <div *ngFor="let account of sortedAccounts"
+              <div
+                *ngFor="let account of sortedAccounts"
                 style="display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
               >
                 <i
@@ -280,7 +280,10 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
             </div>
 
             <div style="margin: 0 8px;" *ngSwitchCase="2" ngCase>
-              <app-card-list [memberId]="modal.id" />
+              <app-card-list 
+                [accountId]="model.defaultAccountId!"
+                [memberId]="modal.id"
+              />
             </div>
 
             <div *ngSwitchCase="3" class="tab-content">

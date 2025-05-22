@@ -19,6 +19,7 @@ export interface Member {
   agentName?: string;
   photo?: string;
   accounts?: MemberAccount[];
+  defaultAccountId?: number;
 }
 
 export interface MemberAccount {

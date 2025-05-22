@@ -41,9 +41,7 @@ import { NG_VALUE_ACCESSOR } from "@angular/forms";
         [nzLabel]="item?.name + ''"
       >
         <div nz-flex nzAlign="center" nzGap="small">
-          <div>
-            <span class="b-name"> {{ item.name }} </span>
-          </div>
+          <span class="b-name"> {{ item.name }}</span>
         </div>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>

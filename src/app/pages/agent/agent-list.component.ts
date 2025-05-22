@@ -64,7 +64,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               <th [nzWidth]="SIZE_COLUMNS.PHONE">{{ "Phone" | translate }}</th>
               <th nzWidth="200px">{{ "Address" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-              <th nzWidth="100px" nzAlign="center">
+              <th nzWidth="100px">
                 {{ "JoinDate" | translate }}
               </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION" nzAlign="right"></th>
@@ -95,7 +95,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               <td nzEllipsis>{{ data.phone }}</td>
               <td nzEllipsis>{{ data.address }}</td>
               <td nzEllipsis>{{ data.note }}</td>
-              <td nzEllipsis nzAlign="center">
+              <td nzEllipsis>
                 {{ data.joinDate | customDate }}
               </td>
               <td class="col-action">

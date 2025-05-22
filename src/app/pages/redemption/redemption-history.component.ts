@@ -215,5 +215,6 @@ export class RedemptionHistoryComponnet extends BaseListComponent<Transaction> {
   isRedemptionHistoryEdit = computed(() => true);
   isRedemptionHistoryRemove = computed(() => true);
   isRedemptionHistoryView = computed(() => true);
+  readonly LOOKUP_TYPE = LOOKUP_TYPE;
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

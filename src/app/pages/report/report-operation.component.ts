@@ -29,7 +29,6 @@ import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { timer } from "rxjs";
 import { NotificationService } from "../../utils/services/notification.service";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
-
 export let ParamSelectComponent = {
   StatusType: LookupMultipleSelectComponent,
   StaticDropdownMultipleSelect: StaticDropdownMultipleSelectComponent,
@@ -388,6 +387,7 @@ export let ParamSelectComponent = {
                   [language]="'html'"
                   formControlName="template"
                 ></app-code-editor>
+                <!-- <textarea formControlName="template" rows="25" nz-input></textarea> -->
               </nz-form-control>
             </nz-form-item>
           </nz-tab>
@@ -403,6 +403,7 @@ export let ParamSelectComponent = {
                   [language]="'sql'"
                   formControlName="command"
                 ></app-code-editor>
+                <!-- <textarea formControlName="command" rows="25" nz-input></textarea> -->
               </nz-form-control>
             </nz-form-item>
           </nz-tab>
@@ -527,7 +528,6 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
 
   isReportEdit = computed(() => true);
   isReportRemove = computed(() => true);
-
   type: any;
 
   override initControl() {
@@ -545,8 +545,8 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
       ],
       note: [null, [noteMaxLengthValidator()]],
       label: [null, [required]],
-      template: [null],
-      command: [null],
+      template: [' '],
+      command: [' '],
       isHidden: [false],
       permissionKey: [null, [required]],
       reportGroupId: [null, [required]],
@@ -609,12 +609,12 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
   onTabChange(index: number) {
     switch (index) {
       case TAB_INDEX_REPORT.TEMPLATE:
-        timer(50).subscribe(() => {
+        timer(100).subscribe(() => {
           this.codeEditorTemplate?.ngOnInit();
         });
         break;
       case TAB_INDEX_REPORT.COMMAND:
-        timer(50).subscribe(() => {
+        timer(100).subscribe(() => {
           this.codeEditorCommand?.ngOnInit();
         });
         break;

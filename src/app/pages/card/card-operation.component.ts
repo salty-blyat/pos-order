@@ -38,17 +38,6 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           </nz-form-control>
         </nz-form-item>
 
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
-            >{{ "Account" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip>
-            <app-lookup-item-select
-              formControlName="accountId"
-              [lookupType]="LOOKUP_TYPE.AccountType"
-            />
-          </nz-form-control>
-        </nz-form-item>
         @if(!modal.isAdd){
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>
@@ -159,11 +148,13 @@ export class CardOperationComponent extends BaseOperationComponent<Card> {
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   isCardEdit = computed(() => true);
   isCardRemove = computed(() => true);
+  
 
   override initControl(): void {
     const { required } = CommonValidators;
+    
     this.frm = this.fb.group({
-      accountId: [null, [required]],
+      accountId: [this.modal.accountId, [required]],
       cardNumber: [null, [required]],
       status: [null, [required]],
       issueDate: [new Date().toISOString(), [required]],
