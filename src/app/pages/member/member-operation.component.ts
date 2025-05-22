@@ -122,7 +122,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
           </ul>
         </nz-sider>
 
-        <nz-content>
+        <nz-content [ngStyle]="{ padding: current == 3 ? '0' : '' }">
           <app-loading *ngIf="isLoading()"></app-loading>
           <div [ngSwitch]="current" [style.height.%]="100">
             <div *ngSwitchCase="1" ngCase>
@@ -280,7 +280,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
             </div>
 
             <div style="margin: 0 8px;" *ngSwitchCase="2" ngCase>
-              <app-card-list 
+              <app-card-list
                 [accountId]="model.defaultAccountId!"
                 [memberId]="modal.id"
               />
@@ -365,86 +365,18 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
-      .ant-tabs-tab {
-        margin: 0 0 0 12px !important;
-      }
-      nz-layout {
-        height: calc(100vh - 180px);
-        nz-content {
-          overflow-y: scroll;
-        }
-        nz-sider {
-          border-right: 1px solid #d9d9d9;
-        }
-      }
-      .image-upload {
-        cursor: pointer;
-        width: 108px;
-        height: auto;
-        padding: 1px;
-        min-height: 2cm;
-        margin: 16px auto 0;
-        border: 2px dotted #d9d9d9;
-        border-radius: 6px;
-        transition: border-color 0.3s ease;
-
-        img {
-          width: 100%;
-        }
-        &:hover {
-          border-color: #4976c4;
-        }
-      }
-      .image-upload {
-        cursor: pointer;
-        width: 108px;
-        height: auto;
-        padding: 1px;
-        min-height: 2cm;
-        margin: 16px auto 0;
-        border: 2px dotted #d9d9d9;
-        border-radius: 6px;
-        transition: border-color 0.3s ease;
-
-        img {
-          width: 100%;
-        }
-        &:hover {
-          border-color: #4976c4;
-        }
-      }
-
-      .tab-content {
-        loverflow-y: scroll;
-        padding: 8px;
-        padding: 8px;
-      }
-      .ant-modal-body {
-        height: auto !important;
-      }
-
-      .ant-upload {
-        margin-bottom: 0 !important;
-      }
       .ant-upload-list-picture-card-container {
         margin: 0 !important;
       }
 
-      .ant-upload-list-item {
-        padding: 0px !important;
-      }
       .photo {
-        cursor: pointer;
         width: 108px;
         height: auto;
         padding: 1px;
         min-height: 2cm;
         margin: 16px auto 0;
         border: 1px solid #d0cfcf;
-        border-radius: 6px;
-        transition: border-color 0.3s ease;
-        border-radius: 6px;
-        transition: border-color 0.3s ease;
+        border-radius: 4px;
 
         img {
           width: 100%;
@@ -461,9 +393,12 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
       }
 
       .menu-item {
-        display: flex;
-        flex-direction: column;
         background: #fff;
+      }
+
+      .sider-member {
+        height: calc(100vh - 180px);
+        border-right: 1px solid #d9d9d9;
       }
 
       [profile] {
