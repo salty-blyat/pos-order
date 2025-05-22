@@ -64,8 +64,8 @@ import { AuthService } from "../../helpers/auth.service";
             showAllLabel="-"
           ></app-auto-number-select>
         </nz-form-control>
-      </nz-form-item> 
-      
+      </nz-form-item>
+
       <nz-form-item>
         <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
           {{ "OfferAutoNo" | translate }}

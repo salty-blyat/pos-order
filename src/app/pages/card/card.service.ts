@@ -12,6 +12,8 @@ export interface Card {
   id?: number;
   statusNameKh?: string;
   statusNameEn?: string;
+  accountTypeNameKh?: string;
+  accountTypeNameEn?: string;
 }
 @Injectable({
   providedIn: "root",

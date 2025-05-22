@@ -13,6 +13,8 @@ import { NotificationService } from "../../utils/services/notification.service";
 import { Filter } from "../../utils/services/base-api.service";
 import { Card, CardService } from "./card.service";
 import { CardUiService } from "./card-ui.service";
+import { TranslateService } from "@ngx-translate/core";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-card-list",
@@ -28,14 +30,13 @@ import { CardUiService } from "./card-ui.service";
               "
             ></app-filter-input> -->
           </div>
-          
         </div>
         <div>
           <button
             nz-button
             nzType="primary"
             *ngIf="isCardAdd()"
-            (click)="uiService.showAdd(this.accountId())"
+            (click)="uiService.showAdd(this.memberId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Add" | translate }}
@@ -64,16 +65,20 @@ import { CardUiService } from "./card-ui.service";
           <thead>
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">
+              <th nzWidth="100px">
                 {{ "CardNumber" | translate }}
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">
+              <th nzWidth="100px">
+                {{ "Type" | translate }}
+              </th>
+
+              <th [nzWidth]="SIZE_COLUMNS.NAME" nzAlign="center">
                 {{ "IssueDate" | translate }}
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">
+              <th [nzWidth]="SIZE_COLUMNS.NAME" nzAlign="center">
                 {{ "ExpiryDate" | translate }}
               </th>
-              <!-- <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Status" | translate }}</th> -->
+              <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Status" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -96,9 +101,27 @@ import { CardUiService } from "./card-ui.service";
                 }}</a>
               </td>
 
-              <td nzEllipsis>{{ data.issueDate | customDate }}</td>
-              <td nzEllipsis>{{ data.expiryDate | customDate }}</td>
-              <!-- <td nzEllipsis>{{ data.status }}</td> -->
+              <td nzEllipsis>
+                {{
+                  translateService.currentLang == "km"
+                    ? data.accountTypeNameKh
+                    : data.accountTypeNameEn
+                }}
+              </td>
+
+              <td nzEllipsis nzAlign="center">
+                {{ data.issueDate | customDate }}
+              </td>
+              <td nzEllipsis nzAlign="center">
+                {{ data.expiryDate | customDate }}
+              </td>
+              <td nzEllipsis>
+                {{
+                  translateService.currentLang == "en"
+                    ? data.statusNameEn
+                    : data.statusNameKh
+                }}
+              </td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>
@@ -149,6 +172,7 @@ export class CardListComponent
   constructor(
     override service: CardService,
     uiService: CardUiService,
+    public translateService: TranslateService,
     sessionStorageService: SessionStorageService,
     private authService: AuthService,
     notificationService: NotificationService
@@ -161,17 +185,17 @@ export class CardListComponent
       notificationService
     );
   }
+  memberId = input<number>(0);
 
-  accountId = input<number>(0);
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [
       { field: "search", operator: "contains", value: this.searchText() },
     ];
-    if (this.accountId()) {
+    if (this.memberId()) {
       filters.push({
-        field: "accountId",
+        field: "memberId",
         operator: "eq",
-        value: 2,
+        value: this.memberId(),
       });
     }
     return filters;

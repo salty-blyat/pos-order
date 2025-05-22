@@ -1,5 +1,5 @@
 import { Component, computed, ViewEncapsulation } from "@angular/core";
-import {   FormBuilder } from "@angular/forms"; 
+import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
@@ -50,11 +50,11 @@ import { AgentUiService } from "./agent-ui.service";
               </div>
               <div nz-col [nzXs]="12">
                 <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired=""
+                  <nz-form-label [nzSm]="8" [nzXs]="24"
                     >{{ "JoinDate" | translate }}
                   </nz-form-label>
 
-                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
                     <nz-date-picker formControlName="joinDate"></nz-date-picker>
                   </nz-form-control>
                 </nz-form-item>
@@ -88,7 +88,7 @@ import { AgentUiService } from "./agent-ui.service";
                   <nz-form-label [nzSm]="8" [nzXs]="24"
                     >{{ "Email" | translate }}
                   </nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
                     <input nz-input formControlName="email" />
                   </nz-form-control>
                 </nz-form-item>
@@ -194,6 +194,7 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
   }
   isAgentEdit = computed(() => true);
   isAgentRemove = computed(() => true);
+
   override initControl(): void {
     const {
       nameMaxLengthValidator,
@@ -231,7 +232,7 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
       email: this.model.email,
       phone: this.model.phone,
       address: this.model.address,
-      joinDate: this.model.joinDate, 
+      joinDate: this.model.joinDate,
       note: this.model.note,
     });
   }

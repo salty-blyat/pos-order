@@ -11,7 +11,7 @@ import { SystemSettingService } from "../system-setting/system-setting.service";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { AuthService } from "../../helpers/auth.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { Observable } from "rxjs";
+import { Observable, Observer } from "rxjs";
 import { AccountService } from "../account/account.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
@@ -34,36 +34,22 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
     <div class="modal-content">
       <nz-layout>
         <nz-sider nzTheme="light" class="sider-member" nzWidth="220px">
-          @if (file.length == 0 && modal.isView) {
-          <div class="image-upload">
-            <div
-              (click)="uiService.showUpload()"
-              role="button"
-              aria-label="Upload image"
-              *ngIf="file.length == 0"
-            >
-              <img src="./assets/image/man.png" alt="Photo" />
-            </div>
-          </div>
-          } @else {
           <div class="photo">
             <nz-upload
+              class="profile"
               [nzAction]="uploadUrl"
-              nzListType="picture-card"
               [(nzFileList)]="file"
-              [nzDisabled]="modal.isView"
+              [nzBeforeUpload]="beforeUpload"
               (nzChange)="handleUpload($event)"
-              [nzShowUploadList]="
-                modal.isView ? nzShowUploadList : nzShowIconList
-              "
-              [nzShowUploadList]="
-                modal.isView ? nzShowUploadList : nzShowIconList
-              "
+              nzListType="picture-card"
               [nzShowButton]="file.length < 1"
             >
+              <div photo>
+                <i nz-icon nzType="plus"></i>
+                <img src="./assets/image/man.png" alt="Photo" />
+              </div>
             </nz-upload>
           </div>
-          }
           <div class="member-name">
             <p *ngIf="memberName === ''">
               {{ memberNameEn || "NewMember" | translate }}
@@ -72,6 +58,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
           </div>
 
           <ul class="menu-item" nz-menu nzTheme="light" nzMode="inline">
+            <!-- info -->
             <li
               nz-menu-item
               [nzSelected]="current == 1"
@@ -80,7 +67,9 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               <i nz-icon nzType="user"></i>
               <span>{{ "Information" | translate }}</span>
             </li>
-            @if(!modal.isAdd ) {
+
+            <!-- card -->
+            @if(modal.isView){
             <li
               nz-menu-item
               [nzSelected]="current == 2"
@@ -89,7 +78,12 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               <i nz-icon nzType="credit-card"></i>
               <span>{{ "Card" | translate }}</span>
             </li>
-            <li
+            }
+
+            <!-- account -->
+            @if(!modal.isAdd ) {
+            <li 
+              
               style="height:auto; padding-bottom:12px"
               nz-menu-item
               [nzSelected]="current == 3"
@@ -99,8 +93,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
                 {{ "Account" | translate }}
               </div>
 
-              <div
-                *ngFor="let account of sortedAccounts"
+              <div *ngFor="let account of sortedAccounts"
                 style="display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
               >
                 <i
@@ -119,8 +112,8 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
                           ? account.balance.toFixed(2)
                           : "0.00")
                       : account.balance != null
-                      ? account.balance
-                      : 0
+                      ? account.balance + " pts"
+                      : "0 pts"
                   }}
                 </div>
               </div>
@@ -287,7 +280,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
             </div>
 
             <div style="margin: 0 8px;" *ngSwitchCase="2" ngCase>
-              <app-card-list />
+              <app-card-list [memberId]="modal.id" />
             </div>
 
             <div *ngSwitchCase="3" class="tab-content">
@@ -495,6 +488,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     fb: FormBuilder,
     ref: NzModalRef<MemberOperationComponent>,
     service: MemberService,
+    private msg: NzMessageService,
     override uiService: MemberUiService,
     public accountService: AccountService,
     private settingService: SettingService,
@@ -647,6 +641,28 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       }
     }
   }
+
+  beforeUpload = (
+    file: NzUploadFile,
+    _fileList: NzUploadFile[]
+  ): Observable<boolean> =>
+    new Observable((observer: Observer<boolean>) => {
+      const isJpgOrPng =
+        file.type === "image/jpeg" || file.type === "image/png";
+      if (!isJpgOrPng) {
+        this.msg.error("You can only upload JPG file!");
+        observer.complete();
+        return;
+      }
+      const isLt2M = file.size! / 1024 / 1024 < 5;
+      if (!isLt2M) {
+        this.msg.error("Image must smaller than 2MB!");
+        observer.complete();
+        return;
+      }
+      observer.next(isJpgOrPng && isLt2M);
+      observer.complete();
+    });
 
   switchCurrent(index: number) {
     switch (index) {
