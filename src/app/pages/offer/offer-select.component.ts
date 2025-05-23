@@ -37,7 +37,7 @@ import { OfferUiService } from "./offer-ui.service";
       <nz-option
         *ngFor="let item of lists()"
         nzCustomContent
-        [nzValue]="item"
+        [nzValue]="item?.id"
         [nzLabel]="item?.name + ''"
       >
         <div nz-flex nzAlign="center" nzGap="small">

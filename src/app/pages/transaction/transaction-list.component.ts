@@ -67,23 +67,24 @@ import { TranslateService } from "@ngx-translate/core";
             <thead>
               <tr>
                 <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-                <th [nzWidth]="SIZE_COLUMNS.NAME">
-                  {{ "TransNo" | translate }}
-                </th>
-                <th [nzWidth]="SIZE_COLUMNS.NAME">
-                  {{ "Type" | translate }}
-                </th>
                 <th nzWidth="100px">
-                  {{ "RefNo" | translate }}
+                  {{ "TransNo" | translate }}
                 </th>
                 <th nzWidth="100px">
                   {{ "Date" | translate }}
                 </th>
                 <th nzWidth="100px">
+                  {{ "Type" | translate }}
+                </th>
+
+                <th nzWidth="75px" nzAlign="right">
                   {{ "Amount" | translate }}
                 </th>
                 <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-                <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+                <th nzWidth="100px">
+                  {{ "RefNo" | translate }}
+                </th>
+                <!-- <th [nzWidth]="SIZE_COLUMNS.ACTION"></th> -->
               </tr>
             </thead>
 
@@ -107,6 +108,7 @@ import { TranslateService } from "@ngx-translate/core";
                   >
                   <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
                 </td>
+                <td nzEllipsis>{{ data.transDate | customDate }}</td>
                 <td nzEllipsis="">
                   {{
                     translateService.currentLang == "en"
@@ -115,12 +117,24 @@ import { TranslateService } from "@ngx-translate/core";
                   }}
                 </td>
 
-                <td nzEllipsis>{{ data.refNo }}</td>
-
-                <td nzEllipsis>{{ data.transDate | customDate }}</td>
-                <td nzEllipsis>{{ data.amount }}</td>
+                <td
+                  nzEllipsis
+                  nzAlign="right"
+                  [ngStyle]="{
+                    color:
+                      data.amount! > 0
+                        ? 'green'
+                        : data.amount! < 0
+                        ? 'red'
+                        : 'black',
+                    'font-weight': 'semi-bold'
+                  }"
+                >
+                   {{ data.redeemWithNameEn	 === "Point" ? (data.amount + ' pts') : (data.amount + ' $') }}
+                </td>
                 <td nzEllipsis>{{ data.note }}</td>
-                <td class="col-action">
+                <td nzEllipsis>{{ data.refNo }}</td>
+                <!-- <td class="col-action">
                   <a
                     (click)="uiService.showDeleteTransaction(data.id || 0)"
                     nz-typography
@@ -134,7 +148,7 @@ import { TranslateService } from "@ngx-translate/core";
                     ></i>
                     {{ "Delete" | translate }}
                   </a>
-                </td>
+                </td> -->
               </tr>
             </tbody>
           </nz-table>

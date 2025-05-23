@@ -30,9 +30,12 @@ export interface Transaction {
   refNo?: string;
   id?: number;
   memberId?: number;
+  redeemWithNameEn?: string;
+  redeemWithNameKh?: string;
   memberCode?: string;
   typeNameKh?: string;
   typeNameEn?: string;
+  redeemWith?: number;
 }
 
 @Injectable({

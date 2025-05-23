@@ -13,9 +13,9 @@ export class CardUiService extends BaseUiService {
       modalService,
       CardOperationComponent,
       CardDeleteComponent,
-      "480px",
-      "480px",
-      "480px",
+      "500px",
+      "500px",
+      "500px",
       "450px"
     );
   }
@@ -30,7 +30,7 @@ export class CardUiService extends BaseUiService {
       nzFooter: null,
       nzClosable: true,
       nzData: { memberId: memberId, isAdd: true, accountId: accountId },
-      nzWidth: "450px",
+      nzWidth: "500px",
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: "added", value: e.model, componentId });
@@ -43,7 +43,7 @@ export class CardUiService extends BaseUiService {
       nzData: { id: id, isEdit: true, accountId: accountId },
       nzFooter: null,
       nzClosable: true,
-      nzWidth: "450px",
+      nzWidth: "500px",
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: "edited", value: e.model });

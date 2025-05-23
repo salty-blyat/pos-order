@@ -41,6 +41,9 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               [(nzFileList)]="file"
               [nzBeforeUpload]="beforeUpload"
               (nzChange)="handleUpload($event)"
+              [nzShowUploadList]="
+                modal.isView ? nzShowButtonView : nzShowIconList
+              "
               nzListType="picture-card"
               [nzShowButton]="file.length < 1"
             >
@@ -81,7 +84,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
             }
 
             <!-- account -->
-            @if(!modal.isAdd ) {
+            @if(modal.isView) {
             <li
               style="height:auto; padding-bottom:12px"
               nz-menu-item
@@ -447,10 +450,12 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
 
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
-  nzShowUploadList = {
+  //  view
+  nzShowButtonView = {
     showPreviewIcon: true,
     showRemoveIcon: false,
   };
+  // add | edit
   nzShowIconList = {
     showPreviewIcon: true,
     showRemoveIcon: true,

@@ -1,26 +1,18 @@
-import {
-  Component,
-  computed,
-  effect,
-  signal,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { AuthService } from "../../helpers/auth.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
-import { SettingService } from "../../app-setting";
 import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
-import { Member, MemberService } from "../member/member.service";
+import { Member, MemberAccount, MemberService } from "../member/member.service";
 import { TranslateService } from "@ngx-translate/core";
 import {
   SETTING_KEY,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
-import { LookupItem } from "../lookup/lookup-item/lookup-item.service";
 import { Offer } from "../offer/offer.service";
 
 @Component({
@@ -92,7 +84,7 @@ import { Offer } from "../offer/offer.service";
 
               <div nz-col [nzXs]="12">
                 <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24"
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
                     >{{ "Status" | translate }}
                   </nz-form-label>
                   <nz-form-control [nzSm]="14" [nzXs]="24">
@@ -112,10 +104,7 @@ import { Offer } from "../offer/offer.service";
                     >{{ "Member" | translate }}
                   </nz-form-label>
                   <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <app-member-select
-                      (valueChanged)="selectedMember.set($event)"
-                      nzErrorTip
-                    />
+                    <app-member-select formControlName="memberId" />
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -126,11 +115,7 @@ import { Offer } from "../offer/offer.service";
                     >{{ "Offer" | translate }}
                   </nz-form-label>
                   <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <app-offer-select
-                      (valueChanged)="selectedOffer.set($event)"
-                      formControlName="offerId"
-                      nzErrorTip
-                    />
+                    <app-offer-select formControlName="offerId" />
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -139,26 +124,25 @@ import { Offer } from "../offer/offer.service";
             <div nz-row>
               <div nz-col [nzXs]="12">
                 <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                    >{{ "AccountType" | translate }}
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>
+                    {{ "Account" | translate }}
                   </nz-form-label>
-                  <!-- <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <nz-select
-                      [ngModel]="selectedMember()?.accountId"
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <app-account-select
                       formControlName="accountId"
-                      nzPlaceHolder="Select account"
-                    >
-                      <nz-option
-                        *ngFor="let acc of selectedMember()?.accounts || []"
-                        [nzValue]="acc.accountId"
-                        [nzLabel]="
-                          translateService.currentLang == 'km'
-                            ? acc.accountTypeNameKh
-                            : acc.accountTypeNameEn
-                        "
-                      ></nz-option>
-                    </nz-select>
-                  </nz-form-control> -->
+                      [parentId]="frm.get('memberId')?.value"
+                    />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col [nzXs]="12">
+                <nz-form-item>
+                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>
+                    {{ "Location" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <app-location-select formControlName="locationId" />
+                  </nz-form-control>
                 </nz-form-item>
               </div>
             </div>
@@ -249,7 +233,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   ) {
     super(fb, ref, service, uiService);
   }
-
   override ngOnInit(): void {
     super.ngOnInit();
     this.systemSettingService.find(SETTING_KEY.RedemptionAutoId).subscribe({
@@ -260,17 +243,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       },
     });
   }
-  member = signal<Member | null>(null);
-  // getMembers(id: number) {
-  //   this.memberService.find(id).subscribe({
-  //     next: (result) => {
-  //       this.member.set(result);
-  //       this.frm.controls["accountId"].reset();
-  //     },
-  //   });
-  // }
-  selectedOffer = signal<Offer | null>(null);
-  selectedMember = signal<Member | null>(null);
+
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   isRedemptionEdit = computed(() => true);
   isRedemptionRemove = computed(() => true);
@@ -282,7 +255,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     this.frm = this.fb.group({
       redeemNo: [null, [required]],
       refNo: [null],
-      accountId: [null, required],
+      accountId: [{ value: null, disabled: true }, required],
       redeemedDate: [new Date().toISOString(), required],
       offerId: [null, [required]],
       qty: [1, [required]],
@@ -290,12 +263,13 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       note: [null, [noteMaxLengthValidator]],
       status: [null, [required, integerValidator]],
       locationId: [null, [required, integerValidator]],
+      memberId: [null, [required]],
     });
 
     this.frm.controls["qty"]?.valueChanges.subscribe({
       next: (qty) => {
-        console.log(qty);
-        const amount = this.selectedOffer()?.redeemCost! * qty;
+        const offer: Offer = this.frm.get("offerId")?.value;
+        const amount = offer.redeemCost! * qty;
         this.frm.controls["amount"].setValue(amount);
       },
     });
@@ -304,9 +278,9 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       next: (offer: Offer) => {
         const qty = this.frm.controls["qty"].value;
         const amount = offer?.redeemCost! * qty;
-        console.log(this.selectedOffer());
-        console.log(amount);
+
         this.frm.controls["amount"].setValue(amount);
+        this.frm.controls["offerId"].setValue(offer.id);
       },
     });
 
@@ -318,6 +292,9 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     //   if (this.modal.accountTypeId !== 0 && this.modal.accountTypeId)
     //     this.frm.patchValue({ redeemWith: this.modal.accountTypeId });
     // }, 50);
+    this.frm.get("memberId")?.valueChanges.subscribe((val) => {
+      if (val) this.frm.get("accountId")?.enable();
+    });
   }
 
   override setFormValue() {

@@ -15,7 +15,7 @@ import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { NotificationService } from "../../utils/services/notification.service";
-import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { AccountTypes, LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { AccountUiService } from "../account/account-ui.service";
 import { Transaction } from "../account/account.service";
@@ -76,24 +76,24 @@ import { Transaction } from "../account/account.service";
           <thead>
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">
-                {{ "TransNo" | translate }}
-              </th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">
-                {{ "Type" | translate }}
-              </th>
-
               <th nzWidth="100px">
-                {{ "RefNo" | translate }}
+                {{ "TransNo" | translate }}
               </th>
               <th nzWidth="100px">
                 {{ "Date" | translate }}
               </th>
               <th nzWidth="100px">
+                {{ "Type" | translate }}
+              </th>
+
+              <th nzWidth="75px" nzAlign="right">
                 {{ "Amount" | translate }}
               </th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+              <th nzWidth="100px">
+                {{ "RefNo" | translate }}
+              </th>
+              <!-- <th [nzWidth]="SIZE_COLUMNS.ACTION"></th> -->
             </tr>
           </thead>
 
@@ -119,6 +119,8 @@ import { Transaction } from "../account/account.service";
                   data.transNo
                 }}</span>
               </td>
+
+              <td nzEllipsis>{{ data.transDate | customDate }}</td>
               <td nzEllipsis>
                 {{
                   translateService.currentLang == "en"
@@ -126,11 +128,39 @@ import { Transaction } from "../account/account.service";
                     : data.typeNameKh
                 }}
               </td>
-              <td nzEllipsis>{{ data.refNo }}</td>
-              <td nzEllipsis>{{ data.transDate | customDate }}</td>
-              <td nzEllipsis>{{ data.amount }}</td>
+              <td
+                nzEllipsis
+                nzAlign="right"
+                [ngStyle]="{
+                  color:
+                    data.amount! > 0
+                      ? 'green'
+                      : data.amount! < 0
+                      ? 'red'
+                      : 'black',
+                  'font-weight': 'semi-bold'
+                }"
+              >
+                <!-- @if (data.redeemWith === AccountTypes.Point){
+               
+<span>              data.amount + " pts"</span>
+              } @else if (data.redeemWith === AccountTypes.Wallet){
+<span>              data.amount + " $"</span>
+               } @else {
+<span>data.amount</span>
+                
+               }
+
+              -->
+                {{
+                  data.redeemWith === AccountTypes.Point
+                    ? data.amount + " pts"
+                    : data.amount + " $"
+                }}
+              </td>
               <td nzEllipsis>{{ data.note }}</td>
-              <td class="col-action">
+              <td nzEllipsis>{{ data.refNo }}</td>
+              <!-- <td class="col-action">
                 <a
                   (click)="uiService.showDeleteTransaction(data.id || 0)"
                   nz-typography
@@ -144,7 +174,7 @@ import { Transaction } from "../account/account.service";
                   ></i>
                   {{ "Delete" | translate }}
                 </a>
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </nz-table>
@@ -216,5 +246,6 @@ export class RedemptionHistoryComponnet extends BaseListComponent<Transaction> {
   isRedemptionHistoryRemove = computed(() => true);
   isRedemptionHistoryView = computed(() => true);
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
+  readonly AccountTypes = AccountTypes;
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

@@ -165,6 +165,7 @@ import { TransactionViewComponent } from "./pages/transaction/transaction-view.c
 import { CardListComponent } from "./pages/card/card-list.component";
 import { CardOperationComponent } from "./pages/card/card-operation.component";
 import { CardDeleteComponent } from "./pages/card/card-delete.component";
+import { AccountSelectComponent } from "./pages/account/account-select.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -358,6 +359,7 @@ export class CustomTranslate implements TranslateLoader {
     AccountDeleteComponent,
     AccountListComponent,
     AccountOperationComponent,
+    AccountSelectComponent,
 
     //redem
     RedemptionDeleteComponent,

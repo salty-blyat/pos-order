@@ -109,7 +109,6 @@ export class BaseSelectComponent<T extends SharedDomain>
             this.lists().length > 0
           ) {
             this.selected.set(this.lists()[0]?.id!);
-            this.onModalChange();
           }
         },
         error: (err) => {
