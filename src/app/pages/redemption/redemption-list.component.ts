@@ -110,8 +110,7 @@ import { Filter } from "../../utils/services/base-api.service";
               <th nzWidth="100px">{{ "Amount" | translate }}</th>
               <th nzWidth="120px">{{ "Location" | translate }}</th>
               <th nzWidth="150px">{{ "RedeemedDate" | translate }}</th>
-              <th nzWidth="150px">{{ "Note" | translate }}</th>
-              <th nzWidth="150px"></th>
+              <th nzWidth="150px">{{ "Note" | translate }}</th> 
             </tr>
           </thead>
           <tbody>
@@ -141,41 +140,7 @@ import { Filter } from "../../utils/services/base-api.service";
               <td nzEllipsis>{{ data.amount }}</td>
               <td nzEllipsis>{{ data.locationName }}</td>
               <td nzEllipsis>{{ data.redeemedDate | customDate }}</td>
-              <td nzEllipsis>{{ data.note }}</td>
-              <td class="col-action">
-                <nz-space [nzSplit]="spaceSplit">
-                  <ng-template #spaceSplit>
-                    <nz-divider nzType="vertical"></nz-divider>
-                  </ng-template>
-                  <!-- <ng-container *ngIf="isRedemptionEdit()">
-                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
-                      <i
-                        nz-icon
-                        nzType="edit"
-                        nzTheme="outline"
-                        class="edit"
-                      ></i>
-                      {{ "Edit" | translate }}
-                    </a>
-                  </ng-container> -->
-                  <ng-container *ngIf="isRedemptionRemove()">
-                    <a
-                      *nzSpaceItem
-                      (click)="uiService.showDelete(data.id || 0)"
-                      nz-typography
-                      class="delete"
-                    >
-                      <i
-                        nz-icon
-                        nzType="delete"
-                        nzTheme="outline"
-                        style="padding-right: 5px"
-                      ></i>
-                      {{ "Delete" | translate }}
-                    </a>
-                  </ng-container>
-                </nz-space>
-              </td>
+              <td nzEllipsis>{{ data.note }}</td> 
             </tr>
           </tbody>
         </nz-table>

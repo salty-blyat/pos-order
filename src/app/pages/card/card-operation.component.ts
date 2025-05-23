@@ -30,20 +30,20 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
         [nzAutoTips]="autoTips"
       >
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
             >{{ "CardNumber" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
             <input [autofocus]="true" nz-input formControlName="cardNumber" />
           </nz-form-control>
         </nz-form-item>
 
         @if(!modal.isAdd){
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>
             {{ "Status" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="17" [nzXs]="24" nzErrorTip>
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
             <app-lookup-item-select
               formControlName="status"
               [lookupType]="LOOKUP_TYPE.CardStatus"
@@ -54,21 +54,21 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
         }
 
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24"
+          <nz-form-label [nzSm]="8" [nzXs]="24"
             >{{ "IssueDate" | translate }}
           </nz-form-label>
 
-          <nz-form-control [nzSm]="17" [nzXs]="24">
+          <nz-form-control [nzSm]="14" [nzXs]="24">
             <nz-date-picker formControlName="issueDate"></nz-date-picker>
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24"
+          <nz-form-label [nzSm]="8" [nzXs]="24"
             >{{ "ExpiryDate" | translate }}
           </nz-form-label>
 
-          <nz-form-control [nzSm]="17" [nzXs]="24">
+          <nz-form-control [nzSm]="14" [nzXs]="24">
             <nz-date-picker formControlName="expiryDate"></nz-date-picker>
           </nz-form-control>
         </nz-form-item>

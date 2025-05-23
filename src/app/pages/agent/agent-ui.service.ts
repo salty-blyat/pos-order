@@ -13,9 +13,9 @@ export class AgentUiService extends BaseUiService {
       modalService,
       AgentOperationComponent,
       AgentDeleteComponent,
-      "720px",
-      "720px",
-      "720px",
+      "680px",
+      "680px",
+      "680px",
       "450px"
     );
   }

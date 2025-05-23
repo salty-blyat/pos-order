@@ -13,24 +13,23 @@ export class CardUiService extends BaseUiService {
       modalService,
       CardOperationComponent,
       CardDeleteComponent,
-      "500px",
-      "500px",
-      "500px",
+      "480px",
+      "480px",
+      "480px",
       "450px"
     );
   }
 
   override showAdd(
     componentId: any = "",
-    accountId?: number,
-    memberId?: number
+    accountId?: number
   ): void {
     this.modalService.create({
       nzContent: CardOperationComponent,
       nzFooter: null,
       nzClosable: true,
-      nzData: { memberId: memberId, isAdd: true, accountId: accountId },
-      nzWidth: "500px",
+      nzData: { isAdd: true, accountId: accountId },
+      nzWidth: "480px",
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: "added", value: e.model, componentId });
@@ -43,7 +42,7 @@ export class CardUiService extends BaseUiService {
       nzData: { id: id, isEdit: true, accountId: accountId },
       nzFooter: null,
       nzClosable: true,
-      nzWidth: "500px",
+      nzWidth: "480px",
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: "edited", value: e.model });

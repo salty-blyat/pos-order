@@ -28,10 +28,10 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
       <app-loading *ngIf="isLoading()" />
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24">
+          <nz-form-label [nzSm]="6" [nzXs]="24">
             {{ "TransNo" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-form-control [nzSm]="15" [nzXs]="24">
             <input
               nz-input
               formControlName="transNo"
@@ -41,19 +41,19 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24"
+          <nz-form-label [nzSm]="6" [nzXs]="24"
             >{{ "Amount" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-form-control [nzSm]="15" [nzXs]="24">
             <input nz-input formControlName="amount" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24"
+          <nz-form-label [nzSm]="6" [nzXs]="24"
             >{{ "Type" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-form-control [nzSm]="15" [nzXs]="24">
             <app-lookup-item-select
               [lookupType]="LOOKUP_TYPE.TransactionType"
               formControlName="type"
@@ -61,42 +61,28 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24"
+          <nz-form-label [nzSm]="6" [nzXs]="24"
             >{{ "Date" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-form-control [nzSm]="15" [nzXs]="24">
             <nz-date-picker formControlName="transDate"></nz-date-picker>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24"
+          <nz-form-label [nzSm]="6" [nzXs]="24"
             >{{ "Note" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-form-control [nzSm]="15" [nzXs]="24">
             <textarea nz-input formControlName="note" rows="3"></textarea>
           </nz-form-control>
         </nz-form-item>
       </form>
     </div>
     <div *nzModalFooter>
-      <div *ngIf="modal?.isView">
-        <a
-          nz-typography
-          nzType="danger"
-          *ngIf="!isLoading() && isTransactionRemove()"
-        >
-          <i nz-icon nzType="delete" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Delete" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isTransactionRemove()"
-        ></nz-divider>
-        <a nz-typography (click)="cancel()" style="color: gray;">
-          <i nz-icon nzType="close" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Close" | translate }}</span>
-        </a>
-      </div>
+      <a nz-typography (click)="cancel()" style="color: gray;">
+        <i nz-icon nzType="close" nzTheme="outline"></i>
+        <span class="action-text"> {{ "Close" | translate }}</span>
+      </a>
     </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],

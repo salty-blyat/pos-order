@@ -39,6 +39,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               class="profile"
               [nzAction]="uploadUrl"
               [(nzFileList)]="file"
+              [nzDisabled]="modal.isView"
               [nzBeforeUpload]="beforeUpload"
               (nzChange)="handleUpload($event)"
               [nzShowUploadList]="
@@ -378,7 +379,6 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
         padding: 1px;
         min-height: 2cm;
         margin: 16px auto 0;
-        border: 1px solid #d0cfcf;
         border-radius: 4px;
 
         img {
@@ -417,6 +417,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
       .profile {
         .ant-upload.ant-upload-select-picture-card {
           margin: 0;
+          padding: 2px;
         }
       }
     `,
