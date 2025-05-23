@@ -1,4 +1,4 @@
-import { Component, computed, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -115,7 +115,12 @@ import { Offer } from "../offer/offer.service";
                     >{{ "Offer" | translate }}
                   </nz-form-label>
                   <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <app-offer-select formControlName="offerId" />
+                    <app-offer-select
+                      [memberId]="frm.get('memberId')?.value"
+                      [accountId]="frm.get('accountId')?.value"
+                      formControlName="offerId"
+                      (selectedObject)="selectedOffer.set($event)"
+                    />
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -235,6 +240,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
   override ngOnInit(): void {
     super.ngOnInit();
+
     this.systemSettingService.find(SETTING_KEY.RedemptionAutoId).subscribe({
       next: (value?: string) => {
         if (Number(value) !== 0) {
@@ -245,6 +251,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
+  selectedOffer = signal<Offer | null>(null);
   isRedemptionEdit = computed(() => true);
   isRedemptionRemove = computed(() => true);
 
@@ -257,8 +264,8 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       refNo: [null],
       accountId: [{ value: null, disabled: true }, required],
       redeemedDate: [new Date().toISOString(), required],
-      offerId: [null, [required]],
-      qty: [1, [required]],
+      offerId: [{ value: null, disabled: true }, [required]],
+      qty: [null, [integerValidator, required]],
       amount: [null, [required, integerValidator]],
       note: [null, [noteMaxLengthValidator]],
       status: [null, [required, integerValidator]],
@@ -268,35 +275,39 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
     this.frm.controls["qty"]?.valueChanges.subscribe({
       next: (qty) => {
-        const offer: Offer = this.frm.get("offerId")?.value;
-        const amount = offer.redeemCost! * qty;
-        this.frm.controls["amount"].setValue(amount);
+        const amount = this.selectedOffer()?.redeemCost! * Number(qty);
+        this.frm.get("amount")?.setValue(amount);
       },
     });
 
     this.frm.controls["offerId"]?.valueChanges.subscribe({
-      next: (offer: Offer) => {
+      next: () => {
         const qty = this.frm.controls["qty"].value;
-        const amount = offer?.redeemCost! * qty;
+        const amount = this.selectedOffer()?.redeemCost! * qty;
 
-        this.frm.controls["amount"].setValue(amount);
-        this.frm.controls["offerId"].setValue(offer.id);
+        this.frm.get("amount")?.setValue(amount);
       },
     });
 
-    // setTimeout(() => {
-    //   if (this.modal.offerTypeId !== 0 && this.modal.offerTypeId)
-    //     this.frm.patchValue({ offerType: this.modal.offerTypeId });
-    //   if (this.modal.offerGroupId !== 0 && this.modal.offerGroupId)
-    //     this.frm.patchValue({ offerGroupId: this.modal.offerGroupId });
-    //   if (this.modal.accountTypeId !== 0 && this.modal.accountTypeId)
-    //     this.frm.patchValue({ redeemWith: this.modal.accountTypeId });
-    // }, 50);
     this.frm.get("memberId")?.valueChanges.subscribe((val) => {
-      if (val) this.frm.get("accountId")?.enable();
+      if (!this.modal.isView) {
+        this.frm.get("accountId")?.setValue(null);
+        this.frm.get("offerId")?.setValue(null);
+        this.frm.get("offerId")?.disable();
+      }
+
+      if (val && !this.modal.isView) {
+        this.frm.get("accountId")?.enable();
+      }
+    });
+
+    this.frm.get("accountId")?.valueChanges.subscribe((val) => {
+      if (!this.modal.isView) this.frm.get("offerId")?.setValue(null);
+      if (val && !this.modal.isView) {
+        this.frm.get("offerId")?.enable();
+      }
     });
   }
-
   override setFormValue() {
     this.frm.setValue({
       redeemNo: this.model.redeemNo,
@@ -307,6 +318,9 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       note: this.model.note,
       status: this.model.status,
       locationId: this.model.locationId,
+      memberId: this.model.memberId,
+      accountId: this.model.accountId,
+      redeemedDate: this.model.redeemedDate,
     });
   }
 }

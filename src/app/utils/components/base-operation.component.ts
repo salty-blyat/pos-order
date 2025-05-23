@@ -1,26 +1,28 @@
-import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { NZ_MODAL_DATA, NzModalRef } from 'ng-zorro-antd/modal';
-import { CommonValidators } from '../services/common-validators';
-import { BaseUiService } from '../services/base-ui.service';
-import { BaseApiService } from '../services/base-api.service';
-import { Observable } from 'rxjs';
+import { Component, inject, OnDestroy, OnInit, signal } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
+import { CommonValidators } from "../services/common-validators";
+import { BaseUiService } from "../services/base-ui.service";
+import { BaseApiService } from "../services/base-api.service";
+import { Observable } from "rxjs";
 
 interface SharedDomain {
   id?: number;
   name?: string;
 }
 @Component({
-  template: '',
-  standalone: false
+  template: "",
+  standalone: false,
 })
-export class BaseOperationComponent<T extends SharedDomain> implements OnInit , OnDestroy{
+export class BaseOperationComponent<T extends SharedDomain>
+  implements OnInit, OnDestroy
+{
   constructor(
     protected fb: FormBuilder,
     protected ref: NzModalRef<any>,
     protected service: BaseApiService<any>,
     protected uiService: BaseUiService
-  ) { }
+  ) {}
   readonly modal: any = inject(NZ_MODAL_DATA);
   isLoading = signal<boolean>(false);
   frm!: FormGroup;
@@ -28,16 +30,16 @@ export class BaseOperationComponent<T extends SharedDomain> implements OnInit , 
   autoTips: Record<any, any> = CommonValidators.autoTips;
   refreshSub$: any;
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     if (this.isLoading()) return;
     this.initControl();
-    if (this.modal?.isView) {
+    if (this.modal?.isView) { 
       this.frm.disable();
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
-        if (e.key === 'edited') {
+        if (e.key === "edited") {
           this.isLoading.set(true);
           this.service.find(this.modal?.id).subscribe({
-            next: (result: T) => { 
+            next: (result: T) => {
               this.model = result;
               this.setFormValue();
               this.isLoading.set(false);
@@ -92,8 +94,8 @@ export class BaseOperationComponent<T extends SharedDomain> implements OnInit , 
   cancel() {
     this.ref.triggerCancel().then();
   }
-  initControl(): void { }
-  setFormValue(): void { }
+  initControl(): void {}
+  setFormValue(): void {}
 
   ngOnDestroy(): void {
     this.refreshSub$?.unsubscribe();

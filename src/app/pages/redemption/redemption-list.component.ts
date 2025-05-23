@@ -9,7 +9,7 @@ import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { NotificationService } from "../../utils/services/notification.service";
-import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { AccountTypes, LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { Filter } from "../../utils/services/base-api.service";
 
 @Component({
@@ -28,11 +28,12 @@ import { Filter } from "../../utils/services/base-api.service";
           <div nz-flex nzGap="small">
             <app-filter-input
               storageKey="redemption-list-search"
+              class="fixed-width-select"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
-            <!-- <app-lookup-item-select
+            <app-lookup-item-select
               class="fixed-width-select"
               showAll="AllOfferType"
               [showAllOption]="true"
@@ -63,7 +64,7 @@ import { Filter } from "../../utils/services/base-api.service";
               (valueChanged)="
                 accountTypeId.set($event); param().pageIndex = 1; search()
               "
-            ></app-lookup-item-select> -->
+            ></app-lookup-item-select>
           </div>
           <button
             *ngIf="isRedemptionAdd()"
@@ -106,11 +107,13 @@ import { Filter } from "../../utils/services/base-api.service";
               <th [nzWidth]="SIZE_COLUMNS.NAME">
                 {{ "Offer" | translate }}
               </th>
-              <th nzWidth="150px">{{ "Status" | translate }}</th>
-              <th nzWidth="100px">{{ "Amount" | translate }}</th>
+              <th nzWidth="100px">{{ "Status" | translate }}</th>
+              <th nzWidth="100px" nzAlign="right">
+                {{ "Amount" | translate }}
+              </th>
               <th nzWidth="120px">{{ "Location" | translate }}</th>
               <th nzWidth="150px">{{ "RedeemedDate" | translate }}</th>
-              <th nzWidth="150px">{{ "Note" | translate }}</th> 
+              <th nzWidth="150px">{{ "Note" | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -126,7 +129,12 @@ import { Filter } from "../../utils/services/base-api.service";
                 }}
               </td>
               <td nzEllipsis>
-                {{ data.redeemNo }}
+                <a
+                  *ngIf="isRedemptionView()"
+                  (click)="uiService.showView(data.id || 0)"
+                  >{{ data.redeemNo }}</a
+                >
+                <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
               </td>
               <td nzEllipsis>{{ data.offerName }}</td>
               <td nzEllipsis>
@@ -137,10 +145,30 @@ import { Filter } from "../../utils/services/base-api.service";
                 }}
               </td>
               <!-- <td nzEllipsis>{{ data.qty }}</td> -->
-              <td nzEllipsis>{{ data.amount }}</td>
+              <td
+                nzEllipsis
+                nzAlign="right"
+                [ngStyle]="{
+                  color:
+                    data.amount! > 0
+                      ? 'green'
+                      : data.amount! < 0
+                      ? 'red'
+                      : 'black',
+                  'font-weight': 'semi-bold'
+                }"
+              >
+                @if (data.redeemWith == AccountTypes.Point){
+                <span> {{ data.amount + " pts" }}</span>
+                } @else if (data.redeemWith == AccountTypes.Wallet){
+                <span> {{ data.amount + " $" }}</span>
+                } @else {
+                <span>{{ data.amount }}</span>
+                }
+              </td>
               <td nzEllipsis>{{ data.locationName }}</td>
               <td nzEllipsis>{{ data.redeemedDate | customDate }}</td>
-              <td nzEllipsis>{{ data.note }}</td> 
+              <td nzEllipsis>{{ data.note }}</td>
             </tr>
           </tbody>
         </nz-table>
@@ -187,7 +215,7 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
     const filters: Filter[] = [];
     if (this.offerTypeId()) {
       filters.push({
-        field: "OfferType",
+        field: "offerType",
         operator: "eq",
         value: this.offerTypeId(),
       });
@@ -214,4 +242,5 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
   isRedemptionRemove = computed(() => true);
   isRedemptionView = computed(() => true);
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
+  readonly AccountTypes = AccountTypes;
 }

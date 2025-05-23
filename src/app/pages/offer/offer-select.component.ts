@@ -1,7 +1,13 @@
 import {
   Component,
+  EventEmitter,
   forwardRef,
+  Input,
+  input,
+  OnChanges,
+  Output,
   signal,
+  SimpleChanges,
   ViewEncapsulation,
 } from "@angular/core";
 import { BaseSelectComponent } from "../../utils/components/base-select.component";
@@ -9,6 +15,7 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { Offer, OfferService } from "./offer.service";
 import { OfferUiService } from "./offer-ui.service";
+import { Filter } from "../../utils/services/base-api.service";
 
 @Component({
   providers: [
@@ -85,9 +92,12 @@ import { OfferUiService } from "./offer-ui.service";
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class OfferSelectComponent extends BaseSelectComponent<Offer> {
+export class OfferSelectComponent
+  extends BaseSelectComponent<Offer>
+  implements OnChanges
+{
   constructor(
-    service: OfferService,
+    override service: OfferService,
     uiService: OfferUiService,
     sessionStorageService: SessionStorageService
   ) {
@@ -98,6 +108,74 @@ export class OfferSelectComponent extends BaseSelectComponent<Offer> {
       "offer-filter",
       "all-offer"
     );
+  }
+  @Output() selectedObject = new EventEmitter<Offer>();
+  @Input() memberId = 0;
+  @Input() accountId = 0;
+
+  protected override getCustomFilters(): Filter[] {
+    const filters: Filter[] = [];
+    if (this.memberId) {
+      filters.push({
+        field: "memberId",
+        operator: "eq",
+        value: this.memberId,
+      });
+    }
+    if (this.accountId) {
+      filters.push({
+        field: "redeemWith",
+        operator: "eq",
+        value: this.accountId,
+      });
+    }
+    return filters;
+  }
+
+  override search(delay: number = 50) {
+    if (this.isLoading()) return;
+    if (!this.memberId || !this.accountId) return;
+    this.isLoading.set(true);
+    setTimeout(() => {
+      this.param().filters = this.buildFilters();
+      if (this.searchText() && this.param().pageIndex === 1) {
+        this.lists.set([]);
+      }
+      this.service.getAvailable(this.param()).subscribe({
+        next: (result: { results: any[] }) => {
+          this.isLoading.set(false);
+          this.lists.set(result.results);
+          if (
+            this.isDefault() &&
+            this.selected() == 0 &&
+            this.lists().length > 0
+          ) {
+            this.selected.set(this.lists()[0]?.id!);
+            this.onModalChange();
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }, delay);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.selected.set(0);
+    this.search();
+  }
+
+  override onModalChange() {
+    this.valueChanged.emit(this.selected());
+    this.onChangeCallback(this.selected());
+    this.onTouchedCallback(this.selected());
+    this.setStorageKey(this.selected());
+
+    const selectedOffer = this.lists().find((o) => o.id === this.selected());
+    console.log('in select',selectedOffer);
+    
+    this.selectedObject.emit(selectedOffer);
   }
 
   isOfferAdd = signal<boolean>(true);

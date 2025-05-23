@@ -25,6 +25,17 @@ export interface Redemption {
   offerName?: string;
   statusNameKh?: string;
   statusNameEn?: string;
+  redeemWith?: number;
+  accounntType?: number;
+  memberId?: number;
+  attachment?: Attachment[]; 
+}
+
+export interface Attachment {
+  uid: string;
+  url: string;
+  name: string;
+  type: string;
 }
 
 @Injectable({

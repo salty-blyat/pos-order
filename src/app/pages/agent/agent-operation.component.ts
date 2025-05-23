@@ -72,7 +72,7 @@ import { AgentUiService } from "./agent-ui.service";
               <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
                 >{{ "Phone" | translate }}
               </nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
+              <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
                 <input nz-input formControlName="phone" />
               </nz-form-control>
             </nz-form-item>
@@ -81,10 +81,10 @@ import { AgentUiService } from "./agent-ui.service";
         <div nz-row>
           <div nz-col [nzXs]="12">
             <nz-form-item>
-              <nz-form-label [nzSm]="8" [nzXs]="24"
+              <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
                 >{{ "Email" | translate }}
               </nz-form-label>
-              <nz-form-control [nzSm]="14" [nzXs]="24">
+              <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
                 <input nz-input formControlName="email" />
               </nz-form-control>
             </nz-form-item>
@@ -205,7 +205,7 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
       email: [null, [emailValidator, required]],
       phone: [null, [multiplePhoneValidator, required]],
       address: [null],
-      joinDate: [null],
+      joinDate: [new Date().toISOString()],
       note: [null, [noteMaxLengthValidator()]],
     });
   }

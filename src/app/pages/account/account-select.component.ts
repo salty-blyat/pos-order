@@ -13,6 +13,7 @@ import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { Account, AccountService } from "./account.service";
 import { AccountUiService } from "./account-ui.service";
 import { TranslateService } from "@ngx-translate/core";
+import { Filter } from "../../utils/services/base-api.service";
 
 @Component({
   providers: [
@@ -97,7 +98,10 @@ import { TranslateService } from "@ngx-translate/core";
 
   encapsulation: ViewEncapsulation.None,
 })
-export class AccountSelectComponent extends BaseSelectComponent<Account> implements OnChanges{
+export class AccountSelectComponent
+  extends BaseSelectComponent<Account>
+  implements OnChanges
+{
   constructor(
     service: AccountService,
     uiService: AccountUiService,
@@ -112,13 +116,24 @@ export class AccountSelectComponent extends BaseSelectComponent<Account> impleme
       "all-account"
     );
   }
-  @Input() parentId = 0
-
+  @Input() parentId = 0;
   isAccountAdd = signal<boolean>(true);
 
-    override search(delay: number = 50) {
+  protected override getCustomFilters(): Filter[] {
+    const filters: Filter[] = [];
+    if (this.parentId) {
+      filters.push({
+        field: "memberId",
+        operator: "eq",
+        value: this.parentId,
+      });
+    }
+    return filters;
+  }
+
+  override search(delay: number = 50) {
     if (this.isLoading()) return;
-    if(!this.parentId) return;
+    if (!this.parentId) return;
     this.isLoading.set(true);
     setTimeout(() => {
       this.param().filters = this.buildFilters();
@@ -145,6 +160,7 @@ export class AccountSelectComponent extends BaseSelectComponent<Account> impleme
     }, delay);
   }
   ngOnChanges(changes: SimpleChanges): void {
-      this.search()
+    this.selected.set(0);
+    this.search();
   }
 }

@@ -9,7 +9,7 @@ import { Offer, OfferService } from "./offer.service";
 import { OfferUiService } from "./offer-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Filter } from "../../utils/services/base-api.service";
-import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { AccountTypes, LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { NotificationService } from "../../utils/services/notification.service";
 @Component({
   selector: "app-offer-list",
@@ -112,17 +112,11 @@ import { NotificationService } from "../../utils/services/notification.service";
               <th [nzWidth]="SIZE_COLUMNS.NAME" nzEllipsis>
                 {{ "Name" | translate }}
               </th>
-              <th nzWidth="120px" nzAlign="right">
-                {{ "RedeemMinBalance" | translate }}
-              </th>
-              <th nzWidth="100px" nzAlign="center">
+              <th nzWidth="100px" nzAlign="right">
                 {{ "RedeemCost" | translate }}
               </th>
               <th nzWidth="110px" nzAlign="right">
                 {{ "RedeemedQty" | translate }}
-              </th>
-              <th nzWidth="100px" nzAlign="center">
-                {{ "AccountType" | translate }}
               </th>
               <th nzWidth="100px">
                 {{ "OfferType" | translate }}
@@ -172,23 +166,19 @@ import { NotificationService } from "../../utils/services/notification.service";
               <td nzEllipsis>
                 {{ data.name }}
               </td>
-              <td nzEllipsis nzAlign="right">{{ data.redeemMinBalance }}</td>
-              <td nzEllipsis nzAlign="center">
-                {{
-                  data.redeemCost == 0
-                    ? "Free"
-                    : (data.redeemCost | number : "1.0-2")
-                }}
+              <td nzEllipsis nzAlign="right">
+                @if(data.redeemCost == 0){
+                {{ "Free" | translate }}
+                } @else { @if (data.redeemWith == AccountTypes.Point){
+                <span> {{ data.redeemCost + " pts" }}</span>
+                } @else if (data.redeemWith == AccountTypes.Wallet){
+                <span> {{ data.redeemCost + " $" }}</span>
+                } @else {
+                <span>{{ data.redeemCost }}</span>
+                } }
               </td>
               <td nzEllipsis nzAlign="right">
                 {{ data.redeemedQty }} / {{ data.maxQty }}
-              </td>
-              <td nzEllipsis nzAlign="center">
-                {{
-                  translateService.currentLang == "km"
-                    ? data.redeemWithNameKh
-                    : data.redeemWithNameEn
-                }}
               </td>
               <td nzEllipsis>
                 {{
@@ -198,7 +188,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                 }}
               </td>
               <td nzEllipsis>{{ data.offerGroupName }}</td>
-              <td nzEllipsis nzAlign="right">
+              <td nzEllipsis>
                 {{ data.offerStartAt | customDate }} ~
                 {{ data.offerEndAt | customDate }}
               </td>
@@ -324,5 +314,6 @@ export class OfferListComponent extends BaseListComponent<Offer> {
   isOfferEdit = computed(() => true);
   isOfferRemove = computed(() => true);
   isOfferView = computed(() => true);
+  readonly AccountTypes = AccountTypes;
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }
