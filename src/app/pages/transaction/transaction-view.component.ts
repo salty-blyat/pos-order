@@ -31,7 +31,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           <nz-form-label [nzSm]="8" [nzXs]="24">
             {{ "TransNo" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
             <input
               nz-input
               formControlName="transNo"
@@ -42,9 +42,18 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 
         <nz-form-item>
           <nz-form-label [nzSm]="8" [nzXs]="24"
+            >{{ "Amount" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <input nz-input formControlName="amount" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="8" [nzXs]="24"
             >{{ "Type" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
             <app-lookup-item-select
               [lookupType]="LOOKUP_TYPE.TransactionType"
               formControlName="type"
@@ -55,7 +64,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           <nz-form-label [nzSm]="8" [nzXs]="24"
             >{{ "Date" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
+          <nz-form-control [nzSm]="14" [nzXs]="24">
             <nz-date-picker formControlName="transDate"></nz-date-picker>
           </nz-form-control>
         </nz-form-item>
@@ -63,7 +72,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           <nz-form-label [nzSm]="8" [nzXs]="24"
             >{{ "Note" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
+          <nz-form-control [nzSm]="14" [nzXs]="24">
             <textarea nz-input formControlName="note" rows="3"></textarea>
           </nz-form-control>
         </nz-form-item>

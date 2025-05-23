@@ -22,6 +22,7 @@ import { Subscription } from "rxjs";
 import { MemberAccount } from "../member/member.service";
 import { AccountUiService } from "../account/account-ui.service";
 import { TranslateService } from "@ngx-translate/core";
+import { AccountTypes } from "../lookup/lookup-type.service";
 
 @Component({
   selector: "app-transaction-list",
@@ -130,7 +131,13 @@ import { TranslateService } from "@ngx-translate/core";
                     'font-weight': 'semi-bold'
                   }"
                 >
-                   {{ data.redeemWithNameEn	 === "Point" ? (data.amount + ' pts') : (data.amount + ' $') }}
+                  @if (data.accountType == AccountTypes.Point){
+                  <span> {{ data.amount + " pts" }}</span>
+                  } @else if (data.accountType == AccountTypes.Wallet){
+                  <span> {{ data.amount + " $" }}</span>
+                  } @else {
+                  <span>{{ data.amount }}</span>
+                  }
                 </td>
                 <td nzEllipsis>{{ data.note }}</td>
                 <td nzEllipsis>{{ data.refNo }}</td>
@@ -221,4 +228,5 @@ export class TransactionListComponent
         });
     }, delay);
   }
+  readonly AccountTypes = AccountTypes;
 }

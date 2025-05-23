@@ -33,6 +33,7 @@ export interface Transaction {
   redeemWithNameEn?: string;
   redeemWithNameKh?: string;
   memberCode?: string;
+  accountType?: number;
   typeNameKh?: string;
   typeNameEn?: string;
   redeemWith?: number;

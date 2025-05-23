@@ -141,22 +141,13 @@ import { Transaction } from "../account/account.service";
                   'font-weight': 'semi-bold'
                 }"
               >
-                <!-- @if (data.redeemWith === AccountTypes.Point){
-               
-<span>              data.amount + " pts"</span>
-              } @else if (data.redeemWith === AccountTypes.Wallet){
-<span>              data.amount + " $"</span>
-               } @else {
-<span>data.amount</span>
-                
-               }
-
-              -->
-                {{
-                  data.redeemWith === AccountTypes.Point
-                    ? data.amount + " pts"
-                    : data.amount + " $"
-                }}
+                @if (data.accountType == AccountTypes.Point){
+                <span> {{data.amount + " pts"}}</span>
+                } @else if (data.accountType == AccountTypes.Wallet){
+                <span> {{data.amount + " $"}}</span>
+                } @else {
+                <span>{{data.amount}}</span>
+                }
               </td>
               <td nzEllipsis>{{ data.note }}</td>
               <td nzEllipsis>{{ data.refNo }}</td>
