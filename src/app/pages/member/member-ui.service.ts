@@ -47,7 +47,7 @@ export class MemberUiService extends BaseUiService {
     this.modalService.create({
       nzContent: MemberOperationComponent,
       nzFooter: null,
-      nzData: { id },
+      nzData: { id, isEdit: true },
       nzClosable: true,
       nzWidth: "100%",
       nzBodyStyle: this.mainPageService.getModalBodyStyle(),

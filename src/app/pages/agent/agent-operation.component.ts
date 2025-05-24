@@ -208,6 +208,9 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
       joinDate: [new Date().toISOString()],
       note: [null, [noteMaxLengthValidator()]],
     });
+     this.frm
+      .get("code")
+      ?.valueChanges.subscribe((v) => console.log(this.frm.getRawValue()));
   }
 
   override setFormValue() {

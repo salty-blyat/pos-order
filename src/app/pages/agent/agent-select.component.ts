@@ -38,7 +38,7 @@ import { AgentUiService } from "./agent-ui.service";
       ></nz-option>
       <nz-option
         *ngFor="let item of lists()"
-        [nzValue]="item.id"
+        [nzValue]="item?.id"
         [nzLabel]="item?.name + ''"
       >
       </nz-option>

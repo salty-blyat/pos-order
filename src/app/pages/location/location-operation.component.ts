@@ -144,22 +144,25 @@ export class LocationOperationComponent extends BaseOperationComponent<Location>
         [required, nameMaxLengthValidator],
         [nameExistValidator(this.service, this.modal?.id)],
       ],
-      branchId: [null],
+      branchId: [null, [required]],
       note: [null, [noteMaxLengthValidator]],
-    });
-    setTimeout(() => {
-      this.isLoading.set(true);
-      if (this.modal.branchId !== 0) {
-        this.frm.patchValue({ branchId: this.modal.branchId });
-      }
-      this.isLoading.set(false);
-    }, 50);
+    }); 
+    if (!this.modal.isEdit) {   // on edit this block set the branchId to undefined
+      setTimeout(() => {
+        this.isLoading.set(true);
+        if (this.modal.branchId !== 0) {
+          this.frm.patchValue({ branchId: this.modal.branchId });
+        }
+        this.isLoading.set(false);
+      }, 50);
+    }
   }
 
-  override setFormValue() {
+  override setFormValue() { 
     this.frm.setValue({
       code: this.model.code,
-      branchId: this.model.branchId,
+      branchId:
+        this.model.branchId !== 0 ? this.model.branchId : this.modal.branchId,
       name: this.model.name,
       note: this.model.note,
     });

@@ -37,6 +37,7 @@ import { NotificationService } from "../../utils/services/notification.service";
           <div nz-col>
             <app-branch-select
               [showAllOption]="true"
+              storageKey="branch-list-search"
               (valueChanged)="
                 branchId.set($event); param().pageIndex = 1; search()
               "
@@ -168,9 +169,11 @@ export class LocationListComponent extends BaseListComponent<Location> {
       notificationService
     );
   }
+  readonly branchIdKey = "branch-list-search";
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  readonly branchKey = this.sessionStorageService.getValue("branch-filter");
-  branchId = signal<number>(0);
+  branchId = signal<number>(
+    parseInt(this.sessionStorageService.getValue(this.branchIdKey) ?? 0)
+  );
   isLocationAdd = signal<boolean>(true);
   isLocationEdit = signal<boolean>(true);
   isLocationRemove = signal<boolean>(true);
@@ -178,9 +181,7 @@ export class LocationListComponent extends BaseListComponent<Location> {
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 
   protected override getCustomFilters(): Filter[] {
-    const filters: Filter[] = [
-      { field: "search", operator: "contains", value: this.searchText() },
-    ];
+    const filters: Filter[] = [];
     if (this.branchId()) {
       filters.push({
         field: "branchId",

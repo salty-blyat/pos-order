@@ -31,4 +31,18 @@ export class LocationUiService extends BaseUiService {
       },
     });
   }
+
+  override showEdit(id: number): void {
+    this.modalService.create({
+      nzContent: LocationOperationComponent,
+      nzData: { id, isEdit: true },
+      nzFooter: null,
+      nzClosable: true,
+      nzWidth: "450px",
+      nzMaskClosable: false,
+      nzOnOk: (e: any) => {
+        this.refresher.emit({ key: "edited", value: e.model });
+      },
+    });
+  }
 }

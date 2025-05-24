@@ -26,6 +26,7 @@ import { NotificationService } from "../../utils/services/notification.service";
           <div nz-flex nzGap="small">
             <app-filter-input
               class="fixed-width-select"
+              storageKey="member-list"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "

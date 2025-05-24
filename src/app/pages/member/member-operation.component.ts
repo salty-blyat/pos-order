@@ -7,7 +7,10 @@ import { MemberUiService } from "./member-ui.service";
 import { SettingService } from "../../app-setting";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
-import { SystemSettingService } from "../system-setting/system-setting.service";
+import {
+  SETTING_KEY,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { AuthService } from "../../helpers/auth.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -35,6 +38,8 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
       <nz-layout>
         <nz-sider nzTheme="light" class="sider-member" nzWidth="220px">
           <div class="photo">
+            @if(modal.isView){
+            <!-- view -->
             <nz-upload
               class="profile"
               [nzAction]="uploadUrl"
@@ -53,6 +58,31 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
                 <img src="./assets/image/man.png" alt="Photo" />
               </div>
             </nz-upload>
+            } @else {
+            <!-- add & edit -->
+            @if(file.length == 0 ){
+            <div
+              class="image-upload"
+              (click)="uiService.showUpload()"
+              role="button"
+              aria-label="Upload image"
+              *ngIf="file.length == 0"
+            >
+              <img src="./assets/image/man.png" alt="Photo" />
+            </div>
+            } @else {
+            <nz-upload
+              [nzAction]="uploadUrl"
+              nzListType="picture-card"
+              [(nzFileList)]="file"
+              (nzChange)="handleUpload($event)"
+              [nzShowUploadList]="
+                modal.isView ? nzShowButtonView : nzShowIconList
+              "
+              [nzShowButton]="file.length < 1"
+            >
+            </nz-upload
+            >} }
           </div>
           <div class="member-name">
             <p *ngIf="memberName === ''">
@@ -369,6 +399,24 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
+      .image-upload {
+        border: 2px dotted #ddd;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 110px;
+        height: 110px;
+        padding: 4px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: border-color 0.3s ease; /* Smooth transition */
+      }
+
+      .image-upload:hover {
+        border-color: #1890ff;
+      }
       .ant-upload-list-picture-card-container {
         margin: 0 !important;
       }
@@ -463,10 +511,15 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     showDownloadIcon: false,
   };
   selectedAccountIndex = signal<number>(0);
-
   override ngOnInit(): void {
     super.ngOnInit();
-
+    this.systemSettingService.find(SETTING_KEY.MemberAutoId).subscribe({
+      next: (value?: string) => {
+        if (Number(value) !== 0) {
+          this.frm.get("code")?.disable();
+        }
+      },
+    });
     this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];
