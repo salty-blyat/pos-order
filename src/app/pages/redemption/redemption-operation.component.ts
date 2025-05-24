@@ -16,6 +16,7 @@ import {
 import { Offer } from "../offer/offer.service";
 import { SettingService } from "../../app-setting";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-redemption-operation",
@@ -179,11 +180,11 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
                 <nz-form-control [nzXs]="19">
                   <nz-upload
                     [nzAction]="uploadUrl"
-                    [nzDisabled]="disabled"
+                    [nzDisabled]="modal?.isView"
                     [(nzFileList)]="fileList"
                     (nzChange)="handleUpload($event)"
                   >
-                    <button nz-button [disabled]="disabled">
+                    <button nz-button [disabled]="modal?.isView">
                       <i nz-icon nzType="upload"></i>
                       Upload
                     </button>
@@ -354,8 +355,41 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     });
   }
 
+  override onSubmit(e?: any) {
+    if (this.frm.valid && !this.isLoading()) {
+      let operation$: Observable<Redemption> = this.service.add({
+        ...this.frm.getRawValue(),
+        attachments: this.fileList,
+      });
+      if (this.modal?.id) {
+        operation$ = this.service.edit({
+          ...this.frm.getRawValue(),
+          id: this.modal?.id,
+          attachments: this.fileList,
+        });
+      }
+      if (e.detail === 1 || e.detail === 0) {
+        this.isLoading.set(true);
+        operation$.subscribe({
+          next: (result: Redemption) => {
+            this.model = result;
+            this.isLoading.set(false);
+            this.ref.triggerOk().then();
+          },
+          error: (error: any) => {
+            console.log(error);
+            this.isLoading.set(false);
+          },
+          complete: () => {
+            this.isLoading.set(false);
+          },
+        });
+      }
+    }
+  }
+
   override setFormValue() {
-    this.frm.setValue({
+    this.frm.patchValue({
       redeemNo: this.model.redeemNo,
       refNo: this.model.refNo,
       offerId: this.model.offerId,
@@ -368,12 +402,14 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       accountId: this.model.accountId,
       redeemedDate: this.model.redeemedDate,
     });
+    console.log(this.model.attachments);
+    
     this.fileList =
-      this.model.attachment?.map(
+      this.model.attachments?.map(
         (file, index) =>
           <NzUploadFile>{
             name:
-              this.model.attachment?.length! > 1
+              this.model.attachments?.length! > 1
                 ? this.translateService.instant("attachment") +
                   " " +
                   (index + 1)

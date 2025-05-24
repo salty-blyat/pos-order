@@ -184,10 +184,38 @@ import {
               <td nzEllipsis>{{ data.redeemedDate | customDate }}</td>
               <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
-                <a (click)="uiService.showDelete(data.id || 0)" class="delete">
-                  <i nz-icon nzType="delete" nzTheme="outline"></i>
-                  {{ "Delete" | translate }}
-                </a>
+                <nz-space [nzSplit]="spaceSplit">
+                  <ng-template #spaceSplit>
+                    <nz-divider nzType="vertical"></nz-divider>
+                  </ng-template>
+                  <ng-container *ngIf="isRedemptionEdit()">
+                    <!-- <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
+                      <i
+                        nz-icon
+                        nzType="priter"
+                        nzTheme="outline"
+                        class="edit"
+                      ></i>
+                      {{ "Print" | translate }}
+                    </a> -->
+                  </ng-container>
+                  <ng-container *ngIf="isRedemptionRemove()">
+                    <a
+                      *nzSpaceItem
+                      (click)="uiService.showDelete(data.id || 0)"
+                      nz-typography
+                      class="delete"
+                    >
+                      <i
+                        nz-icon
+                        nzType="delete"
+                        nzTheme="outline"
+                        style="padding-right: 5px"
+                      ></i>
+                      {{ "Delete" | translate }}
+                    </a>
+                  </ng-container>
+                </nz-space>
               </td>
             </tr>
           </tbody>

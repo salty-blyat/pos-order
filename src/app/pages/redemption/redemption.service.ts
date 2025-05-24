@@ -29,7 +29,7 @@ export interface Redemption {
   redeemWith?: number;
   accounntType?: number;
   memberId?: number;
-  attachment?: Attachment[];
+  attachments?: Attachment[];
 }
 
 @Injectable({
