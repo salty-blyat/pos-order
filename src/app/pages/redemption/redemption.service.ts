@@ -8,6 +8,7 @@ import {
 } from "../../utils/services/base-api.service";
 import { Observable } from "rxjs";
 import { Transaction } from "../account/account.service";
+import { Attachment } from "../member/member.service";
 
 export interface Redemption {
   accountId?: number;
@@ -28,14 +29,7 @@ export interface Redemption {
   redeemWith?: number;
   accounntType?: number;
   memberId?: number;
-  attachment?: Attachment[]; 
-}
-
-export interface Attachment {
-  uid: string;
-  url: string;
-  name: string;
-  type: string;
+  attachment?: Attachment[];
 }
 
 @Injectable({

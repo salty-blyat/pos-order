@@ -10,6 +10,8 @@ import { AuthService } from "../../helpers/auth.service";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { Observable, Observer } from "rxjs";
 import { NzMessageService } from "ng-zorro-antd/message";
+import { TranslateService } from "@ngx-translate/core";
+import { Offer } from "../offer/offer.service";
 
 @Component({
   selector: "app-offer-group-operation",
@@ -190,7 +192,8 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     private msg: NzMessageService,
     public override uiService: OfferGroupUiService,
     private settingService: SettingService,
-    private authService: AuthService
+    private authService: AuthService,
+    public translateService: TranslateService
   ) {
     super(fb, ref, service, uiService);
   }
@@ -213,11 +216,41 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
   };
   override ngOnInit(): void {
     super.ngOnInit();
+    if (this.modal?.isView) {
+      this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
+        if (e.key === "edited") {
+          this.isLoading.set(true);
+          this.service.find(this.modal?.id).subscribe({
+            next: (result: OfferGroup) => {
+              this.model = result;
+
+              this.setFormValue();
+              if (this.model.image) {
+                this.file = [
+                  {
+                    uid: "",
+                    name: this.model.name!,
+                    url: this.model.image,
+                  },
+                ];
+              } else {
+                this.file = [];
+              }
+              this.isLoading.set(false);
+            },
+            error: (err: any) => {
+              console.log(err);
+            },
+          });
+        }
+      });
+    }
     this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];
         if (e?.value) {
           this.file.push(e.value);
+          return;
         }
       }
     });
@@ -259,21 +292,47 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     });
     this.file = fileList;
   }
-  override onSubmit(e: any): void {
-    if (this.frm.valid && !this.isLoading()) {
-      this.isLoading.set(true);
-      if (this.file.length > 0) {
-        this.frm.patchValue({
-          image: this.file[0].url,
-        });
+
+  beforeUpload = (
+    file: NzUploadFile,
+    _fileList: NzUploadFile[]
+  ): Observable<boolean> =>
+    new Observable((observer: Observer<boolean>) => {
+      const isJpgOrPng =
+        file.type === "image/jpeg" || file.type === "image/png";
+      if (!isJpgOrPng) {
+        this.msg.error("You can only upload JPG or PNG files!");
+        observer.complete();
+        return;
       }
-      let operation$: Observable<OfferGroup> = this.service.add(
-        this.frm.getRawValue()
-      );
+
+      const isLt500KB = file.size! / 1024 < 500; // Convert size to KB and check
+      if (!isLt500KB) {
+        this.msg.error(
+          this.translateService.instant("Image must be smaller than 500KB")
+        );
+        observer.complete();
+        return;
+      }
+
+      observer.next(true); // File passes validation
+      observer.complete();
+    });
+
+  override onSubmit(e?: any): void {
+    if (this.frm.valid) {
+      this.isLoading.set(true);
+      let image = this.file[0]?.url;
+
+      let operation$ = this.service.add({
+        ...this.frm.getRawValue(),
+        image: image,
+      });
       if (this.modal?.id) {
         operation$ = this.service.edit({
           ...this.frm.getRawValue(),
           id: this.modal?.id,
+          image: image,
         });
       }
       if (e.detail === 1 || e.detail === 0) {
@@ -283,12 +342,9 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
             this.isLoading.set(false);
             this.ref.triggerOk().then();
           },
-          error: (error: any) => {
-            console.log(error);
+          error: (err: any) => {
             this.isLoading.set(false);
-          },
-          complete: () => {
-            this.isLoading.set(false);
+            console.log(err);
           },
         });
       }
@@ -296,10 +352,10 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
   }
 
   override setFormValue() {
-    this.frm.setValue({
-      name: this.model.name,
-      image: this.model.image,
-      note: this.model.note,
+    this.frm.patchValue({
+      name: this.model?.name,
+      image: this.model?.image,
+      note: this.model?.note,
     });
 
     if (this.model.image) {

@@ -246,9 +246,7 @@ export class LookupItemListComponent extends BaseListComponent<LookupItem> {
     });
   }
   protected override getCustomFilters(): Filter[] {
-    const filters: Filter[] = [
-      { field: "search", operator: "contains", value: this.searchText() },
-    ];
+    const filters: Filter[] = [];
     if (this.lookupTypeId()) {
       filters.push({
         field: "lookupTypeId",

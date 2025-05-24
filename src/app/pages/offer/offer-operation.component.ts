@@ -316,6 +316,35 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
         }
       },
     });
+    if (this.modal?.isView) {
+      this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
+        if (e.key === "edited") {
+          this.isLoading.set(true);
+          this.service.find(this.modal?.id).subscribe({
+            next: (result: Offer) => {
+              this.model = result;
+
+              this.setFormValue();
+              if (this.model.photo) {
+                this.file = [
+                  {
+                    uid: "",
+                    name: this.model.name!,
+                    url: this.model.photo,
+                  },
+                ];
+              } else {
+                this.file = [];
+              }
+              this.isLoading.set(false);
+            },
+            error: (err: any) => {
+              console.log(err);
+            },
+          });
+        }
+      });
+    }
     this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];
@@ -342,21 +371,20 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
     });
     this.file = fileListOfferGroupItems;
   }
-  override onSubmit(e: any): void {
-    if (this.frm.valid && !this.isLoading()) {
+  override onSubmit(e?: any): void {
+    if (this.frm.valid) {
       this.isLoading.set(true);
-      if (this.file.length > 0) {
-        this.frm.patchValue({
-          photo: this.file[0].url,
-        });
-      }
-      let operation$: Observable<Offer> = this.service.add(
-        this.frm.getRawValue()
-      );
+      let photo = this.file[0]?.url;
+
+      let operation$ = this.service.add({
+        ...this.frm.getRawValue(),
+        photo: photo,
+      });
       if (this.modal?.id) {
         operation$ = this.service.edit({
           ...this.frm.getRawValue(),
           id: this.modal?.id,
+          photo: photo,
         });
       }
       if (e.detail === 1 || e.detail === 0) {
@@ -366,17 +394,15 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
             this.isLoading.set(false);
             this.ref.triggerOk().then();
           },
-          error: (error: any) => {
-            console.log(error);
+          error: (err: any) => {
             this.isLoading.set(false);
-          },
-          complete: () => {
-            this.isLoading.set(false);
+            console.log(err);
           },
         });
       }
     }
   }
+
   override initControl(): void {
     const {
       nameMaxLengthValidator,

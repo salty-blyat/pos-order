@@ -14,6 +14,8 @@ import {
   SystemSettingService,
 } from "../system-setting/system-setting.service";
 import { Offer } from "../offer/offer.service";
+import { SettingService } from "../../app-setting";
+import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 
 @Component({
   selector: "app-redemption-operation",
@@ -30,144 +32,164 @@ import { Offer } from "../offer/offer.service";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
+
       <form
         nz-form
         [formGroup]="frm"
         [style.height.%]="100"
         [nzAutoTips]="autoTips"
       >
-        <div nz-row>
-          <div nz-col [nzXs]="24">
-            <div nz-row>
-              <div nz-col [nzXs]="12">
-                <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                    >{{ "RedeemNo" | translate }}
-                  </nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
-                    <input
-                      [autofocus]="true"
-                      nz-input
-                      formControlName="redeemNo"
-                      [placeholder]="
-                        frm.controls['redeemNo'].disabled
-                          ? ('RedeemNo' | translate)
-                          : ''
-                      "
-                    />
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
-              <div nz-col [nzXs]="12">
-                <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24"
-                    >{{ "RefNo" | translate }}
-                  </nz-form-label>
-
-                  <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <input nz-input formControlName="refNo" />
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
+        <div nz-col [nzXs]="24">
+          <div nz-row>
+            <div nz-col [nzXs]="12">
+              <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                  >{{ "RedeemNo" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
+                  <input
+                    [autofocus]="true"
+                    nz-input
+                    formControlName="redeemNo"
+                    [placeholder]="
+                      frm.controls['redeemNo'].disabled
+                        ? ('RedeemNo' | translate)
+                        : ''
+                    "
+                  />
+                </nz-form-control>
+              </nz-form-item>
             </div>
-            <div nz-row>
-              <div nz-col [nzXs]="12">
-                <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                    >{{ "Quantity" | translate }}
-                  </nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
-                    <input nz-input formControlName="qty" />
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
+            <div nz-col [nzXs]="12">
+              <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>
+                  {{ "Location" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                  <app-location-select formControlName="locationId" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
 
-              <div nz-col [nzXs]="12">
-                <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                    >{{ "Status" | translate }}
-                  </nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <app-lookup-item-select
-                      [lookupType]="LOOKUP_TYPE.RedeemStatus"
-                      formControlName="status"
-                    />
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
+          <div nz-row>
+            <div nz-col [nzXs]="12">
+              <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                  >{{ "Member" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                  <app-member-select formControlName="memberId" />
+                </nz-form-control>
+              </nz-form-item>
             </div>
 
-            <div nz-row>
-              <div nz-col [nzXs]="12">
-                <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                    >{{ "Member" | translate }}
-                  </nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <app-member-select formControlName="memberId" />
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
+            <div nz-col [nzXs]="12">
+              <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>
+                  {{ "Account" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                  <app-account-select
+                    formControlName="accountId"
+                    [parentId]="frm.get('memberId')?.value"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
 
-              <div nz-col [nzXs]="12">
-                <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                    >{{ "Offer" | translate }}
-                  </nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <app-offer-select
-                      [memberId]="frm.get('memberId')?.value"
-                      [accountId]="frm.get('accountId')?.value"
-                      formControlName="offerId"
-                      (selectedObject)="selectedOffer.set($event)"
-                    />
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
+          <div nz-row>
+            <div nz-col [nzXs]="12">
+              <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                  >{{ "Offer" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                  <app-offer-select
+                    [memberId]="frm.get('memberId')?.value"
+                    [accountId]="frm.get('accountId')?.value"
+                    formControlName="offerId"
+                    (selectedObject)="selectedOffer.set($event)"
+                  />
+                </nz-form-control>
+              </nz-form-item>
             </div>
 
-            <div nz-row>
-              <div nz-col [nzXs]="12">
-                <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>
-                    {{ "Account" | translate }}
-                  </nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <app-account-select
-                      formControlName="accountId"
-                      [parentId]="frm.get('memberId')?.value"
-                    />
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
-              <div nz-col [nzXs]="12">
-                <nz-form-item>
-                  <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>
-                    {{ "Location" | translate }}
-                  </nz-form-label>
-                  <nz-form-control [nzSm]="14" [nzXs]="24">
-                    <app-location-select formControlName="locationId" />
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
+            <div nz-col [nzXs]="12">
+              <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                  >{{ "Quantity" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
+                  <input nz-input formControlName="qty" />
+                </nz-form-control>
+              </nz-form-item>
             </div>
+          </div>
+          <div nz-row>
+            <div nz-col [nzXs]="12">
+              <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                  >{{ "Status" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                  <app-lookup-item-select
+                    [lookupType]="LOOKUP_TYPE.RedeemStatus"
+                    formControlName="status"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col [nzXs]="12">
+              <nz-form-item>
+                <nz-form-label [nzSm]="8" [nzXs]="24"
+                  >{{ "RefNo" | translate }}
+                </nz-form-label>
 
-            <div nz-row>
-              <div nz-col [nzSpan]="24">
-                <nz-form-item>
-                  <nz-form-label [nzSpan]="4"
-                    >{{ "Note" | translate }}
-                  </nz-form-label>
-                  <nz-form-control [nzXs]="19">
-                    <textarea
-                      nz-input
-                      type="text"
-                      formControlName="note"
-                      rows="3"
-                    ></textarea>
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                  <input nz-input formControlName="refNo" />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+          <div nz-row>
+            <div nz-col [nzSpan]="24">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4"
+                  >{{ "Note" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzXs]="19">
+                  <textarea
+                    nz-input
+                    type="text"
+                    formControlName="note"
+                    rows="3"
+                  ></textarea>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+          <div nz-row>
+            <div nz-col [nzSpan]="24">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="4"
+                  >{{ "Attachment" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzXs]="19">
+                  <nz-upload
+                    [nzAction]="uploadUrl"
+                    [nzDisabled]="disabled"
+                    [(nzFileList)]="fileList"
+                    (nzChange)="handleUpload($event)"
+                  >
+                    <button nz-button [disabled]="disabled">
+                      <i nz-icon nzType="upload"></i>
+                      Upload
+                    </button>
+                  </nz-upload>
+                </nz-form-control>
+              </nz-form-item>
             </div>
           </div>
         </div>
@@ -222,6 +244,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     public translateService: TranslateService,
     public memberService: MemberService,
     private authService: AuthService,
+    private settingService: SettingService,
     private systemSettingService: SystemSettingService,
     uiService: RedemptionUiService
   ) {
@@ -239,10 +262,32 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     });
   }
 
+  fileList: NzUploadFile[] = [];
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   selectedOffer = signal<Offer | null>(null);
   isRedemptionRemove = computed(() => true);
+  uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
+  disabled = false;
 
+  handleUpload(info: NzUploadChangeParam): void {
+    let fileList = [...info.fileList];
+
+    // 1. Limit 5 number of uploaded files
+    fileList = fileList.slice(-10);
+
+    // 2. Read from response and show file link
+    fileList = fileList.map((file) => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url;
+        if (file.response.name) {
+          file.name = file.response.name;
+        }
+      }
+      return file;
+    });
+    this.fileList = fileList;
+  }
   override initControl(): void {
     const { noteMaxLengthValidator, required, integerValidator } =
       CommonValidators;
@@ -259,7 +304,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         { value: this.model?.offerId ?? null, disabled: true },
         [required],
       ],
-      qty: [null, [integerValidator, required]],
+      qty: [{ value: 1, disabled: false }, [integerValidator, required]],
       amount: [null, [required, integerValidator]],
       note: [null, [noteMaxLengthValidator]],
       status: [null, [required, integerValidator]],
@@ -308,9 +353,8 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       }
     });
   }
-  override setFormValue() {
-    console.log(this.model);
 
+  override setFormValue() {
     this.frm.setValue({
       redeemNo: this.model.redeemNo,
       refNo: this.model.refNo,
@@ -324,5 +368,19 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       accountId: this.model.accountId,
       redeemedDate: this.model.redeemedDate,
     });
+    this.fileList =
+      this.model.attachment?.map(
+        (file, index) =>
+          <NzUploadFile>{
+            name:
+              this.model.attachment?.length! > 1
+                ? this.translateService.instant("attachment") +
+                  " " +
+                  (index + 1)
+                : this.translateService.instant("attachment"),
+            url: file.url,
+            uid: file.uid,
+          }
+      ) ?? [];
   }
 }

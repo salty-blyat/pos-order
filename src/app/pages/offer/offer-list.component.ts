@@ -162,6 +162,13 @@ import { NotificationService } from "../../utils/services/notification.service";
                   [src]="data.photo"
                   alt=""
                 />
+                <img
+                  *ngIf="!data.photo"
+                  class="image-list"
+                  height="42"
+                  src="./assets/image/img-not-found.jpg"
+                  alt=""
+                />
               </td>
               <td nzEllipsis>
                 {{ data.name }}
