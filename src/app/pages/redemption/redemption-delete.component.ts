@@ -5,6 +5,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
 import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
+import { finalize, Observable, of, switchMap } from "rxjs";
 
 @Component({
   selector: "app-redemption-delete",
@@ -76,13 +77,37 @@ import { RedemptionUiService } from "./redemption-ui.service";
 export class RedemptionDeleteComponent extends BaseDeleteComponent<Redemption> {
   constructor(
     service: RedemptionService,
+    public redemptionService: RedemptionService,
     uiService: RedemptionUiService,
     ref: NzModalRef<RedemptionDeleteComponent>,
     fb: FormBuilder
   ) {
     super(service, uiService, ref, fb);
   }
-
+  override ngOnInit(): void {
+    this.initControl();
+    if (this.modal.id) {
+      this.isLoading.set(true);
+      const canRemove$: Observable<{ can: boolean; message?: string }> = of({
+        can: true,
+      });
+      const find$: Observable<any> = canRemove$.pipe(
+        switchMap((x: any) => {
+          if (!x.can) {
+            this.errMessage.set(x.message);
+            this.frm.disable();
+          }
+          return this.redemptionService.find(this.modal.id);
+        })
+      );
+      find$
+        .pipe(finalize(() => this.isLoading.set(false)))
+        .subscribe((result: Redemption) => {
+          this.model = result;
+          this.setFormValue();
+        });
+    }
+  }
   override initControl() {
     const { required, noteMaxLengthValidator } = CommonValidators;
     this.frm = this.fb.group({
@@ -91,6 +116,8 @@ export class RedemptionDeleteComponent extends BaseDeleteComponent<Redemption> {
     });
   }
   override setFormValue() {
+    console.log(this.model);
+
     this.frm.setValue({
       redeemNo: this.model.redeemNo,
       note: "",

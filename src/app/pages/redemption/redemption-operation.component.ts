@@ -191,17 +191,6 @@ import { Offer } from "../offer/offer.service";
       </div>
       <div *ngIf="modal?.isView">
         <a
-          (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isRedemptionEdit()"
-        >
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Edit" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isRedemptionEdit()"
-        ></nz-divider>
-        <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
@@ -252,7 +241,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   selectedOffer = signal<Offer | null>(null);
-  isRedemptionEdit = computed(() => true);
   isRedemptionRemove = computed(() => true);
 
   override initControl(): void {
@@ -301,6 +289,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         this.frm.get("offerId")?.setValue(null);
         this.frm.get("offerId")?.disable();
       } else {
+        // add/edit state
         setTimeout(() => {
           this.frm.get("accountId")?.setValue(this.model?.accountId);
           this.frm.get("offerId")?.setValue(this.model?.offerId);

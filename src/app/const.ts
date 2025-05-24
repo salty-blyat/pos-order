@@ -112,7 +112,7 @@ export const SIZE_COLUMNS = {
   GENDER: "100px",
   NORMAL: "12%",
   FORMAT: "150px",
-  COLOR: "100px",
+  COLOR: "120px",
   SMALL: "50px",
   MEDIUM: "150px",
   LARGE: "300px",

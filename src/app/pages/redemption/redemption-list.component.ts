@@ -1,4 +1,10 @@
-import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
+import {
+  Component,
+  computed,
+  Query,
+  signal,
+  ViewEncapsulation,
+} from "@angular/core";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Observable } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
@@ -10,7 +16,11 @@ import { RedemptionUiService } from "./redemption-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { NotificationService } from "../../utils/services/notification.service";
 import { AccountTypes, LOOKUP_TYPE } from "../lookup/lookup-type.service";
-import { Filter } from "../../utils/services/base-api.service";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
+import {
+  LookupItem,
+  LookupItemService,
+} from "../lookup/lookup-item/lookup-item.service";
 
 @Component({
   selector: "app-redemption-list",
@@ -114,6 +124,7 @@ import { Filter } from "../../utils/services/base-api.service";
               <th nzWidth="120px">{{ "Location" | translate }}</th>
               <th nzWidth="150px">{{ "RedeemedDate" | translate }}</th>
               <th nzWidth="150px">{{ "Note" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
           <tbody>
@@ -137,14 +148,17 @@ import { Filter } from "../../utils/services/base-api.service";
                 <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
               </td>
               <td nzEllipsis>{{ data.offerName }}</td>
-              <td nzEllipsis>
+              <td
+                nzEllipsis
+                [ngStyle]="{ color: getStatusColor(data.status!) }"
+              >
                 {{
-                  translateService.currentLang == "km"
+                  translateService.currentLang === "km"
                     ? data.statusNameKh
                     : data.statusNameEn
                 }}
               </td>
-              <!-- <td nzEllipsis>{{ data.qty }}</td> -->
+
               <td
                 nzEllipsis
                 nzAlign="right"
@@ -169,6 +183,12 @@ import { Filter } from "../../utils/services/base-api.service";
               <td nzEllipsis>{{ data.locationName }}</td>
               <td nzEllipsis>{{ data.redeemedDate | customDate }}</td>
               <td nzEllipsis>{{ data.note }}</td>
+              <td class="col-action">
+                <a (click)="uiService.showDelete(data.id || 0)" class="delete">
+                  <i nz-icon nzType="delete" nzTheme="outline"></i>
+                  {{ "Delete" | translate }}
+                </a>
+              </td>
             </tr>
           </tbody>
         </nz-table>
@@ -186,7 +206,7 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
     private authService: AuthService,
     public translateService: TranslateService,
     sessionStorageService: SessionStorageService,
-    private activated: ActivatedRoute,
+    public lookupItemService: LookupItemService,
     notificationService: NotificationService
   ) {
     super(
@@ -210,6 +230,37 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
   offerTypeId = signal(
     parseInt(this.sessionStorageService.getValue(this.offerTypeKey) ?? 0)
   );
+  lookup = signal<LookupItem[]>([]);
+
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.getStatus();
+  }
+  getStatus() {
+    const filter: Filter[] = [
+      {
+        field: "lookupTypeId",
+        operator: "eq",
+        value: LOOKUP_TYPE.RedeemStatus,
+      },
+    ];
+    const lookupParam: QueryParam = {
+      pageSize:
+        this.sessionStorageService.getCurrentPageSizeOption(
+          this.pageSizeOptionKey()
+        ) ?? 25,
+      pageIndex: 1,
+      sorts: "",
+      filters: JSON.stringify(filter),
+    };
+    this.lookupItemService
+      .search(lookupParam)
+      .subscribe({ next: (v) => this.lookup.set(v.results) });
+  }
+  getStatusColor(statusId: number): string {
+    const found = this.lookup().find((l) => l.valueId === statusId);
+    return found?.color || "inherit";
+  }
 
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
@@ -237,6 +288,7 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
     }
     return filters;
   }
+
   isRedemptionAdd = computed(() => true);
   isRedemptionEdit = computed(() => true);
   isRedemptionRemove = computed(() => true);

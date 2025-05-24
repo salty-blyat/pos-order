@@ -69,17 +69,79 @@ import { AuthKeys } from "../../../const";
             </nz-form-item>
           </div>
           <div nz-col [nzSpan]="8" nzOffset="2">
+            <!-- <nz-form-item>
+                          <nz-form-label [nzSpan]="7">{{ "Image" | translate }}</nz-form-label>
+                          <nz-form-control>
+                              <nz-upload
+                                      *ngIf="!modal?.isView"
+                                      [nzAction]="uploadUrl"
+                                      nzListType="picture-card"
+                                      [(nzFileList)]="file"
+                                      (nzChange)="handleUploadLookupItem($event)"
+                                      [nzShowUploadList]="nzShowIconList"
+                                      [nzShowButton]="file.length < 1"
+                              >
+                                  <div>
+                                      <span nz-icon nzType="plus"></span>
+                                      <div class="upload-text">{{ "Upload" | translate }}</div>
+                                  </div>
+                              </nz-upload>
+                              <nz-upload
+                                      *ngIf="modal?.isView"
+                                      profile
+                                      [nzAction]="uploadUrl"
+                                      nzListType="picture-card"
+                                      [(nzFileList)]="file"
+                                      (nzChange)="handleUploadLookupItem($event)"
+                                      [nzShowButton]="file.length < 1"
+                                      [nzShowUploadList]="nzShowUploadList"
+                                      [nzDisabled]="true"
+                              >
+                                  <div>
+                                      <span nz-icon nzType="plus"></span>
+                                      <div class="upload-text">{{ "Upload" | translate }}</div>
+                                  </div>
+                              </nz-upload>
+                          </nz-form-control>
+                      </nz-form-item> -->
             <nz-form-item>
-              <nz-form-label [nzSpan]="7">{{
+              <nz-form-label [nzSm]="6" [nzXs]="24">{{
                 "Image" | translate
               }}</nz-form-label>
-              <nz-form-control>
+              <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="">
+                <div
+                  class="image-upload"
+                  (click)="uiService.showUpload()"
+                  role="button"
+                  aria-label="Upload image"
+                  *ngIf="!modal?.isView && file.length == 0"
+                >
+                  <i nz-icon nzType="plus"></i>
+                  <p>{{ "Upload" | translate }}</p>
+                </div>
+
+                @if(modal?.isView){
                 <nz-upload
-                  *ngIf="!modal?.isView"
                   [nzAction]="uploadUrl"
                   nzListType="picture-card"
                   [(nzFileList)]="file"
-                  (nzChange)="handleUploadLookupItem($event)"
+                  (nzChange)="handleUpload($event)"
+                  [nzShowButton]="file.length < 1"
+                  [nzShowUploadList]="nzShowButtonView"
+                  [nzDisabled]="true"
+                >
+                  <div>
+                    <span nz-icon nzType="plus"></span>
+                    <div class="upload-text">{{ "Upload" | translate }}</div>
+                  </div>
+                </nz-upload>
+                } @else {
+                <nz-upload
+                  *ngIf="file.length != 0"
+                  [nzAction]="uploadUrl"
+                  nzListType="picture-card"
+                  [(nzFileList)]="file"
+                  (nzChange)="handleUpload($event)"
                   [nzShowUploadList]="nzShowIconList"
                   [nzShowButton]="file.length < 1"
                 >
@@ -88,22 +150,7 @@ import { AuthKeys } from "../../../const";
                     <div class="upload-text">{{ "Upload" | translate }}</div>
                   </div>
                 </nz-upload>
-                <nz-upload
-                  *ngIf="modal?.isView"
-                  profile
-                  [nzAction]="uploadUrl"
-                  nzListType="picture-card"
-                  [(nzFileList)]="file"
-                  (nzChange)="handleUploadLookupItem($event)"
-                  [nzShowButton]="file.length < 1"
-                  [nzShowUploadList]="nzShowUploadList"
-                  [nzDisabled]="true"
-                >
-                  <div>
-                    <span nz-icon nzType="plus"></span>
-                    <div class="upload-text">{{ "Upload" | translate }}</div>
-                  </div>
-                </nz-upload>
+                }
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -112,7 +159,6 @@ import { AuthKeys } from "../../../const";
               }}</nz-form-label>
               <nz-form-control>
                 <nz-color-picker
-                  nzAllowClear
                   formControlName="color"
                   nzShowText
                 ></nz-color-picker>
@@ -171,24 +217,28 @@ import { AuthKeys } from "../../../const";
   `,
   styles: [
     `
-      .image-container {
+      .image-upload {
+        border: 2px dotted #ddd;
+        border-radius: 6px;
+        cursor: pointer;
+        width: 110px;
+        height: 110px;
+        padding: 20px;
+        text-align: center;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: 104px;
-        height: 104px;
-        border: 2px dotted #ddd;
-        overflow: hidden;
+        transition: border-color 0.3s ease; /* Smooth transition */
       }
 
-      .view-image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+      .image-upload:hover {
+        border-color: #rgb(131, 131, 131);
       }
     `,
   ],
   styleUrls: ["../../../../assets/scss/operation.style.scss"],
+
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
@@ -196,8 +246,8 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<LookupItemOperationComponent>,
-    service: LookupItemService,
-    uiService: LookupItemUiService,
+    override service: LookupItemService,
+    override uiService: LookupItemUiService,
     private settingService: SettingService,
     private authService: AuthService
   ) {
@@ -206,18 +256,33 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
 
   isLookupEdit = computed(() => true);
   isLookupRemove = computed(() => true);
-  image!: Image;
+
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
-  nzShowUploadList = {
+  image!: Image;
+  //view
+  nzShowButtonView = {
     showPreviewIcon: true,
     showRemoveIcon: false,
+    showDownloadIcon: false,
   };
+  // add | edit
   nzShowIconList = {
     showPreviewIcon: true,
     showRemoveIcon: true,
     showDownloadIcon: false,
   };
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.uiService.refresher.subscribe((e) => {
+      if (e.key === "upload") {
+        this.file = [];
+        if (e?.value) {
+          this.file.push(e.value);
+        }
+      }
+    });
+  }
 
   override initControl(): void {
     const {
@@ -226,6 +291,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
       required,
       noteMaxLengthValidator,
     } = CommonValidators;
+    console.log(this.modal?.lookupTypeId);
 
     this.frm = this.fb.group({
       lookupTypeId: [this.modal?.lookupTypeId],
@@ -260,7 +326,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     });
   }
 
-  handleUploadLookupItem(info: NzUploadChangeParam): void {
+  handleUpload(info: NzUploadChangeParam): void {
     let fileListLookupItems = [...info.fileList];
     // 1. Limit 5 number of uploaded files
     fileListLookupItems = fileListLookupItems.slice(-5);
@@ -277,6 +343,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     });
     this.file = fileListLookupItems;
   }
+
   override onSubmit(e: any): void {
     if (this.frm.valid) {
       this.isLoading.set(true);
@@ -291,14 +358,14 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
 
       let operation$ = this.service.add({
         ...this.frm.value,
-        image: this.image.url,
+        image: this.image,
       });
 
       if (this.model?.id) {
         operation$ = this.service.edit({
           ...this.frm.value,
           id: this.model?.id,
-          image: this.image.url,
+          image: this.image,
         });
       }
       if (e.detail === 1 || e.detail === 0) {
@@ -321,28 +388,19 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
   }
 
   override setFormValue() {
-    this.frm.setValue({
+    this.frm.patchValue({
       lookupTypeId: this.model?.lookupTypeId,
       name: this.model.name,
       nameEn: this.model.nameEn,
       ordering: this.model.ordering,
-      image: this.model.image,
       color: this.model.color,
       note: this.model.note,
     });
 
-    const imageUrl = this.model.image;
+    const imageUrl = this.model?.image;
 
     if (imageUrl) {
-      this.file = [
-        {
-          uid: "1",
-          name: "preview",
-          status: "done",
-          url: this.model.image,
-          response: { url: this.model.image },
-        },
-      ];
+      this.file = [this.model.image as unknown as NzUploadFile];
     }
   }
 }
