@@ -40,16 +40,20 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
           <div class="photo">
             @if(modal.isView){
             <!-- view -->
+            @if(file.length == 0){
+            <div class="image-no-profile" *ngIf="file.length == 0">
+              <img src="./assets/image/man.png" alt="Photo" />
+            </div>
+
+            }@else {
             <nz-upload
               class="profile"
               [nzAction]="uploadUrl"
               [(nzFileList)]="file"
-              [nzDisabled]="modal.isView"
-              [nzBeforeUpload]="beforeUpload"
+              [nzShowButton]="false"
+              [nzDisabled]="true"
               (nzChange)="handleUpload($event)"
-              [nzShowUploadList]="
-                modal.isView ? nzShowButtonView : nzShowIconList
-              "
+              [nzShowUploadList]="nzShowButtonView"
               nzListType="picture-card"
               [nzShowButton]="file.length < 1"
             >
@@ -58,7 +62,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
                 <img src="./assets/image/man.png" alt="Photo" />
               </div>
             </nz-upload>
-            } @else {
+            } } @else {
             <!-- add & edit -->
             @if(file.length == 0 ){
             <div
@@ -66,8 +70,8 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               (click)="uiService.showUpload()"
               role="button"
               aria-label="Upload image"
-              *ngIf="file.length == 0"
             >
+              <i nz-icon nzType="plus"></i>
               <img src="./assets/image/man.png" alt="Photo" />
             </div>
             } @else {
@@ -76,9 +80,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
               nzListType="picture-card"
               [(nzFileList)]="file"
               (nzChange)="handleUpload($event)"
-              [nzShowUploadList]="
-                modal.isView ? nzShowButtonView : nzShowIconList
-              "
+              [nzShowUploadList]="nzShowIconList"
               [nzShowButton]="file.length < 1"
             >
             </nz-upload
@@ -399,8 +401,16 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
+      .image-no-profile {
+        border: 2px dotted #ddd;
+        border-radius: 6px;
+        width: 110px;
+        height: 110px;
+        padding: 4px;
+      }
       .image-upload {
         border: 2px dotted #ddd;
+        color: #ddd; //for plus icon clor
         border-radius: 6px;
         cursor: pointer;
         width: 110px;
@@ -409,13 +419,45 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
         text-align: center;
         display: flex;
         flex-direction: column;
+        cursor: pointer;
         justify-content: center;
+        display: inline-block;
         align-items: center;
+        position: relative;
         transition: border-color 0.3s ease; /* Smooth transition */
       }
 
+      .image-upload::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(128, 128, 128, 0.2); /* semi-transparent gray */
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 1;
+      }
+
+      .image-upload:hover::before {
+        opacity: 1;
+      }
+
+      .image-upload img {
+        position: relative;
+        z-index: 2;
+      }
+      .image-upload i {
+        color: white;
+        top: 50%;
+        position: absolute;
+        left: 50%;
+        z-index: 3;
+        transform: translate(-50%, -50%);
+      }
       .image-upload:hover {
-        border-color: #1890ff;
+        border-color: rgb(131, 131, 131);
       }
       .ant-upload-list-picture-card-container {
         margin: 0 !important;
@@ -502,6 +544,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   //  view
   nzShowButtonView = {
     showPreviewIcon: true,
+    showDownloadIcon: false,
     showRemoveIcon: false,
   };
   // add | edit
@@ -638,28 +681,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       }
     }
   }
-
-  beforeUpload = (
-    file: NzUploadFile,
-    _fileList: NzUploadFile[]
-  ): Observable<boolean> =>
-    new Observable((observer: Observer<boolean>) => {
-      const isJpgOrPng =
-        file.type === "image/jpeg" || file.type === "image/png";
-      if (!isJpgOrPng) {
-        this.msg.error("You can only upload JPG file!");
-        observer.complete();
-        return;
-      }
-      const isLt2M = file.size! / 1024 / 1024 < 5;
-      if (!isLt2M) {
-        this.msg.error("Image must smaller than 2MB!");
-        observer.complete();
-        return;
-      }
-      observer.next(isJpgOrPng && isLt2M);
-      observer.complete();
-    });
 
   switchCurrent(index: number) {
     switch (index) {

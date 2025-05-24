@@ -138,7 +138,7 @@ export class CardOperationComponent extends BaseOperationComponent<Card> {
 
   override ngOnInit(): void {
     super.ngOnInit();
-    if (this.modal.isEdit) {
+    if (this.modal?.isEdit) {
       this.frm.get("status")?.enable();
     } else {
       this.frm.get("status")?.disable();
@@ -151,10 +151,9 @@ export class CardOperationComponent extends BaseOperationComponent<Card> {
   
 
   override initControl(): void {
-    const { required } = CommonValidators;
-    
+    const { required } = CommonValidators; 
     this.frm = this.fb.group({
-      accountId: [this.modal.accountId, [required]],
+      accountId: [this.modal?.accountId, [required]],
       cardNumber: [null, [required]],
       status: [null, [required]],
       issueDate: [new Date().toISOString(), [required]],

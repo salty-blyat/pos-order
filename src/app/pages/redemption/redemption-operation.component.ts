@@ -234,7 +234,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     public memberService: MemberService,
     private authService: AuthService,
     private systemSettingService: SystemSettingService,
-    override uiService: RedemptionUiService
+    uiService: RedemptionUiService
   ) {
     super(fb, ref, service, uiService);
   }
@@ -289,21 +289,21 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       },
     });
 
-    this.frm.get("memberId")?.valueChanges.subscribe((val) => {
-      if (!this.modal.isView) {
+    this.frm.get("memberId")?.valueChanges.subscribe((val) => { 
+      if (this.modal?.isView || !this.modal?.isView) {
         this.frm.get("accountId")?.setValue(null);
         this.frm.get("offerId")?.setValue(null);
         this.frm.get("offerId")?.disable();
       }
 
-      if (val && !this.modal.isView) {
+      if (val && !this.modal?.isView || this.modal?.isView) {
         this.frm.get("accountId")?.enable();
       }
     });
 
     this.frm.get("accountId")?.valueChanges.subscribe((val) => {
-      if (!this.modal.isView) this.frm.get("offerId")?.setValue(null);
-      if (val && !this.modal.isView) {
+      if (this.modal?.isView || !this.modal?.isView) this.frm.get("offerId")?.setValue(null);
+      if (val && !this.modal?.isView) {
         this.frm.get("offerId")?.enable();
       }
     });

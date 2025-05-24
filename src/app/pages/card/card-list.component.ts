@@ -40,7 +40,7 @@ import { Subscription } from "rxjs";
               nz-button
               nzType="primary"
               *ngIf="isCardAdd()"
-              (click)="uiService.showAdd(accountId(), memberId())"
+              (click)="uiService.showAdd('',accountId())"
             >
               <i nz-icon nzType="plus" nzTheme="outline"></i>
               {{ "Add" | translate }}
@@ -127,7 +127,7 @@ import { Subscription } from "rxjs";
                     <ng-container *ngIf="isCardEdit()">
                       <a
                         *nzSpaceItem
-                        (click)="uiService.showEdit(data.id || 0, accountId())"
+                        (click)="uiService.showEdit(data.id!, accountId())"
                         ><i
                           nz-icon
                           nzType="edit"

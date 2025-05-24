@@ -8,7 +8,8 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
 import { SettingService } from "../../app-setting";
 import { AuthService } from "../../helpers/auth.service";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { Observable } from "rxjs";
+import { Observable, Observer } from "rxjs";
+import { NzMessageService } from "ng-zorro-antd/message";
 
 @Component({
   selector: "app-offer-group-operation",
@@ -73,13 +74,12 @@ import { Observable } from "rxjs";
 
                 @if(modal?.isView){
                 <nz-upload
-                  profile
                   [nzAction]="uploadUrl"
                   nzListType="picture-card"
                   [(nzFileList)]="file"
                   (nzChange)="handleUpload($event)"
                   [nzShowButton]="file.length < 1"
-                  [nzShowUploadList]="nzShowUploadList"
+                  [nzShowUploadList]="nzShowButtonView"
                   [nzDisabled]="true"
                 >
                   <div>
@@ -89,7 +89,6 @@ import { Observable } from "rxjs";
                 </nz-upload>
                 } @else {
                 <nz-upload
-                  profile
                   *ngIf="file.length != 0"
                   [nzAction]="uploadUrl"
                   nzListType="picture-card"
@@ -158,7 +157,7 @@ import { Observable } from "rxjs";
     </div>
   `,
   styles: [
-    `  
+    `
       .image-upload {
         border: 2px dotted #ddd;
         border-radius: 6px;
@@ -188,6 +187,7 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     fb: FormBuilder,
     ref: NzModalRef<OfferGroupOperationComponent>,
     service: OfferGroupService,
+    private msg: NzMessageService,
     public override uiService: OfferGroupUiService,
     private settingService: SettingService,
     private authService: AuthService
@@ -200,16 +200,17 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
 
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
-  nzShowUploadList = {
+  nzShowButtonView = {
     showPreviewIcon: true,
     showRemoveIcon: false,
+    showDownloadIcon: false,
   };
+  // add | edit
   nzShowIconList = {
     showPreviewIcon: true,
     showRemoveIcon: true,
     showDownloadIcon: false,
   };
-
   override ngOnInit(): void {
     super.ngOnInit();
     this.uiService.refresher.subscribe((e) => {
@@ -242,11 +243,11 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
   }
 
   handleUpload(info: NzUploadChangeParam): void {
-    let fileListOfferGroupItems = [...info.fileList];
+    let fileList = [...info.fileList];
     // 1. Limit 5 number of uploaded files
-    fileListOfferGroupItems = fileListOfferGroupItems.slice(-5);
+    fileList = fileList.slice(-5);
     // 2. Read from response and show file link
-    fileListOfferGroupItems = fileListOfferGroupItems.map((file) => {
+    fileList = fileList.map((file) => {
       if (file.response) {
         // Component will show file.url as link
         file.url = file.response.url;
@@ -256,7 +257,7 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
       }
       return file;
     });
-    this.file = fileListOfferGroupItems;
+    this.file = fileList;
   }
   override onSubmit(e: any): void {
     if (this.frm.valid && !this.isLoading()) {
