@@ -400,7 +400,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
       }
 
       .sider-member {
-        height: 100vh;
+        height: calc(100vh - 160px);
         border-right: 1px solid #d9d9d9;
       }
 

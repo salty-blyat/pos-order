@@ -7,7 +7,7 @@ import { AuthService } from "../../helpers/auth.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
-import { Member, MemberAccount, MemberService } from "../member/member.service";
+import { MemberService } from "../member/member.service";
 import { TranslateService } from "@ngx-translate/core";
 import {
   SETTING_KEY,

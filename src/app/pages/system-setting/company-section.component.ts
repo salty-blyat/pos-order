@@ -133,33 +133,33 @@ import { AuthService } from "../../helpers/auth.service";
         </nz-form-control>
       </nz-form-item>
 
-      <!-- <ng-container >
-                <div class="sub-section">
-                    <h5>{{ 'Currency' | translate }}</h5>
-                </div>
+      <ng-container>
+        <div class="sub-section">
+          <h5>{{ "Currency" | translate }}</h5>
+        </div>
 
-                <nz-form-item style="margin-bottom: 10px !important;">
-                    <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-                        {{ 'MainCurrency' | translate }}
-                    </nz-form-label>
-                    <nz-form-control [nzSm]="8" [nzXs]="24">
-                        <app-currency-select
-                                formControlName="{{ SettingKey.MainCurrency }}"
-                        ></app-currency-select>
-                    </nz-form-control>
-                </nz-form-item>
+        <nz-form-item style="margin-bottom: 10px !important;">
+          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+            {{ "MainCurrency" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="8" [nzXs]="24">
+            <app-currency-select
+              formControlName="{{ SettingKey.MainCurrency }}"
+            ></app-currency-select>
+          </nz-form-control>
+        </nz-form-item>
 
-                <nz-form-item style="margin-bottom: 10px !important;">
-                    <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
-                        {{ 'SecondCurrency' | translate }}
-                    </nz-form-label>
-                    <nz-form-control [nzSm]="8" [nzXs]="24">
-                        <app-currency-select
-                                formControlName="{{ SettingKey.SecondCurrency }}"
-                        ></app-currency-select>
-                    </nz-form-control>
-                </nz-form-item>
-            </ng-container> -->
+        <nz-form-item style="margin-bottom: 10px !important;">
+          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
+            {{ "SecondCurrency" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="8" [nzXs]="24">
+            <app-currency-select
+              formControlName="{{ SettingKey.SecondCurrency }}"
+            ></app-currency-select>
+          </nz-form-control>
+        </nz-form-item>
+      </ng-container>
 
       <nz-form-item *ngIf="isCompanySettingEdit()">
         <nz-form-label [nzSm]="7" [nzXs]="24" nzNoColon></nz-form-label>
@@ -223,6 +223,8 @@ export class CompanySectionComponent extends BaseSettingSectionComponent {
     SETTING_KEY.CompanyPhone,
     SETTING_KEY.CompanyEmail,
     SETTING_KEY.CompanyWebsite,
+    SETTING_KEY.MainCurrency,
+    SETTING_KEY.SecondCurrency,
   ];
 
   isCompanySettingEdit = computed(() => true);

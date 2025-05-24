@@ -19,140 +19,150 @@ import { Subscription } from "rxjs";
 @Component({
   selector: "app-card-list",
   template: `
-    <nz-layout>
-      <nz-header>
-        <div nz-row>
-          <div nz-col>
-            <!-- <app-filter-input
+    <div *nzModalTitle class="modal-header-ellipsis">
+      {{ "TransactionHistory" | translate }}
+    </div>
+    <div class="modal-content">
+      <nz-layout>
+        <nz-header>
+          <div nz-row>
+            <div nz-col>
+              <!-- <app-filter-input
               storageKey="card-list-search"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input> -->
+            </div>
           </div>
-        </div>
-        <div>
-          <button
-            nz-button
-            nzType="primary"
-            *ngIf="isCardAdd()"
-            (click)="uiService.showAdd(accountId(), memberId())"
+          <div>
+            <button
+              nz-button
+              nzType="primary"
+              *ngIf="isCardAdd()"
+              (click)="uiService.showAdd(accountId(), memberId())"
+            >
+              <i nz-icon nzType="plus" nzTheme="outline"></i>
+              {{ "Add" | translate }}
+            </button>
+          </div>
+        </nz-header>
+        <nz-content>
+          <nz-table
+            nzSize="small"
+            style="height:auto" 
+            nzShowSizeChanger
+            #fixedTable
+            nzTableLayout="fixed"
+            [nzPageSizeOptions]="pageSizeOption()"
+            [nzData]="lists()"
+            [nzLoading]="isLoading()"
+            [nzTotal]="param().rowCount || 0"
+            [nzPageSize]="param().pageSize || 0"
+            [nzPageIndex]="param().pageIndex || 0"
+            [nzNoResult]="noResult"
+            [nzFrontPagination]="false"
+            (nzQueryParams)="onQueryParamsChange($event)"
           >
-            <i nz-icon nzType="plus" nzTheme="outline"></i>
-            {{ "Add" | translate }}
-          </button>
-        </div>
-      </nz-header>
-      <nz-content>
-        <nz-table
-          nzSize="small"
-          nzShowSizeChanger
-          #fixedTable
-          nzTableLayout="fixed"
-          [nzPageSizeOptions]="pageSizeOption()"
-          [nzData]="lists()"
-          [nzLoading]="isLoading()"
-          [nzTotal]="param().rowCount || 0"
-          [nzPageSize]="param().pageSize || 0"
-          [nzPageIndex]="param().pageIndex || 0"
-          [nzNoResult]="noResult"
-          [nzFrontPagination]="false"
-          (nzQueryParams)="onQueryParamsChange($event)"
-        >
-          <ng-template #noResult>
-            <app-no-result-found></app-no-result-found>
-          </ng-template>
-          <thead>
-            <tr>
-              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-              <th nzWidth="100px">
-                {{ "CardNumber" | translate }}
-              </th> 
-              <th [nzWidth]="SIZE_COLUMNS.NAME" nzAlign="center">
-                {{ "IssueDate" | translate }}
-              </th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME" nzAlign="center">
-                {{ "ExpiryDate" | translate }}
-              </th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Status" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let data of lists(); let i = index">
-              <td nzEllipsis>
-                {{
-                  i
-                    | rowNumber
-                      : {
-                          index: param().pageIndex || 0,
-                          size: param().pageSize || 0
-                        }
-                }}
-              </td>
-              <td nzEllipsis>
-                <span *ngIf="!isCardAdd()">{{ data.cardNumber }}</span>
-                <a *ngIf="isCardAdd()" (click)="uiService.showView(data.id!)">{{
-                  data.cardNumber
-                }}</a>
-              </td> 
+            <ng-template #noResult>
+              <app-no-result-found></app-no-result-found>
+            </ng-template>
+            <thead>
+              <tr>
+                <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+                <th nzWidth="100px">
+                  {{ "CardNumber" | translate }}
+                </th>
+                <th [nzWidth]="SIZE_COLUMNS.NAME" nzAlign="center">
+                  {{ "IssueDate" | translate }}
+                </th>
+                <th [nzWidth]="SIZE_COLUMNS.NAME" nzAlign="center">
+                  {{ "ExpiryDate" | translate }}
+                </th>
+                <th [nzWidth]="SIZE_COLUMNS.NAME">
+                  {{ "Status" | translate }}
+                </th>
+                <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of lists(); let i = index">
+                <td nzEllipsis>
+                  {{
+                    i
+                      | rowNumber
+                        : {
+                            index: param().pageIndex || 0,
+                            size: param().pageSize || 0
+                          }
+                  }}
+                </td>
+                <td nzEllipsis>
+                  <span *ngIf="!isCardAdd()">{{ data.cardNumber }}</span>
+                  <a
+                    *ngIf="isCardAdd()"
+                    (click)="uiService.showView(data.id!)"
+                    >{{ data.cardNumber }}</a
+                  >
+                </td>
 
-              <td nzEllipsis nzAlign="center">
-                {{ data.issueDate | customDate }}
-              </td>
-              <td nzEllipsis nzAlign="center">
-                {{ data.expiryDate | customDate }}
-              </td>
-              <td nzEllipsis>
-                {{
-                  translateService.currentLang == "en"
-                    ? data.statusNameEn
-                    : data.statusNameKh
-                }}
-              </td>
-              <td class="col-action">
-                <nz-space [nzSplit]="spaceSplit">
-                  <ng-template #spaceSplit>
-                    <nz-divider nzType="vertical"></nz-divider>
-                  </ng-template>
-                  <ng-container *ngIf="isCardEdit()">
-                    <a
-                      *nzSpaceItem
-                      (click)="uiService.showEdit(data.id || 0, accountId())"
-                      ><i
-                        nz-icon
-                        nzType="edit"
-                        nzTheme="outline"
-                        class="pr-sm"
-                      ></i>
-                      {{ "Edit" | translate }}
-                    </a>
-                  </ng-container>
-                  <ng-container *ngIf="isCardRemove()">
-                    <a
-                      *nzSpaceItem
-                      (click)="uiService.showDelete(data.id || 0)"
-                      nz-typography
-                      style="color: #F31313"
-                    >
-                      <i
-                        nz-icon
-                        nzType="delete"
-                        nzTheme="outline"
-                        class="pr-sm"
-                      ></i>
-                      {{ "Delete" | translate }}
-                    </a>
-                  </ng-container>
-                </nz-space>
-              </td>
-            </tr>
-          </tbody>
-        </nz-table>
-      </nz-content>
-    </nz-layout>
+                <td nzEllipsis nzAlign="center">
+                  {{ data.issueDate | customDate }}
+                </td>
+                <td nzEllipsis nzAlign="center">
+                  {{ data.expiryDate | customDate }}
+                </td>
+                <td nzEllipsis>
+                  {{
+                    translateService.currentLang == "en"
+                      ? data.statusNameEn
+                      : data.statusNameKh
+                  }}
+                </td>
+                <td class="col-action">
+                  <nz-space [nzSplit]="spaceSplit">
+                    <ng-template #spaceSplit>
+                      <nz-divider nzType="vertical"></nz-divider>
+                    </ng-template>
+                    <ng-container *ngIf="isCardEdit()">
+                      <a
+                        *nzSpaceItem
+                        (click)="uiService.showEdit(data.id || 0, accountId())"
+                        ><i
+                          nz-icon
+                          nzType="edit"
+                          nzTheme="outline"
+                          class="pr-sm"
+                        ></i>
+                        {{ "Edit" | translate }}
+                      </a>
+                    </ng-container>
+                    <ng-container *ngIf="isCardRemove()">
+                      <a
+                        *nzSpaceItem
+                        (click)="uiService.showDelete(data.id || 0)"
+                        nz-typography
+                        style="color: #F31313"
+                      >
+                        <i
+                          nz-icon
+                          nzType="delete"
+                          nzTheme="outline"
+                          class="pr-sm"
+                        ></i>
+                        {{ "Delete" | translate }}
+                      </a>
+                    </ng-container>
+                  </nz-space>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-content>
+      </nz-layout>
+    </div>
   `,
-  styleUrls: ["../../../assets/scss/list.style.scss"],
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
 })
 export class CardListComponent
