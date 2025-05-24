@@ -10,6 +10,10 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { SettingService } from "../../app-setting";
 import { Observable } from "rxjs";
+import {
+  SETTING_KEY,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 
 @Component({
   selector: "app-offer-operation",
@@ -34,7 +38,13 @@ import { Observable } from "rxjs";
                 >{{ "Code" | translate }}
               </nz-form-label>
               <nz-form-control [nzSm]="19" nzErrorTip nzHasFeedback>
-                <input nz-input formControlName="code" />
+                <input
+                  nz-input
+                  formControlName="code"
+                  [placeholder]="
+                    frm.controls['code'].disabled ? ('NewCode' | translate) : ''
+                  "
+                />
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -241,8 +251,6 @@ import { Observable } from "rxjs";
 .redeem-cost .ant-select .ant-select-selector {
   padding: 0 !important;
 }
-
-
  
   .ant-input-group-addon {
     width: 90px;
@@ -264,7 +272,7 @@ import { Observable } from "rxjs";
       }
 
       .image-upload:hover {
-        border-color: #1890ff;
+        border-color: rgb(131, 131, 131);
       }
       `,
   encapsulation: ViewEncapsulation.None,
@@ -276,6 +284,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
     service: OfferService,
     private authService: AuthService,
     private settingService: SettingService,
+    private systemSettingService: SystemSettingService,
     override uiService: OfferUiService
   ) {
     super(fb, ref, service, uiService);
@@ -300,6 +309,13 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
   };
   override ngOnInit(): void {
     super.ngOnInit();
+    this.systemSettingService.find(SETTING_KEY.OfferAutoId).subscribe({
+      next: (value?: string) => {
+        if (Number(value) !== 0) {
+          this.frm.get("code")?.disable();
+        }
+      },
+    });
     this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];
@@ -378,7 +394,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
         nameExistValidator(this.service, this.modal?.id),
       ],
       code: [
-        null,
+        { value: null, disabled: false },
         [codeMaxLengthValidator, required],
         codeExistValidator(this.service, this.modal?.id),
       ],

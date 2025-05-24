@@ -146,8 +146,9 @@ export class LocationOperationComponent extends BaseOperationComponent<Location>
       ],
       branchId: [null, [required]],
       note: [null, [noteMaxLengthValidator]],
-    }); 
-    if (!this.modal.isEdit) {   // on edit this block set the branchId to undefined
+    });
+    if (!this.modal.isEdit) {
+      // on edit this block set the branchId to undefined
       setTimeout(() => {
         this.isLoading.set(true);
         if (this.modal.branchId !== 0) {
@@ -158,11 +159,10 @@ export class LocationOperationComponent extends BaseOperationComponent<Location>
     }
   }
 
-  override setFormValue() { 
+  override setFormValue() {
     this.frm.setValue({
       code: this.model.code,
-      branchId:
-        this.model.branchId !== 0 ? this.model.branchId : this.modal.branchId,
+      branchId: this.model.branchId,
       name: this.model.name,
       note: this.model.note,
     });

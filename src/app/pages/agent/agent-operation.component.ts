@@ -6,6 +6,10 @@ import { BaseOperationComponent } from "../../utils/components/base-operation.co
 import { AuthService } from "../../helpers/auth.service";
 import { Agent, AgentService } from "./agent.service";
 import { AgentUiService } from "./agent-ui.service";
+import {
+  SETTING_KEY,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 @Component({
   selector: "app-agent-operation",
   template: ` <div *nzModalTitle class="modal-header-ellipsis">
@@ -172,6 +176,7 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
     fb: FormBuilder,
     ref: NzModalRef<AgentOperationComponent>,
     service: AgentService,
+    private systemSettingService: SystemSettingService,
     private authService: AuthService,
     uiService: AgentUiService
   ) {
@@ -179,6 +184,16 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
   }
   isAgentEdit = computed(() => true);
   isAgentRemove = computed(() => true);
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.systemSettingService.find(SETTING_KEY.AgentAutoId).subscribe({
+      next: (value?: string) => {
+        if (Number(value) !== 0) {
+          this.frm.get("code")?.disable();
+        }
+      },
+    });
+  }
 
   override initControl(): void {
     const {
@@ -193,7 +208,7 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
     } = CommonValidators;
     this.frm = this.fb.group({
       code: [
-        null,
+        { value: null, disabled: false },
         [codeMaxLengthValidator, required],
         [codeExistValidator(this.service, this.modal?.id)],
       ],
@@ -208,7 +223,7 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
       joinDate: [new Date().toISOString()],
       note: [null, [noteMaxLengthValidator()]],
     });
-     this.frm
+    this.frm
       .get("code")
       ?.valueChanges.subscribe((v) => console.log(this.frm.getRawValue()));
   }

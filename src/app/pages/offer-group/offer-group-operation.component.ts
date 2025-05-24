@@ -174,7 +174,7 @@ import { NzMessageService } from "ng-zorro-antd/message";
       }
 
       .image-upload:hover {
-        border-color: #1890ff;
+        border-color: #rgb(131, 131, 131);
       }
     `,
   ],

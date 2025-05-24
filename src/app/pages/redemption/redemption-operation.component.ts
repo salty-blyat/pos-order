@@ -22,10 +22,10 @@ import { Offer } from "../offer/offer.service";
       <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
       <span *ngIf="modal?.id && !modal?.isView"
         >{{ "Edit" | translate }}
-        {{ model?.refNo || ("Loading" | translate) }}</span
+        {{ model?.redeemNo || ("Loading" | translate) }}</span
       >
       <span *ngIf="modal?.id && modal?.isView">{{
-        model?.refNo || ("Loading" | translate)
+        model?.redeemNo || ("Loading" | translate)
       }}</span>
     </div>
     <div class="modal-content">
@@ -262,9 +262,15 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     this.frm = this.fb.group({
       redeemNo: [null, [required]],
       refNo: [null],
-      accountId: [{ value: null, disabled: true }, required],
+      accountId: [
+        { value: this.model?.accountId ?? null, disabled: true },
+        required,
+      ],
       redeemedDate: [new Date().toISOString(), required],
-      offerId: [{ value: null, disabled: true }, [required]],
+      offerId: [
+        { value: this.model?.offerId ?? null, disabled: true },
+        [required],
+      ],
       qty: [null, [integerValidator, required]],
       amount: [null, [required, integerValidator]],
       note: [null, [noteMaxLengthValidator]],
@@ -289,26 +295,33 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       },
     });
 
-    this.frm.get("memberId")?.valueChanges.subscribe((val) => { 
-      if (this.modal?.isView || !this.modal?.isView) {
+    this.frm.get("memberId")?.valueChanges.subscribe((val) => {
+      if (!this.modal?.isView) {
         this.frm.get("accountId")?.setValue(null);
         this.frm.get("offerId")?.setValue(null);
         this.frm.get("offerId")?.disable();
+      } else {
+        setTimeout(() => {
+          this.frm.get("accountId")?.setValue(this.model?.accountId);
+          this.frm.get("offerId")?.setValue(this.model?.offerId);
+        }, 50);
       }
 
-      if (val && !this.modal?.isView || this.modal?.isView) {
+      if (val && !this.modal?.isView) {
         this.frm.get("accountId")?.enable();
       }
     });
 
     this.frm.get("accountId")?.valueChanges.subscribe((val) => {
-      if (this.modal?.isView || !this.modal?.isView) this.frm.get("offerId")?.setValue(null);
+      if (!this.modal?.isView) this.frm.get("offerId")?.setValue(null);
       if (val && !this.modal?.isView) {
         this.frm.get("offerId")?.enable();
       }
     });
   }
   override setFormValue() {
+    console.log(this.model);
+
     this.frm.setValue({
       redeemNo: this.model.redeemNo,
       refNo: this.model.refNo,

@@ -27,11 +27,15 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
       <span *ngIf="modal?.id && !modal?.isView"
         >{{ "Edit" | translate
         }}{{
-          model?.code + " " + model?.name! || ("Loading" | translate)
+          model?.code && model?.name
+            ? model?.code + " " + model?.name
+            : ("Loading" | translate)
         }}</span
       >
       <span *ngIf="modal?.id && modal?.isView">{{
-        model?.code + " " + model?.name! || ("Loading" | translate)
+        model?.code && model?.name
+          ? model?.code + " " + model?.name
+          : ("Loading" | translate)
       }}</span>
     </div>
     <div class="modal-content">

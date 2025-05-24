@@ -177,7 +177,7 @@ import { AuthKeys } from "../../../const";
         align-items: center;
         width: 104px;
         height: 104px;
-        border: 1px solid #d9d9d9;
+        border: 2px dotted #ddd;
         overflow: hidden;
       }
 
