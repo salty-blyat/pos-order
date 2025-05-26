@@ -14,6 +14,7 @@ import { Account, AccountService } from "./account.service";
 import { AccountUiService } from "./account-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Filter } from "../../utils/services/base-api.service";
+import { AccountTypes } from "../lookup/lookup-type.service";
 
 @Component({
   providers: [
@@ -49,12 +50,21 @@ import { Filter } from "../../utils/services/base-api.service";
             : item.accountTypeNameEn || item.accountTypeNameKh) || ''
         "
       >
-        <div nz-flex nzAlign="center" nzGap="small">
-          {{
-            (this.translate.currentLang === "km"
-              ? item.accountTypeNameKh || item.accountTypeNameEn
-              : item.accountTypeNameEn || item.accountTypeNameKh) || ""
-          }}
+        <div nz-flex nzJustify="space-between">
+          <span>
+            {{
+              (this.translate.currentLang === "km"
+                ? item.accountTypeNameKh || item.accountTypeNameEn
+                : item.accountTypeNameEn || item.accountTypeNameKh) || ""
+            }}
+          </span>
+          <span>
+            @if (item.accountType == AccountTypes.Point){
+            <span> {{ item.balance + " pts" }}</span>
+            } @else if (item.accountType == AccountTypes.Wallet){
+            <span> {{ item.balance + " $" }}</span>
+            }
+          </span>
         </div>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
@@ -159,6 +169,8 @@ export class AccountSelectComponent
       });
     }, delay);
   }
+
+  readonly AccountTypes = AccountTypes;
   ngOnChanges(changes: SimpleChanges): void {
     this.selected.set(0);
     this.search();

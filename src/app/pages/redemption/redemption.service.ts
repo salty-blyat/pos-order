@@ -31,7 +31,7 @@ export interface Redemption {
   memberId?: number;
   attachments?: Attachment[];
 }
-
+ 
 @Injectable({
   providedIn: "root",
 })

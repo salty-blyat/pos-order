@@ -182,7 +182,9 @@ import { Observable } from "rxjs";
                     [nzAction]="uploadUrl"
                     [nzDisabled]="modal?.isView"
                     [(nzFileList)]="fileList"
+                    [nzShowUploadList]="nzShowIconList"
                     (nzChange)="handleUpload($event)"
+                    list
                   >
                     <button nz-button [disabled]="modal?.isView">
                       <i nz-icon nzType="upload"></i>
@@ -251,6 +253,11 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   ) {
     super(fb, ref, service, uiService);
   }
+  nzShowIconList = {
+    showPreviewIcon: true,
+    showRemoveIcon: false,
+    showDownloadIcon: false,
+  };
   override ngOnInit(): void {
     super.ngOnInit();
 
@@ -305,7 +312,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         { value: this.model?.offerId ?? null, disabled: true },
         [required],
       ],
-      qty: [{ value: 1, disabled: false }, [integerValidator, required]],
+      qty: [1, [integerValidator, required]],
       amount: [null, [required, integerValidator]],
       note: [null, [noteMaxLengthValidator]],
       status: [null, [required, integerValidator]],
@@ -315,15 +322,15 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
     this.frm.controls["qty"]?.valueChanges.subscribe({
       next: (qty) => {
-        const amount = this.selectedOffer()?.redeemCost! * Number(qty);
+        let amount = this.selectedOffer()?.redeemCost! * Number(qty);
         this.frm.get("amount")?.setValue(amount);
       },
     });
 
     this.frm.controls["offerId"]?.valueChanges.subscribe({
       next: () => {
-        const qty = this.frm.controls["qty"].value;
-        const amount = this.selectedOffer()?.redeemCost! * qty;
+        let qty = this.frm.controls["qty"].value;
+        let amount = this.selectedOffer()?.redeemCost! * qty;
 
         this.frm.get("amount")?.setValue(amount);
       },
@@ -402,8 +409,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       accountId: this.model.accountId,
       redeemedDate: this.model.redeemedDate,
     });
-    console.log(this.model.attachments);
-    
+
     this.fileList =
       this.model.attachments?.map(
         (file, index) =>

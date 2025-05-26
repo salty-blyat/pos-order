@@ -51,11 +51,20 @@ import { AccountTypes } from "../lookup/lookup-type.service";
         [nzValue]="item?.id"
         [nzLabel]="getRedeemLabel(item)"
       >
-        <div nz-flex nzAlign="center" nzJustify="space-between" nzGap="small">
-          <!-- <nz-avatar [nzSrc]="item.image"></nz-avatar>  -->
-          <span class="b-name">
-            {{ getRedeemLabel(item) }}
-          </span>
+        <div class="b-name" nzGap="small">
+          @if(item.redeemWith == AccountTypes.Point){
+          <div nz-flex nzAlign="center" nzJustify="space-between">
+            <span>{{ item.name }}</span>
+            <span>{{ item.redeemCost + "pts" }}</span>
+          </div>
+          } @else if(item.redeemWith == AccountTypes.Wallet){
+          <div nz-flex nzAlign="center" nzJustify="space-between">
+            <span>{{ item.name }} </span
+            ><span>
+              {{ item.redeemCost + " pts" }}
+            </span>
+          </div>
+          }
         </div>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>

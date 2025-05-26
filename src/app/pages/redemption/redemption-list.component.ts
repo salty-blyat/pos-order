@@ -75,6 +75,17 @@ import {
                 accountTypeId.set($event); param().pageIndex = 1; search()
               "
             ></app-lookup-item-select>
+
+            <app-lookup-item-select
+              class="fixed-width-select"
+              showAll="AllStatus"
+              storageKey="redemption-status-list-search"
+              [showAllOption]="true"
+              [lookupType]="LOOKUP_TYPE.RedeemStatus"
+              (valueChanged)="
+                statusId.set($event); param().pageIndex = 1; search()
+              "
+            ></app-lookup-item-select>
           </div>
           <button
             *ngIf="isRedemptionAdd()"
@@ -152,11 +163,13 @@ import {
                 nzEllipsis
                 [ngStyle]="{ color: getStatusColor(data.status!) }"
               >
-                {{
-                  translateService.currentLang === "km"
-                    ? data.statusNameKh
-                    : data.statusNameEn
-                }}
+                <span>
+                  {{
+                    translateService.currentLang === "km"
+                      ? data.statusNameKh
+                      : data.statusNameEn
+                  }}
+                </span>
               </td>
 
               <td
@@ -248,12 +261,16 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
   readonly offerGroupKey = "redemption-offer-group-list-search";
   readonly offerTypeKey = "redemption-offer-type-list-search";
   readonly accountTypeKey = "redemption-account-type-list-search";
+  readonly statusKey = "redemption-status-list-search";
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   accountTypeId = signal(
     parseInt(this.sessionStorageService.getValue(this.accountTypeKey) ?? 0)
   );
   offerGroupId = signal(
     parseInt(this.sessionStorageService.getValue(this.offerGroupKey) ?? 0)
+  );
+  statusId = signal(
+    parseInt(this.sessionStorageService.getValue(this.statusKey) ?? 0)
   );
   offerTypeId = signal(
     parseInt(this.sessionStorageService.getValue(this.offerTypeKey) ?? 0)
@@ -314,6 +331,14 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
         value: this.offerGroupId(),
       });
     }
+    if (this.statusId()) {
+      filters.push({
+        field: "status",
+        operator: "eq",
+        value: this.statusId(),
+      });
+    }
+
     return filters;
   }
 
