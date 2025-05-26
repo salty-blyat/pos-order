@@ -5,7 +5,7 @@ import { MemberOperationComponent } from "./member-operation.component";
 import { MainPageService } from "../../utils/services/main-page.service";
 import { MemberDeleteComponent } from "./member-delete.component";
 import { ItemUploadComponent } from "../offer-group/item-upload.component";
-import { TransactionListComponent } from "../transaction/transaction-list.component";
+import { AccountListComponent } from "../account/account-list.component";
 
 @Injectable({ providedIn: "root" })
 export class MemberUiService extends BaseUiService {
@@ -74,7 +74,7 @@ export class MemberUiService extends BaseUiService {
 
   showTransaction(id: number): any {
     this.modalService.create({
-      nzContent: TransactionListComponent,
+      nzContent: AccountListComponent,
       nzFooter: null,
       nzData: { id },
       nzClosable: true,

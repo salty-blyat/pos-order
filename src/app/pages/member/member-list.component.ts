@@ -123,7 +123,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                 <span>{{ data.code }}</span>
                 }
               </td>
-              <td nzEllipsis>{{ data.name }}/{{ data.latinName }}</td>
+              <td nzEllipsis>{{ data.name }}</td>
               <td nzEllipsis>{{ data.phone }}</td>
               <td nzEllipsis>{{ data.memberClassName }}</td>
               <td nzEllipsis>{{ data.agentName }}</td>

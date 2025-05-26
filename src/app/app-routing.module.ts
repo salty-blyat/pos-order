@@ -22,7 +22,6 @@ import { AgentListComponent } from "./pages/agent/agent-list.component";
 import { MemberClassListComponent } from "./pages/member-class/member-class-list.component";
 import { OfferGroupListComponent } from "./pages/offer-group/offer-group-list.component";
 import { MemberListComponent } from "./pages/member/member-list.component";
-import { AccountListComponent } from "./pages/account/account-list.component";
 import { OfferListComponent } from "./pages/offer/offer-list.component";
 import { RedemptionListComponent } from "./pages/redemption/redemption-list.component";
 
@@ -58,14 +57,10 @@ const routes: Routes = [
         component: OfferListComponent,
       },
       {
-        path: "account",
-        component: AccountListComponent,
-      },
-      {
         path: "member",
         component: MemberListComponent,
       },
-      
+
       {
         path: "redemption",
         component: RedemptionListComponent,

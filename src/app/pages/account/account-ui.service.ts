@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { NzModalService } from "ng-zorro-antd/modal";
 import { BaseUiService } from "../../utils/services/base-ui.service";
-import { AccountDeleteComponent } from "./account-delete.component";
+import { AccountTypes, TransactionTypes } from "../lookup/lookup-type.service";
 import { AccountOperationComponent } from "./account-operation.component";
-import { TransactionViewComponent } from "../transaction/transaction-view.component";
+import { MemberAccount } from "../member/member.service";
 
 @Injectable({
   providedIn: "root",
@@ -13,7 +13,7 @@ export class AccountUiService extends BaseUiService {
     super(
       modalService,
       AccountOperationComponent,
-      AccountDeleteComponent,
+      "",
       "480px",
       "480px",
       "480px",
@@ -21,28 +21,39 @@ export class AccountUiService extends BaseUiService {
     );
   }
 
-  showDeleteTransaction(id: number): void {
+  showTransaction(id: number, accountType: AccountTypes): any {
     this.modalService.create({
-      nzContent: "TransactionDeleteComponent",
-      nzData: { id },
-      nzClosable: true,
-      nzFooter: null,
-      nzWidth: "450px",
-      nzMaskClosable: false,
-      nzOnOk: (e: any) => {
-        this.refresher.emit({ key: "deleted", value: e.model });
-      },
-    });
-  }
-
-  showTransaction(id: number): any {
-    this.modalService.create({
-      nzContent: TransactionViewComponent,
-      nzData: { id, isView: true },
+      nzContent: AccountOperationComponent,
+      nzData: { id, isView: true, accountType: accountType },
       nzClosable: true,
       nzFooter: null,
       nzWidth: "480px",
       nzMaskClosable: false,
+    });
+  }
+
+  showAdjust(
+    componentId: any = "",
+    accountId: number,
+    type: TransactionTypes,
+    accountType: AccountTypes,
+    accounts: MemberAccount[]
+  ): any {
+    this.modalService.create({
+      nzContent: AccountOperationComponent,
+      nzData: {
+        type: type,
+        accountId: accountId,
+        accountType: accountType,
+        accounts: accounts,
+      },
+      nzClosable: true,
+      nzFooter: null,
+      nzWidth: "480px",
+      nzMaskClosable: false,
+      nzOnOk: (e: any) => {
+        this.refresher.emit({ key: "added", value: e.model, componentId });
+      },
     });
   }
 }

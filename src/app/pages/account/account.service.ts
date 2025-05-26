@@ -7,6 +7,7 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { SettingService } from "../../app-setting";
 import { Observable } from "rxjs";
+import { Attachment } from "../member/member.service";
 
 export interface Account {
   memberId?: number;
@@ -37,6 +38,18 @@ export interface Transaction {
   typeNameKh?: string;
   typeNameEn?: string;
   redeemWith?: number;
+}
+
+export interface TransactionAdjust {
+  transNo?: string;
+  transDate?: string;
+  accountId?: number;
+  amount?: number;
+  type?: number;
+  note?: string;
+  refNo?: string;
+  id?: number;
+  attachments?: Attachment[];
 }
 
 @Injectable({
@@ -70,10 +83,16 @@ export class AccountService extends BaseApiService<Account> {
     );
   }
 
-  // individual transaction
-  public findTransaction(id: number): Observable<Transaction> {
-    return this.httpClient.get<Transaction>(
-       `${this.settingService.setting.BASE_API_URL}/account/transaction/${id}`, 
+  override add(model: TransactionAdjust): Observable<TransactionAdjust> {
+    return this.httpClient.post<TransactionAdjust>(
+      `${this.settingService.setting.BASE_API_URL}/account/transaction`,
+      model
+    );
+  }
+
+  override find(id: number): Observable<TransactionAdjust> {
+    return this.httpClient.get<TransactionAdjust>(
+      `${this.settingService.setting.BASE_API_URL}/account/transaction/${id}`,
       this._get_httpHeader(id)
     );
   }

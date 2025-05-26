@@ -6,8 +6,6 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { Observable } from "rxjs";
-import { ActivatedRoute } from "@angular/router";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { AuthService } from "../../helpers/auth.service";
@@ -21,6 +19,7 @@ import {
   LookupItem,
   LookupItemService,
 } from "../lookup/lookup-item/lookup-item.service";
+import { getAccountBalance } from "../../utils/components/get-account-balance";
 
 @Component({
   selector: "app-redemption-list",
@@ -185,16 +184,10 @@ import {
                   'font-weight': 'semi-bold'
                 }"
               >
-                @if (data.redeemWith == AccountTypes.Point){
-                <span> {{ data.amount + " pts" }}</span>
-                } @else if (data.redeemWith == AccountTypes.Wallet){
-                <span> {{ data.amount + " $" }}</span>
-                } @else {
-                <span>{{ data.amount }}</span>
-                }
+                {{ getAccountBalance(data.redeemWith!, data.amount) }}
               </td>
               <td nzEllipsis>{{ data.locationName }}</td>
-              <td nzEllipsis>{{ data.redeemedDate | customDate }}</td>
+              <td nzEllipsis>{{ data.redeemedDate | customDateTime }}</td>
               <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
@@ -278,6 +271,15 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
   lookup = signal<LookupItem[]>([]);
 
   override ngOnInit(): void {
+    this.param.set({
+      pageSize:
+        this.sessionStorageService.getCurrentPageSizeOption(
+          this.pageSizeOptionKey()
+        ) ?? 25,
+      pageIndex: 1,
+      sorts: "-redeemedDate",
+      filters: "",
+    });
     super.ngOnInit();
     this.getStatus();
   }
@@ -348,4 +350,5 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
   isRedemptionView = computed(() => true);
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
   readonly AccountTypes = AccountTypes;
+  getAccountBalance = getAccountBalance;
 }

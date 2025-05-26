@@ -4,7 +4,11 @@ import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { AuthService } from "../../helpers/auth.service";
-import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import {
+  AccountTypes,
+  LOOKUP_TYPE,
+  RedeemStatuses,
+} from "../lookup/lookup-type.service";
 import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
 import { MemberService } from "../member/member.service";
@@ -129,19 +133,6 @@ import { Observable } from "rxjs";
             </div>
           </div>
           <div nz-row>
-            <div nz-col [nzXs]="12">
-              <nz-form-item>
-                <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                  >{{ "Status" | translate }}
-                </nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24">
-                  <app-lookup-item-select
-                    [lookupType]="LOOKUP_TYPE.RedeemStatus"
-                    formControlName="status"
-                  />
-                </nz-form-control>
-              </nz-form-item>
-            </div>
             <div nz-col [nzXs]="12">
               <nz-form-item>
                 <nz-form-label [nzSm]="8" [nzXs]="24"
@@ -312,10 +303,10 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         { value: this.model?.offerId ?? null, disabled: true },
         [required],
       ],
-      qty: [1, [integerValidator, required]],
+      qty: [{ value: 1, disabled: false }, [integerValidator, required]],
       amount: [null, [required, integerValidator]],
       note: [null, [noteMaxLengthValidator]],
-      status: [null, [required, integerValidator]],
+      status: [RedeemStatuses.Used, [required, integerValidator]],
       locationId: [null, [required, integerValidator]],
       memberId: [null, [required]],
     });
@@ -363,16 +354,23 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   override onSubmit(e?: any) {
+    let attachments = this.fileList.map((f) => ({
+      uid: f.uid,
+      url: f.url,
+      name: f.name,
+      type: f.type,
+    }));
+
     if (this.frm.valid && !this.isLoading()) {
       let operation$: Observable<Redemption> = this.service.add({
         ...this.frm.getRawValue(),
-        attachments: this.fileList,
+        attachments: attachments,
       });
       if (this.modal?.id) {
         operation$ = this.service.edit({
           ...this.frm.getRawValue(),
           id: this.modal?.id,
-          attachments: this.fileList,
+          attachments: attachments,
         });
       }
       if (e.detail === 1 || e.detail === 0) {
@@ -396,6 +394,8 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   override setFormValue() {
+    console.log(this.model);
+
     this.frm.patchValue({
       redeemNo: this.model.redeemNo,
       refNo: this.model.refNo,
@@ -412,14 +412,9 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
     this.fileList =
       this.model.attachments?.map(
-        (file, index) =>
+        (file) =>
           <NzUploadFile>{
-            name:
-              this.model.attachments?.length! > 1
-                ? this.translateService.instant("attachment") +
-                  " " +
-                  (index + 1)
-                : this.translateService.instant("attachment"),
+            name: file.name,
             url: file.url,
             uid: file.uid,
           }

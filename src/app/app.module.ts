@@ -147,13 +147,9 @@ import { ItemUploadComponent } from "./pages/offer-group/item-upload.component";
 import { OfferGroupDeleteComponent } from "./pages/offer-group/offer-group-delete.component";
 import { OfferGroupSelectComponent } from "./pages/offer-group/offer-group-select.component";
 import { AgentSelectComponent } from "./pages/agent/agent-select.component";
-import { AccountDeleteComponent } from "./pages/account/account-delete.component";
-import { AccountListComponent } from "./pages/account/account-list.component";
-import { AccountOperationComponent } from "./pages/account/account-operation.component";
 import { OfferListComponent } from "./pages/offer/offer-list.component";
 import { OfferOperationComponent } from "./pages/offer/offer-operation.component";
 import { OfferDeleteComponent } from "./pages/offer/offer-delete.component";
-import { TransactionListComponent } from "./pages/transaction/transaction-list.component";
 import { RedemptionDeleteComponent } from "./pages/redemption/redemption-delete.component";
 import { RedemptionListComponent } from "./pages/redemption/redemption-list.component";
 import { MemberOperationComponent } from "./pages/member/member-operation.component";
@@ -161,11 +157,12 @@ import { RedemptionOperationComponent } from "./pages/redemption/redemption-oper
 import { LocationSelectComponent } from "./pages/location/location-select.component";
 import { OfferSelectComponent } from "./pages/offer/offer-select.component";
 import { RedemptionHistoryComponnet } from "./pages/redemption/redemption-history.component";
-import { TransactionViewComponent } from "./pages/transaction/transaction-view.component";
 import { CardListComponent } from "./pages/card/card-list.component";
 import { CardOperationComponent } from "./pages/card/card-operation.component";
 import { CardDeleteComponent } from "./pages/card/card-delete.component";
 import { AccountSelectComponent } from "./pages/account/account-select.component";
+import { AccountListComponent } from "./pages/account/account-list.component";
+import { AccountOperationComponent } from "./pages/account/account-operation.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -304,13 +301,11 @@ export class CustomTranslate implements TranslateLoader {
     TagMultiSelectComponent,
 
     //member
-    TransactionListComponent,
     MemberListComponent,
     MemberOperationComponent,
     MemberDeleteComponent,
     MemberPullComponent,
     MemberSelectComponent,
-    TransactionViewComponent,
 
     // card
     CardListComponent,
@@ -356,7 +351,6 @@ export class CustomTranslate implements TranslateLoader {
     AgentSelectComponent,
 
     // account
-    AccountDeleteComponent,
     AccountListComponent,
     AccountOperationComponent,
     AccountSelectComponent,
@@ -429,7 +423,7 @@ export class CustomTranslate implements TranslateLoader {
     },
     DecimalPipe,
     CurrencyPipe,
-    TransparentPipe,
+    TransparentPipe, 
     provideHttpClient(withInterceptorsFromDi()),
   ],
 })

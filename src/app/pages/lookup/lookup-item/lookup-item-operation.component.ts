@@ -290,8 +290,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
       nameExistValidator,
       required,
       noteMaxLengthValidator,
-    } = CommonValidators;
-    console.log(this.modal?.lookupTypeId);
+    } = CommonValidators; 
 
     this.frm = this.fb.group({
       lookupTypeId: [this.modal?.lookupTypeId],

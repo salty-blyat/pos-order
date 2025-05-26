@@ -6,7 +6,7 @@ import { Member, MemberService } from "./member.service";
 import { MemberUiService } from "./member-ui.service";
 import { SettingService } from "../../app-setting";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
-import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { AccountTypes, LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import {
   SETTING_KEY,
   SystemSettingService,
@@ -18,6 +18,8 @@ import { Observable, Observer } from "rxjs";
 import { AccountService } from "../account/account.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
+import { AccountUiService } from "../account/account-ui.service";
+import { getAccountBalance } from "../../utils/components/get-account-balance";
 
 @Component({
   selector: "app-member-operation",
@@ -145,16 +147,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
                   style="margin-right: 8px;"
                 ></i>
                 <div>
-                  {{
-                    account.accountTypeNameEn === "Wallet"
-                      ? "$ " +
-                        (account.balance != null
-                          ? account.balance.toFixed(2)
-                          : "0.00")
-                      : account.balance != null
-                      ? account.balance + " pts"
-                      : "0 pts"
-                  }}
+                  {{ getAccountBalance(account.accountType, account.balance) }}
                 </div>
               </div>
             </li>
@@ -329,7 +322,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
             <div *ngSwitchCase="3" class="tab-content">
               <nz-tabset
                 style="margin: 0 8px;"
-                (nzSelectedIndexChange)="selectedAccountIndex.set($event)"
+                (nzSelectedIndexChange)="tabIndex = $event"
               >
                 <nz-tab
                   *ngFor="let account of sortedAccounts"
@@ -339,10 +332,10 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
                       : account.accountTypeNameEn ?? ''
                   "
                 >
-                  <app-transaction-list
+                  <app-account-list
                     [accounts]="model.accounts || []"
-                    [tabIndex]="this.selectedAccountIndex()"
-                  ></app-transaction-list>
+                    [tabIndex]="tabIndex"
+                  ></app-account-list>
                 </nz-tab>
                 <nz-tab [nzTitle]="'Redemption' | translate">
                   <app-redemption-history [memberId]="modal.id" />
@@ -520,12 +513,14 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
   encapsulation: ViewEncapsulation.None,
 })
 export class MemberOperationComponent extends BaseOperationComponent<Member> {
+
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<MemberOperationComponent>,
     service: MemberService,
     private msg: NzMessageService,
     override uiService: MemberUiService,
+    public accountUiService: AccountUiService,
     public accountService: AccountService,
     private settingService: SettingService,
     private systemSettingService: SystemSettingService,
@@ -557,9 +552,10 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     showRemoveIcon: true,
     showDownloadIcon: false,
   };
-  selectedAccountIndex = signal<number>(0);
+  tabIndex = 0;
   override ngOnInit(): void {
     super.ngOnInit();
+
     this.systemSettingService.find(SETTING_KEY.MemberAutoId).subscribe({
       next: (value?: string) => {
         if (Number(value) !== 0) {
@@ -585,6 +581,19 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       next: (event: any) => {
         this.memberNameEn = event;
       },
+    });
+    this.accountUiService.refresher.subscribe(() => {
+      // refresh the total balance after adjust/topup from account-operation
+      this.service.find(this.modal?.id).subscribe({
+        next: (result: Member) => {
+          this.model = result;
+          this.setFormValue();
+          this.isLoading.set(false);
+        },
+        error: (err: any) => {
+          console.log(err);
+        },
+      });
     });
   }
 
@@ -720,11 +729,13 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
 
   get sortedAccounts() {
     return (this.model?.accounts ?? []).slice().sort((a, b) => {
-      if (a.accountTypeNameEn === "Wallet") return -1;
-      if (b.accountTypeNameEn === "Wallet") return 1;
+      if (a.accountId === AccountTypes.Wallet) return -1;
+      if (b.accountId === AccountTypes.Wallet) return 1;
       return 0;
     });
   }
+  protected readonly AccountTypes = AccountTypes;
 
   protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
+  readonly getAccountBalance = getAccountBalance;
 }

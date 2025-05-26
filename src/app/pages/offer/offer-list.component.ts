@@ -11,6 +11,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { Filter } from "../../utils/services/base-api.service";
 import { AccountTypes, LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { NotificationService } from "../../utils/services/notification.service";
+import { getAccountBalance } from "../../utils/components/get-account-balance";
 @Component({
   selector: "app-offer-list",
   template: `
@@ -176,13 +177,8 @@ import { NotificationService } from "../../utils/services/notification.service";
               <td nzEllipsis nzAlign="right">
                 @if(data.redeemCost == 0){
                 {{ "Free" | translate }}
-                } @else { @if (data.redeemWith == AccountTypes.Point){
-                <span> {{ data.redeemCost + " pts" }}</span>
-                } @else if (data.redeemWith == AccountTypes.Wallet){
-                <span> {{ data.redeemCost + " $" }}</span>
                 } @else {
-                <span>{{ data.redeemCost }}</span>
-                } }
+                {{ getAccountBalance(data.offerType!, data.redeemCost) }}}
               </td>
               <td nzEllipsis nzAlign="right">
                 {{ data.redeemedQty }} / {{ data.maxQty }}
@@ -196,9 +192,14 @@ import { NotificationService } from "../../utils/services/notification.service";
               </td>
               <td nzEllipsis>{{ data.offerGroupName }}</td>
               <td nzEllipsis>
-                {{ data.offerStartAt | customDate }} ~
-                {{ data.offerEndAt | customDate }}
+                <span
+                  [ngStyle]="isExpired(data.offerEndAt ?? '') ? { color: 'red' } : {}"
+                >
+                  {{ data.offerStartAt | customDate }} ~
+                  {{ data.offerEndAt | customDate }}
+                </span>
               </td>
+
               <td nzEllipsis>
                 {{ data.note }}
               </td>
@@ -317,10 +318,18 @@ export class OfferListComponent extends BaseListComponent<Offer> {
     }
     return filters;
   }
+  isExpired(dateStr: string | Date): boolean {
+    if (!dateStr) return false;
+    const now = new Date();
+    const offerEnd = new Date(dateStr);
+    return offerEnd < now;
+  }
+
   isOfferAdd = computed(() => true);
   isOfferEdit = computed(() => true);
   isOfferRemove = computed(() => true);
   isOfferView = computed(() => true);
   readonly AccountTypes = AccountTypes;
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
+  getAccountBalance = getAccountBalance;
 }

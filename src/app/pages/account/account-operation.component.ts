@@ -1,12 +1,29 @@
-import { Component, computed, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
-import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
+import { CommonValidators } from "../../utils/services/common-validators";
+import {
+  SETTING_KEY,
+  SystemSettingService,
+} from "../system-setting/system-setting.service";
 import { AuthService } from "../../helpers/auth.service";
-import { Account, AccountService } from "./account.service";
+import {
+  Account,
+  AccountService,
+  Transaction,
+  TransactionAdjust,
+} from "./account.service";
 import { AccountUiService } from "./account-ui.service";
-import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import {
+  AccountTypes,
+  LOOKUP_TYPE,
+  TransactionTypes,
+} from "../lookup/lookup-type.service";
+import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
+import { SettingService } from "../../app-setting";
+import { Observable } from "rxjs";
+import { getAccountBalance } from "../../utils/components/get-account-balance";
 
 @Component({
   selector: "app-account-operation",
@@ -15,45 +32,99 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
       <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
       <span *ngIf="modal?.id && !modal?.isView"
         >{{ "Edit" | translate }}
-        {{ model?.memberId || ("Loading" | translate) }}</span
+        {{ model?.transNo || ("Loading" | translate) }}</span
       >
       <span *ngIf="modal?.id && modal?.isView">{{
-        model?.memberId || ("Loading" | translate)
+        model?.transNo || ("Loading" | translate)
       }}</span>
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
+
+      <form
+        nz-form
+        [formGroup]="frm"
+        [style.height.%]="100"
+        [nzAutoTips]="autoTips"
+      >
         <nz-form-item>
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired
-            >{{ "MemberId" | translate }}
+          <nz-form-label [nzSm]="8" [nzXs]="24">
+            {{ "TransNo" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzHasFeedback>
-            <input nz-input formControlName="memberId" />
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <input
+              nz-input
+              formControlName="transNo"
+              [placeholder]="
+                frm.controls['transNo'].disabled ? ('TransNo' | translate) : ''
+              "
+            />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired
-            >{{ "AccountType" | translate }}
+          <nz-form-label [nzSm]="8" [nzXs]="24">
+            {{ "Amount" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-input-group [nzAddOnAfter]="addOnAfterTemplate">
+              <input nz-input formControlName="amount" />
+            </nz-input-group>
+          </nz-form-control>
+
+          <ng-template #addOnAfterTemplate>
+            <span>
+              {{ modal?.accountType == AccountTypes.Wallet ? "$" : " pts" }}
+            </span>
+          </ng-template>
+        </nz-form-item>
+
+        <nz-form-item *ngIf="modal?.isView">
+          <nz-form-label [nzSm]="8" [nzXs]="24"
+            >{{ "Type" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
             <app-lookup-item-select
-              formControlName="accountType"
-              [lookupType]="LOOKUP_TYPE.AccountType"
-            >
-            </app-lookup-item-select>
+              [lookupType]="LOOKUP_TYPE.TransactionType"
+              formControlName="type"
+            />
           </nz-form-control>
         </nz-form-item>
-        <nz-form-item *ngIf="frm.get('accountType')?.value !== wallet">
-          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired
-            >{{ "mainAccountId " | translate }}
+        <nz-form-item *ngIf="modal?.isView">
+          <nz-form-label [nzSm]="8" [nzXs]="24"
+            >{{ "Date" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
-            <!-- <app-account-select
-              formControlName="mainAccountId" 
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-date-picker formControlName="transDate"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-label [nzSm]="8" [nzXs]="24"
+            >{{ "Note" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <textarea nz-input formControlName="note" rows="3"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="8" [nzXs]="24"
+            >{{ "Attachment" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <nz-upload
+              [nzAction]="uploadUrl"
+              [nzDisabled]="modal?.isView"
+              [(nzFileList)]="fileList"
+              [nzShowUploadList]="nzShowIconList"
+              (nzChange)="handleUpload($event)"
+              list
             >
-            </app-account-select> -->
+              <button nz-button [disabled]="modal?.isView">
+                <i nz-icon nzType="upload"></i>
+                Upload
+              </button>
+            </nz-upload>
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -74,30 +145,6 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
         </button>
       </div>
       <div *ngIf="modal?.isView">
-        <a
-          (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isAccountEdit()"
-        >
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Edit" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isAccountEdit()"
-        ></nz-divider>
-        <a
-          nz-typography
-          nzType="danger"
-          (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isAccountRemove()"
-        >
-          <i nz-icon nzType="delete" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Delete" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isAccountRemove()"
-        ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
           <span class="action-text"> {{ "Close" | translate }}</span>
@@ -109,37 +156,139 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class AccountOperationComponent extends BaseOperationComponent<Account> {
+export class AccountOperationComponent extends BaseOperationComponent<TransactionAdjust> {
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<AccountOperationComponent>,
-    service: AccountService,
-    private authService: AuthService,
-    uiService: AccountUiService
+    override service: AccountService,
+    override uiService: AccountUiService,
+    private systemSettingService: SystemSettingService,
+    private settingService: SettingService,
+    private authService: AuthService
   ) {
     super(fb, ref, service, uiService);
   }
-  wallet = 1;
-  isAccountEdit = computed(() => true);
-  isAccountRemove = computed(() => true);
+  fileList: NzUploadFile[] = [];
+  uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
+  disabled = false;
+  nzShowIconList = {
+    showPreviewIcon: true,
+    showRemoveIcon: false,
+    showDownloadIcon: false,
+  };
+  isTransactionRemove = computed(() => true);
+
   override ngOnInit(): void {
-    super.ngOnInit(); 
+    super.ngOnInit();
+    console.log(this.modal);
+
+    this.systemSettingService.find(SETTING_KEY.TransNoAutoId).subscribe({
+      next: (value?: string) => {
+        if (Number(value) !== 0) {
+          this.frm.get("transNo")?.disable();
+        }
+      },
+    });
   }
+
+  override onSubmit(e?: any) {
+    let attachments = this.fileList.map((f) => ({
+      uid: f.uid,
+      url: f.url,
+      name: f.name,
+      type: f.type,
+    }));
+    console.log(e);
+
+    if (this.frm.valid && !this.isLoading()) {
+      let operation$: Observable<TransactionAdjust> = this.service.add({
+        ...this.frm.getRawValue(),
+        attachments: attachments,
+      });
+      if (this.modal?.id) {
+        operation$ = this.service.edit({
+          ...this.frm.getRawValue(),
+          id: this.modal?.id,
+          attachments: attachments,
+        });
+      }
+      if (e.detail === 1 || e.detail === 0) {
+        this.isLoading.set(true);
+        operation$.subscribe({
+          next: (result: TransactionAdjust) => {
+            this.model = result;
+            this.isLoading.set(false);
+            this.ref.triggerOk().then();
+          },
+          error: (error: any) => {
+            console.log(error);
+            this.isLoading.set(false);
+          },
+          complete: () => {
+            this.isLoading.set(false);
+          },
+        });
+      }
+    }
+  }
+
+  handleUpload(info: NzUploadChangeParam): void {
+    let fileList = [...info.fileList];
+
+    // 1. Limit 5 number of uploaded files
+    fileList = fileList.slice(-10);
+
+    // 2. Read from response and show file link
+    fileList = fileList.map((file) => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url;
+        if (file.response.name) {
+          file.name = file.response.name;
+        }
+      }
+      return file;
+    });
+    this.fileList = fileList;
+  }
+
   override initControl(): void {
-    const { codeMaxLengthValidator, codeExistValidator, required } =
+    const { noteMaxLengthValidator, priceValidator, required } =
       CommonValidators;
     this.frm = this.fb.group({
-      memberId: [null, [codeMaxLengthValidator(), required]],
-      accountType: [null, [required]],
-      mainAccountId: [null, [required]],
+      transNo: [null, required],
+      transDate: [new Date().toISOString()],
+      accountId: [this.modal.accountId, required],
+      amount: [{ value: 1, disabled: false }, [required]],
+      type: [this.modal.type, required],
+      note: [null, noteMaxLengthValidator],
+      refNo: [null],
     });
   }
+
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
-  override setFormValue() {
-    this.frm.setValue({
-      memberId: this.model.memberId,
-      accountType: this.model.accountType,
-      mainAccountId: this.model.mainAccountId,
+  readonly TransactionTypes = TransactionTypes;
+  AccountTypes = AccountTypes;
+  getAccountBalance = getAccountBalance;
+
+  override setFormValue(): void {
+    this.frm.patchValue({
+      transNo: this.model.transNo,
+      transDate: this.model.transDate,
+      accountId: this.model.accountId,
+      amount: this.model.amount,
+      type: this.model.type,
+      note: this.model.note,
+      refNo: this.model.refNo,
     });
+    this.fileList =
+      this.model.attachments?.map(
+        (file) =>
+          <NzUploadFile>{
+            name: file.name,
+            url: file.url,
+            uid: file.uid,
+          }
+      ) ?? [];
   }
 }

@@ -1,8 +1,11 @@
 import {
   Component,
   computed,
+  Input,
   input,
+  OnChanges,
   signal,
+  SimpleChanges,
   ViewEncapsulation,
 } from "@angular/core";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -19,6 +22,7 @@ import { AccountTypes, LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { AccountUiService } from "../account/account-ui.service";
 import { Transaction } from "../account/account.service";
+import { getAccountBalance } from "../../utils/components/get-account-balance";
 
 @Component({
   selector: "app-redemption-history",
@@ -79,7 +83,7 @@ import { Transaction } from "../account/account.service";
               <th nzWidth="100px">
                 {{ "TransNo" | translate }}
               </th>
-              <th nzWidth="100px">
+              <th nzWidth="150px">
                 {{ "Date" | translate }}
               </th>
               <th nzWidth="100px">
@@ -112,7 +116,9 @@ import { Transaction } from "../account/account.service";
               <td nzEllipsis="">
                 <a
                   *ngIf="isRedemptionHistoryView()"
-                  (click)="uiService.showTransaction(data.id || 0)"
+                  (click)="
+                    uiService.showTransaction(data.id || 0, data.accountType!)
+                  "
                   >{{ data.transNo }}</a
                 >
                 <span *ngIf="!isRedemptionHistoryView()">{{
@@ -120,7 +126,7 @@ import { Transaction } from "../account/account.service";
                 }}</span>
               </td>
 
-              <td nzEllipsis>{{ data.transDate | customDate }}</td>
+              <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
               <td nzEllipsis>
                 {{
                   translateService.currentLang == "en"
@@ -141,13 +147,7 @@ import { Transaction } from "../account/account.service";
                   'font-weight': 'semi-bold'
                 }"
               >
-                @if (data.accountType == AccountTypes.Point){
-                <span> {{data.amount + " pts"}}</span>
-                } @else if (data.accountType == AccountTypes.Wallet){
-                <span> {{data.amount + " $"}}</span>
-                } @else {
-                <span>{{data.amount}}</span>
-                }
+                {{ getAccountBalance(data.accountType!, data.amount) }}
               </td>
               <td nzEllipsis>{{ data.note }}</td>
               <td nzEllipsis>{{ data.refNo }}</td>
@@ -176,7 +176,7 @@ import { Transaction } from "../account/account.service";
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class RedemptionHistoryComponnet extends BaseListComponent<Transaction> {
+export class RedemptionHistoryComponnet extends BaseListComponent<Transaction> implements OnChanges {
   constructor(
     override service: RedemptionService,
     override uiService: AccountUiService,
@@ -197,6 +197,12 @@ export class RedemptionHistoryComponnet extends BaseListComponent<Transaction> {
 
   memberId = input(0);
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["tabIndex"]) {
+      this.search();
+    }
+  }
+
   override ngOnInit(): void {
     this.refreshSub = this.uiService?.refresher?.subscribe(() => {
       this.search();
@@ -215,7 +221,7 @@ export class RedemptionHistoryComponnet extends BaseListComponent<Transaction> {
     return filters;
   }
   override search(delay: number = 50) {
-    if (this.isLoading()) return;
+    if (this.isLoading()) return; 
     this.isLoading.set(true);
     setTimeout(() => {
       this.param().filters = this.buildFilters();
@@ -239,4 +245,5 @@ export class RedemptionHistoryComponnet extends BaseListComponent<Transaction> {
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   readonly AccountTypes = AccountTypes;
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
+  getAccountBalance = getAccountBalance;
 }
