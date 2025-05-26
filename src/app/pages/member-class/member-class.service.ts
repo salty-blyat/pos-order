@@ -7,6 +7,7 @@ export interface MemberClass {
   id?: number;
   code?: string;
   name?: string;
+  photo?: string;
   note?: string;
 }
 

@@ -15,8 +15,16 @@ nz-header{
       min-width: 220px;
       max-width: 240px;
     }
-  }
+  } 
+}
 
+.image {
+  padding: 0 !important;
+}
+
+.image-list {
+  height: 38px;
+  object-fit: scale-down;
 }
  
  .fixed-width-select {

@@ -74,7 +74,11 @@ import { NotificationService } from "../../utils/services/notification.service";
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.IMAGE" nzAlign="center">
+                {{ "Image" | translate }}
+              </th>
               <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
+
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION" nzAlign="right"></th>
@@ -106,6 +110,22 @@ import { NotificationService } from "../../utils/services/notification.service";
                         }
                 }}
               </td>
+              <td nzEllipsis class="image" nzAlign="center">
+                <img
+                  *ngIf="data.photo"
+                  class="image-list"
+                  height="42"
+                  [src]="data.photo"
+                  alt=""
+                />
+                <img
+                  *ngIf="!data.photo"
+                  class="image-list"
+                  height="42"
+                  src="./assets/image/img-not-found.jpg"
+                  alt=""
+                />
+              </td>
               <td nzEllipsis style="flex: 1">
                 <a
                   *ngIf="isMemberClassView()"
@@ -114,9 +134,11 @@ import { NotificationService } from "../../utils/services/notification.service";
                 >
                 <span *ngIf="!isMemberClassView()"> {{ data.code }}</span>
               </td>
+
               <td nzEllipsis style="flex: 3">
                 {{ data.name }}
               </td>
+
               <td nzEllipsis style="flex: 3">{{ data.note }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
@@ -160,6 +182,18 @@ import { NotificationService } from "../../utils/services/notification.service";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  styles: [
+    `
+      .image {
+        padding: 0 !important;
+      }
+
+      .image-list {
+        height: 38px;
+        object-fit: scale-down;
+      }
+    `,
+  ],
   encapsulation: ViewEncapsulation.None,
 })
 export class MemberClassListComponent extends BaseListComponent<MemberClass> {

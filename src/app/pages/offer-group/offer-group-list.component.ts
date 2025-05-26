@@ -1,10 +1,4 @@
-import {
-  Component,
-  computed,
-  signal,
-  ViewChild,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { OfferGroup, OfferGroupService } from "./offer-group.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
@@ -12,8 +6,6 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { AuthService } from "../../helpers/auth.service";
-import { Filter, QueryParam } from "../../utils/services/base-api.service";
-import { LookupItem } from "../lookup/lookup-item/lookup-item.service";
 import { Observable } from "rxjs";
 import { NotificationService } from "../../utils/services/notification.service";
 

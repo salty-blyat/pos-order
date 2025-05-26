@@ -635,19 +635,19 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     }, 50);
   }
 
-  override setFormValue(model?: Member) {
+  override setFormValue() {
     this.frm.patchValue({
-      id: this.model?.id,
-      code: this.model?.code,
-      name: this.model?.name,
-      latinName: this.model?.latinName,
-      email: this.model?.email,
-      phone: this.model?.phone,
-      address: this.model?.address,
-      birthDate: this.model?.birthDate,
-      agentId: this.model?.agentId,
-      memberClassId: this.model?.memberClassId,
-      photo: this.model?.photo,
+      id: this.model.id,
+      code: this.model.code,
+      name: this.model.name,
+      latinName: this.model.latinName,
+      email: this.model.email,
+      phone: this.model.phone,
+      address: this.model.address,
+      birthDate: this.model.birthDate,
+      agentId: this.model.agentId,
+      memberClassId: this.model.memberClassId,
+      photo: this.model.photo,
     });
 
     if (this.model.photo) {

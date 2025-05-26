@@ -60,6 +60,7 @@ import { Offer } from "../offer/offer.service";
               </nz-form-control>
             </nz-form-item>
           </div>
+
           <div nz-col [nzSpan]="4" nzOffset="1">
             <nz-form-item>
               <nz-form-control>
@@ -293,31 +294,7 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     this.file = fileList;
   }
 
-  beforeUpload = (
-    file: NzUploadFile,
-    _fileList: NzUploadFile[]
-  ): Observable<boolean> =>
-    new Observable((observer: Observer<boolean>) => {
-      const isJpgOrPng =
-        file.type === "image/jpeg" || file.type === "image/png";
-      if (!isJpgOrPng) {
-        this.msg.error("You can only upload JPG or PNG files!");
-        observer.complete();
-        return;
-      }
-
-      const isLt500KB = file.size! / 1024 < 500; // Convert size to KB and check
-      if (!isLt500KB) {
-        this.msg.error(
-          this.translateService.instant("Image must be smaller than 500KB")
-        );
-        observer.complete();
-        return;
-      }
-
-      observer.next(true); // File passes validation
-      observer.complete();
-    });
+ 
 
   override onSubmit(e?: any): void {
     if (this.frm.valid) {
