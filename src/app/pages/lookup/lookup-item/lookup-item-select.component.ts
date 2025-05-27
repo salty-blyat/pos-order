@@ -34,42 +34,38 @@ import { AuthKeys } from "../../../const";
       (ngModelChange)="onModalChange()"
       (nzOnSearch)="searchText.set($event); param().pageIndex = 1; search()"
       [nzDisabled]="disabled()"
-      [nzCustomTemplate]="customTemplate"
     >
       <nz-option
         *ngIf="showAllOption()"
         [nzValue]="0"
         [nzLabel]="typeLabelAll() ? typeLabelAll() : (showAll() | translate)"
       ></nz-option>
-      <ng-container *ngIf="lookupType() !== LOOKUP_TYPE.AccountType">
-        <nz-option
-          *ngFor="let item of lists()"
-          [nzValue]="item.valueId"
-          nzCustomContent
-          [nzLabel]="
-            (this.translate.currentLang === 'km'
-              ? item.name || item.nameEn
-              : item.nameEn || item.name) || ''
-          "
-        >
-          <div class="option-container">
-            <!-- <div class="image-container" *ngIf="item.image">
+      <!-- <ng-container *ngIf="lookupType() !== LOOKUP_TYPE.AccountType"> -->
+      <nz-option
+        *ngFor="let item of lists()"
+        [nzValue]="item.valueId"
+        nzCustomContent
+        [nzLabel]="
+          (this.translate.currentLang === 'km'
+            ? item.name || item.nameEn
+            : item.nameEn || item.name) || ''
+        "
+      >
+        <div class="option-container">
+          <!-- <div class="image-container" *ngIf="item.image">
               <img *ngIf="item.image" [src]="item.image.url" alt="" />
             </div> -->
-            <span
-              [ngStyle]="{ color: item.color ?? '#000000D9' }"
-              class="option-text"
-            >
-              {{
-                (this.translate.currentLang === "km"
-                  ? item.name || item.nameEn
-                  : item.nameEn || item.name) || ""
-              }}
-            </span>
-          </div>
-        </nz-option>
-      </ng-container>
-      <ng-container *ngIf="lookupType() == LOOKUP_TYPE.AccountType">
+          <span class="option-text">
+            {{
+              (this.translate.currentLang === "km"
+                ? item.name || item.nameEn
+                : item.nameEn || item.name) || ""
+            }}
+          </span>
+        </div>
+      </nz-option>
+      <!-- </ng-container> -->
+      <!-- <ng-container *ngIf="lookupType() == LOOKUP_TYPE.AccountType">
         <nz-option
           *ngFor="let item of lists(); let i = index"
           nzCustomContent
@@ -81,18 +77,8 @@ import { AuthKeys } from "../../../const";
           "
         >
           <div class="option-container">
-            <!-- <div class="image-container">
-              <img *ngIf="item.image" [src]="item.image.url" alt="" />
-              <img
-                *ngIf="!item.image"
-                src="./assets/image/img-not-found.jpg"
-                alt=""
-              />
-            </div> -->
-            <span
-              [ngStyle]="{ color: item.color ?? '#000000D9' }"
-              class="option-text"
-            >
+          
+            <span class="option-text">
               {{
                 (this.translate.currentLang === "km"
                   ? item.name || item.nameEn
@@ -101,7 +87,7 @@ import { AuthKeys } from "../../../const";
             </span>
           </div>
         </nz-option>
-      </ng-container>
+      </ng-container> -->
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
         <i nz-icon nzType="loading" class="loading-icon"></i>
         {{ "Loading" | translate }}
@@ -140,7 +126,6 @@ import { AuthKeys } from "../../../const";
       .image-container {
         height: 22px;
         width: 22px;
-        border-radius: 50%;
       }
 
       .image-container img {
@@ -148,7 +133,6 @@ import { AuthKeys } from "../../../const";
         object-fit: cover;
         height: 100%;
         overflow: hidden;
-        border-radius: 50%;
       }
 
       .option-text {

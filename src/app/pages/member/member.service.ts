@@ -23,7 +23,7 @@ export interface Member {
 }
 
 export interface MemberAccount {
-accountType: any;
+  accountType: any;
   accountId?: number;
   balance?: number;
   accountTypeNameKh?: string;

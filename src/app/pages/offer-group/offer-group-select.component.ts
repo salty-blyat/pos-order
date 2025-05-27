@@ -40,9 +40,16 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
         [nzValue]="item.id"
         [nzLabel]="item?.name + ''"
       >
-        <div nz-flex nzAlign="center" nzGap="small">
-          <!-- <nz-avatar [nzSrc]="item.image"></nz-avatar>  -->
-            <span class="b-name"> {{ item.name }} </span> 
+        <div class="b-name  option-container " nz-flex nzGap="small">
+          <div class="image-container">
+            <img *ngIf="item.image" [src]="item.image" alt="" />
+            <img
+              *ngIf="!item.image"
+              src="./assets/image/img-not-found.jpg"
+              alt=""
+            />
+          </div>
+          <span>{{ item.name }}</span>
         </div>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
@@ -71,15 +78,27 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
         padding: 6px 8px;
         display: block;
       }
-      .b-code {
-        font-weight: bolder;
+
+      .option-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
-      .b-name {
-        font-size: 12px;
-        padding-left: 5px;
+
+      .image-container {
+        height: 22px;
+        width: 22px;
       }
-      ::ng-deep cdk-virtual-scroll-viewport {
-        min-height: 34px;
+
+      .image-container img {
+        width: 100%;
+        object-fit: cover;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .option-text {
+        font-size: 14px;
       }
     `,
   ],

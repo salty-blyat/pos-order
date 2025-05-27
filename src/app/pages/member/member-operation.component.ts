@@ -141,7 +141,9 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 <i
                   nz-icon
                   [nzType]="
-                    account.accountTypeNameEn === 'Wallet' ? 'wallet' : 'star'
+                    account.accountType == AccountTypes.Wallet
+                      ? 'wallet'
+                      : 'star'
                   "
                   nzTheme="outline"
                   style="margin-right: 8px;"
@@ -513,7 +515,6 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
   encapsulation: ViewEncapsulation.None,
 })
 export class MemberOperationComponent extends BaseOperationComponent<Member> {
-
   constructor(
     fb: FormBuilder,
     ref: NzModalRef<MemberOperationComponent>,
@@ -735,7 +736,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     });
   }
   protected readonly AccountTypes = AccountTypes;
-
   protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
   readonly getAccountBalance = getAccountBalance;
 }

@@ -1,6 +1,9 @@
 import {
   Component,
+  EventEmitter,
   forwardRef,
+  output,
+  Output,
   signal,
   ViewEncapsulation,
 } from "@angular/core";
@@ -9,7 +12,7 @@ import { Member, MemberService } from "./member.service";
 import { MemberUiService } from "./member-ui.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { QueryParam } from "../../utils/services/base-api.service";
+import { QueryParam } from "../../utils/services/base-api.service";  
 
 @Component({
   providers: [
@@ -42,6 +45,11 @@ import { QueryParam } from "../../utils/services/base-api.service";
         [nzLabel]="item?.name + ''"
       >
         <div nz-flex nzAlign="center" nzGap="small">
+          <nz-avatar
+            nzSize="small"
+            nzIcon="user"
+            [nzSrc]="item.photo"
+          ></nz-avatar>
           <span class="b-name"> {{ item.name }}</span>
         </div>
       </nz-option>
@@ -100,11 +108,13 @@ export class MemberSelectComponent extends BaseSelectComponent<Member> {
       "all-member"
     );
   }
- override param = signal<QueryParam>({
+ 
+  override param = signal<QueryParam>({
     pageSize: 25,
     pageIndex: 1,
     sorts: "",
     filters: "",
   });
+
   isMemberAdd = signal<boolean>(true);
 }

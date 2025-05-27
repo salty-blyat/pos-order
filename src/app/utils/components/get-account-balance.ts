@@ -1,7 +1,7 @@
 import { AccountTypes } from "../../pages/lookup/lookup-type.service";
 
 export function getAccountBalance(
-  type: AccountTypes,
+  type: number,
   balance: number | null | undefined
 ): string {
   const safeBalance = balance != null ? balance : 0;

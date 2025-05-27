@@ -37,7 +37,7 @@ import { AccountTypes } from "../lookup/lookup-type.service";
       (ngModelChange)="onModalChange()"
       (nzOnSearch)="searchText.set($event); param().pageIndex = 1; search()"
       [nzDisabled]="disabled()"
-      >​
+    >
       <nz-option
         *ngIf="showAllOption()"
         style="width:300px !important"
@@ -46,24 +46,24 @@ import { AccountTypes } from "../lookup/lookup-type.service";
       ></nz-option>
       <nz-option
         *ngFor="let item of lists()"
-        style="width:300px !important"
         nzCustomContent
         [nzValue]="item?.id"
         [nzLabel]="getRedeemLabel(item)"
       >
-        <div class="b-name" nzGap="small">
+        <div class="b-name option-container" nz-flex nzGap="small">
+          <div class="image-container">
+            <img *ngIf="item.photo" [src]="item.photo" alt="" />
+            <img
+              *ngIf="!item.photo"
+              src="./assets/image/img-not-found.jpg"
+              alt=""
+            />
+          </div>
           @if(item.redeemWith == AccountTypes.Point){
-          <div nz-flex nzAlign="center" nzJustify="space-between">
-            <span>{{ item.name }}</span>
-            <span>{{ item.redeemCost + "pts" }}</span>
-          </div>
+          <span>{{ item.name }}</span>
           } @else if(item.redeemWith == AccountTypes.Wallet){
-          <div nz-flex nzAlign="center" nzJustify="space-between">
-            <span>{{ item.name }} </span
-            ><span>
-              {{ item.redeemCost + " pts" }}
-            </span>
-          </div>
+          <span>{{ item.name }}</span>
+          {{ item.redeemCost + " pts" }}
           }
         </div>
       </nz-option>
@@ -93,15 +93,27 @@ import { AccountTypes } from "../lookup/lookup-type.service";
         padding: 6px 8px;
         display: block;
       }
-      .b-code {
-        font-weight: bolder;
+
+      .option-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
-      .b-name {
-        font-size: 12px;
-        padding-left: 5px;
+
+      .image-container {
+        height: 22px;
+        width: 22px;
       }
-      ::ng-deep cdk-virtual-scroll-viewport {
-        min-height: 34px;
+
+      .image-container img {
+        width: 100%;
+        object-fit: cover;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .option-text {
+        font-size: 14px;
       }
     `,
   ],
@@ -187,6 +199,8 @@ export class OfferSelectComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     this.selected.set(0);
+    console.log("hitt onchange");
+
     this.search();
   }
 
@@ -197,7 +211,6 @@ export class OfferSelectComponent
     this.setStorageKey(this.selected());
 
     const selectedOffer = this.lists().find((o) => o.id === this.selected());
-    console.log("in select", selectedOffer);
 
     this.selectedObject.emit(selectedOffer);
   }
