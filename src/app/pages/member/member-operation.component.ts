@@ -555,15 +555,16 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   };
   tabIndex = 0;
   override ngOnInit(): void {
-    super.ngOnInit();
-
-    this.systemSettingService.find(SETTING_KEY.MemberAutoId).subscribe({
-      next: (value?: string) => {
-        if (Number(value) !== 0) {
-          this.frm.get("code")?.disable();
-        }
-      },
-    });
+    super.ngOnInit(); 
+    if (this.modal?.isView) {
+      this.systemSettingService.find(SETTING_KEY.MemberAutoId).subscribe({
+        next: (value?: string) => {
+          if (Number(value) !== 0) {
+            this.frm.get("code")?.disable();
+          }
+        },
+      });
+    }
     this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];

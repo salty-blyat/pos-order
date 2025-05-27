@@ -124,6 +124,9 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
               <th [nzWidth]="SIZE_COLUMNS.CODE">
                 {{ "RedeemNo" | translate }}
               </th>
+              <th [nzWidth]="SIZE_COLUMNS.IMAGE" nzEllipsis nzAlign="center">
+                {{ "Image" | translate }}
+              </th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">
                 {{ "Offer" | translate }}
               </th>
@@ -156,6 +159,22 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                   >{{ data.redeemNo }}</a
                 >
                 <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
+              </td>
+              <td nzEllipsis class="image" nzAlign="center">
+                <img
+                  *ngIf="data.offerPhoto"
+                  class="image-list"
+                  height="42"
+                  [src]="data.offerPhoto"
+                  alt=""
+                />
+                <img
+                  *ngIf="!data.offerPhoto"
+                  class="image-list"
+                  height="42"
+                  src="./assets/image/img-not-found.jpg"
+                  alt=""
+                />
               </td>
               <td nzEllipsis>{{ data.offerName }}</td>
               <td
@@ -231,6 +250,17 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  styles: [
+    `
+      .image {
+        padding: 0 !important;
+      }
+      .image-list {
+        height: 38px;
+        object-fit: scale-down;
+      }
+    `,
+  ],
   encapsulation: ViewEncapsulation.None,
 })
 export class RedemptionListComponent extends BaseListComponent<Redemption> {

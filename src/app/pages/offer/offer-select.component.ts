@@ -65,7 +65,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
             {{ item?.name }}
           </span>
           <span style="margin-left-auto">
-            {{ getAccountBalance(redeemWith, item?.redeemCost) }}
+            {{ getAccountBalance(item?.redeemWith!, item?.redeemCost) }}
           </span>
         </div>
       </nz-option>
@@ -140,7 +140,6 @@ export class OfferSelectComponent
   }
   @Output() selectedObject = new EventEmitter<Offer>();
   @Input() memberId = 0;
-  @Input() redeemWith = 0;
   readonly AccountTypes = AccountTypes;
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
@@ -166,7 +165,7 @@ export class OfferSelectComponent
   override search(delay: number = 50) {
     if (this.isLoading()) return;
     if (!this.memberId) return;
-    console.log(this.lists())
+    console.log(this.lists());
     this.isLoading.set(true);
     setTimeout(() => {
       this.param().filters = this.buildFilters();

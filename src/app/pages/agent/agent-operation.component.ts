@@ -186,13 +186,15 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
   isAgentRemove = computed(() => true);
   override ngOnInit(): void {
     super.ngOnInit();
-    this.systemSettingService.find(SETTING_KEY.AgentAutoId).subscribe({
-      next: (value?: string) => {
-        if (Number(value) !== 0) {
-          this.frm.get("code")?.disable();
-        }
-      },
-    });
+    if (this.modal?.isView) {
+      this.systemSettingService.find(SETTING_KEY.AgentAutoId).subscribe({
+        next: (value?: string) => {
+          if (Number(value) !== 0) {
+            this.frm.get("code")?.disable();
+          }
+        },
+      });
+    }
   }
 
   override initControl(): void {

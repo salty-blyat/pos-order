@@ -29,9 +29,10 @@ export interface Redemption {
   redeemWith?: number;
   accounntType?: number;
   memberId?: number;
+  offerPhoto?: string;
   attachments?: Attachment[];
 }
- 
+
 @Injectable({
   providedIn: "root",
 })

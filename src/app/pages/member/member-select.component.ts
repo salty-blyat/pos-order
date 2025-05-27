@@ -1,9 +1,6 @@
 import {
   Component,
-  EventEmitter,
   forwardRef,
-  output,
-  Output,
   signal,
   ViewEncapsulation,
 } from "@angular/core";
@@ -12,7 +9,7 @@ import { Member, MemberService } from "./member.service";
 import { MemberUiService } from "./member-ui.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { QueryParam } from "../../utils/services/base-api.service";  
+import { QueryParam } from "../../utils/services/base-api.service";
 
 @Component({
   providers: [
@@ -108,9 +105,9 @@ export class MemberSelectComponent extends BaseSelectComponent<Member> {
       "all-member"
     );
   }
- 
+
   override param = signal<QueryParam>({
-    pageSize: 25,
+    pageSize: 10,
     pageIndex: 1,
     sorts: "",
     filters: "",

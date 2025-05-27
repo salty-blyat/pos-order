@@ -181,7 +181,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   override ngOnInit(): void {
     super.ngOnInit();
     console.log(this.modal);
-
+ if (!this.modal?.isView) {
     this.systemSettingService.find(SETTING_KEY.TransNoAutoId).subscribe({
       next: (value?: string) => {
         if (Number(value) !== 0) {
@@ -189,6 +189,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
         }
       },
     });
+ }
   }
 
   override onSubmit(e?: any) {

@@ -11,13 +11,13 @@ import {
 } from "../lookup/lookup-type.service";
 import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
-import { Member, MemberService } from "../member/member.service";
+import { Member, MemberAccount, MemberService } from "../member/member.service";
 import { TranslateService } from "@ngx-translate/core";
 import {
   SETTING_KEY,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
-import { Offer } from "../offer/offer.service";
+import { Offer, OfferService } from "../offer/offer.service";
 import { SettingService } from "../../app-setting";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { Observable } from "rxjs";
@@ -125,10 +125,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                     <div
                       nz-flex
                       nzVertical
-                      *ngFor="let a of sortedAccounts"
-                      [ngClass]="{
-                        'empty-card': modal?.isView
-                      }"
+                      *ngFor="let a of sortedAccounts" 
                     >
                       <div class="card-value">
                         <i
@@ -147,7 +144,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 </div>
               </div>
             </div>
-            
+
             <nz-form-label nzNoColon>{{ "RefNo" | translate }}</nz-form-label>
             <nz-form-item>
               <nz-form-control>
@@ -170,9 +167,12 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 <nz-upload
                   [nzAction]="uploadUrl"
                   [(nzFileList)]="fileList"
+                  [nzShowUploadList]="
+                    modal?.isView ? nzShowButtonView : nzShowIconList
+                  "
                   (nzChange)="handleUpload($event)"
                 >
-                  <button nz-button>
+                  <button nz-button [disabled]="modal?.isView">
                     <i nz-icon nzType="upload"></i> Upload
                   </button>
                 </nz-upload>
@@ -290,15 +290,13 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 <nz-icon nzType="credit-card" nzTheme="outline" />
                 {{ "TransactionSummary" | translate }}
               </h3>
-              <div nz-flex nzJustify="space-between">
+              <div nz-flex nzJustify="space-between" *ngIf="!modal?.isView">
                 <span>{{ "CurrentBalance" | translate }}</span>
                 <span>{{
-                  selectedOffer
-                    ? getAccountBalance(
-                        selectedOffer.redeemWith!,
-                        currentBalance
-                      )
-                    : "0.00"
+                  getAccountBalance(
+                    selectedOffer?.redeemWith!,
+                    selectedAccount?.balance
+                  )
                 }}</span>
               </div>
 
@@ -310,27 +308,31 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 >
                 <span style="color: red"
                   >{{
-                    selectedOffer
-                      ? getAccountBalance(
-                          selectedOffer?.redeemWith!,
-                          this.frm.get("amount")?.value
-                        )
-                      : "0.00"
+                    getAccountBalance(
+                      selectedOffer?.redeemWith!,
+                      frm.get("amount")?.value
+                    )
                   }}
                 </span>
               </div>
 
-              <nz-divider style="margin: 8px 0"></nz-divider>
-              <div nz-flex nzJustify="space-between">
+              <nz-divider
+                *ngIf="!modal?.isView"
+                style="margin: 8px 0"
+              ></nz-divider>
+              <div nz-flex nzJustify="space-between" *ngIf="!modal?.isView">
                 <span>{{ "RemainingBalance" | translate }}</span>
-                <span>
+                <span
+                  [ngStyle]="{
+                    color: remainingBalance() > 0 ? 'green' : 'black',
+                    'font-weight': 'bold'
+                  }"
+                >
                   {{
-                    selectedOffer
-                      ? getAccountBalance(
-                          selectedOffer?.redeemWith!,
-                          remainingBalance()
-                        )
-                      : "0.00"
+                    getAccountBalance(
+                      selectedOffer?.redeemWith!,
+                      remainingBalance()
+                    )
                   }}
                 </span>
               </div>
@@ -471,6 +473,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     service: RedemptionService,
     public translateService: TranslateService,
     public memberService: MemberService,
+    public offerService: OfferService,
     private authService: AuthService,
     private settingService: SettingService,
     private systemSettingService: SystemSettingService,
@@ -478,34 +481,47 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   ) {
     super(fb, ref, service, uiService);
   }
-  nzShowIconList = {
-    showPreviewIcon: true,
-    showRemoveIcon: false,
-    showDownloadIcon: false,
-  };
 
   selectedMember: Member | null = null;
   selectedOffer: Offer | null = null;
   override ngOnInit(): void {
     super.ngOnInit();
-    this.systemSettingService.find(SETTING_KEY.RedemptionAutoId).subscribe({
-      next: (value?: string) => {
-        if (Number(value) !== 0) {
-          this.frm.get("redeemNo")?.disable();
-        }
-      },
-    });
+    if (!this.modal?.isView) {
+      this.systemSettingService.find(SETTING_KEY.RedemptionAutoId).subscribe({
+        next: (value?: string) => {
+          if (Number(value) !== 0) {
+            this.frm.get("redeemNo")?.disable();
+          }
+        },
+      });
+    }
   }
+  //view
+  nzShowButtonView = {
+    showPreviewIcon: true,
+    showRemoveIcon: false,
+    showDownloadIcon: false,
+  };
+  // add | edit
+  nzShowIconList = {
+    showPreviewIcon: true,
+    showRemoveIcon: true,
+    showDownloadIcon: false,
+  };
 
   onMemberChange() {
-    this.memberService.find(this.frm.get("memberId")?.value).subscribe({
-      next: (m: any) => {
-        this.selectedMember = m;
-      },
-      error: (err) => {
-        console.error("Failed to fetch member detail:", err);
-      },
-    });
+    const memberId = this.frm.get("memberId")?.value;
+    if (memberId != null) {
+      this.memberService.find(memberId).subscribe({
+        next: (m: any) => {
+          this.selectedMember = m;
+          if (!this.modal?.isView) this.selectedOffer = null; // prevent reset selected offer because this block run on init
+        },
+        error: (err) => {
+          console.error("Failed to fetch member detail:", err);
+        },
+      });
+    }
   }
 
   fileList: NzUploadFile[] = [];
@@ -513,7 +529,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   isRedemptionRemove = computed(() => true);
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
-  currentBalance = 0;
+  selectedAccount: MemberAccount | null = null;
 
   handleUpload(info: NzUploadChangeParam): void {
     let fileList = [...info.fileList];
@@ -542,15 +558,9 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     this.frm = this.fb.group({
       redeemNo: [null, [required]],
       refNo: [null],
-      accountId: [
-        { value: this.model?.accountId ?? null, disabled: true },
-        required,
-      ],
+      accountId: [{ value: null, disabled: true }, required],
       redeemedDate: [new Date().toISOString(), required],
-      offerId: [
-        { value: this.model?.offerId ?? null, disabled: true },
-        [required],
-      ],
+      offerId: [{ value: null, disabled: true }, [required]],
       qty: [{ value: 1, disabled: false }, [integerValidator, required]],
       amount: [{ value: 0, disabled: false }, [required]],
       note: [null, [noteMaxLengthValidator]],
@@ -561,16 +571,23 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
     this.frm.controls["memberId"]?.valueChanges.subscribe({
       next: () => {
-        this.onMemberChange();
         setTimeout(() => {
-          this.frm.get("offerId")?.enable();
+          if (!this.modal?.isView) {
+            this.frm.get("offerId")?.enable();
+            this.frm.get("offerId")?.setValue(null);
+          } else {
+            this.frm.get("offerId")?.setValue(this.model.offerId);
+          }
+          this.onMemberChange();
         }, 50);
       },
     });
+
     this.frm.controls["qty"]?.valueChanges.subscribe({
       next: (qty) => {
         setTimeout(() => {
           let amount = this.selectedOffer?.redeemCost! * Number(qty);
+
           this.frm.get("amount")?.setValue(amount);
         }, 50);
       },
@@ -580,34 +597,16 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       next: () => {
         setTimeout(() => {
           let qty = this.frm.controls["qty"].value;
-          let amount = this.selectedOffer?.redeemCost! * qty;
-          this.currentBalance =
+          let amount = this.selectedOffer?.redeemCost! * qty; 
+          this.selectedAccount =
             this.selectedMember?.accounts?.find(
               (a) => a.accountType == this.selectedOffer?.redeemWith
-            )?.balance || 0;
-          console.log(this.currentBalance);
-
+            ) ?? null;
+          console.log(this.selectedAccount);
+          this.frm.get("accountId")?.setValue(this.selectedAccount?.accountId);
           this.frm.get("amount")?.setValue(amount);
         }, 50);
       },
-    });
-
-    this.frm.get("memberId")?.valueChanges.subscribe((val) => {
-      if (!this.modal?.isView) {
-        this.frm.get("accountId")?.setValue(null);
-        this.frm.get("offerId")?.setValue(null);
-        this.frm.get("offerId")?.disable();
-      } else {
-        // add/edit state
-        setTimeout(() => {
-          this.frm.get("accountId")?.setValue(this.model?.accountId);
-          this.frm.get("offerId")?.setValue(this.model?.offerId);
-        }, 50);
-      }
-
-      if (val && !this.modal?.isView) {
-        this.frm.get("accountId")?.enable();
-      }
     });
   }
 
@@ -666,7 +665,14 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   remainingBalance() {
-    return this.currentBalance - this.frm.get("amount")?.value;
+    if (
+      this.selectedAccount?.balance != null &&
+      this.selectedAccount?.balance != undefined
+    ) {
+      return this.selectedAccount?.balance! - this.frm.get("amount")?.value;
+    } else {
+      return 0;
+    }
   }
 
   override setFormValue() {
@@ -683,6 +689,28 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       accountId: this.model.accountId,
       redeemedDate: this.model.redeemedDate,
     });
+    if (this.model.offerId && this.modal?.isView) {
+      this.offerService.find(this.model.offerId).subscribe({
+        next: (d: any) => {
+          this.selectedOffer = d;
+        },
+        error: (err: any) => {
+          console.error("Failed to fetch offer detail:", err);
+        },
+      });
+    }
+
+    if (this.model.memberId && this.modal?.isView) {
+      this.memberService.find(this.model.memberId).subscribe({
+        next: (d: any) => {
+          this.selectedMember = d;
+        },
+        error: (err: any) => {
+          console.error("Failed to fetch member detail:", err);
+        },
+      });
+    }
+    console.log(this.model);
 
     this.fileList =
       this.model.attachments?.map(
