@@ -3,7 +3,6 @@ import {
   computed,
   inject,
   Input,
-  OnChanges,
   SimpleChanges,
   ViewEncapsulation,
 } from "@angular/core";
@@ -15,12 +14,13 @@ import { SIZE_COLUMNS } from "../../const";
 import { AccountService, Transaction } from "./account.service";
 import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 import { NotificationService } from "../../utils/services/notification.service";
-import { QueryParam } from "../../utils/services/base-api.service";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { MemberAccount } from "../member/member.service";
 import { AccountUiService } from "./account-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { AccountTypes, TransactionTypes } from "../lookup/lookup-type.service";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
+import { DatetimeHelper } from "../../helpers/datetime-helper";
 
 @Component({
   selector: "app-account-list",
@@ -32,46 +32,65 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
     <div class="modal-content">
       <nz-layout>
         <nz-header>
-          <div nz-flex nzJustify="flex-end" style="width:100%" nzGap="small">
-            <button
-              *ngIf="isAccountAdjust()"
-              nz-button
-              nzType="primary"
-              (click)="
-                uiService.showAdjust(
-                  '',
-                  accounts[tabIndex]?.accountId!,
-                  TransactionTypes.Adjust,
-                  accounts[tabIndex]?.accountType!,
-                  accounts
-                )
-              "
-            >
-              <i nz-icon nzType="plus" nzTheme="outline"></i>
-              {{ "Adjust" | translate }}
-            </button>
-            <button
-              *ngIf="isAccountTopup()"
-              nz-button
-              nzType="primary"
-              (click)="
-                uiService.showAdjust(
-                  '',
-                  accounts[tabIndex]?.accountId!,
-                  TransactionTypes.Topup,
-                  accounts[tabIndex]?.accountType!,
-                  accounts
-                )
-              "
-            >
-              <i nz-icon nzType="plus" nzTheme="outline"></i>
-              {{ "Topup" | translate }}
-            </button>
+          <div
+            nz-flex
+            nzWrap="nowrap"
+            nzJustify="space-between"
+            nzAlign="center"
+            nzGap="middle"
+            style="width:100%"
+          >
+            <div nz-flex nzGap="small">
+              <div class="filter-box" style="width: 230px;">
+                <app-date-range-input
+                  storageKey="trans-"
+                  (valueChanged)="
+                    dateRange = $event; param().pageIndex = 1; search()
+                  "
+                ></app-date-range-input>
+              </div>
+            </div>
+            <div nz-flex nzGap="small">
+              <button
+                *ngIf="isAccountAdjust()"
+                nz-button
+                nzType="primary"
+                (click)="
+                  uiService.showAdjust(
+                    '',
+                    accounts[tabIndex]?.accountId!,
+                    TransactionTypes.Adjust,
+                    accounts[tabIndex]?.accountType!,
+                    accounts
+                  )
+                "
+              >
+                <i nz-icon nzType="plus" nzTheme="outline"></i>
+                {{ "Adjust" | translate }}
+              </button>
+              <button
+                *ngIf="isAccountTopup()"
+                nz-button
+                nzType="primary"
+                (click)="
+                  uiService.showAdjust(
+                    '',
+                    accounts[tabIndex]?.accountId!,
+                    TransactionTypes.Topup,
+                    accounts[tabIndex]?.accountType!,
+                    accounts
+                  )
+                "
+              >
+                <i nz-icon nzType="plus" nzTheme="outline"></i>
+                {{ "Topup" | translate }}
+              </button>
+            </div>
           </div>
         </nz-header>
+
         <nz-content>
-          <nz-table
-            style="height:auto"
+          <nz-table 
             nzSize="small"
             nzShowSizeChanger
             nzTableLayout="fixed"
@@ -92,7 +111,10 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
               <tr>
                 <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
                 <th nzWidth="100px">
-                  {{ "TransNo" | translate }}
+                  {{ "RedeemNo" | translate }}
+                </th>
+                <th nzWidth="150px">
+                  {{ "Offer" | translate }}
                 </th>
                 <th nzWidth="150px">
                   {{ "Date" | translate }}
@@ -133,10 +155,11 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                         accounts[tabIndex]?.accountType!
                       )
                     "
-                    >{{ data.transNo }}</a
+                    >{{ data.redeemNo }}</a
                   >
-                  <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
+                  <span *ngIf="!isTransactionView()">{{ data.redeemNo }}</span>
                 </td>
+                <td nzEllipsis>{{ data.offerName }}</td>
                 <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
                 <td nzEllipsis="">
                   {{
@@ -161,6 +184,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 >
                   {{ getAccountBalance(data.accountType!, data.amount) }}
                 </td>
+                <td nzEllipsis>{{ data.offerName }}</td>
                 <td nzEllipsis>{{ data.note }}</td>
                 <td nzEllipsis>{{ data.refNo }}</td>
                 <!-- <td class="col-action">
@@ -212,7 +236,7 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
 
   @Input() accounts: MemberAccount[] = [];
   @Input() tabIndex: number = 0;
-
+  dateRange: any = [];
   isTransactionView = computed(() => true);
   isAccountTopup = computed(() => true);
   isAccountAdjust = computed(() => true);
@@ -226,9 +250,22 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
     }
   }
 
-  override ngOnInit(): void {
-    console.log("init hit");
+  protected override getCustomFilters(): Filter[] {
+    let filters: Filter[] = [];
 
+    if (this.dateRange.length > 0) {
+      filters.push({
+        field: "dateRange",
+        operator: "contains",
+        value: `${DatetimeHelper.toShortDateString(
+          this.dateRange[0]
+        )} ~ ${DatetimeHelper.toShortDateString(this.dateRange[1])}`,
+      });
+    }
+    return filters;
+  }
+
+  override ngOnInit(): void {
     this.uiService.refresher.subscribe((e) => {
       if (e.key == "added") {
         this.search();

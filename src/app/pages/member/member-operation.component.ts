@@ -651,7 +651,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       photo: this.model.photo,
     });
 
-    if (this.model.photo || this.model.photo !== '') {
+    if (this.model.photo || this.model.photo !== "") {
       this.file = [];
       this.file.push({
         uid: "",

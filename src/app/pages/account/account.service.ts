@@ -29,15 +29,20 @@ export interface Transaction {
   type?: number;
   note?: string;
   refNo?: string;
+  attachments?: Attachment[];
   id?: number;
   memberId?: number;
-  redeemWithNameEn?: string;
-  redeemWithNameKh?: string;
+  offerGroupId?: number;
+  offerType?: number;
   memberCode?: string;
-  accountType?: number;
   typeNameKh?: string;
   typeNameEn?: string;
+  redeemNo?: string;
+  offerName?: string;
+  accountType?: number;
   redeemWith?: number;
+  redeemWithNameKh?: string;
+  redeemWithNameEn?: string;
 }
 
 export interface TransactionAdjust {

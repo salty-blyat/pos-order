@@ -15,15 +15,8 @@ import { NotificationService } from "../../utils/services/notification.service";
   template: `
     <nz-layout>
       <nz-header>
-        <div
-          nz-flex
-          nzWrap="nowrap"
-          nzJustify="space-between"
-          nzAlign="center"
-          nzGap="middle"
-          style="width:100%"
-        >
-          <div nz-flex nzGap="small">
+        <div nz-row>
+          <div nz-col nzSpan="5">
             <app-filter-input
               class="fixed-width-select"
               storageKey="member-list"
@@ -31,7 +24,8 @@ import { NotificationService } from "../../utils/services/notification.service";
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
-
+          </div>
+          <div nz-col nzSpan="5">
             <app-member-class-select
               class="fixed-width-select"
               storageKey="member-class-list-search"
@@ -41,7 +35,8 @@ import { NotificationService } from "../../utils/services/notification.service";
               [showAllOption]="true"
             >
             </app-member-class-select>
-
+          </div>
+          <div nz-col nzSpan="5">
             <app-agent-select
               storageKey="agent-list-search"
               class="fixed-width-select"
@@ -52,7 +47,8 @@ import { NotificationService } from "../../utils/services/notification.service";
             >
             </app-agent-select>
           </div>
-
+        </div>
+        <div style="margin-left:auto" nz-flex nzAlign="center">
           <button
             *ngIf="isMemberAdd()"
             nz-button

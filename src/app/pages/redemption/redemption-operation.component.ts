@@ -1,4 +1,4 @@
-import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -11,7 +11,7 @@ import {
 } from "../lookup/lookup-type.service";
 import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
-import { Member, MemberAccount, MemberService } from "../member/member.service";
+import { Member, MemberService } from "../member/member.service";
 import { TranslateService } from "@ngx-translate/core";
 import {
   SETTING_KEY,
@@ -22,7 +22,6 @@ import { SettingService } from "../../app-setting";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { Observable } from "rxjs";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
-import { Account } from "../account/account.service";
 
 @Component({
   selector: "app-redemption-operation",
@@ -57,13 +56,14 @@ import { Account } from "../account/account.service";
                   </nz-form-control>
                 </nz-form-item>
               </div>
+
               <div nz-col [nzSpan]="12">
-                <nz-form-label nzNoColon>{{
-                  "RefNo" | translate
+                <nz-form-label nzRequired nzNoColon>{{
+                  "Location" | translate
                 }}</nz-form-label>
                 <nz-form-item>
                   <nz-form-control>
-                    <input nz-input formControlName="refNo" />
+                    <app-location-select formControlName="locationId" />
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -80,16 +80,6 @@ import { Account } from "../account/account.service";
                 <nz-form-item>
                   <nz-form-control>
                     <app-member-select formControlName="memberId" />
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
-              <div nz-col [nzSpan]="12">
-                <nz-form-label nzRequired nzNoColon>{{
-                  "Location" | translate
-                }}</nz-form-label>
-                <nz-form-item>
-                  <nz-form-control>
-                    <app-location-select formControlName="locationId" />
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -157,6 +147,13 @@ import { Account } from "../account/account.service";
                 </div>
               </div>
             </div>
+            
+            <nz-form-label nzNoColon>{{ "RefNo" | translate }}</nz-form-label>
+            <nz-form-item>
+              <nz-form-control>
+                <input nz-input formControlName="refNo" />
+              </nz-form-control>
+            </nz-form-item>
 
             <!-- Notes -->
             <nz-form-label nzNoColon>{{ "Note" | translate }}</nz-form-label>
@@ -311,7 +308,7 @@ import { Account } from "../account/account.service";
                     frm.get("qty")?.value
                   }})</span
                 >
-                <span
+                <span style="color: red"
                   >{{
                     selectedOffer
                       ? getAccountBalance(
@@ -572,8 +569,10 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     });
     this.frm.controls["qty"]?.valueChanges.subscribe({
       next: (qty) => {
-        let amount = this.selectedOffer?.redeemCost! * Number(qty);
-        this.frm.get("amount")?.setValue(amount);
+        setTimeout(() => {
+          let amount = this.selectedOffer?.redeemCost! * Number(qty);
+          this.frm.get("amount")?.setValue(amount);
+        }, 50);
       },
     });
 
@@ -584,8 +583,9 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
           let amount = this.selectedOffer?.redeemCost! * qty;
           this.currentBalance =
             this.selectedMember?.accounts?.find(
-              (a) => a.accountType == this.selectedOffer?.redeemWithNameKh
+              (a) => a.accountType == this.selectedOffer?.redeemWith
             )?.balance || 0;
+          console.log(this.currentBalance);
 
           this.frm.get("amount")?.setValue(amount);
         }, 50);
@@ -666,7 +666,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   remainingBalance() {
-    return this.currentBalance - this.frm.get('amount')?.value;
+    return this.currentBalance - this.frm.get("amount")?.value;
   }
 
   override setFormValue() {
