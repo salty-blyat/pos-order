@@ -34,9 +34,8 @@ import { MemberClassUiService } from "./member-class-ui.service";
     >
       <nz-option
         *ngIf="showAllOption()"
-        style="width:300px !important"
         [nzValue]="0"
-        [nzLabel]="'AllOffer' | translate"
+        [nzLabel]="'AllMemberClass' | translate"
       ></nz-option>
       <nz-option
         *ngFor="let item of lists()"

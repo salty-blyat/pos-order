@@ -17,6 +17,7 @@ import { Offer, OfferService } from "./offer.service";
 import { OfferUiService } from "./offer-ui.service";
 import { Filter } from "../../utils/services/base-api.service";
 import { AccountTypes } from "../lookup/lookup-type.service";
+import { getAccountBalance } from "../../utils/components/get-account-balance";
 
 @Component({
   providers: [
@@ -59,12 +60,13 @@ import { AccountTypes } from "../lookup/lookup-type.service";
               alt=""
             />
           </div>
-          @if(item.redeemWith == AccountTypes.Point){
-          <span>{{ item.name }}</span>
-          } @else if(item.redeemWith == AccountTypes.Wallet){
-          <span>{{ item.name }}</span>
-          {{ item.redeemCost + " pts" }}
-          }
+
+          <span>
+            {{ item?.name }}
+          </span>
+          <span style="margin-left-auto">
+            {{ getAccountBalance(redeemWith, item?.redeemCost) }}
+          </span>
         </div>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
@@ -138,7 +140,7 @@ export class OfferSelectComponent
   }
   @Output() selectedObject = new EventEmitter<Offer>();
   @Input() memberId = 0;
-  @Input() accountId = 0;
+  @Input() redeemWith = 0;
   readonly AccountTypes = AccountTypes;
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
@@ -147,13 +149,6 @@ export class OfferSelectComponent
         field: "memberId",
         operator: "eq",
         value: this.memberId,
-      });
-    }
-    if (this.accountId) {
-      filters.push({
-        field: "redeemWith",
-        operator: "eq",
-        value: this.accountId,
       });
     }
     return filters;
@@ -170,7 +165,8 @@ export class OfferSelectComponent
 
   override search(delay: number = 50) {
     if (this.isLoading()) return;
-    if (!this.memberId || !this.accountId) return;
+    if (!this.memberId) return;
+    console.log(this.lists())
     this.isLoading.set(true);
     setTimeout(() => {
       this.param().filters = this.buildFilters();
@@ -199,8 +195,6 @@ export class OfferSelectComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     this.selected.set(0);
-    console.log("hitt onchange");
-
     this.search();
   }
 
@@ -215,5 +209,6 @@ export class OfferSelectComponent
     this.selectedObject.emit(selectedOffer);
   }
 
+  getAccountBalance = getAccountBalance;
   isOfferAdd = signal<boolean>(true);
 }

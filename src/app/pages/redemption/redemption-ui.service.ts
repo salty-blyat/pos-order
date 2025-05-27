@@ -17,9 +17,9 @@ export class RedemptionUiService extends BaseUiService {
       modalService,
       RedemptionOperationComponent,
       RedemptionDeleteComponent,
-      "800px",
-      "800px",
-      "800px",
+      "900px",
+      "900px",
+      "900px",
       "450px"
     );
   }

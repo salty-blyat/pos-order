@@ -92,15 +92,6 @@ export interface Type {
               <span>{{ "Member" | translate }}</span>
             </li>
             <li
-              *ngIf="isOfferList()"
-              nz-menu-item
-              [nzMatchRouter]="isActive()"
-              routerLink="/offer"
-            >
-              <nz-icon nzType="tags" nzTheme="outline" />
-              <span>{{ "Offer" | translate }}</span>
-            </li>
-            <li
               *ngIf="isAgentList()"
               nz-menu-item
               [nzMatchRouter]="isActive()"
@@ -108,6 +99,16 @@ export interface Type {
             >
               <i nz-icon nzType="user"></i>
               <span>{{ "Agent" | translate }}</span>
+            </li>
+
+            <li
+              *ngIf="isOfferList()"
+              nz-menu-item
+              [nzMatchRouter]="isActive()"
+              routerLink="/offer"
+            >
+              <nz-icon nzType="tags" nzTheme="outline" />
+              <span>{{ "Offer" | translate }}</span>
             </li>
             <li
               *ngIf="isRedemptionList()"

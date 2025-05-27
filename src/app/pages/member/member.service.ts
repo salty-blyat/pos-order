@@ -20,6 +20,7 @@ export interface Member {
   photo?: string;
   accounts?: MemberAccount[];
   defaultAccountId?: number;
+  joinDate?: string;
 }
 
 export interface MemberAccount {

@@ -38,18 +38,19 @@ import { Account } from "../account/account.service";
       }}</span>
     </div>
     <div class="modal-content">
-      <div nz-row [nzGutter]="16">
-        <!-- Column 1: Form -->
-        <div nz-col [nzSm]="24" [nzLg]="14">
-          <form nz-form [formGroup]="frm">
-            <!-- Redeem No & Location -->
+      <form nz-form [formGroup]="frm">
+        <div nz-row [nzGutter]="16">
+          <!-- Column 1: Form -->
+          <div nz-col [nzSm]="24" [nzLg]="14">
             <h3 style="line-height: 0.1">
-              <nz-icon nzType="credit-card" nzTheme="outline" /> Transaction
-              Details
+              <nz-icon nzType="credit-card" nzTheme="outline" />
+              {{ "TransactionDetail" | translate }}
             </h3>
             <div nz-row [nzGutter]="16">
               <div nz-col [nzSpan]="12">
-                <nz-form-label nzRequired nzNoColon>Redeem No</nz-form-label>
+                <nz-form-label nzRequired nzNoColon>{{
+                  "RedeemNo" | translate
+                }}</nz-form-label>
                 <nz-form-item>
                   <nz-form-control>
                     <input nz-input formControlName="redeemNo" />
@@ -57,7 +58,35 @@ import { Account } from "../account/account.service";
                 </nz-form-item>
               </div>
               <div nz-col [nzSpan]="12">
-                <nz-form-label nzRequired nzNoColon>Location</nz-form-label>
+                <nz-form-label nzNoColon>{{
+                  "RefNo" | translate
+                }}</nz-form-label>
+                <nz-form-item>
+                  <nz-form-control>
+                    <input nz-input formControlName="refNo" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+            <h3 style="line-height: 0.1">
+              <nz-icon nzType="user" nzTheme="outline" />
+              {{ "MemberInformation" | translate }}
+            </h3>
+            <div nz-row [nzGutter]="16">
+              <div nz-col [nzSpan]="12">
+                <nz-form-label nzRequired nzNoColon>{{
+                  "Member" | translate
+                }}</nz-form-label>
+                <nz-form-item>
+                  <nz-form-control>
+                    <app-member-select formControlName="memberId" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div nz-col [nzSpan]="12">
+                <nz-form-label nzRequired nzNoColon>{{
+                  "Location" | translate
+                }}</nz-form-label>
                 <nz-form-item>
                   <nz-form-control>
                     <app-location-select formControlName="locationId" />
@@ -65,91 +94,105 @@ import { Account } from "../account/account.service";
                 </nz-form-item>
               </div>
             </div>
+            <!-- member card -->
+            <div class="account-card" style="margin-bottom: 12px">
+              <div nz-flex nzGap="small">
+                <nz-avatar
+                  [nzText]="selectedMember?.name?.substring(0, 2)"
+                  nzSize="large"
+                  [nzSrc]="selectedMember?.photo"
+                  style="background-color: #ccc"
+                ></nz-avatar>
 
-            <!-- Member & Account -->
-            <h3 style="margin-top:12px">
-              <nz-icon nzType="user" nzTheme="outline" /> Member Information
-            </h3>
-            <div nz-row>
-              <div nz-col [nzSpan]="12">
-                <nz-form-label nzRequired nzNoColon
-                  >Select Member</nz-form-label
+                <div>
+                  <strong>{{ selectedMember?.name || "-" }} </strong><br />
+                  <span>
+                    <i nz-icon nzType="phone" nzTheme="outline"></i>
+                    {{ selectedMember?.phone || "-" }}
+                  </span>
+                  <br />
+                  <span
+                    ><i nz-icon nzType="calendar" nzTheme="outline"></i>
+                    {{
+                      selectedMember?.joinDate
+                        ? (selectedMember?.joinDate | customDate)
+                        : "-"
+                    }}
+                  </span>
+                  <br />
+                </div>
+
+                <div
+                  style="margin-left:auto"
+                  nz-flex
+                  nzVertical
+                  *ngIf="sortedAccounts.length > 0"
                 >
-                <nz-form-item>
-                  <nz-form-control>
-                    <app-member-select formControlName="memberId" />
-                  </nz-form-control>
-                </nz-form-item>
-              </div>
-            </div>
-            <div nz-row>
-              <div nz-col [nzSpan]="12">
-                <nz-form-label nzRequired nzNoColon>Account Type</nz-form-label>
-                <nz-form-item>
-                  <nz-form-control>
-                    <!-- <app-account-select formControlName="accountId" /> -->
-                    <div nz-flex nzGap="small">
-                      <!-- Show real account cards -->
-                      <ng-container
-                        *ngIf="sortedAccounts.length > 0; else emptyCards"
-                      >
-                        <div
-                          *ngFor="let a of sortedAccounts"
-                          class="account-card"
-                          [ngClass]="{
-                            'selected-card':
-                              selectedAccount?.accountId == a.accountId
-                          }"
-                          (click)="selectAccountType(a)"
-                        >
-                          <div class="card-title">
-                            <i
-                              nz-icon
-                              [nzType]="
-                                a.accountType == AccountTypes.Wallet
-                                  ? 'wallet'
-                                  : 'star'
-                              "
-                              nzTheme="outline"
-                            ></i>
-                            {{
-                              translateService.currentLang == "km"
-                                ? a.accountTypeNameKh ?? ""
-                                : a.accountTypeNameEn ?? ""
-                            }}
-                          </div>
-                          <div class="card-value">
-                            {{ getAccountBalance(a.accountType, a.balance) }}
-                          </div>
-                        </div>
-                      </ng-container>
-
-                      <!-- Empty placeholder cards -->
-                      <ng-template #emptyCards>
-                        <div class="account-card empty-card">
-                          <div class="card-title">
-                            <i nz-icon nzType="wallet" nzTheme="outline"></i>
-                            <span class="placeholder-text">Wallet</span>
-                          </div>
-                          <div class="card-value">0.00 Available</div>
-                        </div>
-
-                        <div class="account-card empty-card">
-                          <div class="card-title">
-                            <i nz-icon nzType="star" nzTheme="outline"></i>
-                            <span class="placeholder-text">Point</span>
-                          </div>
-                          <div class="card-value">0.00 Available</div>
-                        </div>
-                      </ng-template>
+                  <strong style="text-align:right">{{
+                    selectedMember?.memberClassName || "-"
+                  }}</strong>
+                  <div style="margin-top:auto" nz-flex nzGap="small">
+                    <div
+                      nz-flex
+                      nzVertical
+                      *ngFor="let a of sortedAccounts"
+                      [ngClass]="{
+                        'empty-card': modal?.isView
+                      }"
+                    >
+                      <div class="card-value">
+                        <i
+                          nz-icon
+                          [nzType]="
+                            a.accountType == AccountTypes.Wallet
+                              ? 'wallet'
+                              : 'star'
+                          "
+                          nzTheme="outline"
+                        ></i>
+                        {{ getAccountBalance(a.accountType, a.balance) }}
+                      </div>
                     </div>
-                  </nz-form-control>
-                </nz-form-item>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <h3 style="margin-top:12px">
-              <nz-icon nzType="file" nzTheme="outline" /> Additional Details
+            <!-- Notes -->
+            <nz-form-label nzNoColon>{{ "Note" | translate }}</nz-form-label>
+            <nz-form-item>
+              <nz-form-control>
+                <textarea nz-input rows="3" formControlName="note"></textarea>
+              </nz-form-control>
+            </nz-form-item>
+
+            <!-- Upload -->
+            <nz-form-item>
+              <nz-form-label>{{ "Attachment" | translate }}</nz-form-label>
+              <nz-form-control>
+                <nz-upload
+                  [nzAction]="uploadUrl"
+                  [(nzFileList)]="fileList"
+                  (nzChange)="handleUpload($event)"
+                >
+                  <button nz-button>
+                    <i nz-icon nzType="upload"></i> Upload
+                  </button>
+                </nz-upload>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <!-- Column 2: Summary -->
+          <div
+            style="padding: 0 12px 12px 12px"
+            nz-row
+            nz-col
+            [nzSm]="24"
+            [nzLg]="10"
+          >
+            <h3 style="line-height: 0.1">
+              <nz-icon nzType="file" nzTheme="outline" />
+              {{ "AdditionalDetail" | translate }}
             </h3>
 
             <!-- Quantity & Ref No -->
@@ -160,52 +203,52 @@ import { Account } from "../account/account.service";
               <nz-form-control>
                 <app-offer-select
                   [memberId]="frm.get('memberId')?.value"
-                  [accountId]="frm.get('accountId')?.value"
                   formControlName="offerId"
                   (selectedObject)="selectedOffer = $event"
                 />
               </nz-form-control>
             </nz-form-item>
-
-            <div class="account-card" *ngIf="selectedOffer; else emptyOffer">
-              <div nz-flex nzGap="small">
-                <nz-avatar
-                  [nzSrc]="selectedOffer?.photo"
-                  nzShape="square"
-                  [nzSize]="64"
-                  nzIcon="gift"
-                ></nz-avatar>
-                <div style="width:100%">
-                  <strong> {{ selectedOffer?.name || "-" }} </strong><br />
-                  <span>
+            <div
+              class="offer-card"
+              nz-flex
+              nzGap="small"
+              *ngIf="selectedOffer; else emptyOffer"
+            >
+              @if(selectedOffer?.photo){
+              <img [src]="selectedOffer?.photo" alt="" />
+              } @else {
+              <img src="./assets/image/img-not-found.jpg" alt="" />
+              }
+              <div style="width:100%; padding:8px 8px 8px 0">
+                <strong> {{ selectedOffer?.name || "-" }} </strong><br />
+                <span>
+                  {{
+                    translateService.currentLang == "km"
+                      ? selectedOffer?.offerTypeNameKh || "-"
+                      : selectedOffer?.offerTypeNameEn || "-"
+                  }} </span
+                ><br />
+                <div
+                  nz-row
+                  nzJustify="space-between"
+                  nzAlign="middle"
+                  style="width: 100%"
+                >
+                  <strong>
                     {{
-                      translateService.currentLang == "km"
-                        ? selectedOffer?.offerTypeNameKh || "-"
-                        : selectedOffer?.offerTypeNameEn || "-"
-                    }} </span
-                  ><br />
-                  <div
-                    nz-row
-                    nzJustify="space-between"
-                    nzAlign="middle"
-                    style="width: 100%"
-                  >
-                    <strong>
-                      {{
-                        getAccountBalance(
-                          selectedOffer?.redeemWith!,
-                          selectedOffer?.redeemCost
-                        )
-                      }}
-                    </strong>
+                      getAccountBalance(
+                        selectedOffer?.redeemWith!,
+                        selectedOffer?.redeemCost
+                      )
+                    }}
+                  </strong>
 
-                    <nz-input-number
-                      style="width: 60px; margin-left:auto"
-                      formControlName="qty"
-                      [nzMin]="1"
-                      [nzStep]="1"
-                    ></nz-input-number>
-                  </div>
+                  <nz-input-number
+                    style="width: 60px; margin-left:auto"
+                    formControlName="qty"
+                    [nzMin]="1"
+                    [nzStep]="1"
+                  ></nz-input-number>
                 </div>
               </div>
             </div>
@@ -240,106 +283,64 @@ import { Account } from "../account/account.service";
               </div>
             </ng-template>
 
-            <!-- <nz-form-label nzRequired nzNoColon>Quantity</nz-form-label>
-                <nz-form-item>
-                  <nz-form-control>
-                    <input nz-input formControlName="qty" />
-                  </nz-form-control>
-                </nz-form-item> -->
+            <div
+              class="account-card"
+              nzFlex
+              nzVertical="true"
+              style="margin-top: 16px"
+            >
+              <h3 style="text-weight: 600">
+                <nz-icon nzType="credit-card" nzTheme="outline" />
+                {{ "TransactionSummary" | translate }}
+              </h3>
+              <div nz-flex nzJustify="space-between">
+                <span>{{ "CurrentBalance" | translate }}</span>
+                <span>{{
+                  selectedOffer
+                    ? getAccountBalance(
+                        selectedOffer.redeemWith!,
+                        currentBalance
+                      )
+                    : "0.00"
+                }}</span>
+              </div>
 
-            <nz-form-label nzNoColon>Reference No</nz-form-label>
-            <nz-form-item>
-              <nz-form-control>
-                <input nz-input formControlName="refNo" />
-              </nz-form-control>
-            </nz-form-item>
-            <!-- Notes -->
-            <nz-form-label nzNoColon>Notes</nz-form-label>
-            <nz-form-item>
-              <nz-form-control>
-                <textarea nz-input rows="3" formControlName="note"></textarea>
-              </nz-form-control>
-            </nz-form-item>
-
-            <!-- Upload -->
-            <nz-form-item>
-              <nz-form-label>Attachment</nz-form-label>
-              <nz-form-control>
-                <nz-upload
-                  [nzAction]="uploadUrl"
-                  [(nzFileList)]="fileList"
-                  (nzChange)="handleUpload($event)"
+              <div nz-flex nzJustify="space-between" *ngIf="selectedOffer">
+                <span
+                  >{{ "RedeemCost" | translate }} (x{{
+                    frm.get("qty")?.value
+                  }})</span
                 >
-                  <button nz-button>
-                    <i nz-icon nzType="upload"></i> Upload
-                  </button>
-                </nz-upload>
-              </nz-form-control>
-            </nz-form-item>
+                <span
+                  >{{
+                    selectedOffer
+                      ? getAccountBalance(
+                          selectedOffer?.redeemWith!,
+                          this.frm.get("amount")?.value
+                        )
+                      : "0.00"
+                  }}
+                </span>
+              </div>
 
-            <!-- Buttons -->
-            <div class="button-group">
-              <button nz-button nzType="default">Cancel</button>
-              <button nz-button nzType="primary">Save</button>
-            </div>
-          </form>
-        </div>
-        <!-- Column 2: Summary -->
-        <div style="padding:12px" nz-row nz-col [nzSm]="24" [nzLg]="10">
-          <div class="account-card">
-            <div nz-flex nzGap="small">
-              <nz-avatar
-                [nzText]="selectedMember?.name?.substring(0, 2)"
-                nzSize="large"
-                [nzSrc]="selectedMember?.photo"
-                style="background-color: #ccc"
-              ></nz-avatar>
-              <div>
-                <strong> {{ selectedMember?.name || "-" }} </strong><br />
-                <span> {{ selectedMember?.email || "-" }}</span
-                ><br />
-                <nz-tag>{{ selectedMember?.memberClassName || "-" }}</nz-tag>
+              <nz-divider style="margin: 8px 0"></nz-divider>
+              <div nz-flex nzJustify="space-between">
+                <span>{{ "RemainingBalance" | translate }}</span>
+                <span>
+                  {{
+                    selectedOffer
+                      ? getAccountBalance(
+                          selectedOffer?.redeemWith!,
+                          remainingBalance()
+                        )
+                      : "0.00"
+                  }}
+                </span>
               </div>
             </div>
           </div>
-
-          <div
-            class="account-card"
-            nzFlex
-            nzVertical="true"
-            style="margin-top: 16px"
-          >
-            <h3 style="text-weight: 600">
-              <nz-icon nzType="credit-card" nzTheme="outline" /> Transaction
-              Summary
-            </h3>
-            <div nz-flex nzJustify="space-between">
-              <span>{{ "CurrentBalance" | translate }}</span>
-
-              <span>
-                {{
-                  selectedAccount
-                    ? getAccountBalance(
-                        selectedAccount.accountType,
-                        selectedAccount.balance
-                      )
-                    : "0.00"
-                }}
-              </span>
-            </div>
-            <div nz-flex nzJustify="space-between">
-              <span>{{ "RedeemCost" | translate }}</span>
-              <span>
-                {{  this.frm.get('accountId')?.value || "0.00"  }}
-              </span>
-            </div>
-
-            <nz-divider style="margin: 8px 0"></nz-divider>
-
-            <div><span>New balance</span></div>
-          </div>
         </div>
-      </div>
+      </form>
     </div>
 
     <div *nzModalFooter>
@@ -393,6 +394,21 @@ import { Account } from "../account/account.service";
   background-color: #fafafa;
   pointer-events: none;
 }
+.offer-card{
+  height: 100px;
+  border:1px solid #d3d3d3;
+  min-width: 170px ;
+  border-radius: 8px; 
+  img{ 
+     border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  
+     border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+    width: 100px;
+    object-fit:cover;
+  }
+}
 
 .placeholder-text {
   margin-left: 5px;
@@ -415,11 +431,8 @@ nz-form-label{
   padding: 0px !important; 
 }
 .balance-card{
-  min-width:190px;
-}
-
-
-
+  min-width:165px;
+} 
 .wallet-points {
   display: flex;
   justify-content: space-between;
@@ -475,7 +488,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   };
 
   selectedMember: Member | null = null;
-  selectedAccount: MemberAccount | null = null;
   selectedOffer: Offer | null = null;
   override ngOnInit(): void {
     super.ngOnInit();
@@ -499,20 +511,12 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     });
   }
 
-  selectAccountType(account: MemberAccount) {
-    this.frm.get("accountId")?.patchValue(account.accountId);
-
-    this.selectedAccount = account;
-    console.log("this.selectedAccount", this.selectedAccount);
-    console.log("account", account);
-  }
-
   fileList: NzUploadFile[] = [];
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
 
   isRedemptionRemove = computed(() => true);
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
-  disabled = false;
+  currentBalance = 0;
 
   handleUpload(info: NzUploadChangeParam): void {
     let fileList = [...info.fileList];
@@ -533,6 +537,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     });
     this.fileList = fileList;
   }
+
   override initControl(): void {
     const { noteMaxLengthValidator, required, integerValidator } =
       CommonValidators;
@@ -550,7 +555,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         [required],
       ],
       qty: [{ value: 1, disabled: false }, [integerValidator, required]],
-      amount: [null, [required, integerValidator]],
+      amount: [{ value: 0, disabled: false }, [required]],
       note: [null, [noteMaxLengthValidator]],
       status: [RedeemStatuses.Used, [required, integerValidator]],
       locationId: [null, [required, integerValidator]],
@@ -560,6 +565,9 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     this.frm.controls["memberId"]?.valueChanges.subscribe({
       next: () => {
         this.onMemberChange();
+        setTimeout(() => {
+          this.frm.get("offerId")?.enable();
+        }, 50);
       },
     });
     this.frm.controls["qty"]?.valueChanges.subscribe({
@@ -571,10 +579,16 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
     this.frm.controls["offerId"]?.valueChanges.subscribe({
       next: () => {
-        let qty = this.frm.controls["qty"].value;
-        let amount = this.selectedOffer?.redeemCost! * qty;
+        setTimeout(() => {
+          let qty = this.frm.controls["qty"].value;
+          let amount = this.selectedOffer?.redeemCost! * qty;
+          this.currentBalance =
+            this.selectedMember?.accounts?.find(
+              (a) => a.accountType == this.selectedOffer?.redeemWithNameKh
+            )?.balance || 0;
 
-        this.frm.get("amount")?.setValue(amount);
+          this.frm.get("amount")?.setValue(amount);
+        }, 50);
       },
     });
 
@@ -593,13 +607,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
       if (val && !this.modal?.isView) {
         this.frm.get("accountId")?.enable();
-      }
-    });
-
-    this.frm.get("accountId")?.valueChanges.subscribe((val) => {
-      if (!this.modal?.isView) this.frm.get("offerId")?.setValue(null);
-      if (val && !this.modal?.isView) {
-        this.frm.get("offerId")?.enable();
       }
     });
   }
@@ -650,6 +657,16 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       if (b.accountId === AccountTypes.Wallet) return 1;
       return 0;
     });
+  }
+
+  itemPrice(): number {
+    const balance = Number(this.selectedOffer?.redeemCost);
+    const amount = Number(this.frm.get("amount")?.value);
+    return balance - amount;
+  }
+
+  remainingBalance() {
+    return this.currentBalance - this.frm.get('amount')?.value;
   }
 
   override setFormValue() {
