@@ -70,7 +70,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
             </nz-upload>
             } } @else {
             <!-- add & edit -->
-            @if(file.length == 0 ){
+            @if(file.length == 0){
             <div
               class="image-upload"
               (click)="uiService.showUpload()"
@@ -651,7 +651,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       photo: this.model.photo,
     });
 
-    if (this.model.photo) {
+    if (this.model.photo || this.model.photo !== '') {
       this.file = [];
       this.file.push({
         uid: "",
