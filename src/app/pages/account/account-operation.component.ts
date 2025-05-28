@@ -191,8 +191,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   isTransactionRemove = computed(() => true);
 
   override ngOnInit(): void {
-    super.ngOnInit();
-    console.log(this.modal);
+    super.ngOnInit(); 
     if (!this.modal?.isView) {
       this.systemSettingService.find(SETTING_KEY.TransNoAutoId).subscribe({
         next: (value?: string) => {

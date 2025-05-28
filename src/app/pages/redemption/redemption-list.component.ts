@@ -145,7 +145,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               <th nzWidth="120px">
                 {{ "Offer" | translate }}
               </th>
-              <th nzWidth="100px" nzAlign="right"> {{ "Cost" | translate }} </th>
+              <th nzWidth="100px" nzAlign="right">{{ "Cost" | translate }}</th>
               <th nzWidth="85px">{{ "Date" | translate }}</th>
               <th nzWidth="50px">{{ "Location" | translate }}</th>
               <th nzWidth="50px">{{ "Status" | translate }}</th>

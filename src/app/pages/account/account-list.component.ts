@@ -345,8 +345,6 @@ export class AccountListComponent
   }
 
   override search(delay: number = 50) {
-    console.log(this.tabIndex);
-
     if (this.isLoading() || this.tabIndex > 1) return;
     this.isLoading.set(true);
     setTimeout(() => {

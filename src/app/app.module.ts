@@ -163,6 +163,7 @@ import { AccountSelectComponent } from "./pages/account/account-select.component
 import { AccountListComponent } from "./pages/account/account-list.component";
 import { AccountOperationComponent } from "./pages/account/account-operation.component";
 import { LocationMultiSelectComponent } from "./pages/location/location-multi-select.component";
+import { RedemptionPrintComponent } from "./pages/redemption/redemption-print.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -360,6 +361,7 @@ export class CustomTranslate implements TranslateLoader {
     RedemptionDeleteComponent,
     RedemptionListComponent,
     RedemptionOperationComponent,
+    RedemptionPrintComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

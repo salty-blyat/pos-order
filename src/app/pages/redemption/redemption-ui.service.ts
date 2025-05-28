@@ -5,12 +5,16 @@ import { RedemptionDeleteComponent } from "./redemption-delete.component";
 import { RedemptionOperationComponent } from "./redemption-operation.component";
 import { MainPageService } from "../../utils/services/main-page.service";
 import { Redemption } from "./redemption.service";
+import { RedemptionPrintComponent } from "./redemption-print.component";
 
 @Injectable({
   providedIn: "root",
 })
 export class RedemptionUiService extends BaseUiService {
-  constructor(modalService: NzModalService) {
+  constructor(
+    modalService: NzModalService,
+    private mainPageService: MainPageService
+  ) {
     super(
       modalService,
       RedemptionOperationComponent,
@@ -33,6 +37,19 @@ export class RedemptionUiService extends BaseUiService {
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: "added", value: e.model, componentId });
       },
+    });
+  }
+
+  showPrint(model: Redemption, id: number): any {
+    this.modalService.create({
+      nzContent: RedemptionPrintComponent,
+      nzFooter: null,
+      nzData: { model, reportId:id },
+      nzClosable: true,
+      nzWidth: "100%",
+      nzBodyStyle: this.mainPageService.getModalBodyStyle(),
+      nzStyle: this.mainPageService.getModalFullPageSize(),
+      nzMaskClosable: false,
     });
   }
 }

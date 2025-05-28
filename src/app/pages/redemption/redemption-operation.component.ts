@@ -22,6 +22,7 @@ import { SettingService } from "../../app-setting";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { Observable } from "rxjs";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
+import { Report, ReportService } from "../report/report.service";
 
 @Component({
   selector: "app-redemption-operation",
@@ -346,6 +347,17 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
       </div>
       <div *ngIf="modal?.isView">
         <a
+          *ngIf="isRedemptionPrint()"
+          nz-dropdown (click)="uiService.showPrint(model, RedeemPrint)" 
+        >
+          <span nz-icon nzType="printer" nzTheme="outline"></span>
+          {{ "Print" | translate }} 
+        </a> 
+        <nz-divider
+          nzType="vertical"
+          *ngIf="!isLoading() && isRedemptionPrint()"
+        ></nz-divider>
+        <a
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
@@ -460,6 +472,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     service: RedemptionService,
     public translateService: TranslateService,
     public memberService: MemberService,
+    private reportService: ReportService,
     public offerService: OfferService,
     private authService: AuthService,
     private settingService: SettingService,
@@ -474,9 +487,11 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   extData: string | null = null;
   currentB: number | null = null;
   remainingB: number | null = null;
+  RedeemPrint = 1;
 
   override ngOnInit(): void {
     super.ngOnInit();
+    this.getReports();
     if (!this.modal?.isView) {
       this.systemSettingService.find(SETTING_KEY.RedemptionAutoId).subscribe({
         next: (value?: string) => {
@@ -486,6 +501,24 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         },
       });
     }
+  }
+  reports: Report[] = [];
+  getReports() {
+    this.reportService
+      .search({
+        pageIndex: 1,
+        pageSize: 9999999,
+        sorts: "",
+        filters: "",
+      })
+      .subscribe({
+        next: (result: any) => {
+          this.reports = result.results;
+        },
+        error: (error: any) => {
+          console.log(error);
+        },
+      });
   }
   //view
   nzShowButtonView = {
@@ -517,7 +550,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   fileList: NzUploadFile[] = [];
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
-
+  isRedemptionPrint = computed(() => true);
   isRedemptionRemove = computed(() => true);
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   selectedAccount: MemberAccount | null = null;
@@ -685,13 +718,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         const parsed: { startBalance: number } = JSON.parse(
           this.model?.extData
         );
-        console.log(
-          "startBalance",
-          JSON.parse(this.model?.extData).startBalance
-        );
-
         this.currentB = parsed.startBalance;
-        console.log("this.currentB", this.currentB);
       } catch (error) {
         console.error("Failed to parse extData:", error);
       }
@@ -709,10 +736,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       } catch (error) {
         console.error("Failed to parse extData:", error);
       }
-      console.log("top");
-      console.log("this.remainingB,", this.remainingB);
     } else {
-      console.log("sbottom");
       if (
         this.selectedAccount?.balance != null &&
         this.selectedAccount?.balance != undefined
@@ -765,7 +789,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         },
       });
     }
-    console.log(this.model);
 
     this.fileList =
       this.model.attachments?.map(
