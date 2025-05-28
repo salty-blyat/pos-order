@@ -1,8 +1,11 @@
 import {
   Component,
   computed,
+  input,
+  OnChanges,
   Query,
   signal,
+  SimpleChanges,
   ViewEncapsulation,
 } from "@angular/core";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
@@ -20,6 +23,7 @@ import {
   LookupItemService,
 } from "../lookup/lookup-item/lookup-item.service";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
+import { DatetimeHelper } from "../../helpers/datetime-helper";
 
 @Component({
   selector: "app-redemption-list",
@@ -263,7 +267,10 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class RedemptionListComponent extends BaseListComponent<Redemption> {
+export class RedemptionListComponent
+  extends BaseListComponent<Redemption>
+  implements OnChanges
+{
   constructor(
     service: RedemptionService,
     uiService: RedemptionUiService,
@@ -299,7 +306,15 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
     parseInt(this.sessionStorageService.getValue(this.offerTypeKey) ?? 0)
   );
   lookup = signal<LookupItem[]>([]);
+  memberId = input(0);
+  redeemDate: any = [];
 
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["tabIndex"]) {
+      this.search();
+    }
+  }
   override ngOnInit(): void {
     this.param.set({
       pageSize:
@@ -341,6 +356,23 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
 
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
+    if (this.memberId()) {
+      filters.push({
+        field: "memberId",
+        operator: "eq",
+        value: this.memberId(),
+      });
+    }
+    if (this.redeemDate.length > 0) {
+      filters.push({
+        field: "redeemDate",
+        operator: "contains",
+        value: `${DatetimeHelper.toShortDateString(
+          this.redeemDate[0]
+        )} ~ ${DatetimeHelper.toShortDateString(this.redeemDate[1])}`,
+      });
+    }
+
     if (this.offerTypeId()) {
       filters.push({
         field: "offerType",

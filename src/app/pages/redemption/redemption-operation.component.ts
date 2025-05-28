@@ -122,11 +122,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                     selectedMember?.memberClassName || "-"
                   }}</strong>
                   <div style="margin-top:auto" nz-flex nzGap="small">
-                    <div
-                      nz-flex
-                      nzVertical
-                      *ngFor="let a of sortedAccounts" 
-                    >
+                    <div nz-flex nzVertical *ngFor="let a of sortedAccounts">
                       <div class="card-value">
                         <i
                           nz-icon
@@ -202,6 +198,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                   [memberId]="frm.get('memberId')?.value"
                   formControlName="offerId"
                   (selectedObject)="selectedOffer = $event"
+                  [isAvailable]="!modal?.isView"
                 />
               </nz-form-control>
             </nz-form-item>
@@ -234,8 +231,8 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                   <strong>
                     {{
                       getAccountBalance(
-                        selectedOffer?.redeemWith!,
-                        selectedOffer?.redeemCost
+                        selectedOffer.redeemWith!,
+                        selectedOffer.redeemCost
                       )
                     }}
                   </strong>
@@ -290,13 +287,10 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 <nz-icon nzType="credit-card" nzTheme="outline" />
                 {{ "TransactionSummary" | translate }}
               </h3>
-              <div nz-flex nzJustify="space-between" *ngIf="!modal?.isView">
+              <div nz-flex nzJustify="space-between">
                 <span>{{ "CurrentBalance" | translate }}</span>
                 <span>{{
-                  getAccountBalance(
-                    selectedOffer?.redeemWith!,
-                    selectedAccount?.balance
-                  )
+                  getAccountBalance(selectedOffer?.redeemWith!, currentB)
                 }}</span>
               </div>
 
@@ -316,23 +310,16 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 </span>
               </div>
 
-              <nz-divider
-                *ngIf="!modal?.isView"
-                style="margin: 8px 0"
-              ></nz-divider>
-              <div nz-flex nzJustify="space-between" *ngIf="!modal?.isView">
+              <nz-divider style="margin: 8px 0"></nz-divider>
+              <div nz-flex nzJustify="space-between">
                 <span>{{ "RemainingBalance" | translate }}</span>
                 <span
                   [ngStyle]="{
-                    color: remainingBalance() > 0 ? 'green' : 'black',
                     'font-weight': 'bold'
                   }"
                 >
                   {{
-                    getAccountBalance(
-                      selectedOffer?.redeemWith!,
-                      remainingBalance()
-                    )
+                    getAccountBalance(selectedOffer?.redeemWith!, remainingB)
                   }}
                 </span>
               </div>
@@ -484,6 +471,10 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   selectedMember: Member | null = null;
   selectedOffer: Offer | null = null;
+  extData: string | null = null;
+  currentB: number | null = null;
+  remainingB: number | null = null;
+
   override ngOnInit(): void {
     super.ngOnInit();
     if (!this.modal?.isView) {
@@ -567,6 +558,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       status: [RedeemStatuses.Used, [required, integerValidator]],
       locationId: [null, [required, integerValidator]],
       memberId: [null, [required]],
+      extData: [null],
     });
 
     this.frm.controls["memberId"]?.valueChanges.subscribe({
@@ -584,30 +576,47 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     });
 
     this.frm.controls["qty"]?.valueChanges.subscribe({
-      next: (qty) => {
+      next: () => {
         setTimeout(() => {
-          let amount = this.selectedOffer?.redeemCost! * Number(qty);
-
-          this.frm.get("amount")?.setValue(amount);
+          this.setAmountControl();
+          this.setExtDataControl();
         }, 50);
       },
     });
 
     this.frm.controls["offerId"]?.valueChanges.subscribe({
-      next: () => {
+      next: (v) => {
         setTimeout(() => {
-          let qty = this.frm.controls["qty"].value;
-          let amount = this.selectedOffer?.redeemCost! * qty; 
           this.selectedAccount =
             this.selectedMember?.accounts?.find(
               (a) => a.accountType == this.selectedOffer?.redeemWith
             ) ?? null;
-          console.log(this.selectedAccount);
+
           this.frm.get("accountId")?.setValue(this.selectedAccount?.accountId);
-          this.frm.get("amount")?.setValue(amount);
+          this.setAmountControl();
+          this.setExtDataControl();
+
+          this.getCurrectBalance();
+          this.remainingBalance();
         }, 50);
       },
     });
+  }
+
+  setAmountControl() {
+    let qty = this.frm.controls["qty"].value;
+    let amount = this.selectedOffer?.redeemCost! * qty;
+    this.frm.get("amount")?.setValue(amount);
+  }
+
+  setExtDataControl() {
+    this.extData = JSON.stringify({
+      cardNumber: "",
+      startBalance: this.selectedAccount?.balance,
+      endingBalance:
+        this.selectedAccount?.balance! - this.frm.get("amount")?.value,
+    });
+    this.frm.get("extData")?.setValue(this.extData);
   }
 
   override onSubmit(e?: any) {
@@ -658,37 +667,77 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     });
   }
 
-  itemPrice(): number {
-    const balance = Number(this.selectedOffer?.redeemCost);
-    const amount = Number(this.frm.get("amount")?.value);
-    return balance - amount;
-  }
+  // itemPrice(): number {
+  //   const balance = Number(this.selectedOffer?.redeemCost);
+  //   const amount = Number(this.frm.get("amount")?.value);
+  //   return balance - amount;
+  // }
 
-  remainingBalance() {
-    if (
-      this.selectedAccount?.balance != null &&
-      this.selectedAccount?.balance != undefined
-    ) {
-      return this.selectedAccount?.balance! - this.frm.get("amount")?.value;
+  getCurrectBalance() {
+    if (this.modal?.isView && this.model?.extData) {
+      try {
+        const parsed: { startBalance: number } = JSON.parse(
+          this.model?.extData
+        );
+        console.log(
+          "startBalance",
+          JSON.parse(this.model?.extData).startBalance
+        );
+
+        this.currentB = parsed.startBalance;
+        console.log("this.currentB", this.currentB);
+      } catch (error) {
+        console.error("Failed to parse extData:", error);
+      }
     } else {
-      return 0;
+      this.currentB = this.selectedAccount?.balance!;
+    }
+  }
+  remainingBalance() {
+    if (this.modal?.isView && this.model?.extData) {
+      try {
+        const parsed: { endingBalance: number } = JSON.parse(
+          this.model?.extData
+        );
+        this.remainingB = parsed?.endingBalance;
+      } catch (error) {
+        console.error("Failed to parse extData:", error);
+      }
+      console.log("top");
+      console.log("this.remainingB,", this.remainingB);
+    } else {
+      console.log("sbottom");
+      if (
+        this.selectedAccount?.balance != null &&
+        this.selectedAccount?.balance != undefined
+      ) {
+        this.remainingB =
+          this.selectedAccount?.balance! - this.frm.get("amount")?.value;
+      } else {
+        this.remainingB = 0;
+      }
     }
   }
 
   override setFormValue() {
     this.frm.patchValue({
-      redeemNo: this.model.redeemNo,
-      refNo: this.model.refNo,
-      offerId: this.model.offerId,
-      qty: this.model.qty,
-      amount: this.model.amount,
-      note: this.model.note,
-      status: this.model.status,
-      locationId: this.model.locationId,
-      memberId: this.model.memberId,
-      accountId: this.model.accountId,
-      redeemedDate: this.model.redeemedDate,
+      redeemNo: this.model?.redeemNo,
+      refNo: this.model?.refNo,
+      offerId: this.model?.offerId,
+      qty: this.model?.qty,
+      amount: this.model?.amount,
+      note: this.model?.note,
+      status: this.model?.status,
+      locationId: this.model?.locationId,
+      memberId: this.model?.memberId,
+      accountId: this.model?.accountId,
+      redeemedDate: this.model?.redeemedDate,
+      extData: this.model?.extData,
     });
+    if (this.model.extData) {
+      this.extData = this.model.extData;
+    }
+
     if (this.model.offerId && this.modal?.isView) {
       this.offerService.find(this.model.offerId).subscribe({
         next: (d: any) => {

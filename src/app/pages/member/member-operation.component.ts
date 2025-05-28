@@ -340,7 +340,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                   ></app-account-list>
                 </nz-tab>
                 <nz-tab [nzTitle]="'Redemption' | translate">
-                  <app-redemption-history [memberId]="modal.id" />
+                  <app-redemption-list [memberId]="modal.id" />
                 </nz-tab>
               </nz-tabset>
             </div>
@@ -555,7 +555,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   };
   tabIndex = 0;
   override ngOnInit(): void {
-    super.ngOnInit(); 
+    super.ngOnInit();
     if (this.modal?.isView) {
       this.systemSettingService.find(SETTING_KEY.MemberAutoId).subscribe({
         next: (value?: string) => {
@@ -563,6 +563,35 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
             this.frm.get("code")?.disable();
           }
         },
+      });
+    }
+    if (this.modal?.isView) {
+      this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
+        if (e.key === "edited") {
+          this.isLoading.set(true);
+          this.service.find(this.modal?.id).subscribe({
+            next: (result: Member) => {
+              this.model = result;
+
+              this.setFormValue();
+              if (this.model.photo) {
+                this.file = [
+                  {
+                    uid: "",
+                    name: this.model.name!,
+                    url: this.model.photo,
+                  },
+                ];
+              } else {
+                this.file = [];
+              }
+              this.isLoading.set(false);
+            },
+            error: (err: any) => {
+              console.log(err);
+            },
+          });
+        }
       });
     }
     this.uiService.refresher.subscribe((e) => {
@@ -573,7 +602,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
         }
       }
     });
-
     this.frm.get("name")?.valueChanges.subscribe({
       next: (event: any) => {
         this.memberName = event;

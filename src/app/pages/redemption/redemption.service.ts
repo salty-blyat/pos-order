@@ -31,7 +31,9 @@ export interface Redemption {
   memberId?: number;
   offerPhoto?: string;
   attachments?: Attachment[];
+  extData?: string;
 }
+// format like  this extData {"cardNumber":"", "startBalance":100, "endingBalance":100}
 
 @Injectable({
   providedIn: "root",

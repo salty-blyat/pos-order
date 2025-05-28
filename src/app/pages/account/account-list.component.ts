@@ -45,7 +45,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 <app-date-range-input
                   storageKey="trans-"
                   (valueChanged)="
-                    dateRange = $event; param().pageIndex = 1; search()
+                    redeemDate = $event; param().pageIndex = 1; search()
                   "
                 ></app-date-range-input>
               </div>
@@ -236,7 +236,7 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
 
   @Input() accounts: MemberAccount[] = [];
   @Input() tabIndex: number = 0;
-  dateRange: any = [];
+  redeemDate: any = [];
   isTransactionView = computed(() => true);
   isAccountTopup = computed(() => true);
   isAccountAdjust = computed(() => true);
@@ -253,13 +253,13 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   protected override getCustomFilters(): Filter[] {
     let filters: Filter[] = [];
 
-    if (this.dateRange.length > 0) {
+    if (this.redeemDate.length > 0) {
       filters.push({
-        field: "dateRange",
+        field: "redeemDate",
         operator: "contains",
         value: `${DatetimeHelper.toShortDateString(
-          this.dateRange[0]
-        )} ~ ${DatetimeHelper.toShortDateString(this.dateRange[1])}`,
+          this.redeemDate[0]
+        )} ~ ${DatetimeHelper.toShortDateString(this.redeemDate[1])}`,
       });
     }
     return filters;

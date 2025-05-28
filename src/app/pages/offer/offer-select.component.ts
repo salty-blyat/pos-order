@@ -140,10 +140,14 @@ export class OfferSelectComponent
   }
   @Output() selectedObject = new EventEmitter<Offer>();
   @Input() memberId = 0;
+  @Input() isAvailable = false;
+
   readonly AccountTypes = AccountTypes;
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
-    if (this.memberId) {
+    console.log(this.isAvailable);
+
+    if (this.memberId && this.isAvailable) {
       filters.push({
         field: "memberId",
         operator: "eq",
@@ -163,16 +167,19 @@ export class OfferSelectComponent
   }
 
   override search(delay: number = 50) {
+    console.log(this.isAvailable);
     if (this.isLoading()) return;
-    if (!this.memberId) return;
-    console.log(this.lists());
     this.isLoading.set(true);
     setTimeout(() => {
       this.param().filters = this.buildFilters();
       if (this.searchText() && this.param().pageIndex === 1) {
         this.lists.set([]);
       }
-      this.service.getAvailable(this.param()).subscribe({
+      let operation =
+        this.memberId && this.isAvailable
+          ? this.service.getAvailable(this.param())
+          : this.service.search(this.param());
+      operation.subscribe({
         next: (result: { results: any[] }) => {
           this.isLoading.set(false);
           this.lists.set(result.results);

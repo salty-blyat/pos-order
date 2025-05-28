@@ -47,7 +47,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 <app-date-range-input
                   storageKey="trans-"
                   (valueChanged)="
-                    dateRange = $event; param().pageIndex = 1; search()
+                    redeemDate = $event; param().pageIndex = 1; search()
                   "
                 ></app-date-range-input>
               </div>
@@ -203,7 +203,7 @@ export class RedemptionHistoryComponnet
   }
 
   memberId = input(0);
-  dateRange: any = [];
+  redeemDate: any = [];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["tabIndex"]) {
@@ -226,13 +226,13 @@ export class RedemptionHistoryComponnet
         value: this.memberId(),
       });
     }
-    if (this.dateRange.length > 0) {
+    if (this.redeemDate.length > 0) {
       filters.push({
-        field: "dateRange",
+        field: "redeemDate",
         operator: "contains",
         value: `${DatetimeHelper.toShortDateString(
-          this.dateRange[0]
-        )} ~ ${DatetimeHelper.toShortDateString(this.dateRange[1])}`,
+          this.redeemDate[0]
+        )} ~ ${DatetimeHelper.toShortDateString(this.redeemDate[1])}`,
       });
     }
     return filters;
