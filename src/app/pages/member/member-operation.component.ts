@@ -322,10 +322,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
             </div>
 
             <div *ngSwitchCase="3" class="tab-content">
-              <nz-tabset
-                style="margin: 0 8px;"
-                (nzSelectedIndexChange)="tabIndex = $event"
-              >
+              <nz-tabset style="margin: 0 8px;" [(nzSelectedIndex)]="tabIndex">
                 <nz-tab
                   *ngFor="let account of sortedAccounts"
                   [nzTitle]="
@@ -340,7 +337,10 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                   ></app-account-list>
                 </nz-tab>
                 <nz-tab [nzTitle]="'Redemption' | translate">
-                  <app-redemption-list [memberId]="modal.id" />
+                  <app-redemption-list
+                    [memberId]="modal.id"
+                    [isFromMember]="true"
+                  />
                 </nz-tab>
               </nz-tabset>
             </div>

@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  Input,
   input,
   OnChanges,
   Query,
@@ -124,6 +125,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
           [nzNoResult]="noResult"
           [nzFrontPagination]="false"
           (nzQueryParams)="onQueryParamsChange($event)"
+          style="height: calc(100vh - {{ isFromMember ? '270px' : '65px' }});"
         >
           <ng-template #noResult>
             <app-no-result-found></app-no-result-found>
@@ -296,6 +298,7 @@ export class RedemptionListComponent
       notificationService
     );
   }
+  @Input() isFromMember = false;
   readonly offerGroupKey = "redemption-offer-group-list-search";
   readonly offerTypeKey = "redemption-offer-type-list-search";
   readonly accountTypeKey = "redemption-account-type-list-search";

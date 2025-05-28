@@ -103,6 +103,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
             [nzNoResult]="noResult"
             [nzFrontPagination]="false"
             (nzQueryParams)="onQueryParamsChange($event)"
+            style="height: calc(100vh - 270px);"
           >
             <ng-template #noResult>
               <app-no-result-found></app-no-result-found>
@@ -189,7 +190,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                   }"
                 >
                   {{ getAccountBalance(data.accountType!, data.amount) }}
-                </td> 
+                </td>
                 <td nzEllipsis>{{ data.note }}</td>
                 <td nzEllipsis>{{ data.refNo }}</td>
                 <!-- <td class="col-action">
