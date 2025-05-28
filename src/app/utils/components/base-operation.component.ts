@@ -4,7 +4,7 @@ import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../services/common-validators";
 import { BaseUiService } from "../services/base-ui.service";
 import { BaseApiService } from "../services/base-api.service";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 interface SharedDomain {
   id?: number;
@@ -28,7 +28,7 @@ export class BaseOperationComponent<T extends SharedDomain>
   frm!: FormGroup;
   model!: T;
   autoTips: Record<any, any> = CommonValidators.autoTips;
-  refreshSub$: any;
+  refreshSub$= new Subscription();
 
   ngOnInit(): void {
     if (this.isLoading()) return;

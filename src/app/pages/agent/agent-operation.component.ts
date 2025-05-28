@@ -222,7 +222,7 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
       email: [null, [emailValidator, required]],
       phone: [null, [multiplePhoneValidator, required]],
       address: [null],
-      joinDate: [new Date().toISOString()],
+      joinDate: [new Date()],
       note: [null, [noteMaxLengthValidator()]],
     });
     this.frm

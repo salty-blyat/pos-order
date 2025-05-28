@@ -97,6 +97,9 @@ import { NotificationService } from "../../utils/services/notification.service";
               <th nzEllipsis nzWidth="150px">
                 {{ "Agent" | translate }}
               </th>
+              <th nzEllipsis nzWidth="150px">
+                {{ "Address" | translate }}
+              </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -123,6 +126,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               <td nzEllipsis>{{ data.phone }}</td>
               <td nzEllipsis>{{ data.memberClassName }}</td>
               <td nzEllipsis>{{ data.agentName }}</td>
+              <td nzEllipsis>{{ data.address }}</td>
 
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">

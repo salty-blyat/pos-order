@@ -17,7 +17,11 @@ import { Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { NotificationService } from "../../utils/services/notification.service";
-import { AccountTypes, LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import {
+  AccountTypes,
+  LOOKUP_TYPE,
+  RedeemStatuses,
+} from "../lookup/lookup-type.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import {
   LookupItem,
@@ -135,23 +139,22 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               <th [nzWidth]="SIZE_COLUMNS.ID" class="col-header col-rowno">
                 #
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.CODE">
+              <th nzWidth="60px">
                 {{ "RedeemNo" | translate }}
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.IMAGE" nzEllipsis nzAlign="center">
-                {{ "Image" | translate }}
-              </th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME">
+              <th nzWidth="120px">
                 {{ "Offer" | translate }}
               </th>
-              <th nzWidth="100px">{{ "Status" | translate }}</th>
+              <th nzWidth="85px">{{ "Date" | translate }}</th>
+              <th nzWidth="50px">{{ "Location" | translate }}</th>
+
+              <th nzWidth="50px">{{ "Status" | translate }}</th>
+              <th nzWidth="150px">{{ "Note" | translate }}</th>
               <th nzWidth="100px" nzAlign="right">
                 {{ "Amount" | translate }}
               </th>
-              <th nzWidth="120px">{{ "Location" | translate }}</th>
-              <th nzWidth="150px">{{ "RedeemedDate" | translate }}</th>
-              <th nzWidth="150px">{{ "Note" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
+
+              <th nzWidth="45px"></th>
             </tr>
           </thead>
           <tbody>
@@ -174,23 +177,38 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 >
                 <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
               </td>
-              <td nzEllipsis class="image" nzAlign="center">
-                <img
-                  *ngIf="data.offerPhoto"
-                  class="image-list"
-                  height="42"
-                  [src]="data.offerPhoto"
-                  alt=""
-                />
-                <img
-                  *ngIf="!data.offerPhoto"
-                  class="image-list"
-                  height="42"
-                  src="./assets/image/img-not-found.jpg"
-                  alt=""
-                />
+              <td nzEllipsis class="image">
+                <div style="display:flex; gap:4px">
+                  <img
+                    *ngIf="data.offerPhoto"
+                    class="image-list"
+                    height="42"
+                    [src]="data.offerPhoto"
+                    alt=""
+                  />
+                  <img
+                    *ngIf="!data.offerPhoto"
+                    class="image-list"
+                    height="42"
+                    src="./assets/image/img-not-found.jpg"
+                    alt=""
+                  />
+
+                  <div style="display:flex; flex-direction:column">
+                    {{ data.offerName }}
+                    <span style="font-size: 12px; color: #6f6f6f">
+                      {{
+                        translateService.currentLang === "km"
+                          ? data.redeemWithNameKh
+                          : data.redeemWithNameEn
+                      }}
+                    </span>
+                  </div>
+                </div>
               </td>
-              <td nzEllipsis>{{ data.offerName }}</td>
+              <td nzEllipsis>{{ data.redeemedDate | customDateTime }}</td>
+              <td nzEllipsis>{{ data.locationName }}</td>
+
               <td
                 nzEllipsis
                 [ngStyle]="{ color: getStatusColor(data.status!) }"
@@ -203,7 +221,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                   }}
                 </span>
               </td>
-
+              <td nzEllipsis>{{ data.note }}</td>
               <td
                 nzEllipsis
                 nzAlign="right"
@@ -219,42 +237,24 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               >
                 {{ getAccountBalance(data.redeemWith!, data.amount) }}
               </td>
-              <td nzEllipsis>{{ data.locationName }}</td>
-              <td nzEllipsis>{{ data.redeemedDate | customDateTime }}</td>
-              <td nzEllipsis>{{ data.note }}</td>
               <td class="col-action">
-                <nz-space [nzSplit]="spaceSplit">
-                  <ng-template #spaceSplit>
-                    <nz-divider nzType="vertical"></nz-divider>
-                  </ng-template>
-                  <ng-container *ngIf="isRedemptionEdit()">
-                    <!-- <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
-                      <i
-                        nz-icon
-                        nzType="priter"
-                        nzTheme="outline"
-                        class="edit"
-                      ></i>
-                      {{ "Print" | translate }}
-                    </a> -->
-                  </ng-container>
-                  <ng-container *ngIf="isRedemptionRemove()">
-                    <a
-                      *nzSpaceItem
-                      (click)="uiService.showDelete(data.id || 0)"
-                      nz-typography
-                      class="delete"
-                    >
-                      <i
-                        nz-icon
-                        nzType="delete"
-                        nzTheme="outline"
-                        style="padding-right: 5px"
-                      ></i>
-                      {{ "Delete" | translate }}
-                    </a>
-                  </ng-container>
-                </nz-space>
+                <a
+                  *ngIf="
+                    isRedemptionRemove() &&
+                    data.status != RedeemStatuses.Removed
+                  "
+                  (click)="uiService.showDelete(data.id || 0)"
+                  nz-typography
+                  class="delete"
+                >
+                  <i
+                    nz-icon
+                    nzType="delete"
+                    nzTheme="outline"
+                    style="padding-right: 5px"
+                  ></i>
+                  {{ "Delete" | translate }}
+                </a>
               </td>
             </tr>
           </tbody>
@@ -270,7 +270,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
         padding: 0 !important;
       }
       .image-list {
-        height: 38px;
+        width: 60px;
         object-fit: scale-down;
       }
     `,
@@ -303,6 +303,8 @@ export class RedemptionListComponent
   readonly offerTypeKey = "redemption-offer-type-list-search";
   readonly accountTypeKey = "redemption-account-type-list-search";
   readonly statusKey = "redemption-status-list-search";
+  readonly advancedStoreKey = "redemption-list-advanced-filter";
+
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   accountTypeId = signal(
     parseInt(this.sessionStorageService.getValue(this.accountTypeKey) ?? 0)
@@ -424,5 +426,6 @@ export class RedemptionListComponent
   isRedemptionView = computed(() => true);
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
   readonly AccountTypes = AccountTypes;
+  readonly RedeemStatuses = RedeemStatuses;
   getAccountBalance = getAccountBalance;
 }

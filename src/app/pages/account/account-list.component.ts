@@ -3,6 +3,8 @@ import {
   computed,
   inject,
   Input,
+  OnChanges,
+  signal,
   SimpleChanges,
   ViewEncapsulation,
 } from "@angular/core";
@@ -18,7 +20,11 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { MemberAccount } from "../member/member.service";
 import { AccountUiService } from "./account-ui.service";
 import { TranslateService } from "@ngx-translate/core";
-import { AccountTypes, TransactionTypes } from "../lookup/lookup-type.service";
+import {
+  AccountTypes,
+  LOOKUP_TYPE,
+  TransactionTypes,
+} from "../lookup/lookup-type.service";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
 import { DatetimeHelper } from "../../helpers/datetime-helper";
 
@@ -42,12 +48,46 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
           >
             <div nz-flex nzGap="small">
               <div class="filter-box" style="width: 230px;">
+                <app-filter-input
+                  class="fixed-width-select"
+                  storageKey="member-list"
+                  (filterChanged)="
+                    searchText.set($event); param().pageIndex = 1; search()
+                  "
+                ></app-filter-input>
+              </div>
+
+              <div class="filter-box" style="width: 230px;">
                 <app-date-range-input
                   storageKey="trans-"
                   (valueChanged)="
                     transDate = $event; param().pageIndex = 1; search()
                   "
                 ></app-date-range-input>
+              </div>
+              <div class="filter-box" style="width: 230px;">
+                <app-lookup-item-select
+                  class="fixed-width-select"
+                  showAll="AllTransactionType"
+                  [showAllOption]="true"
+                  storageKey="trans-type-list-search"
+                  [lookupType]="LOOKUP_TYPE.TransactionType"
+                  (valueChanged)="
+                    typeId.set($event); param().pageIndex = 1; search()
+                  "
+                >
+                </app-lookup-item-select>
+              </div>
+              <div class="filter-box" style="width: 230px;">
+                <app-location-select
+                  class="fixed-width-select"
+                  [showAllOption]="true"
+                  storageKey="location-account-list-search"
+                  (valueChanged)="
+                    locationId.set($event); param().pageIndex = 1; search()
+                  "
+                >
+                </app-location-select>
               </div>
             </div>
             <div nz-flex nzGap="small">
@@ -68,6 +108,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 <i nz-icon nzType="plus" nzTheme="outline"></i>
                 {{ "Adjust" | translate }}
               </button>
+              @if(isTopup){
               <button
                 *ngIf="isAccountTopup()"
                 nz-button
@@ -85,6 +126,25 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 <i nz-icon nzType="plus" nzTheme="outline"></i>
                 {{ "Topup" | translate }}
               </button>
+              } @else{
+              <button
+                *ngIf="isAccountReward()"
+                nz-button
+                nzType="primary"
+                (click)="
+                  uiService.showAdjust(
+                    '',
+                    accounts[tabIndex]?.accountId!,
+                    TransactionTypes.Earn,
+                    accounts[tabIndex]?.accountType!,
+                    accounts
+                  )
+                "
+              >
+                <i nz-icon nzType="plus" nzTheme="outline"></i>
+                {{ "Reward" | translate }}
+              </button>
+              }
             </div>
           </div>
         </nz-header>
@@ -114,25 +174,20 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 <th nzWidth="100px">
                   {{ "TransNo" | translate }}
                 </th>
-                <th nzWidth="100px">
-                  {{ "RedeemNo" | translate }}
-                </th>
-                <th nzWidth="150px">
+                <!-- <th nzWidth="150px">
                   {{ "Offer" | translate }}
-                </th>
+                </th> -->
                 <th nzWidth="150px">
                   {{ "Date" | translate }}
                 </th>
-                <th nzWidth="100px">
+                <th nzWidth="250px">
                   {{ "Type" | translate }}
                 </th>
 
+                <th nzEllipsis nzWidth="100px">{{ "Location" | translate }}</th>
+                <th nzEllipsis>{{ "Note" | translate }}</th>
                 <th nzWidth="100px" nzAlign="right">
                   {{ "Amount" | translate }}
-                </th>
-                <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
-                <th nzWidth="100px">
-                  {{ "RefNo" | translate }}
                 </th>
                 <!-- <th [nzWidth]="SIZE_COLUMNS.ACTION"></th> -->
               </tr>
@@ -163,19 +218,23 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                   >
                   <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
                 </td>
-                <td nzEllipsis>
-                  {{ data.redeemNo }}
-                </td>
-                <td nzEllipsis>{{ data.offerName }}</td>
+                <!-- <td nzEllipsis>{{ data.offerName }}</td> -->
                 <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
-                <td nzEllipsis="">
+                <td nzEllipsis>
                   {{
                     translateService.currentLang == "en"
                       ? data.typeNameEn
                       : data.typeNameKh
                   }}
+                  {{
+                    data.type == TransactionTypes.Redeem
+                      ? " - " + data.offerName
+                      : ""
+                  }}
                 </td>
 
+                <td nzEllipsis>{{ data.locationName }}</td>
+                <td nzEllipsis>{{ data.note }}</td>
                 <td
                   nzEllipsis
                   nzAlign="right"
@@ -191,23 +250,6 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 >
                   {{ getAccountBalance(data.accountType!, data.amount) }}
                 </td>
-                <td nzEllipsis>{{ data.note }}</td>
-                <td nzEllipsis>{{ data.refNo }}</td>
-                <!-- <td class="col-action">
-                  <a
-                    (click)="uiService.showDeleteTransaction(data.id || 0)"
-                    nz-typography
-                    class="delete"
-                  >
-                    <i
-                      nz-icon
-                      nzType="delete"
-                      nzTheme="outline"
-                      style="padding-right: 5px"
-                    ></i>
-                    {{ "Delete" | translate }}
-                  </a>
-                </td> -->
               </tr>
             </tbody>
           </nz-table>
@@ -218,7 +260,10 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class AccountListComponent extends BaseListComponent<Transaction> {
+export class AccountListComponent
+  extends BaseListComponent<Transaction>
+  implements OnChanges
+{
   constructor(
     override service: AccountService,
     override uiService: AccountUiService,
@@ -245,20 +290,40 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   transDate: any = [];
   isTransactionView = computed(() => true);
   isAccountTopup = computed(() => true);
+  isAccountReward = computed(() => true);
   isAccountAdjust = computed(() => true);
-  cancel() {
-    this.ref.triggerCancel().then();
-  }
+  isTopup = false;
+  locationId = signal<number>(0);
+  typeId = signal<number>(0);
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["tabIndex"]) {
+    if (changes["tabIndex"] && this.accounts[this.tabIndex] != undefined) {
+      if (this.accounts[this.tabIndex].accountType! == AccountTypes.Wallet) {
+        this.isTopup = true;
+      } else {
+        this.isTopup = false;
+      }
       this.search();
     }
   }
-
   protected override getCustomFilters(): Filter[] {
     let filters: Filter[] = [];
 
+    if (this.typeId()) {
+      filters.push({
+        field: "type",
+        operator: "eq",
+        value: this.typeId(),
+      });
+    }
+
+    if (this.locationId()) {
+      filters.push({
+        field: "locationId",
+        operator: "eq",
+        value: this.locationId(),
+      });
+    }
     if (this.transDate.length > 0) {
       filters.push({
         field: "transDate",
@@ -280,6 +345,8 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   }
 
   override search(delay: number = 50) {
+    console.log(this.tabIndex);
+
     if (this.isLoading() || this.tabIndex > 1) return;
     this.isLoading.set(true);
     setTimeout(() => {
@@ -304,6 +371,10 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   }
 
   readonly AccountTypes = AccountTypes;
+  readonly LOOKUP_TYPE = LOOKUP_TYPE;
   readonly TransactionTypes = TransactionTypes;
   readonly getAccountBalance = getAccountBalance;
+  override ngOnDestroy(): void {
+    this.refreshSub?.unsubscribe();
+  }
 }

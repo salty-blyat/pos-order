@@ -106,28 +106,20 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
               <th [nzWidth]="SIZE_COLUMNS.ID" class="col-header col-rowno">
                 #
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
-              <th [nzWidth]="SIZE_COLUMNS.IMAGE" nzEllipsis nzAlign="center">
-                {{ "Image" | translate }}
-              </th>
               <th [nzWidth]="SIZE_COLUMNS.NAME" nzEllipsis>
                 {{ "Name" | translate }}
-              </th>
-              <th nzWidth="100px" nzAlign="right">
-                {{ "RedeemCost" | translate }}
-              </th>
-              <th nzWidth="110px" nzAlign="right">
-                {{ "RedeemedQty" | translate }}
-              </th>
-              <th nzWidth="100px">
-                {{ "OfferType" | translate }}
               </th>
               <th nzWidth="100px">
                 {{ "OfferGroup" | translate }}
               </th>
-
               <th nzWidth="190px">
-                {{ "OfferDuration" | translate }}
+                {{ "Duration" | translate }}
+              </th>
+              <th nzWidth="110px" nzAlign="right">
+                {{ "Quantity" | translate }}
+              </th>
+              <th nzWidth="100px" nzAlign="right">
+                {{ "Cost" | translate }}
               </th>
               <th nzWidth="190px">
                 {{ "Note" | translate }}
@@ -147,32 +139,49 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                         }
                 }}
               </td>
+              <td nzEllipsis class="image">
+                <div style="display:flex; gap:4px">
+                  <img
+                    *ngIf="data.photo"
+                    class="image-list"
+                    height="42"
+                    [src]="data.photo"
+                    alt=""
+                  />
+                  <img
+                    *ngIf="!data.photo"
+                    class="image-list"
+                    height="42"
+                    src="./assets/image/img-not-found.jpg"
+                    alt=""
+                  />
+
+                  <div style="display:flex; flex-direction:column">
+                    {{ data.name }}
+                    <span style="font-size: 12px; color: #6f6f6f">
+                      {{
+                        translateService.currentLang === "km"
+                          ? data.offerTypeNameKh
+                          : data.offerTypeNameEn
+                      }}
+                    </span>
+                  </div>
+                </div>
+              </td>
+
+              <td nzEllipsis>{{ data.offerGroupName }}</td>
               <td nzEllipsis>
-                <a
-                  *ngIf="isOfferView()"
-                  (click)="uiService.showView(data.id || 0)"
-                  >{{ data.code }}</a
+                <span
+                  [ngStyle]="
+                    isExpired(data.offerEndAt ?? '') ? { color: 'red' } : {}
+                  "
                 >
-                <span *ngIf="!isOfferView()">{{ data.code }}</span>
+                  {{ data.offerStartAt | customDate }} ~
+                  {{ data.offerEndAt | customDate }}
+                </span>
               </td>
-              <td nzEllipsis class="image" nzAlign="center">
-                <img
-                  *ngIf="data.photo"
-                  class="image-list"
-                  height="42"
-                  [src]="data.photo"
-                  alt=""
-                />
-                <img
-                  *ngIf="!data.photo"
-                  class="image-list"
-                  height="42"
-                  src="./assets/image/img-not-found.jpg"
-                  alt=""
-                />
-              </td>
-              <td nzEllipsis>
-                {{ data.name }}
+              <td nzEllipsis nzAlign="right">
+                {{ data.redeemedQty }} / {{ data.maxQty }}
               </td>
               <td nzEllipsis nzAlign="right">
                 @if(data.redeemCost == 0){
@@ -180,26 +189,14 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 } @else {
                 {{ getAccountBalance(data.offerType!, data.redeemCost) }}}
               </td>
-              <td nzEllipsis nzAlign="right">
-                {{ data.redeemedQty }} / {{ data.maxQty }}
-              </td>
-              <td nzEllipsis>
+
+              <!-- <td nzEllipsis>
                 {{
                   translateService.currentLang == "km"
                     ? data.offerTypeNameKh
                     : data.offerTypeNameEn
                 }}
-              </td>
-              <td nzEllipsis>{{ data.offerGroupName }}</td>
-              <td nzEllipsis>
-                <span
-                  [ngStyle]="isExpired(data.offerEndAt ?? '') ? { color: 'red' } : {}"
-                >
-                  {{ data.offerStartAt | customDate }} ~
-                  {{ data.offerEndAt | customDate }}
-                </span>
-              </td>
-
+              </td> -->
               <td nzEllipsis>
                 {{ data.note }}
               </td>
@@ -251,7 +248,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
         padding: 0 !important;
       }
       .image-list {
-        height: 38px;
+        width: 60px;
         object-fit: scale-down;
       }
     `,

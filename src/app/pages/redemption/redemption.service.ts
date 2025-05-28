@@ -19,7 +19,7 @@ export interface Redemption {
   qty?: number;
   amount?: number;
   note?: string;
-  status?: 1;
+  status?: number;
   locationId?: number;
   id?: number;
   locationName?: string;
@@ -31,6 +31,8 @@ export interface Redemption {
   memberId?: number;
   offerPhoto?: string;
   attachments?: Attachment[];
+  redeemWithNameEn?: string;
+  redeemWithNameKh?: string;
   extData?: string;
 }
 // format like  this extData {"cardNumber":"", "startBalance":100, "endingBalance":100}

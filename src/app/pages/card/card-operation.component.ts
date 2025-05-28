@@ -148,17 +148,16 @@ export class CardOperationComponent extends BaseOperationComponent<Card> {
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   isCardEdit = computed(() => true);
   isCardRemove = computed(() => true);
-  
 
   override initControl(): void {
-    const { required } = CommonValidators; 
+    const { required } = CommonValidators;
     this.frm = this.fb.group({
       accountId: [this.modal?.accountId, [required]],
       cardNumber: [null, [required]],
       status: [null, [required]],
-      issueDate: [new Date().toISOString(), [required]],
+      issueDate: [new Date(), [required]],
       expiryDate: [null],
-    });
+    }); 
   }
 
   override setFormValue() {

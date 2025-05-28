@@ -550,7 +550,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       redeemNo: [null, [required]],
       refNo: [null],
       accountId: [{ value: null, disabled: true }, required],
-      redeemedDate: [new Date().toISOString(), required],
+      redeemedDate: [new Date(), required],
       offerId: [{ value: null, disabled: true }, [required]],
       qty: [{ value: 1, disabled: false }, [integerValidator, required]],
       amount: [{ value: 0, disabled: false }, [required]],

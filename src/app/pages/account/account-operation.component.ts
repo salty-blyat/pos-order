@@ -76,16 +76,19 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
             {{ "Amount" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-input-group [nzAddOnAfter]="addOnAfterTemplate">
-              <input nz-input formControlName="amount" />
+            <nz-input-group>
+              <nz-input-number
+                [nzMin]="0"
+                [nzControls]="false"
+                [nzPrecision]="2"
+                formControlName="amount"
+              >
+                <span nzInputSuffix>{{
+                  modal?.accountType == AccountTypes.Wallet ? "$" : " pts"
+                }}</span>
+              </nz-input-number>
             </nz-input-group>
           </nz-form-control>
-
-          <ng-template #addOnAfterTemplate>
-            <span>
-              {{ modal?.accountType == AccountTypes.Wallet ? "$" : " pts" }}
-            </span>
-          </ng-template>
         </nz-form-item>
 
         <nz-form-item *ngIf="modal?.isView">
@@ -301,5 +304,8 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
             uid: file.uid,
           }
       ) ?? [];
+  }
+  override ngOnDestroy(): void {
+    this.refreshSub$.unsubscribe();
   }
 }

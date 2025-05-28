@@ -195,16 +195,13 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                       </div>
                       <div nz-col [nzXs]="12">
                         <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired=""
-                            >{{ "DateOfBirth" | translate }}
+                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                            >{{ "JoinDate" | translate }}
                           </nz-form-label>
-                          <nz-form-control
-                            [nzSm]="14"
-                            [nzXs]="24"
-                            nzErrorTip=""
-                          >
+                          <nz-form-control [nzSm]="14" [nzXs]="24">
                             <nz-date-picker
-                              formControlName="birthDate"
+                              [nzAllowClear]="false"
+                              formControlName="joinDate"
                             ></nz-date-picker>
                           </nz-form-control>
                         </nz-form-item>
@@ -217,11 +214,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                           <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
                             >{{ "Name" | translate }}
                           </nz-form-label>
-                          <nz-form-control
-                            [nzSm]="14"
-                            [nzXs]="24"
-                            nzHasFeedback
-                          >
+                          <nz-form-control [nzSm]="14" [nzXs]="24">
                             <input nz-input formControlName="name" />
                           </nz-form-control>
                         </nz-form-item>
@@ -287,6 +280,26 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                             <app-agent-select
                               formControlName="agentId"
                             ></app-agent-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
+
+                    <div nz-row>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24"
+                            >{{ "DateOfBirth" | translate }}
+                          </nz-form-label>
+                          <nz-form-control
+                            [nzSm]="14"
+                            [nzXs]="24"
+                            nzErrorTip=""
+                          >
+                            <nz-date-picker
+                              [nzAllowClear]="false"
+                              formControlName="birthDate"
+                            ></nz-date-picker>
                           </nz-form-control>
                         </nz-form-item>
                       </div>
@@ -400,6 +413,9 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
+      nz-tabs-nav {
+        margin: 0 !important;
+      }
       .image-no-profile {
         border: 2px dotted #ddd;
         border-radius: 6px;
@@ -531,7 +547,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   ) {
     super(fb, ref, service, uiService);
   }
-  fileLists: NzUploadFile[] = [];
   memberName = "";
   memberNameEn = "";
   current: number = 1;
@@ -555,8 +570,9 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   };
   tabIndex = 0;
   override ngOnInit(): void {
-    super.ngOnInit();
-    if (this.modal?.isView) {
+    if (this.isLoading()) return;
+    this.initControl();
+    if (!this.modal?.id) {
       this.systemSettingService.find(SETTING_KEY.MemberAutoId).subscribe({
         next: (value?: string) => {
           if (Number(value) !== 0) {
@@ -565,14 +581,15 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
         },
       });
     }
+
     if (this.modal?.isView) {
+      this.frm.disable();
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
         if (e.key === "edited") {
           this.isLoading.set(true);
           this.service.find(this.modal?.id).subscribe({
             next: (result: Member) => {
               this.model = result;
-
               this.setFormValue();
               if (this.model.photo) {
                 this.file = [
@@ -592,6 +609,14 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
             },
           });
         }
+      });
+    }
+    if (this.modal?.id) {
+      this.isLoading.set(true);
+      this.service.find(this.modal?.id).subscribe((result: Member) => {
+        this.model = result;
+        this.setFormValue();
+        this.isLoading.set(false);
       });
     }
     this.uiService.refresher.subscribe((e) => {
@@ -635,7 +660,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       multiplePhoneValidator,
       codeMaxLengthValidator,
       emailValidator,
-      nameExistValidator,
     } = CommonValidators;
     this.frm = this.fb.group({
       code: [
@@ -643,19 +667,17 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
         [required, codeMaxLengthValidator],
         [codeExistValidator(this.service, this.modal?.id)],
       ],
-      name: [
-        null,
-        [required, nameMaxLengthValidator],
-        [nameExistValidator(this.service, this.modal?.id)],
-      ],
+      name: [null, [required, nameMaxLengthValidator]],
       latinName: [null, [nameMaxLengthValidator]],
-      birthDate: [null, [required]],
+      birthDate: [null],
       address: [null],
       phone: [null, [required, multiplePhoneValidator]],
       email: [null, [emailValidator]],
       agentId: [null, [required]],
       memberClassId: [null, [required]],
+      joinDate: [new Date(), [required]],
       photo: [null],
+      defaultAccountId: [null],
     });
     setTimeout(() => {
       if (this.modal.memberClassId !== 0 && this.modal.memberClassId)
@@ -678,9 +700,11 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       agentId: this.model.agentId,
       memberClassId: this.model.memberClassId,
       photo: this.model.photo,
+      joinDate: this.model.joinDate,
+      defaultAccountId: this.model.defaultAccountId,
     });
 
-    if (this.model.photo || this.model.photo !== "") {
+    if (this.model.photo && this.model.photo !== "") {
       this.file = [];
       this.file.push({
         uid: "",
@@ -764,6 +788,11 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       return 0;
     });
   }
+
+  override ngOnDestroy(): void {
+    this.refreshSub$?.unsubscribe();
+  }
+
   protected readonly AccountTypes = AccountTypes;
   protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
   readonly getAccountBalance = getAccountBalance;

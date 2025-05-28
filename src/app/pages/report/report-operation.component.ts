@@ -29,11 +29,13 @@ import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { timer } from "rxjs";
 import { NotificationService } from "../../utils/services/notification.service";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
+import { LocationMultiSelectComponent } from "../location/location-multi-select.component";
 export let ParamSelectComponent = {
   StatusType: LookupMultipleSelectComponent,
   StaticDropdownMultipleSelect: StaticDropdownMultipleSelectComponent,
   StaticDropdownSingleSelect: StaticDropdownSingleSelectComponent,
   DateRange: DateRangeInputReportComponent,
+  Locations: LocationMultiSelectComponent,
 };
 
 @Component({
@@ -545,8 +547,8 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
       ],
       note: [null, [noteMaxLengthValidator()]],
       label: [null, [required]],
-      template: [' '],
-      command: [' '],
+      template: [" "],
+      command: [" "],
       isHidden: [false],
       permissionKey: [null, [required]],
       reportGroupId: [null, [required]],

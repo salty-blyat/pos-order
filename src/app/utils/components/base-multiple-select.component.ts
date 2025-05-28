@@ -6,20 +6,20 @@ import {
   OnInit,
   Output,
   ViewChild,
-} from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-import { NzSelectComponent } from 'ng-zorro-antd/select';
+} from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
+import { TranslateService } from "@ngx-translate/core";
+import { NzSelectComponent } from "ng-zorro-antd/select";
 // @ts-ignore
-import * as uuid from 'uuid';
-import { BaseApiService, QueryParam } from '../services/base-api.service';
+import * as uuid from "uuid";
+import { BaseApiService, QueryParam } from "../services/base-api.service";
 interface SharedDomain {
   id?: number;
   name?: string;
 }
 @Component({
-    template: '',
-    standalone: false
+  template: "",
+  standalone: false,
 })
 export class BaseMultipleSelectComponent<TModel extends SharedDomain>
   implements OnInit, ControlValueAccessor, OnDestroy
@@ -28,7 +28,7 @@ export class BaseMultipleSelectComponent<TModel extends SharedDomain>
     public translate: TranslateService,
     public service: BaseApiService<any>
   ) {}
-  @ViewChild('selectComponent') selectComponent!: NzSelectComponent;
+  @ViewChild("selectComponent") selectComponent!: NzSelectComponent;
   @Input() addOption!: boolean;
   @Output() valueChanged = new EventEmitter<any>();
   isAuthListAllBranch: boolean = false;
@@ -36,7 +36,7 @@ export class BaseMultipleSelectComponent<TModel extends SharedDomain>
   disabled = false;
   loading = false;
   branchId!: number;
-  searchText = '';
+  searchText = "";
   selectedValue: any[] = [0];
   oldSelectedValue: any[] = [...this.selectedValue];
   refreshSub$: any;
@@ -44,8 +44,8 @@ export class BaseMultipleSelectComponent<TModel extends SharedDomain>
   param: QueryParam = {
     pageSize: 50,
     pageIndex: 1,
-    sorts: '',
-    filters: '',
+    sorts: "",
+    filters: "",
   };
   hideSelectedValues = false;
   isAuthAdd: boolean = false;
@@ -71,7 +71,7 @@ export class BaseMultipleSelectComponent<TModel extends SharedDomain>
   search(callBack: Function = () => {}) {
     this.loading = true;
     const filters: any[] = [
-      { field: 'search', operator: 'contains', value: this.searchText },
+      { field: "search", operator: "contains", value: this.searchText },
     ];
     this.param.filters = JSON.stringify(filters);
     if (this.searchText && this.param.pageIndex === 1) {
@@ -97,8 +97,8 @@ export class BaseMultipleSelectComponent<TModel extends SharedDomain>
         const filters: any[] = [];
         if (idsFilter[0] != 0) {
           filters.push({
-            field: 'ids',
-            operator: 'contains',
+            field: "ids",
+            operator: "contains",
             value: JSON.stringify(idsFilter),
           });
         }
@@ -153,7 +153,7 @@ export class BaseMultipleSelectComponent<TModel extends SharedDomain>
           (x: any) =>
             x.sortName ||
             this.formatJson(x.name) ||
-            x.fullName + ' ' + this.formatData(x.data) ||
+            x.fullName + " " + this.formatData(x.data) ||
             this.formatJson(x.title)
         )
         .join(),
@@ -174,7 +174,7 @@ export class BaseMultipleSelectComponent<TModel extends SharedDomain>
       let value = JSON.parse(data);
       return value?.phone;
     } catch (e) {
-      return '';
+      return "";
     }
   }
 

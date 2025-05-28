@@ -11,6 +11,7 @@ import { BaseSelectComponent } from "../../utils/components/base-select.componen
 import { AuthService } from "../../helpers/auth.service";
 import { Agent, AgentService } from "./agent.service";
 import { AgentUiService } from "./agent-ui.service";
+import { QueryParam } from "../../utils/services/base-api.service";
 
 @Component({
   providers: [
@@ -82,5 +83,13 @@ export class AgentSelectComponent extends BaseSelectComponent<Agent> {
       "all-agent"
     );
   }
+
+  override param = signal<QueryParam>({
+    pageSize: 10,
+    pageIndex: 1,
+    sorts: "",
+    filters: "",
+  });
+
   isAgentAdd = signal<boolean>(true);
 }

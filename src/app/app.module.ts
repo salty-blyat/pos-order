@@ -162,6 +162,7 @@ import { CardDeleteComponent } from "./pages/card/card-delete.component";
 import { AccountSelectComponent } from "./pages/account/account-select.component";
 import { AccountListComponent } from "./pages/account/account-list.component";
 import { AccountOperationComponent } from "./pages/account/account-operation.component";
+import { LocationMultiSelectComponent } from "./pages/location/location-multi-select.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -316,6 +317,7 @@ export class CustomTranslate implements TranslateLoader {
     LocationSelectComponent,
     LocationOperationComponent,
     LocationDeleteComponent,
+    LocationMultiSelectComponent,
 
     // branch
     BranchListComponent,

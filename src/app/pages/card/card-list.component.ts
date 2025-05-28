@@ -40,7 +40,7 @@ import { Subscription } from "rxjs";
               nz-button
               nzType="primary"
               *ngIf="isCardAdd()"
-              (click)="uiService.showAdd('',accountId())"
+              (click)="uiService.showAdd('', accountId())"
             >
               <i nz-icon nzType="plus" nzTheme="outline"></i>
               {{ "Add" | translate }}
@@ -50,7 +50,7 @@ import { Subscription } from "rxjs";
         <nz-content>
           <nz-table
             nzSize="small"
-            style="height:auto" 
+            style="height:auto"
             nzShowSizeChanger
             #fixedTable
             nzTableLayout="fixed"
@@ -73,10 +73,10 @@ import { Subscription } from "rxjs";
                 <th nzWidth="100px">
                   {{ "CardNumber" | translate }}
                 </th>
-                <th [nzWidth]="SIZE_COLUMNS.NAME" nzAlign="center">
+                <th [nzWidth]="SIZE_COLUMNS.NAME">
                   {{ "IssueDate" | translate }}
                 </th>
-                <th [nzWidth]="SIZE_COLUMNS.NAME" nzAlign="center">
+                <th [nzWidth]="SIZE_COLUMNS.NAME">
                   {{ "ExpiryDate" | translate }}
                 </th>
                 <th [nzWidth]="SIZE_COLUMNS.NAME">
@@ -106,10 +106,10 @@ import { Subscription } from "rxjs";
                   >
                 </td>
 
-                <td nzEllipsis nzAlign="center">
+                <td nzEllipsis>
                   {{ data.issueDate | customDate }}
                 </td>
-                <td nzEllipsis nzAlign="center">
+                <td nzEllipsis>
                   {{ data.expiryDate | customDate }}
                 </td>
                 <td nzEllipsis>

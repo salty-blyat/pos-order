@@ -42,6 +42,7 @@ export interface Transaction {
   locationId?: number;
   accountType?: number;
   redeemWith?: number;
+  locationName?: string;
   redeemWithNameKh?: string;
   redeemWithNameEn?: string;
 }
