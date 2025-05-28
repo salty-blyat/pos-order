@@ -105,6 +105,26 @@ export class MemberSelectComponent extends BaseSelectComponent<Member> {
       "all-member"
     );
   }
+  override writeValue(value: number | null): void {
+    this.selected.set(value ?? 0);
+    this.onChangeCallback(value);
+    this.onTouchedCallback();
+
+    if (value && typeof value === "number") {
+      this.isLoading.set(true);
+      this.service.find(value).subscribe({
+        next: (entity) => {
+          if (!this.lists().some((item) => item.id === entity.id)) {
+            this.lists.update((list) => [entity, ...list]);
+          }
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+        },
+      });
+    }
+  }
 
   override param = signal<QueryParam>({
     pageSize: 10,
@@ -114,4 +134,9 @@ export class MemberSelectComponent extends BaseSelectComponent<Member> {
   });
 
   isMemberAdd = signal<boolean>(true);
+  override ngOnDestroy(): void {
+    if (this.refreshSub$) {
+      this.refreshSub$.unsubscribe();
+    }
+  }
 }

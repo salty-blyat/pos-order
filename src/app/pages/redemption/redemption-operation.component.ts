@@ -607,9 +607,10 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
             this.frm.get("offerId")?.enable();
             this.frm.get("offerId")?.setValue(null);
           } else {
+            this.onMemberChange();
             this.frm.get("offerId")?.setValue(this.model.offerId);
           }
-          this.onMemberChange();
+          
         }, 50);
       },
     });
