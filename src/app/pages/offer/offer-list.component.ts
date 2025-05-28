@@ -106,6 +106,9 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
               <th [nzWidth]="SIZE_COLUMNS.ID" class="col-header col-rowno">
                 #
               </th>
+              <th [nzWidth]="SIZE_COLUMNS.CODE" nzEllipsis>
+                {{ "Code" | translate }}
+              </th>
               <th [nzWidth]="SIZE_COLUMNS.NAME" nzEllipsis>
                 {{ "Name" | translate }}
               </th>
@@ -138,6 +141,14 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                           size: param().pageSize || 0
                         }
                 }}
+              </td>
+              <td nzEllipsis>
+                <a
+                  *ngIf="isOfferView()"
+                  (click)="uiService.showView(data.id || 0)"
+                  >{{ data.code }}</a
+                >
+                <span *ngIf="!isOfferView()">{{ data.code }}</span>
               </td>
               <td nzEllipsis class="image">
                 <div style="display:flex; gap:4px">

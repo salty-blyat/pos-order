@@ -145,9 +145,9 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               <th nzWidth="120px">
                 {{ "Offer" | translate }}
               </th>
+              <th nzWidth="100px" nzAlign="right"> {{ "Cost" | translate }} </th>
               <th nzWidth="85px">{{ "Date" | translate }}</th>
               <th nzWidth="50px">{{ "Location" | translate }}</th>
-
               <th nzWidth="50px">{{ "Status" | translate }}</th>
               <th nzWidth="150px">{{ "Note" | translate }}</th>
               <th nzWidth="100px" nzAlign="right">
@@ -199,12 +199,18 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                     <span style="font-size: 12px; color: #6f6f6f">
                       {{
                         translateService.currentLang === "km"
-                          ? data.redeemWithNameKh
-                          : data.redeemWithNameEn
+                          ? data.offerTypeNameKh
+                          : data.offerTypeNameEn
                       }}
                     </span>
                   </div>
                 </div>
+              </td>
+              <td nzEllipsis nzAlign="right">
+                @if(data.amount == 0){
+                {{ "Free" | translate }}
+                } @else {
+                {{ getAccountBalance(data.redeemWith!, data.amount) }}}
               </td>
               <td nzEllipsis>{{ data.redeemedDate | customDateTime }}</td>
               <td nzEllipsis>{{ data.locationName }}</td>

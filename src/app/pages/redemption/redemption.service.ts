@@ -34,6 +34,8 @@ export interface Redemption {
   redeemWithNameEn?: string;
   redeemWithNameKh?: string;
   extData?: string;
+  offerTypeNameKh?: string;
+  offerTypeNameEn?: string;
 }
 // format like  this extData {"cardNumber":"", "startBalance":100, "endingBalance":100}
 
