@@ -63,7 +63,16 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24">
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>{{
+            "Location" | translate
+          }}</nz-form-label>
+          <nz-form-control [nzSm]="14" [nzXs]="24">
+            <app-location-select formControlName="locationId" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>
             {{ "Amount" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
@@ -181,15 +190,15 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   override ngOnInit(): void {
     super.ngOnInit();
     console.log(this.modal);
- if (!this.modal?.isView) {
-    this.systemSettingService.find(SETTING_KEY.TransNoAutoId).subscribe({
-      next: (value?: string) => {
-        if (Number(value) !== 0) {
-          this.frm.get("transNo")?.disable();
-        }
-      },
-    });
- }
+    if (!this.modal?.isView) {
+      this.systemSettingService.find(SETTING_KEY.TransNoAutoId).subscribe({
+        next: (value?: string) => {
+          if (Number(value) !== 0) {
+            this.frm.get("transNo")?.disable();
+          }
+        },
+      });
+    }
   }
 
   override onSubmit(e?: any) {
@@ -254,8 +263,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   }
 
   override initControl(): void {
-    const { noteMaxLengthValidator, priceValidator, required } =
-      CommonValidators;
+    const { noteMaxLengthValidator, required } = CommonValidators;
     this.frm = this.fb.group({
       transNo: [null, required],
       transDate: [new Date().toISOString()],
@@ -263,6 +271,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
       amount: [{ value: 1, disabled: false }, [required]],
       type: [this.modal.type, required],
       note: [null, noteMaxLengthValidator],
+      locationId: [null, required],
       refNo: [null],
     });
   }
@@ -280,6 +289,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
       amount: this.model.amount,
       type: this.model.type,
       note: this.model.note,
+      locationId: this.model.locationId,
       refNo: this.model.refNo,
     });
     this.fileList =

@@ -156,7 +156,6 @@ import { MemberOperationComponent } from "./pages/member/member-operation.compon
 import { RedemptionOperationComponent } from "./pages/redemption/redemption-operation.component";
 import { LocationSelectComponent } from "./pages/location/location-select.component";
 import { OfferSelectComponent } from "./pages/offer/offer-select.component";
-import { RedemptionHistoryComponnet } from "./pages/redemption/redemption-history.component";
 import { CardListComponent } from "./pages/card/card-list.component";
 import { CardOperationComponent } from "./pages/card/card-operation.component";
 import { CardDeleteComponent } from "./pages/card/card-delete.component";
@@ -359,7 +358,6 @@ export class CustomTranslate implements TranslateLoader {
     RedemptionDeleteComponent,
     RedemptionListComponent,
     RedemptionOperationComponent,
-    RedemptionHistoryComponnet,
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -423,7 +421,7 @@ export class CustomTranslate implements TranslateLoader {
     },
     DecimalPipe,
     CurrencyPipe,
-    TransparentPipe, 
+    TransparentPipe,
     provideHttpClient(withInterceptorsFromDi()),
   ],
 })

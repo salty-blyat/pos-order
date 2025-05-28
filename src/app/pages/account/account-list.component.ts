@@ -45,7 +45,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 <app-date-range-input
                   storageKey="trans-"
                   (valueChanged)="
-                    redeemDate = $event; param().pageIndex = 1; search()
+                    transDate = $event; param().pageIndex = 1; search()
                   "
                 ></app-date-range-input>
               </div>
@@ -90,7 +90,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
         </nz-header>
 
         <nz-content>
-          <nz-table 
+          <nz-table
             nzSize="small"
             nzShowSizeChanger
             nzTableLayout="fixed"
@@ -110,6 +110,9 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
             <thead>
               <tr>
                 <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+                <th nzWidth="100px">
+                  {{ "TransNo" | translate }}
+                </th>
                 <th nzWidth="100px">
                   {{ "RedeemNo" | translate }}
                 </th>
@@ -155,9 +158,12 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                         accounts[tabIndex]?.accountType!
                       )
                     "
-                    >{{ data.redeemNo }}</a
+                    >{{ data.transNo }}</a
                   >
-                  <span *ngIf="!isTransactionView()">{{ data.redeemNo }}</span>
+                  <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
+                </td>
+                <td nzEllipsis>
+                  {{ data.redeemNo }}
                 </td>
                 <td nzEllipsis>{{ data.offerName }}</td>
                 <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
@@ -183,8 +189,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                   }"
                 >
                   {{ getAccountBalance(data.accountType!, data.amount) }}
-                </td>
-                <td nzEllipsis>{{ data.offerName }}</td>
+                </td> 
                 <td nzEllipsis>{{ data.note }}</td>
                 <td nzEllipsis>{{ data.refNo }}</td>
                 <!-- <td class="col-action">
@@ -236,7 +241,7 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
 
   @Input() accounts: MemberAccount[] = [];
   @Input() tabIndex: number = 0;
-  redeemDate: any = [];
+  transDate: any = [];
   isTransactionView = computed(() => true);
   isAccountTopup = computed(() => true);
   isAccountAdjust = computed(() => true);
@@ -253,13 +258,13 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   protected override getCustomFilters(): Filter[] {
     let filters: Filter[] = [];
 
-    if (this.redeemDate.length > 0) {
+    if (this.transDate.length > 0) {
       filters.push({
-        field: "redeemDate",
+        field: "transDate",
         operator: "contains",
         value: `${DatetimeHelper.toShortDateString(
-          this.redeemDate[0]
-        )} ~ ${DatetimeHelper.toShortDateString(this.redeemDate[1])}`,
+          this.transDate[0]
+        )} ~ ${DatetimeHelper.toShortDateString(this.transDate[1])}`,
       });
     }
     return filters;
@@ -277,15 +282,7 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
     if (this.isLoading() || this.tabIndex > 1) return;
     this.isLoading.set(true);
     setTimeout(() => {
-      this.param.set({
-        pageSize:
-          this.sessionStorageService.getCurrentPageSizeOption(
-            this.pageSizeOptionKey()
-          ) ?? 25,
-        pageIndex: 1,
-        sorts: "-transDate",
-        filters: "",
-      });
+      this.param.set({ ...this.param(), sorts: "-transDate" });
       this.param().filters = this.buildFilters();
       this.service
         .getTransactions(

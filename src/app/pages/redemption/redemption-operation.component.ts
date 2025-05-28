@@ -561,6 +561,12 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       extData: [null],
     });
 
+    if (this.modal?.memberId) {
+      setTimeout(() => {
+        this.frm.get("memberId")?.setValue(this.modal.memberId);
+        this.onMemberChange();
+      }, 50);
+    }
     this.frm.controls["memberId"]?.valueChanges.subscribe({
       next: () => {
         setTimeout(() => {

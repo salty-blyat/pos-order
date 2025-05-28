@@ -39,6 +39,7 @@ export interface Transaction {
   typeNameEn?: string;
   redeemNo?: string;
   offerName?: string;
+  locationId?: number;
   accountType?: number;
   redeemWith?: number;
   redeemWithNameKh?: string;
@@ -52,6 +53,7 @@ export interface TransactionAdjust {
   amount?: number;
   type?: number;
   note?: string;
+  locationId?: number;
   refNo?: string;
   id?: number;
   attachments?: Attachment[];

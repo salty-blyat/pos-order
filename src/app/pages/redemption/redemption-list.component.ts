@@ -46,6 +46,14 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
+            <div class="filter-box" style="width: 230px;">
+              <app-date-range-input
+                storageKey="trans-date-range"
+                (valueChanged)="
+                  redeemedDate = $event; param().pageIndex = 1; search()
+                "
+              ></app-date-range-input>
+            </div>
             <app-lookup-item-select
               class="fixed-width-select"
               showAll="AllOfferType"
@@ -94,7 +102,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
             *ngIf="isRedemptionAdd()"
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd()"
+            (click)="uiService.showAdd('', memberId())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i
             >{{ "Add" | translate }}
@@ -273,7 +281,7 @@ export class RedemptionListComponent
 {
   constructor(
     service: RedemptionService,
-    uiService: RedemptionUiService,
+    public override uiService: RedemptionUiService,
     private authService: AuthService,
     public translateService: TranslateService,
     sessionStorageService: SessionStorageService,
@@ -296,6 +304,7 @@ export class RedemptionListComponent
   accountTypeId = signal(
     parseInt(this.sessionStorageService.getValue(this.accountTypeKey) ?? 0)
   );
+
   offerGroupId = signal(
     parseInt(this.sessionStorageService.getValue(this.offerGroupKey) ?? 0)
   );
@@ -307,8 +316,7 @@ export class RedemptionListComponent
   );
   lookup = signal<LookupItem[]>([]);
   memberId = input(0);
-  redeemDate: any = [];
-
+  redeemedDate: any = [];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["tabIndex"]) {
@@ -363,13 +371,14 @@ export class RedemptionListComponent
         value: this.memberId(),
       });
     }
-    if (this.redeemDate.length > 0) {
+
+    if (this.redeemedDate.length > 0) {
       filters.push({
-        field: "redeemDate",
+        field: "redeemedDate",
         operator: "contains",
         value: `${DatetimeHelper.toShortDateString(
-          this.redeemDate[0]
-        )} ~ ${DatetimeHelper.toShortDateString(this.redeemDate[1])}`,
+          this.redeemedDate[0]
+        )} ~ ${DatetimeHelper.toShortDateString(this.redeemedDate[1])}`,
       });
     }
 
