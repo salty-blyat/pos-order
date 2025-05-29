@@ -623,6 +623,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       });
     }
     this.uiService.refresher.subscribe((e) => {
+      console.log(e);
       if (e.key === "upload") {
         this.file = [];
         if (e?.value) {
@@ -718,10 +719,16 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   }
   override onSubmit(e: any): void {
     if (this.frm.valid && !this.isLoading()) {
+      console.log("sadfdsaf", this.frm.getRawValue());
+
       this.isLoading.set(true);
       if (this.file.length > 0) {
         this.frm.patchValue({
           photo: this.file[0].url,
+        });
+      } else {
+        this.frm.patchValue({
+          photo: null,
         });
       }
       let operation$: Observable<Member> = this.service.add(
@@ -782,6 +789,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       return file;
     });
     this.file = fileList;
+    console.log("this.file", this.file);
   }
 
   get sortedAccounts() {
