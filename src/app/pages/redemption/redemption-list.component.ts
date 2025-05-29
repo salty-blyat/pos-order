@@ -4,7 +4,6 @@ import {
   Input,
   input,
   OnChanges,
-  Query,
   signal,
   SimpleChanges,
   ViewEncapsulation,
@@ -49,15 +48,23 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
         >
           <div nz-flex nzGap="small">
             <app-filter-input
-              storageKey="redemption-list-search"
+              [storageKey]="
+                memberId()
+                  ? 'redemption-list-search' + memberId()
+                  : 'redemption-list-search'
+              "
               class="fixed-width-select"
               (filterChanged)="
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
-            <div class="filter-box"  >
+            <div class="filter-box">
               <app-date-range-input
-                storageKey="trans-date-range"
+                [storageKey]="
+                  memberId()
+                    ? 'trans-date-range' + memberId()
+                    : 'trans-date-range'
+                "
                 (valueChanged)="
                   redeemedDate = $event; param().pageIndex = 1; search()
                 "
@@ -67,7 +74,11 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
             <app-offer-group-select
               class="fixed-width-select"
               [showAllOption]="true"
-              storageKey="redemption-offer-group-list-search"
+              [storageKey]="
+                memberId()
+                  ? 'redemption-offer-group-list-search' + memberId()
+                  : 'redemption-offer-group-list-search'
+              "
               (valueChanged)="
                 offerGroupId.set($event); param().pageIndex = 1; search()
               "
@@ -167,20 +178,22 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               >
                 <img
                   class="image-list"
+                  height="42px"
                   *ngIf="data.offerPhoto"
                   [src]="data.offerPhoto"
                   alt=""
                 />
                 <img
                   class="image-list"
+                  height="42px"
                   *ngIf="!data.offerPhoto"
                   src="./assets/image/img-not-found.jpg"
                   alt=""
                 />
 
-                <div style="display:flex; flex-direction:column">
+                <div style="display:flex; flex-direction:column; padding-left:4px">
                   {{ data.offerName }}
-                  <span style="font-size: 12px; color: #6f6f6f">
+                  <span style="font-size: 10px; color: #6f6f6f">
                     {{
                       translateService.currentLang === "km"
                         ? data.offerTypeNameKh
@@ -211,15 +224,10 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               </td>
               <td class="col-action">
                 <a
-                  (click)="
-                    data.status !== RedeemStatuses.Removed &&
-                      uiService.showDelete(data.id || 0)
-                  "
+                  class="delete"
+                  [nzDisabled]="data.status === RedeemStatuses.Removed"
+                  (click)="uiService.showDelete(data.id || 0)"
                   nz-typography
-                  [ngClass]="{
-                    delete: data.status !== RedeemStatuses.Removed,
-                    disabled: data.status === RedeemStatuses.Removed
-                  }"
                 >
                   <i
                     nz-icon
@@ -245,7 +253,6 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
       }
       .image-list {
         width: 42px;
-        height: 42px;
         object-fit: scale-down;
       }
     `,
@@ -279,6 +286,7 @@ export class RedemptionListComponent
   readonly accountTypeKey = "redemption-account-type-list-search";
   readonly statusKey = "redemption-status-list-search";
   readonly advancedStoreKey = "redemption-list-advanced-filter";
+  readonly locationKey = "location-list-advanced-filter";
 
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   accountTypeId = signal(
@@ -294,6 +302,9 @@ export class RedemptionListComponent
   offerTypeId = signal(
     parseInt(this.sessionStorageService.getValue(this.offerTypeKey) ?? 0)
   );
+  locationId = signal(
+    parseInt(this.sessionStorageService.getValue(this.locationKey) ?? 0)
+  );
   lookup = signal<LookupItem[]>([]);
   memberId = input(0);
   hasAdvancedFilter = signal<boolean>(false);
@@ -304,6 +315,8 @@ export class RedemptionListComponent
     }
   }
   override ngOnInit(): void {
+    console.log(this.lists());
+
     this.param.set({
       pageSize:
         this.sessionStorageService.getCurrentPageSizeOption(
@@ -338,6 +351,7 @@ export class RedemptionListComponent
     this.offerTypeId.set(advancedFilter.offerTypeId);
     this.accountTypeId.set(advancedFilter.accountTypeId);
     this.statusId.set(advancedFilter.statusId);
+    this.locationId.set(advancedFilter.locationId);
   }
 
   getStatus() {
@@ -413,6 +427,13 @@ export class RedemptionListComponent
         field: "status",
         operator: "eq",
         value: this.statusId(),
+      });
+    }
+    if (this.locationId()) {
+      filters.push({
+        field: "locationId",
+        operator: "eq",
+        value: this.locationId(),
       });
     }
 

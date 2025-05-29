@@ -40,6 +40,7 @@ export interface Redemption {
 export interface RedemptionAdvancedFilter {
   offerTypeId?: number;
   accountTypeId?: number;
+  locationId?: number;
   statusId?: number;
   isAdvancedFilter: boolean;
 }

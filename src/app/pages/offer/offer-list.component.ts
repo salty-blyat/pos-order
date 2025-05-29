@@ -150,33 +150,36 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 >
                 <span *ngIf="!isOfferView()">{{ data.code }}</span>
               </td>
-              <td nzEllipsis class="image">
-                <div style="display:flex; gap:4px">
-                  <img
-                    *ngIf="data.photo"
-                    class="image-list"
-                    height="42"
-                    [src]="data.photo"
-                    alt=""
-                  />
-                  <img
-                    *ngIf="!data.photo"
-                    class="image-list"
-                    height="42"
-                    src="./assets/image/img-not-found.jpg"
-                    alt=""
-                  />
+              <td
+                nzEllipsis
+                class="image"
+                style="display:grid;grid-template-columns:42px 1fr; gap:8px"
+                [title]="data.name"
+              >
+                <img
+                  class="image-list"
+                  height=" 42px"
+                  *ngIf="data.photo"
+                  [src]="data.photo"
+                  alt=""
+                />
+                <img
+                  class="image-list"
+                  height=" 42px"
+                  *ngIf="!data.photo"
+                  src="./assets/image/img-not-found.jpg"
+                  alt=""
+                />
 
-                  <div style="display:flex; flex-direction:column">
-                    {{ data.name }}
-                    <span style="font-size: 12px; color: #6f6f6f">
-                      {{
-                        translateService.currentLang === "km"
-                          ? data.offerTypeNameKh
-                          : data.offerTypeNameEn
-                      }}
-                    </span>
-                  </div>
+                <div style="display:flex; flex-direction:column">
+                  {{ data.name }}
+                  <span style="font-size: 12px; color: #6f6f6f">
+                    {{
+                      translateService.currentLang === "km"
+                        ? data.offerTypeNameKh
+                        : data.offerTypeNameEn
+                    }}
+                  </span>
                 </div>
               </td>
 
@@ -259,7 +262,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
         padding: 0 !important;
       }
       .image-list {
-        width: 60px;
+        width: 42px;
         object-fit: scale-down;
       }
     `,

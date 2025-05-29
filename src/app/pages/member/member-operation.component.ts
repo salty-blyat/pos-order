@@ -20,6 +20,8 @@ import { TranslateService } from "@ngx-translate/core";
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { AccountUiService } from "../account/account-ui.service";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
+import { RedemptionService } from "../redemption/redemption.service";
+import { RedemptionUiService } from "../redemption/redemption-ui.service";
 
 @Component({
   selector: "app-member-operation",
@@ -540,6 +542,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     service: MemberService,
     private msg: NzMessageService,
     override uiService: MemberUiService,
+    private redemptionUiService: RedemptionUiService,
     public accountUiService: AccountUiService,
     public accountService: AccountService,
     private settingService: SettingService,
@@ -614,16 +617,23 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
         }
       });
     }
+    const refreshBalance = () => {
+      this.service.find(this.modal?.id).subscribe({
+        next: (result: Member) => {
+          this.model = result;
+          this.setFormValue();
+          this.isLoading.set(false);
+        },
+        error: (err: any) => {
+          console.log(err);
+        },
+      });
+    };
     if (this.modal?.id) {
       this.isLoading.set(true);
-      this.service.find(this.modal?.id).subscribe((result: Member) => {
-        this.model = result;
-        this.setFormValue();
-        this.isLoading.set(false);
-      });
+      this.service.find(this.modal?.id).subscribe(refreshBalance);
     }
     this.uiService.refresher.subscribe((e) => {
-      console.log(e);
       if (e.key === "upload") {
         this.file = [];
         if (e?.value) {
@@ -641,19 +651,9 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
         this.memberNameEn = event;
       },
     });
-    this.accountUiService.refresher.subscribe(() => {
-      // refresh the total balance after adjust/topup from account-operation
-      this.service.find(this.modal?.id).subscribe({
-        next: (result: Member) => {
-          this.model = result;
-          this.setFormValue();
-          this.isLoading.set(false);
-        },
-        error: (err: any) => {
-          console.log(err);
-        },
-      });
-    });
+
+    this.accountUiService.refresher.subscribe(refreshBalance);
+    this.redemptionUiService.refresher.subscribe(refreshBalance);
   }
 
   override initControl(): void {
@@ -719,7 +719,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   }
   override onSubmit(e: any): void {
     if (this.frm.valid && !this.isLoading()) {
-
       this.isLoading.set(true);
       if (this.file.length > 0) {
         this.frm.patchValue({

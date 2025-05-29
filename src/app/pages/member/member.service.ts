@@ -21,6 +21,7 @@ export interface Member {
   accounts?: MemberAccount[];
   defaultAccountId?: number;
   joinDate?: string;
+  memberClassPhoto?: string;
 }
 
 export interface MemberAccount {

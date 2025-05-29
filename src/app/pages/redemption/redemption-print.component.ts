@@ -152,7 +152,7 @@ export class RedemptionPrintComponent implements OnInit, OnDestroy {
           .processReport({
             reportName: this.report.name,
             requestId: uuidv4(),
-            param: { Id: { id: 404, value: "" } },
+            param: { Id: { id: this.modal?.model?.id, value: "" } },
           })
           .subscribe(
             (result) => {

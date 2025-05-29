@@ -59,6 +59,15 @@ import { RedemptionUiService } from "./redemption-ui.service";
               [lookupType]="LOOKUP_TYPE.RedeemStatus"
               formControlName="statusId"
             ></app-lookup-item-select>
+          </nz-form-control> </nz-form-item
+        ><nz-form-item>
+          <nz-form-label>{{ "Location" | translate }}</nz-form-label>
+          <nz-form-control>
+            <app-location-select
+              showAll="AllLocation"
+              [showAllOption]="true" 
+              formControlName="locationId"
+            ></app-location-select>
           </nz-form-control>
         </nz-form-item>
       </form>
@@ -115,12 +124,14 @@ export class RedemptionAdvancedFilterComponent implements OnInit {
       offerTypeId: [null],
       accountTypeId: [null],
       statusId: [null],
+      locationId: [null],
     });
   }
 
   resetForm() {
     this.frm.reset({
       offerTypeId: 0,
+      locationId: 0,
       accountTypeId: 0,
       statusId: 0,
     });
@@ -128,13 +139,12 @@ export class RedemptionAdvancedFilterComponent implements OnInit {
   }
 
   setFormValue(advanced: any) {
-    setTimeout(() => {
-      this.frm.setValue({
-        offerTypeId: advanced?.offerTypeId ?? 0,
-        accountTypeId: advanced?.accountTypeId ?? 0,
-        statusId: advanced?.statusId ?? 0,
-      }); 
-    }, 50);
+    this.frm.setValue({
+      offerTypeId: advanced?.offerTypeId ?? 0,
+      accountTypeId: advanced?.accountTypeId ?? 0,
+      statusId: advanced?.statusId ?? 0,
+      locationId: advanced?.locationId ?? 0,
+    });
   }
   submit() {
     this.setStorageKey(this.isSetFilter());
@@ -142,7 +152,12 @@ export class RedemptionAdvancedFilterComponent implements OnInit {
   }
 
   isSetFilter(): boolean {
-    const defaultZeroFields = ["offerTypeId", "accountTypeId", "statusId"];
+    const defaultZeroFields = [
+      "offerTypeId",
+      "accountTypeId",
+      "statusId",
+      "locationId",
+    ];
     return defaultZeroFields.some((field) => this.frm.value[field] !== 0);
   }
   setStorageKey(isAdvancedFilter: boolean) {

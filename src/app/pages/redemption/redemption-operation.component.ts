@@ -361,9 +361,19 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
             <span nz-icon nzType="printer" nzTheme="outline"></span>
             {{ "Print" | translate }}
           </a>
-
           <div>
             <a
+              *ngIf="!isLoading() && isRedemptionRemove()"
+              class="delete"
+              nz-typography
+              [nzDisabled]="model?.status == RedeemStatuses.Removed"
+              (click)="uiService.showDelete(model.id || 0)"
+            >
+              <i nz-icon nzType="delete" nzTheme="outline"></i>
+              <span class="action-text"> {{ "Delete" | translate }}</span>
+            </a>
+
+            <!-- <a
               nz-typography
               nzType="danger"
               (click)="uiService.showDelete(model.id || 0)"
@@ -371,7 +381,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
             >
               <i nz-icon nzType="delete" nzTheme="outline"></i>
               <span class="action-text"> {{ "Delete" | translate }}</span>
-            </a>
+            </a> -->
             <nz-divider
               nzType="vertical"
               *ngIf="!isLoading() && isRedemptionRemove()"
@@ -773,5 +783,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   readonly getAccountBalance = getAccountBalance;
+  readonly RedeemStatuses = RedeemStatuses;
   readonly AccountTypes = AccountTypes;
 }

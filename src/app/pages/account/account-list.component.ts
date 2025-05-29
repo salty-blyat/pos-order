@@ -62,17 +62,7 @@ import { CurrencyService } from "../currency/currency.service";
                   transDate = $event; param().pageIndex = 1; search()
                 "
               ></app-date-range-input>
-              <app-lookup-item-select
-                class="fixed-width-select"
-                showAll="AllTransactionType"
-                [showAllOption]="true"
-                storageKey="acc-trans-type-list-search"
-                [lookupType]="LOOKUP_TYPE.TransactionType"
-                (valueChanged)="
-                  typeId.set($event); param().pageIndex = 1; search()
-                "
-              >
-              </app-lookup-item-select>
+            
               <app-location-select
                 class="fixed-width-select"
                 [showAllOption]="true"
@@ -286,8 +276,7 @@ export class AccountListComponent
   isAccountReward = computed(() => true);
   isAccountAdjust = computed(() => true);
   isTopup = false;
-  locationId = signal<number>(0);
-  typeId = signal<number>(0);
+  locationId = signal<number>(0); 
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["tabIndex"] && this.accounts[this.tabIndex] != undefined) {
@@ -301,15 +290,7 @@ export class AccountListComponent
   }
   protected override getCustomFilters(): Filter[] { 
     let filters: Filter[] = [];
-
-    if (this.typeId()) {
-      filters.push({
-        field: "type",
-        operator: "eq",
-        value: this.typeId(),
-      });
-    }
-
+ 
     if (this.locationId()) {
       filters.push({
         field: "locationId",
