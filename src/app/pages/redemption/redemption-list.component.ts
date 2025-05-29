@@ -147,7 +147,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               <th nzWidth="100px" nzAlign="right">
                 {{ "Amount" | translate }}
               </th>
-              <th nzWidth="60px"></th>
+              <th nzWidth="100px"></th>
             </tr>
           </thead>
           <tbody>
@@ -191,7 +191,9 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                   alt=""
                 />
 
-                <div style="display:flex; flex-direction:column; padding-left:4px">
+                <div
+                  style="display:flex; flex-direction:column; padding-left:4px"
+                >
                   {{ data.offerName }}
                   <span style="font-size: 10px; color: #6f6f6f">
                     {{
@@ -310,9 +312,9 @@ export class RedemptionListComponent
   hasAdvancedFilter = signal<boolean>(false);
   redeemedDate: any = [];
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["tabIndex"]) {
-      this.search();
-    }
+    // if (changes["tabIndex"].currentValue == 3) {
+    //   this.search();
+    // }
   }
   override ngOnInit(): void {
     console.log(this.lists());

@@ -36,8 +36,7 @@ export class AccountUiService extends BaseUiService {
     componentId: any = "",
     accountId: number,
     type: TransactionTypes,
-    accountType: AccountTypes,
-    accounts: MemberAccount[]
+    accountType: AccountTypes
   ): any {
     this.modalService.create({
       nzContent: AccountOperationComponent,
@@ -45,7 +44,6 @@ export class AccountUiService extends BaseUiService {
         type: type,
         accountId: accountId,
         accountType: accountType,
-        accounts: accounts,
       },
       nzClosable: true,
       nzFooter: null,

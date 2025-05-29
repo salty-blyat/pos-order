@@ -1,6 +1,6 @@
-@use "./modal-style";
-@use "./default-size";
-@use "default-form-style";
+// @use "./modal-style";
+// @use "./default-size";
+// @use "default-form-style";
 .scrollbar::-webkit-scrollbar {
   width: 5px;
 }
@@ -249,8 +249,8 @@ input[type="number"]::-webkit-outer-spin-button {
   margin-top: -16px;
 }
 .filter-box {
-  width: 220px;
-  margin-right: 4px;
+  width: 230px;
+  // margin-right: 4px;
 }
 .standard-height {
   height: calc(100vh - 290px) !important;
@@ -264,4 +264,3 @@ input[type="number"]::-webkit-outer-spin-button {
 ::ng-deep .ant-tag {
   margin: 0;
 }
-

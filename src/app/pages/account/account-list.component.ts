@@ -13,7 +13,7 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { AuthService } from "../../helpers/auth.service";
 import { ActivatedRoute } from "@angular/router";
 import { SIZE_COLUMNS } from "../../const";
-import { AccountService, Transaction } from "./account.service";
+import { Account, AccountService, Transaction } from "./account.service";
 import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 import { NotificationService } from "../../utils/services/notification.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
@@ -33,212 +33,198 @@ import { CurrencyService } from "../currency/currency.service";
   selector: "app-account-list",
   standalone: false,
   template: `
-    <div *nzModalTitle class="modal-header-ellipsis">
-      {{ "TransactionHistory" | translate }}
-    </div>
-    <div class="modal-content">
-      <nz-layout>
-        <nz-header>
-          <div
-            nz-flex
-            nzWrap="nowrap"
-            nzJustify="space-between"
-            nzAlign="center"
-            nzGap="middle"
-            style="width:100%"
-          >
-            <div nz-flex nzGap="small">
-              <app-filter-input
-                class="fixed-width-select"
-                [storageKey]="'account-list-' + accounts[tabIndex]?.accountId"
-                (filterChanged)="
-                  searchText.set($event); param().pageIndex = 1; search()
-                "
-              ></app-filter-input>
-
-              <app-date-range-input
-                storageKey="account-date-range"
-                (valueChanged)="
-                  transDate = $event; param().pageIndex = 1; search()
-                "
-              ></app-date-range-input>
-            
-              <app-location-select
-                class="fixed-width-select"
-                [showAllOption]="true"
-                storageKey="location-account-list-search"
-                (valueChanged)="
-                  locationId.set($event); param().pageIndex = 1; search()
-                "
-              >
-              </app-location-select>
-            </div>
-            <div nz-flex nzGap="small">
-              <button
-                *ngIf="isAccountAdjust()"
-                nz-button
-                nzType="primary"
-                (click)="
-                  uiService.showAdjust(
-                    '',
-                    accounts[tabIndex]?.accountId!,
-                    TransactionTypes.Adjust,
-                    accounts[tabIndex]?.accountType!,
-                    accounts
-                  )
-                "
-              >
-                <i nz-icon nzType="plus" nzTheme="outline"></i>
-                {{ "Adjust" | translate }}
-              </button>
-              @if(isTopup){
-              <button
-                *ngIf="isAccountTopup()"
-                nz-button
-                nzType="primary"
-                (click)="
-                  uiService.showAdjust(
-                    '',
-                    accounts[tabIndex]?.accountId!,
-                    TransactionTypes.Topup,
-                    accounts[tabIndex]?.accountType!,
-                    accounts
-                  )
-                "
-              >
-                <i nz-icon nzType="plus" nzTheme="outline"></i>
-                {{ "Topup" | translate }}
-              </button>
-              } @else{
-              <button
-                *ngIf="isAccountReward()"
-                nz-button
-                nzType="primary"
-                (click)="
-                  uiService.showAdjust(
-                    '',
-                    accounts[tabIndex]?.accountId!,
-                    TransactionTypes.Earn,
-                    accounts[tabIndex]?.accountType!,
-                    accounts
-                  )
-                "
-              >
-                <i nz-icon nzType="plus" nzTheme="outline"></i>
-                {{ "Reward" | translate }}
-              </button>
-              }
-            </div>
+    <nz-layout>
+      <nz-header>
+        <div nz-row>
+          <div class="filter-box">
+            <app-filter-input
+              class="fixed-width-select"
+              [storageKey]="'account-list-' + accountId"
+              (filterChanged)="
+                searchText.set($event); param().pageIndex = 1; search()
+              "
+            ></app-filter-input>
           </div>
-        </nz-header>
+          <div class="filter-box">
+            <app-date-range-input
+              storageKey="account-date-range"
+              (valueChanged)="
+                transDate = $event; param().pageIndex = 1; search()
+              "
+            ></app-date-range-input>
+          </div>
 
-        <nz-content>
-          <nz-table
-            nzSize="small"
-            nzShowSizeChanger
-            nzTableLayout="fixed"
-            [nzPageSizeOptions]="pageSizeOption()"
-            [nzData]="lists()"
-            [nzLoading]="isLoading()"
-            [nzTotal]="param().rowCount || 0"
-            [nzPageSize]="param().pageSize || 0"
-            [nzPageIndex]="param().pageIndex || 0"
-            [nzNoResult]="noResult"
-            [nzFrontPagination]="false"
-            (nzQueryParams)="onQueryParamsChange($event)"
-            style="height: calc(100vh - 270px);"
+          <div class="filter-box">
+            <app-location-select
+              class="fixed-width-select"
+              [showAllOption]="true"
+              storageKey="location-account-list-search"
+              (valueChanged)="
+                locationId.set($event); param().pageIndex = 1; search()
+              "
+            >
+            </app-location-select>
+          </div>
+        </div>
+        <div>
+          <button
+            *ngIf="isAccountAdjust()"
+            style="margin-right: 4px;"
+            nz-button
+            nzType="primary"
+            (click)="
+              uiService.showAdjust(
+                '',
+                accountId!,
+                TransactionTypes.Adjust,
+                accountType!
+              )
+            "
           >
-            <ng-template #noResult>
-              <app-no-result-found></app-no-result-found>
-            </ng-template>
-            <thead>
-              <tr>
-                <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-                <th nzWidth="120px">
-                  {{ "TransNo" | translate }}
-                </th>
-                <!-- <th nzWidth="150px">
+            <i nz-icon nzType="plus" nzTheme="outline"></i>
+            {{ "Adjust" | translate }}
+          </button>
+          @if(isTopup){
+          <button
+            *ngIf="isAccountTopup()"
+            nz-button
+            nzType="primary"
+            (click)="
+              uiService.showAdjust(
+                '',
+                accountId!,
+                TransactionTypes.Topup,
+                accountType!
+              )
+            "
+          >
+            <i nz-icon nzType="plus" nzTheme="outline"></i>
+            {{ "Topup" | translate }}
+          </button>
+          } @else{
+          <button
+            *ngIf="isAccountReward()"
+            nz-button
+            nzType="primary"
+            (click)="
+              uiService.showAdjust(
+                '',
+                accountId!,
+                TransactionTypes.Earn,
+                accountType!
+              )
+            "
+          >
+            <i nz-icon nzType="plus" nzTheme="outline"></i>
+            {{ "Reward" | translate }}
+          </button>
+          }
+        </div>
+      </nz-header>
+
+      <nz-content>
+        <nz-table
+          nzSize="small"
+          nzShowSizeChanger
+          nzTableLayout="fixed"
+          [nzPageSizeOptions]="pageSizeOption()"
+          [nzData]="lists()"
+          [nzLoading]="isLoading()"
+          [nzTotal]="param().rowCount || 0"
+          [nzPageSize]="param().pageSize || 0"
+          [nzPageIndex]="param().pageIndex || 0"
+          [nzNoResult]="noResult"
+          [nzFrontPagination]="false"
+          (nzQueryParams)="onQueryParamsChange($event)"
+          style="height: calc(100vh - 270px);"
+        >
+          <ng-template #noResult>
+            <app-no-result-found></app-no-result-found>
+          </ng-template>
+          <thead>
+            <tr>
+              <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th nzWidth="120px">
+                {{ "TransNo" | translate }}
+              </th>
+              <!-- <th nzWidth="150px">
                   {{ "Offer" | translate }}
                 </th> -->
-                <th nzWidth="150px">
-                  {{ "Date" | translate }}
-                </th>
-                <th nzWidth="250px">
-                  {{ "Type" | translate }}
-                </th>
+              <th [nzWidth]="SIZE_COLUMNS.DATE">
+                {{ "Date" | translate }}
+              </th>
+              <th nzWidth="250px">
+                {{ "Type" | translate }}
+              </th>
 
-                <th nzEllipsis nzWidth="100px">{{ "Location" | translate }}</th>
-                <th nzEllipsis>{{ "Note" | translate }}</th>
-                <th nzWidth="100px" nzAlign="right">
-                  {{ "Amount" | translate }}
-                </th>
-                <!-- <th [nzWidth]="SIZE_COLUMNS.ACTION"></th> -->
-              </tr>
-            </thead>
+              <th nzEllipsis nzWidth="100px">{{ "Location" | translate }}</th>
+              <th nzEllipsis>{{ "Note" | translate }}</th>
+              <th nzWidth="100px" nzAlign="right">
+                {{ "Amount" | translate }}
+              </th>
+              <!-- <th [nzWidth]="SIZE_COLUMNS.ACTION"></th> -->
+            </tr>
+          </thead>
 
-            <tbody>
-              <tr *ngFor="let data of lists(); let i = index">
-                <td nzEllipsis>
-                  {{
-                    i
-                      | rowNumber
-                        : {
-                            index: param().pageIndex || 0,
-                            size: param().pageSize || 0
-                          }
-                  }}
-                </td>
-                <td nzEllipsis>
-                  <a
-                    *ngIf="isTransactionView()"
-                    (click)="
-                      uiService.showTransaction(
-                        data.id || 0,
-                        accounts[tabIndex]?.accountType!
-                      )
-                    "
-                    >{{ data.transNo }}</a
-                  >
-                  <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
-                </td>
-                <!-- <td nzEllipsis>{{ data.offerName }}</td> -->
-                <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
-                <td nzEllipsis>
-                  {{
-                    translateService.currentLang == "en"
-                      ? data.typeNameEn
-                      : data.typeNameKh
-                  }}
-                  {{
-                    data.type == TransactionTypes.Redeem
-                      ? " - " + data.offerName
-                      : ""
-                  }}
-                </td>
-
-                <td nzEllipsis>{{ data.locationName }}</td>
-                <td nzEllipsis>{{ data.note }}</td>
-                <td
-                  nzEllipsis
-                  nzAlign="right"
-                  [ngStyle]="{
-                    color:
-                      data.amount! > 0
-                        ? 'green'
-                        : data.amount! < 0
-                        ? 'red'
-                        : 'black',
-                    'font-weight': 'semi-bold'
-                  }"
+          <tbody>
+            <tr *ngFor="let data of lists(); let i = index">
+              <td nzEllipsis>
+                {{
+                  i
+                    | rowNumber
+                      : {
+                          index: param().pageIndex || 0,
+                          size: param().pageSize || 0
+                        }
+                }}
+              </td>
+              <td nzEllipsis>
+                <a
+                  *ngIf="isTransactionView()"
+                  (click)="
+                    uiService.showTransaction(data.id || 0, data.accountType!)
+                  "
+                  >{{ data.transNo }}</a
                 >
-                  {{ getAccountBalance(data.accountType!, data.amount) }}
-                </td>
-              </tr>
-            </tbody>
-          </nz-table>
-        </nz-content>
-      </nz-layout>
-    </div>
+                <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
+              </td>
+              <!-- <td nzEllipsis>{{ data.offerName }}</td> -->
+              <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
+              <td nzEllipsis>
+                {{
+                  translateService.currentLang == "en"
+                    ? data.typeNameEn
+                    : data.typeNameKh
+                }}
+                {{
+                  data.type == TransactionTypes.Redeem
+                    ? " - " + data.offerName
+                    : ""
+                }}
+              </td>
+
+              <td nzEllipsis>{{ data.locationName }}</td>
+              <td nzEllipsis>{{ data.note }}</td>
+              <td
+                nzEllipsis
+                nzAlign="right"
+                [ngStyle]="{
+                  color:
+                    data.amount! > 0
+                      ? 'green'
+                      : data.amount! < 0
+                      ? 'red'
+                      : 'black',
+                  'font-weight': 'semi-bold'
+                }"
+              >
+                {{ getAccountBalance(data.accountType!, data.amount) }}
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </nz-content>
+    </nz-layout>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   encapsulation: ViewEncapsulation.None,
@@ -268,29 +254,30 @@ export class AccountListComponent
   readonly modal: any = inject(NZ_MODAL_DATA);
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 
-  @Input() accounts: MemberAccount[] = [];
-  @Input() tabIndex: number = 0;
+  @Input() accountId = 0;
+  @Input() accountType = 0;
   transDate: any = [];
   isTransactionView = computed(() => true);
   isAccountTopup = computed(() => true);
   isAccountReward = computed(() => true);
   isAccountAdjust = computed(() => true);
+  account!: Account;
   isTopup = false;
-  locationId = signal<number>(0); 
+  locationId = signal<number>(0);
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes["tabIndex"] && this.accounts[this.tabIndex] != undefined) {
-      if (this.accounts[this.tabIndex].accountType! == AccountTypes.Wallet) {
-        this.isTopup = true;
-      } else {
-        this.isTopup = false;
-      }
-      this.search();
-    }
-  }
-  protected override getCustomFilters(): Filter[] { 
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes["tabIndex"] && this.accounts[this.tabIndex] != undefined) {
+  //     if (this.accounts[this.tabIndex].accountType! == AccountTypes.Wallet) {
+  //       this.isTopup = true;
+  //     } else {
+  //       this.isTopup = false;
+  //     }
+  //     this.search();
+  //   }
+  // }
+  protected override getCustomFilters(): Filter[] {
     let filters: Filter[] = [];
- 
+
     if (this.locationId()) {
       filters.push({
         field: "locationId",
@@ -311,34 +298,31 @@ export class AccountListComponent
   }
 
   override ngOnInit(): void {
-    this.uiService.refresher.subscribe((e) => {
-      if (e.key == "added") {
+    this.refreshSub = this.uiService.refresher.subscribe((e) => {
+      if (e.key == "added" && e.value.accountId == this.accountId) {
         this.search();
       }
     });
+    this.isTopup = this.accountType == AccountTypes.Wallet;
   }
 
   override search(delay: number = 50) {
-    if (this.isLoading() || this.tabIndex > 1) return;
+    if (!this.transDate) return;
+    if (this.isLoading()) return;
     this.isLoading.set(true);
     setTimeout(() => {
       this.param.set({ ...this.param(), sorts: "-transDate" });
       this.param().filters = this.buildFilters();
-      this.service
-        .getTransactions(
-          this.accounts[this.tabIndex].accountId || 0,
-          this.param()
-        )
-        .subscribe({
-          next: (result: { results: Transaction[]; param: QueryParam }) => {
-            this.lists.set(result.results);
-            this.param.set(result.param);
-            this.isLoading.set(false);
-          },
-          error: () => {
-            this.isLoading.set(false);
-          },
-        });
+      this.service.getTransactions(this.accountId, this.param()).subscribe({
+        next: (result: { results: Transaction[]; param: QueryParam }) => {
+          this.lists.set(result.results);
+          this.param.set(result.param);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.isLoading.set(false);
+        },
+      });
     }, delay);
   }
 
@@ -349,4 +333,5 @@ export class AccountListComponent
   override ngOnDestroy(): void {
     this.refreshSub?.unsubscribe();
   }
+  ngOnChanges() {}
 }

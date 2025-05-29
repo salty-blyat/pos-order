@@ -309,7 +309,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
   };
   override ngOnInit(): void {
     super.ngOnInit();
-    if (this.modal?.isView) {
+    if (!this.modal?.isView) {
       this.systemSettingService.find(SETTING_KEY.OfferAutoId).subscribe({
         next: (value?: string) => {
           if (Number(value) !== 0) {

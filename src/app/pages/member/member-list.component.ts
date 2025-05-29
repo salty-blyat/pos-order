@@ -91,13 +91,13 @@ import { NotificationService } from "../../utils/services/notification.service";
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.PHONE">
                 {{ "Phone" | translate }}
               </th>
-              <th nzEllipsis nzWidth="200px">
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.MEDIUM">
                 {{ "MemberClass" | translate }}
               </th>
-              <th nzEllipsis nzWidth="150px">
+              <th nzEllipsis [nzWidth]="SIZE_COLUMNS.MEDIUM">
                 {{ "Agent" | translate }}
               </th>
-              <th nzEllipsis nzWidth="150px">
+              <th nzEllipsis>
                 {{ "Address" | translate }}
               </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
@@ -126,7 +126,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               <td nzEllipsis>{{ data.phone }}</td>
               <td nzEllipsis>{{ data.memberClassName }}</td>
               <td nzEllipsis>{{ data.agentName }}</td>
-              <td nzEllipsis>{{ data.address }}</td> 
+              <td nzEllipsis>{{ data.address }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>

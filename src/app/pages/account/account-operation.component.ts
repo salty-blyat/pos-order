@@ -130,7 +130,6 @@ import { CurrencyService } from "../currency/currency.service";
               [(nzFileList)]="fileList"
               [nzShowUploadList]="nzShowIconList"
               (nzChange)="handleUpload($event)"
-              list
             >
               <button nz-button [disabled]="modal?.isView">
                 <i nz-icon nzType="upload"></i>
@@ -186,7 +185,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   disabled = false;
   nzShowIconList = {
     showPreviewIcon: true,
-    showRemoveIcon: false,
+    showRemoveIcon: true,
     showDownloadIcon: false,
   };
   isTransactionRemove = computed(() => true);
@@ -202,6 +201,9 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
           }
         },
       });
+    }
+    if (this.modal?.isView) {
+      this.nzShowIconList.showRemoveIcon = false;
     }
     if (this.modal?.accountId) {
       this.service.findAccount(this.modal?.accountId).subscribe({
@@ -279,15 +281,15 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
     const { noteMaxLengthValidator, required, mustPositiveNumber } =
       CommonValidators;
     this.frm = this.fb.group({
-      transNo: [null, required],
-      transDate: [new Date().toISOString()],
-      accountId: [this.modal.accountId, required],
+      transNo: [null, [required]],
+      transDate: [new Date()],
+      accountId: [this.modal.accountId, [required]],
       amount: [{ value: 1, disabled: false }, [required]],
       type: [this.modal.type, required],
       note: [null, noteMaxLengthValidator],
       locationId: [null, required],
       refNo: [null],
-      extData: [null, required],
+      extData: [null],
     });
 
     setTimeout(() => {
@@ -339,10 +341,10 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
       this.extData = this.model.extData;
     }
 
-    if (this.model.accountId) {
+    if (this.model.accountId && !this.modal?.isView) {
       this.service.find(this.model.accountId).subscribe({
         next: (d: any) => {
-          this.selectedAccount = d; 
+          this.selectedAccount = d;
         },
         error: (err: any) => {
           console.error("Failed to fetch account detail:", err);

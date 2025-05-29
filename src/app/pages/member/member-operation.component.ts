@@ -14,7 +14,7 @@ import {
 import { NzMessageService } from "ng-zorro-antd/message";
 import { AuthService } from "../../helpers/auth.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { Observable, Observer } from "rxjs";
+import { Observable, Observer, Subscription } from "rxjs";
 import { AccountService } from "../account/account.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
@@ -337,7 +337,7 @@ import { RedemptionUiService } from "../redemption/redemption-ui.service";
             </div>
 
             <div *ngSwitchCase="3" class="tab-content">
-              <nz-tabset style="margin: 0 8px;" [(nzSelectedIndex)]="tabIndex">
+              <nz-tabset style="margin: 0 8px;">
                 <nz-tab
                   *ngFor="let account of sortedAccounts"
                   [nzTitle]="
@@ -347,8 +347,8 @@ import { RedemptionUiService } from "../redemption/redemption-ui.service";
                   "
                 >
                   <app-account-list
-                    [accounts]="model.accounts || []"
-                    [tabIndex]="tabIndex"
+                    [accountId]="account.accountId!"
+                    [accountType]="account.accountType!"
                   ></app-account-list>
                 </nz-tab>
                 <nz-tab [nzTitle]="'Redemption' | translate">
@@ -559,6 +559,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   isMemberEdit = computed(() => true);
   isMemberRemove = computed(() => true);
   selectedAccount = signal<number>(0);
+  accountRefreshSub = new Subscription();
+  redemptionRefreshSub = new Subscription();
 
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
@@ -631,7 +633,16 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     };
     if (this.modal?.id) {
       this.isLoading.set(true);
-      this.service.find(this.modal?.id).subscribe(refreshBalance);
+      this.service.find(this.modal?.id).subscribe({
+        next: (result: Member) => {
+          this.model = result;
+          this.setFormValue();
+          this.isLoading.set(false);
+        },
+        error: (err: any) => {
+          console.log(err);
+        },
+      });
     }
     this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
@@ -652,8 +663,10 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       },
     });
 
-    this.accountUiService.refresher.subscribe(refreshBalance);
-    this.redemptionUiService.refresher.subscribe(refreshBalance);
+    this.accountRefreshSub =
+      this.accountUiService.refresher.subscribe(refreshBalance);
+    this.redemptionRefreshSub =
+      this.redemptionUiService.refresher.subscribe(refreshBalance);
   }
 
   override initControl(): void {
@@ -799,6 +812,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
 
   override ngOnDestroy(): void {
     this.refreshSub$?.unsubscribe();
+    this.accountRefreshSub?.unsubscribe();
+    this.redemptionRefreshSub?.unsubscribe();
   }
 
   protected readonly AccountTypes = AccountTypes;

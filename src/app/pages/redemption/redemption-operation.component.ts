@@ -254,6 +254,19 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                     [nzMin]="1"
                     [nzStep]="1"
                   ></nz-input-number>
+                  <!-- <div>
+                    <div
+                      style="padding:8; border-radius: 100px; border:1px solid black;"
+                    >
+                      <span nz-icon nzType="minus"></span>
+                    </div>
+                    {{ frm.get("qty")?.value }}
+                    <div
+                      style="padding:8; border-radius: 100px; border:1px solid black;"
+                    >
+                      <span nz-icon nzType="plus"></span>
+                    </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -296,7 +309,8 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
               <div nz-flex nzJustify="space-between">
                 <span>{{ "Balance" | translate }}</span>
                 <span>{{
-                  getAccountBalance(selectedOffer?.redeemWith!, currentB)
+                  extData?.startBalance
+                    | accountBalance : selectedOffer?.redeemWith!
                 }}</span>
               </div>
 
@@ -307,11 +321,9 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                   }})</span
                 >
                 <span style="color: red"
-                  >{{
-                    getAccountBalance(
-                      selectedOffer?.redeemWith!,
-                      frm.get("amount")?.value
-                    )
+                  >-{{
+                    frm.get("amount")?.value
+                      | accountBalance : selectedOffer?.redeemWith!
                   }}
                 </span>
               </div>
@@ -325,7 +337,8 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                     }"
                   >
                     {{
-                      getAccountBalance(selectedOffer?.redeemWith!, remainingB)
+                      extData?.endingBalance
+                        | accountBalance : selectedOffer?.redeemWith!
                     }}
                   </span>
                 </div>
@@ -459,9 +472,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   selectedMember: Member | null = null;
   selectedOffer: Offer | null = null;
-  extData: string | null = null;
-  currentB: number | null = null;
-  remainingB: number | null = null;
+  extData!: { cardNumber: String; startBalance: number; endingBalance: number };
   RedeemPrint = 1;
 
   override ngOnInit(): void {
@@ -570,55 +581,60 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       extData: [null],
     });
 
-    if (this.modal?.memberId) {
-      setTimeout(() => {
-        this.frm.get("memberId")?.setValue(this.modal.memberId);
-        this.onMemberChange();
-      }, 50);
-    }
-    this.frm.controls["memberId"]?.valueChanges.subscribe({
-      next: () => {
+    if (!this.modal?.isView) {
+      if (this.modal?.memberId) {
         setTimeout(() => {
-          if (!this.modal?.isView) {
-            this.frm.get("offerId")?.enable();
-            this.frm.get("offerId")?.setValue(null);
-          } else {
-            this.onMemberChange();
-            this.frm.get("offerId")?.setValue(this.model?.offerId);
-          }
+          this.frm.get("memberId")?.setValue(this.modal.memberId);
+          this.frm.get("memberId")?.disable();
           this.onMemberChange();
-          this.remainingBalance();
         }, 50);
-      },
-    });
+      }
+      this.frm.controls["memberId"]?.valueChanges.subscribe({
+        next: () => {
+          setTimeout(() => {
+            if (!this.modal?.isView) {
+              this.frm.get("offerId")?.enable();
+              this.frm.get("offerId")?.setValue(null);
+            } else {
+              // this.onMemberChange();
+              this.frm.get("offerId")?.setValue(this.model?.offerId);
+            }
+            this.onMemberChange();
+            this.remainingBalance();
+          }, 50);
+        },
+      });
 
-    this.frm.controls["qty"]?.valueChanges.subscribe({
-      next: () => {
-        setTimeout(() => {
-          this.setAmountControl();
-          this.setExtDataControl();
-          this.remainingBalance();
-        }, 50);
-      },
-    });
+      this.frm.controls["qty"]?.valueChanges.subscribe({
+        next: () => {
+          setTimeout(() => {
+            this.setAmountControl();
+            this.setExtDataControl();
+            this.remainingBalance();
+          }, 50);
+        },
+      });
 
-    this.frm.controls["offerId"]?.valueChanges.subscribe({
-      next: () => {
-        setTimeout(() => {
-          this.selectedAccount =
-            this.selectedMember?.accounts?.find(
-              (a) => a.accountType == this.selectedOffer?.redeemWith
-            ) ?? null;
+      this.frm.controls["offerId"]?.valueChanges.subscribe({
+        next: () => {
+          setTimeout(() => {
+            this.selectedAccount =
+              this.selectedMember?.accounts?.find(
+                (a) => a.accountType == this.selectedOffer?.redeemWith
+              ) ?? null;
 
-          this.frm.get("accountId")?.setValue(this.selectedAccount?.accountId);
-          this.setAmountControl();
-          this.setExtDataControl();
+            this.frm
+              .get("accountId")
+              ?.setValue(this.selectedAccount?.accountId);
+            this.setAmountControl();
+            this.setExtDataControl();
 
-          this.getCurrectBalance();
-          this.remainingBalance();
-        }, 50);
-      },
-    });
+            this.getCurrectBalance();
+            this.remainingBalance();
+          }, 50);
+        },
+      });
+    }
   }
 
   setAmountControl() {
@@ -628,14 +644,22 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   setExtDataControl() {
-    this.extData = JSON.stringify({
+    this.extData = {
       cardNumber: "",
-      startBalance: this.selectedAccount?.balance,
+      startBalance: this.selectedAccount?.balance!,
       endingBalance: this.currency.roundedDecimal(
         this.selectedAccount?.balance! - this.frm.get("amount")?.value
       ),
-    });
-    this.frm.get("extData")?.setValue(this.extData);
+    };
+    this.frm.get("extData")?.setValue(
+      JSON.stringify({
+        cardNumber: "",
+        startBalance: this.selectedAccount?.balance,
+        endingBalance: this.currency.roundedDecimal(
+          this.selectedAccount?.balance! - this.frm.get("amount")?.value
+        ),
+      })
+    );
   }
 
   override onSubmit(e?: any) {
@@ -698,12 +722,12 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         const parsed: { startBalance: number } = JSON.parse(
           this.model?.extData
         );
-        this.currentB = parsed.startBalance;
+        this.extData.startBalance = parsed.startBalance;
       } catch (error) {
         console.error("Failed to parse extData:", error);
       }
     } else {
-      this.currentB = this.selectedAccount?.balance!;
+      this.extData.startBalance = this.selectedAccount?.balance!;
     }
   }
 
@@ -713,7 +737,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         const parsed: { endingBalance: number } = JSON.parse(
           this.model?.extData
         );
-        this.remainingB = parsed?.endingBalance;
+        this.extData.endingBalance = parsed?.endingBalance;
       } catch (error) {
         console.error("Failed to parse extData:", error);
       }
@@ -722,10 +746,10 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         this.selectedAccount?.balance != null &&
         this.selectedAccount?.balance != undefined
       ) {
-        this.remainingB =
+        this.extData.endingBalance =
           this.selectedAccount?.balance! - this.frm.get("amount")?.value;
       } else {
-        this.remainingB = 0;
+        this.extData.endingBalance = 0;
       }
     }
   }
@@ -746,13 +770,14 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       extData: this.model?.extData,
     });
     if (this.model.extData) {
-      this.extData = this.model.extData;
+      this.extData = JSON.parse(this.model.extData);
     }
 
     if (this.model.offerId && this.modal?.isView) {
       this.offerService.find(this.model.offerId).subscribe({
         next: (d: any) => {
           this.selectedOffer = d;
+          this.frm.get("offerId")?.setValue(this.model?.offerId);
         },
         error: (err: any) => {
           console.error("Failed to fetch offer detail:", err);
