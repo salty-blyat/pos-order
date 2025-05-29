@@ -50,7 +50,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               <div class="filter-box" style="width: 230px;">
                 <app-filter-input
                   class="fixed-width-select"
-                  storageKey="member-list"
+                  [storageKey]="'account-list-' + (accounts[tabIndex]?.accountId)"
                   (filterChanged)="
                     searchText.set($event); param().pageIndex = 1; search()
                   "
@@ -59,7 +59,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
 
               <div class="filter-box" style="width: 230px;">
                 <app-date-range-input
-                  storageKey="trans-"
+                  storageKey="account-date-range"
                   (valueChanged)="
                     transDate = $event; param().pageIndex = 1; search()
                   "
@@ -70,7 +70,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                   class="fixed-width-select"
                   showAll="AllTransactionType"
                   [showAllOption]="true"
-                  storageKey="trans-type-list-search"
+                  storageKey="acc-trans-type-list-search"
                   [lookupType]="LOOKUP_TYPE.TransactionType"
                   (valueChanged)="
                     typeId.set($event); param().pageIndex = 1; search()

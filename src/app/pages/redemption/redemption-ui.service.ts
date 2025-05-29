@@ -6,6 +6,7 @@ import { RedemptionOperationComponent } from "./redemption-operation.component";
 import { MainPageService } from "../../utils/services/main-page.service";
 import { Redemption } from "./redemption.service";
 import { RedemptionPrintComponent } from "./redemption-print.component";
+import { RedemptionAdvancedFilterComponent } from "./redemption-advanced-filter.component";
 
 @Injectable({
   providedIn: "root",
@@ -36,6 +37,25 @@ export class RedemptionUiService extends BaseUiService {
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
         this.refresher.emit({ key: "added", value: e.model, componentId });
+      },
+    });
+  }
+
+  showAdvancedFilter(storageKey: string, componentId: any = '' ): void {
+    this.modalService.create({
+      nzContent: RedemptionAdvancedFilterComponent,
+      nzData: { storageKey },
+      nzFooter: null,
+      nzClosable: true,
+      nzWidth: '400px',
+      nzBodyStyle: { minHeight: '100px' },
+      nzMaskClosable: false,
+      nzOnOk: (e) => {
+        this.refresher.emit({
+          key: 'advanced-filter-redemption',
+          value: e.frm.getRawValue(),
+          componentId: componentId 
+        });
       },
     });
   }

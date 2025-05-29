@@ -37,6 +37,12 @@ export interface Redemption {
   offerTypeNameKh?: string;
   offerTypeNameEn?: string;
 }
+export interface RedemptionAdvancedFilter {
+  offerTypeId?: number;
+  accountTypeId?: number;
+  statusId?: number;
+  isAdvancedFilter: boolean;
+}
 // format like  this extData {"cardNumber":"", "startBalance":100, "endingBalance":100}
 
 @Injectable({

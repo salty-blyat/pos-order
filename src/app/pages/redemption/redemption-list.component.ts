@@ -13,7 +13,11 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { AuthService } from "../../helpers/auth.service";
-import { Redemption, RedemptionService } from "./redemption.service";
+import {
+  Redemption,
+  RedemptionAdvancedFilter,
+  RedemptionService,
+} from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { NotificationService } from "../../utils/services/notification.service";
@@ -59,18 +63,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 "
               ></app-date-range-input>
             </div>
-            <app-lookup-item-select
-              class="fixed-width-select"
-              showAll="AllOfferType"
-              [showAllOption]="true"
-              storageKey="redemption-offer-type-list-search"
-              [lookupType]="LOOKUP_TYPE.OfferType"
-              (valueChanged)="
-                offerTypeId.set($event); param().pageIndex = 1; search()
-              "
-            >
-            </app-lookup-item-select>
-
+            <!-- keeps -->
             <app-offer-group-select
               class="fixed-width-select"
               [showAllOption]="true"
@@ -80,28 +73,17 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               "
             >
             </app-offer-group-select>
-
-            <app-lookup-item-select
-              class="fixed-width-select"
-              showAll="AllAccountType"
-              storageKey="redemption-account-type-list-search"
-              [showAllOption]="true"
-              [lookupType]="LOOKUP_TYPE.AccountType"
-              (valueChanged)="
-                accountTypeId.set($event); param().pageIndex = 1; search()
-              "
-            ></app-lookup-item-select>
-
-            <app-lookup-item-select
-              class="fixed-width-select"
-              showAll="AllStatus"
-              storageKey="redemption-status-list-search"
-              [showAllOption]="true"
-              [lookupType]="LOOKUP_TYPE.RedeemStatus"
-              (valueChanged)="
-                statusId.set($event); param().pageIndex = 1; search()
-              "
-            ></app-lookup-item-select>
+            <div>
+              <nz-badge [nzDot]="hasAdvancedFilter()">
+                <button
+                  nz-button
+                  nzType="default"
+                  (click)="uiService.showAdvancedFilter(advancedStoreKey)"
+                >
+                  <a nz-icon nzType="align-right" nzTheme="outline"></a>
+                </button>
+              </nz-badge>
+            </div>
           </div>
           <button
             *ngIf="isRedemptionAdd()"
@@ -327,8 +309,8 @@ export class RedemptionListComponent
   );
   lookup = signal<LookupItem[]>([]);
   memberId = input(0);
+  hasAdvancedFilter = signal<boolean>(false);
   redeemedDate: any = [];
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["tabIndex"]) {
       this.search();
@@ -344,9 +326,34 @@ export class RedemptionListComponent
       sorts: "-redeemedDate",
       filters: "",
     });
+    this.uiService.refresher.subscribe((result) => {
+      if (result.key === "advanced-filter-redemption") {
+        this.setAdvancedFilter(result.value);
+      }
+      this.getAdvancedFilter();
+      this.search();
+    });
+    this.getAdvancedFilter();
+    if (this.hasAdvancedFilter()) {
+      this.setAdvancedFilter(
+        this.sessionStorageService.getValue(this.advancedStoreKey)
+      );
+    }
     super.ngOnInit();
     this.getStatus();
   }
+  getAdvancedFilter() {
+    const advancedFilter: RedemptionAdvancedFilter =
+      this.sessionStorageService.getValue(this.advancedStoreKey);
+    this.hasAdvancedFilter.set(advancedFilter?.isAdvancedFilter ?? false);
+  }
+  setAdvancedFilter(advancedFilter: any) {
+    console.log(advancedFilter);
+    this.offerTypeId.set(advancedFilter.offerTypeId);
+    this.accountTypeId.set(advancedFilter.accountTypeId);
+    this.statusId.set(advancedFilter.statusId);
+  }
+
   getStatus() {
     const filter: Filter[] = [
       {
