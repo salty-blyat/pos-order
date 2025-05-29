@@ -12,6 +12,7 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { SettingService } from "../../../app-setting";
 import { BaseOperationComponent } from "../../../utils/components/base-operation.component";
 import { AuthKeys } from "../../../const";
+import { UUID } from "uuid-generator-ts";
 
 @Component({
   selector: "app-lookup-item-operation",
@@ -158,10 +159,23 @@ import { AuthKeys } from "../../../const";
                 "Color" | translate
               }}</nz-form-label>
               <nz-form-control>
-                <nz-color-picker
-                  formControlName="color"
-                  nzShowText
-                ></nz-color-picker>
+                <div style="display: flex; align-items: center;">
+                  <nz-color-picker
+                    formControlName="color"
+                    nzShowText
+                  ></nz-color-picker>
+                  <button
+                    nz-button
+                    nzType="link"
+                    [disabled]="modal?.isView"
+                    nzDanger=""
+                    (click)="
+                      !modal?.isView ? frm.get('color')?.setValue(null) : null
+                    "
+                  >
+                    <span nz-icon nzType="close"></span>
+                  </button>
+                </div>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -259,7 +273,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
 
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
-  image!: Image;
+  image!: String;
   //view
   nzShowButtonView = {
     showPreviewIcon: true,
@@ -290,7 +304,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
       nameExistValidator,
       required,
       noteMaxLengthValidator,
-    } = CommonValidators; 
+    } = CommonValidators;
 
     this.frm = this.fb.group({
       lookupTypeId: [this.modal?.lookupTypeId],
@@ -346,32 +360,25 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
   override onSubmit(e: any): void {
     if (this.frm.valid) {
       this.isLoading.set(true);
-      this.file.map((item) => {
-        this.image = {
-          uid: item.uid,
-          url: item.url!,
-          name: item.name!,
-          type: item.type!,
-        };
-      });
+      if (this.file.length > 0) this.image = this.file[0].url!;
 
       let operation$ = this.service.add({
         ...this.frm.value,
-        image: this.file[0].url,
+        image: this.image,
       });
 
       if (this.model?.id) {
         operation$ = this.service.edit({
           ...this.frm.value,
           id: this.model?.id,
-          image: this.file[0].url,
+          image: this.image,
         });
       }
       if (e.detail === 1 || e.detail === 0) {
         operation$.subscribe({
           next: (result: LookupItem) => {
             this.model = result;
-            this.isLoading.set(false);
+            // this.isLoading.set(false);
             this.ref.triggerOk().then();
           },
           error: (err: any) => {
@@ -399,7 +406,9 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     const imageUrl = this.model?.image;
 
     if (imageUrl) {
-      this.file = [this.model.image as unknown as NzUploadFile];
+      this.file = [
+        { url: this.model.image, uid: "", name: "" } as NzUploadFile,
+      ];
     }
   }
 }

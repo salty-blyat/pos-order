@@ -165,6 +165,7 @@ import { AccountOperationComponent } from "./pages/account/account-operation.com
 import { LocationMultiSelectComponent } from "./pages/location/location-multi-select.component";
 import { RedemptionPrintComponent } from "./pages/redemption/redemption-print.component";
 import { RedemptionAdvancedFilterComponent } from "./pages/redemption/redemption-advanced-filter.component";
+import { AccountBalancePipe } from "./utils/pipes/currency-point.pipe";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -208,6 +209,7 @@ export class CustomTranslate implements TranslateLoader {
     CurrencyInputDirective,
     AttendanceRatedPipe,
     TransparentPipe,
+    AccountBalancePipe,
     ChunkPipe,
     ConvertHourPipe,
     CustomDatePipe,
@@ -363,7 +365,7 @@ export class CustomTranslate implements TranslateLoader {
     RedemptionListComponent,
     RedemptionOperationComponent,
     RedemptionPrintComponent,
-    RedemptionAdvancedFilterComponent
+    RedemptionAdvancedFilterComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
