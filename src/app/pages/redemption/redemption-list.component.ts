@@ -124,10 +124,9 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               <th [nzWidth]="SIZE_COLUMNS.CODE" nzEllipsis>
                 {{ "RedeemNo" | translate }}
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.NAME" nzEllipsis>
+              <th nzWidth="250px" nzEllipsis>
                 {{ "Name" | translate }}
               </th>
-              <th nzWidth="80px" nzAlign="right">{{ "Cost" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.DATE">{{ "Date" | translate }}</th>
               <th nzWidth="100px">{{ "Location" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.STATUS">
@@ -163,7 +162,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               <td
                 nzEllipsis
                 class="image"
-                style="display:flex; gap:4px"
+                style="display:grid;grid-template-columns:42px 1fr; gap:8px"
                 [title]="data.offerName"
               >
                 <img
@@ -191,12 +190,6 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 </div>
               </td>
 
-              <td nzEllipsis nzAlign="right">
-                @if(data.amount == 0){
-                {{ "Free" | translate }}
-                } @else {
-                {{ getAccountBalance(data.redeemWith!, data.amount) }}}
-              </td>
               <td nzEllipsis>{{ data.redeemedDate | customDateTime }}</td>
               <td nzEllipsis>{{ data.locationName }}</td>
 
@@ -213,20 +206,8 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 </span>
               </td>
               <td nzEllipsis>{{ data.note }}</td>
-              <td
-                nzEllipsis
-                nzAlign="right"
-                [ngStyle]="{
-                  color:
-                    data.amount! > 0
-                      ? 'green'
-                      : data.amount! < 0
-                      ? 'red'
-                      : 'black',
-                  'font-weight': 'semi-bold'
-                }"
-              >
-                {{ getAccountBalance(data.redeemWith!, data.amount) }}
+              <td nzEllipsis nzAlign="right">
+                {{ data?.amount | accountBalance : data?.redeemWith! }}
               </td>
               <td class="col-action">
                 <a
@@ -263,7 +244,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
         padding: 0 !important;
       }
       .image-list {
-        width: 60px;
+        width: 42px;
         height: 42px;
         object-fit: scale-down;
       }
@@ -445,7 +426,6 @@ export class RedemptionListComponent
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
   readonly AccountTypes = AccountTypes;
   readonly RedeemStatuses = RedeemStatuses;
-  getAccountBalance = getAccountBalance;
 
   override ngOnDestroy(): void {
     this.refreshSub.unsubscribe();
