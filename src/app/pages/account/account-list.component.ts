@@ -299,7 +299,7 @@ export class AccountListComponent
       this.search();
     }
   }
-  protected override getCustomFilters(): Filter[] {
+  protected override getCustomFilters(): Filter[] { 
     let filters: Filter[] = [];
 
     if (this.typeId()) {

@@ -7,7 +7,6 @@ export class MainPageService {
   constructor() {
     this.currentSidebarSize.subscribe((e) => {
       this.sidebar = e;
-      console.log(e);
     });
   }
   currentSidebarSize = new EventEmitter<{ width?: any; height?: any }>();

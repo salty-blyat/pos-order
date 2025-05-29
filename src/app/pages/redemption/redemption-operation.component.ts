@@ -21,9 +21,9 @@ import { Offer, OfferService } from "../offer/offer.service";
 import { SettingService } from "../../app-setting";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { Observable } from "rxjs";
-import { getAccountBalance } from "../../utils/components/get-account-balance";
-import { Report, ReportService } from "../report/report.service";
 import { Currency, CurrencyService } from "../currency/currency.service";
+import { ReportService } from "../report/report.service";
+import { getAccountBalance } from "../../utils/components/get-account-balance";
 
 @Component({
   selector: "app-redemption-operation",
@@ -352,35 +352,36 @@ import { Currency, CurrencyService } from "../currency/currency.service";
         </button>
       </div>
       <div *ngIf="modal?.isView">
-        <a
-          *ngIf="isRedemptionPrint()"
-          nz-dropdown
-          (click)="uiService.showPrint(model, RedeemPrint)"
-        >
-          <span nz-icon nzType="printer" nzTheme="outline"></span>
-          {{ "Print" | translate }}
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isRedemptionPrint()"
-        ></nz-divider>
-        <a
-          nz-typography
-          nzType="danger"
-          (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isRedemptionRemove()"
-        >
-          <i nz-icon nzType="delete" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Delete" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isRedemptionRemove()"
-        ></nz-divider>
-        <a nz-typography (click)="cancel()" style="color: gray;">
-          <i nz-icon nzType="close" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Close" | translate }}</span>
-        </a>
+        <div nz-flex nzJustify="space-between">
+          <a
+            *ngIf="isRedemptionPrint()"
+            nz-dropdown
+            (click)="uiService.showPrint(model, RedeemPrint)"
+          >
+            <span nz-icon nzType="printer" nzTheme="outline"></span>
+            {{ "Print" | translate }}
+          </a>
+
+          <div>
+            <a
+              nz-typography
+              nzType="danger"
+              (click)="uiService.showDelete(model.id || 0)"
+              *ngIf="!isLoading() && isRedemptionRemove()"
+            >
+              <i nz-icon nzType="delete" nzTheme="outline"></i>
+              <span class="action-text"> {{ "Delete" | translate }}</span>
+            </a>
+            <nz-divider
+              nzType="vertical"
+              *ngIf="!isLoading() && isRedemptionRemove()"
+            ></nz-divider>
+            <a nz-typography (click)="cancel()" style="color: gray;">
+              <i nz-icon nzType="close" nzTheme="outline"></i>
+              <span class="action-text"> {{ "Close" | translate }}</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   `,
@@ -499,7 +500,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   onMemberChange() {
     const memberId = this.frm.get("memberId")?.value;
-    console.log(this.frm.get("memberId")?.value);
 
     if (memberId != null) {
       this.memberService.find(memberId).subscribe({
@@ -574,7 +574,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
             this.frm.get("offerId")?.setValue(null);
           } else {
             this.onMemberChange();
-            this.frm.get("offerId")?.setValue(this.model.offerId);
+            this.frm.get("offerId")?.setValue(this.model?.offerId);
           }
           this.onMemberChange();
           this.remainingBalance();

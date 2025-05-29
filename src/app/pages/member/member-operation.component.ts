@@ -719,7 +719,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   }
   override onSubmit(e: any): void {
     if (this.frm.valid && !this.isLoading()) {
-      console.log("sadfdsaf", this.frm.getRawValue());
 
       this.isLoading.set(true);
       if (this.file.length > 0) {
@@ -789,7 +788,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       return file;
     });
     this.file = fileList;
-    console.log("this.file", this.file);
   }
 
   get sortedAccounts() {
