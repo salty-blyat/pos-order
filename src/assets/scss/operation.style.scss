@@ -8,6 +8,11 @@ Style for modal
   border-radius: 6px !important;
   height: 30px;
   line-height: 30px;
+} 
+.fixed-width-select {
+  width: 200px; /* or any fixed width you want */
+  min-width: 200px;
+  max-width: 200px;
 }
 
 .ant-modal-title {

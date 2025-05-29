@@ -48,48 +48,40 @@ import { CurrencyService } from "../currency/currency.service";
             style="width:100%"
           >
             <div nz-flex nzGap="small">
-              <div style='width:140px'>
-                <app-filter-input
-                  class="fixed-width-select"
-                  [storageKey]="'account-list-' + accounts[tabIndex]?.accountId"
-                  (filterChanged)="
-                    searchText.set($event); param().pageIndex = 1; search()
-                  "
-                ></app-filter-input>
-              </div>
+              <app-filter-input
+                class="fixed-width-select"
+                [storageKey]="'account-list-' + accounts[tabIndex]?.accountId"
+                (filterChanged)="
+                  searchText.set($event); param().pageIndex = 1; search()
+                "
+              ></app-filter-input>
 
-              <div >
-                <app-date-range-input
-                  storageKey="account-date-range"
-                  (valueChanged)="
-                    transDate = $event; param().pageIndex = 1; search()
-                  "
-                ></app-date-range-input>
-              </div>
-              <div style='width:190px'>
-                <app-lookup-item-select
-                  class="fixed-width-select"
-                  showAll="AllTransactionType"
-                  [showAllOption]="true"
-                  storageKey="acc-trans-type-list-search"
-                  [lookupType]="LOOKUP_TYPE.TransactionType"
-                  (valueChanged)="
-                    typeId.set($event); param().pageIndex = 1; search()
-                  "
-                >
-                </app-lookup-item-select>
-              </div>
-              <div style='width:190px'>
-                <app-location-select
-                  class="fixed-width-select"
-                  [showAllOption]="true"
-                  storageKey="location-account-list-search"
-                  (valueChanged)="
-                    locationId.set($event); param().pageIndex = 1; search()
-                  "
-                >
-                </app-location-select>
-              </div>
+              <app-date-range-input
+                storageKey="account-date-range"
+                (valueChanged)="
+                  transDate = $event; param().pageIndex = 1; search()
+                "
+              ></app-date-range-input>
+              <app-lookup-item-select
+                class="fixed-width-select"
+                showAll="AllTransactionType"
+                [showAllOption]="true"
+                storageKey="acc-trans-type-list-search"
+                [lookupType]="LOOKUP_TYPE.TransactionType"
+                (valueChanged)="
+                  typeId.set($event); param().pageIndex = 1; search()
+                "
+              >
+              </app-lookup-item-select>
+              <app-location-select
+                class="fixed-width-select"
+                [showAllOption]="true"
+                storageKey="location-account-list-search"
+                (valueChanged)="
+                  locationId.set($event); param().pageIndex = 1; search()
+                "
+              >
+              </app-location-select>
             </div>
             <div nz-flex nzGap="small">
               <button
@@ -97,7 +89,7 @@ import { CurrencyService } from "../currency/currency.service";
                 nz-button
                 nzType="primary"
                 (click)="
-                  uiService.showAdjust( 
+                  uiService.showAdjust(
                     '',
                     accounts[tabIndex]?.accountId!,
                     TransactionTypes.Adjust,
@@ -172,7 +164,7 @@ import { CurrencyService } from "../currency/currency.service";
             <thead>
               <tr>
                 <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
-                <th nzWidth="100px">
+                <th nzWidth="120px">
                   {{ "TransNo" | translate }}
                 </th>
                 <!-- <th nzWidth="150px">

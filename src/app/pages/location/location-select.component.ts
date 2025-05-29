@@ -73,11 +73,7 @@ import { LocationUiService } from "./location-ui.service";
         }
         .b-code {
           font-weight: bolder;
-        }
-        .b-name {
-          font-size: 12px;
-          padding-left: 5px;
-        }
+        } 
         ::ng-deep cdk-virtual-scroll-viewport {
           min-height: 34px;
         }

@@ -55,7 +55,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
-            <div class="filter-box" style="width: 230px;">
+            <div class="filter-box"  >
               <app-date-range-input
                 storageKey="trans-date-range"
                 (valueChanged)="
