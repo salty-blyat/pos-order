@@ -115,7 +115,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
               <th nzWidth="100px">
                 {{ "OfferGroup" | translate }}
               </th>
-              <th nzWidth="190px">
+              <th [nzWidth]="SIZE_COLUMNS.DATE_RANGE">
                 {{ "Duration" | translate }}
               </th>
               <th nzWidth="110px" nzAlign="right">

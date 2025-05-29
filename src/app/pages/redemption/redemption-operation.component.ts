@@ -387,7 +387,7 @@ import { Currency, CurrencyService } from "../currency/currency.service";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
   styles: ` 
-  .anticon-delete{
+  :host ::ng-deep .anticon-delete {
     color:red !important;
   }
 .empty-card {
@@ -500,7 +500,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   onMemberChange() {
     const memberId = this.frm.get("memberId")?.value;
     console.log(this.frm.get("memberId")?.value);
-    
+
     if (memberId != null) {
       this.memberService.find(memberId).subscribe({
         next: (m: any) => {
@@ -577,6 +577,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
             this.frm.get("offerId")?.setValue(this.model.offerId);
           }
           this.onMemberChange();
+          this.remainingBalance();
         }, 50);
       },
     });
@@ -586,12 +587,13 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         setTimeout(() => {
           this.setAmountControl();
           this.setExtDataControl();
+          this.remainingBalance();
         }, 50);
       },
     });
 
     this.frm.controls["offerId"]?.valueChanges.subscribe({
-      next: (v) => {
+      next: () => {
         setTimeout(() => {
           this.selectedAccount =
             this.selectedMember?.accounts?.find(
@@ -694,6 +696,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       this.currentB = this.selectedAccount?.balance!;
     }
   }
+
   remainingBalance() {
     if (this.modal?.isView && this.model?.extData) {
       try {

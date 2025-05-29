@@ -121,20 +121,23 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               <th [nzWidth]="SIZE_COLUMNS.ID" class="col-header col-rowno">
                 #
               </th>
-              <th nzWidth="60px">
+              <th [nzWidth]="SIZE_COLUMNS.CODE" nzEllipsis>
                 {{ "RedeemNo" | translate }}
               </th>
-              <th nzWidth="60px">{{ "Offer" | translate }}</th>
-              <th nzWidth="240px"></th>
-              <th nzWidth="60px" nzAlign="right">{{ "Cost" | translate }}</th>
-              <th nzWidth="85px">{{ "Date" | translate }}</th>
-              <th nzWidth="50px">{{ "Location" | translate }}</th>
-              <th nzWidth="50px">{{ "Status" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.NAME" nzEllipsis>
+                {{ "Name" | translate }}
+              </th>
+              <th nzWidth="80px" nzAlign="right">{{ "Cost" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.DATE">{{ "Date" | translate }}</th>
+              <th nzWidth="100px">{{ "Location" | translate }}</th>
+              <th [nzWidth]="SIZE_COLUMNS.STATUS">
+                {{ "Status" | translate }}
+              </th>
               <th>{{ "Note" | translate }}</th>
               <th nzWidth="100px" nzAlign="right">
                 {{ "Amount" | translate }}
               </th>
-              <th nzWidth="45px"></th>
+              <th nzWidth="60px"></th>
             </tr>
           </thead>
           <tbody>
@@ -149,7 +152,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                         }
                 }}
               </td>
-              <td nzEllipsis>
+              <td nzEllipsis [title]="data.redeemNo">
                 <a
                   *ngIf="isRedemptionView()"
                   (click)="uiService.showView(data.id || 0)"
@@ -157,32 +160,34 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 >
                 <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
               </td>
-              <td class="image" nzAlign="right">
-                <img
-                  *ngIf="data.offerPhoto"
-                  class="image-list"
-                  height="42"
-                  [src]="data.offerPhoto"
-                  alt=""
-                />
-                <img
-                  *ngIf="!data.offerPhoto"
-                  class="image-list"
-                  height="42"
-                  src="./assets/image/img-not-found.jpg"
-                  alt=""
-                />
-              </td>
+              <td nzEllipsis class="image" [title]="data.offerName">
+                <div style="display:flex; gap:4px">
+                  <img
+                    *ngIf="data.offerPhoto"
+                    class="image-list"
+                    height="42"
+                    [src]="data.offerPhoto"
+                    alt=""
+                  />
+                  <img
+                    *ngIf="!data.offerPhoto"
+                    class="image-list"
+                    height="42"
+                    src="./assets/image/img-not-found.jpg"
+                    alt=""
+                  />
 
-              <td nzEllipsis style="display: flex; flex-direction: column;"> 
-                  {{ data.offerName }} 
-                <span style="font-size: 12px; color: #6f6f6f">
-                  {{
-                    translateService.currentLang === "km"
-                      ? data.offerTypeNameKh
-                      : data.offerTypeNameEn
-                  }}
-                </span>
+                  <div style="display:flex; flex-direction:column">
+                    {{ data.offerName }}
+                    <span style="font-size: 12px; color: #6f6f6f">
+                      {{
+                        translateService.currentLang === "km"
+                          ? data.offerTypeNameKh
+                          : data.offerTypeNameEn
+                      }}
+                    </span>
+                  </div>
+                </div>
               </td>
 
               <td nzEllipsis nzAlign="right">
@@ -224,13 +229,15 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               </td>
               <td class="col-action">
                 <a
-                  *ngIf="
-                    isRedemptionRemove() &&
-                    data.status != RedeemStatuses.Removed
+                  (click)="
+                    data.status !== RedeemStatuses.Removed &&
+                      uiService.showDelete(data.id || 0)
                   "
-                  (click)="uiService.showDelete(data.id || 0)"
                   nz-typography
-                  class="delete"
+                  [ngClass]="{
+                    delete: data.status !== RedeemStatuses.Removed,
+                    disabled: data.status === RedeemStatuses.Removed
+                  }"
                 >
                   <i
                     nz-icon

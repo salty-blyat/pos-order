@@ -72,7 +72,7 @@ import { UUID } from "uuid-generator-ts";
     `
       .content-report {
         height: calc(100vh - 120px);
-      }
+      } 
     `,
   ],
   styleUrls: ["../../../assets/scss/list.style.scss"],
