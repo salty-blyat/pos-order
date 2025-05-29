@@ -23,6 +23,7 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { Observable } from "rxjs";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
 import { Report, ReportService } from "../report/report.service";
+import { Currency, CurrencyService } from "../currency/currency.service";
 
 @Component({
   selector: "app-redemption-operation",
@@ -53,7 +54,15 @@ import { Report, ReportService } from "../report/report.service";
                 }}</nz-form-label>
                 <nz-form-item>
                   <nz-form-control>
-                    <input nz-input formControlName="redeemNo" />
+                    <input
+                      nz-input
+                      formControlName="redeemNo"
+                      [placeholder]="
+                        frm.controls['redeemNo'].disabled
+                          ? ('NewCode' | translate)
+                          : ''
+                      "
+                    />
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -239,6 +248,7 @@ import { Report, ReportService } from "../report/report.service";
                   </strong>
 
                   <nz-input-number
+                    nzSize="small"
                     style="width: 60px; margin-left:auto"
                     formControlName="qty"
                     [nzMin]="1"
@@ -249,30 +259,25 @@ import { Report, ReportService } from "../report/report.service";
             </div>
 
             <ng-template #emptyOffer>
-              <div class="account-card empty-card">
-                <div nz-flex nzGap="small">
-                  <nz-avatar
-                    nzShape="square"
-                    [nzSize]="64"
-                    nzIcon="gift"
-                  ></nz-avatar>
-                  <div style="width:100%">
-                    <strong> - </strong><br />
-                    <span> - </span><br />
-                    <div
-                      nz-row
-                      nzJustify="space-between"
-                      nzAlign="middle"
-                      style="width: 100%"
-                    >
-                      <strong>0.00</strong>
-                      <nz-input-number
-                        style="width: 60px; margin-left:auto"
-                        formControlName="qty"
-                        [nzMin]="1"
-                        [nzStep]="1"
-                      ></nz-input-number>
-                    </div>
+              <div class="offer-card empty-card" nz-flex nzGap="small">
+                <img src="./assets/image/img-not-found.jpg" alt="" />
+                <div style="width:100%; padding:8px 8px 8px 0">
+                  <strong>-</strong><br />
+                  <span>-</span><br />
+                  <div
+                    nz-row
+                    nzJustify="space-between"
+                    nzAlign="middle"
+                    style="width: 100%"
+                  >
+                    <span>-</span>
+                    <nz-input-number
+                      nzSize="small"
+                      style="width: 60px; margin-left:auto"
+                      formControlName="qty"
+                      [nzMin]="1"
+                      [nzStep]="1"
+                    ></nz-input-number>
                   </div>
                 </div>
               </div>
@@ -282,7 +287,7 @@ import { Report, ReportService } from "../report/report.service";
               class="account-card"
               nzFlex
               nzVertical="true"
-              style="margin-top: 16px"
+              style="margin-top: 16px;height:170px"
             >
               <h3 style="text-weight: 600">
                 <nz-icon nzType="credit-card" nzTheme="outline" />
@@ -310,19 +315,20 @@ import { Report, ReportService } from "../report/report.service";
                   }}
                 </span>
               </div>
-
-              <nz-divider style="margin: 8px 0"></nz-divider>
-              <div nz-flex nzJustify="space-between">
-                <span>{{ "RemainingBalance" | translate }}</span>
-                <span
-                  [ngStyle]="{
-                    'font-weight': 'bold'
-                  }"
-                >
-                  {{
-                    getAccountBalance(selectedOffer?.redeemWith!, remainingB)
-                  }}
-                </span>
+              <div style="margin-top:30px">
+                <nz-divider style="margin: 8px 0"></nz-divider>
+                <div nz-flex nzJustify="space-between">
+                  <span>{{ "RemainingBalance" | translate }}</span>
+                  <span
+                    [ngStyle]="{
+                      'font-weight': 'bold'
+                    }"
+                  >
+                    {{
+                      getAccountBalance(selectedOffer?.redeemWith!, remainingB)
+                    }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -348,11 +354,12 @@ import { Report, ReportService } from "../report/report.service";
       <div *ngIf="modal?.isView">
         <a
           *ngIf="isRedemptionPrint()"
-          nz-dropdown (click)="uiService.showPrint(model, RedeemPrint)" 
+          nz-dropdown
+          (click)="uiService.showPrint(model, RedeemPrint)"
         >
           <span nz-icon nzType="printer" nzTheme="outline"></span>
-          {{ "Print" | translate }} 
-        </a> 
+          {{ "Print" | translate }}
+        </a>
         <nz-divider
           nzType="vertical"
           *ngIf="!isLoading() && isRedemptionPrint()"
@@ -379,21 +386,17 @@ import { Report, ReportService } from "../report/report.service";
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
-  styles: `
-  .container {
-  padding: 24px;
-}
-.selected-card {
-  border: 1px solid #1890ff !important;
-  color:  #1890ff; 
-}
+  styles: ` 
+  .anticon-delete{
+    color:red !important;
+  }
 .empty-card {
   opacity: 0.6;
   background-color: #fafafa;
   pointer-events: none;
 }
 .offer-card{
-  height: 100px;
+  height: 87px;
   border:1px solid #d3d3d3;
   min-width: 170px ;
   border-radius: 8px; 
@@ -406,20 +409,7 @@ import { Report, ReportService } from "../report/report.service";
     width: 100px;
     object-fit:cover;
   }
-}
-
-.placeholder-text {
-  margin-left: 5px;
-  font-weight: 500;
-  color: #888;
-}
- 
-.card-title {
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
+} 
 
 .card-value { 
   margin-top: 4px;
@@ -427,41 +417,14 @@ import { Report, ReportService } from "../report/report.service";
   
 nz-form-label{
   padding: 0px !important; 
-}
-.balance-card{
-  min-width:165px;
-} 
-.wallet-points {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 16px;
-}
-
-.activity-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.activity-list li {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 14px;
-}
+}   
 
 .account-card{
   border:1px solid #d3d3d3;
   min-width: 170px ;
   border-radius: 8px;
   padding:12px;
-}
-
-.button-group {
-  margin-top: 16px;
-  display: flex;
-  gap: 12px;
-}
+} 
 `,
   encapsulation: ViewEncapsulation.None,
 })
@@ -474,6 +437,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     public memberService: MemberService,
     private reportService: ReportService,
     public offerService: OfferService,
+    public currency: CurrencyService,
     private authService: AuthService,
     private settingService: SettingService,
     private systemSettingService: SystemSettingService,
@@ -535,6 +499,8 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   onMemberChange() {
     const memberId = this.frm.get("memberId")?.value;
+    console.log(this.frm.get("memberId")?.value);
+    
     if (memberId != null) {
       this.memberService.find(memberId).subscribe({
         next: (m: any) => {
@@ -610,7 +576,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
             this.onMemberChange();
             this.frm.get("offerId")?.setValue(this.model.offerId);
           }
-          
+          this.onMemberChange();
         }, 50);
       },
     });
@@ -653,8 +619,9 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     this.extData = JSON.stringify({
       cardNumber: "",
       startBalance: this.selectedAccount?.balance,
-      endingBalance:
-        this.selectedAccount?.balance! - this.frm.get("amount")?.value,
+      endingBalance: this.currency.roundedDecimal(
+        this.selectedAccount?.balance! - this.frm.get("amount")?.value
+      ),
     });
     this.frm.get("extData")?.setValue(this.extData);
   }

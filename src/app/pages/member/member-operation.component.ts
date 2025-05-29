@@ -413,6 +413,9 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
+      .ant-tabs-tab + .ant-tabs-tab {
+        margin: 0 0 0 18px !important;
+      }
       nz-tabs-nav {
         margin: 0 !important;
       }
@@ -572,7 +575,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   override ngOnInit(): void {
     if (this.isLoading()) return;
     this.initControl();
-    if (!this.modal?.id) {
+    if (!this.modal?.isView) {
       this.systemSettingService.find(SETTING_KEY.MemberAutoId).subscribe({
         next: (value?: string) => {
           if (Number(value) !== 0) {

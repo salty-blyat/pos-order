@@ -144,8 +144,7 @@ export class OfferSelectComponent
 
   readonly AccountTypes = AccountTypes;
   protected override getCustomFilters(): Filter[] {
-    const filters: Filter[] = [];
-    console.log(this.isAvailable);
+    const filters: Filter[] = []; 
 
     if (this.memberId && this.isAvailable) {
       filters.push({
@@ -166,8 +165,7 @@ export class OfferSelectComponent
     }
   }
 
-  override search(delay: number = 50) {
-    console.log(this.isAvailable);
+  override search(delay: number = 50) { 
     if (this.isLoading()) return;
     this.isLoading.set(true);
     setTimeout(() => {

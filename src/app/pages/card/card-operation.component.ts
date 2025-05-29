@@ -54,12 +54,12 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
         }
 
         <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24"
+          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired 
             >{{ "IssueDate" | translate }}
           </nz-form-label>
 
           <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-date-picker formControlName="issueDate"></nz-date-picker>
+            <nz-date-picker formControlName="issueDate" [nzAllowClear]="false"></nz-date-picker>
           </nz-form-control>
         </nz-form-item>
 

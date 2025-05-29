@@ -57,6 +57,7 @@ export interface TransactionAdjust {
   locationId?: number;
   refNo?: string;
   id?: number;
+  extData?: string;
   attachments?: Attachment[];
 }
 
@@ -101,6 +102,13 @@ export class AccountService extends BaseApiService<Account> {
   override find(id: number): Observable<TransactionAdjust> {
     return this.httpClient.get<TransactionAdjust>(
       `${this.settingService.setting.BASE_API_URL}/account/transaction/${id}`,
+      this._get_httpHeader(id)
+    );
+  }
+
+  findAccount(id: number): Observable<TransactionAdjust> {
+    return this.httpClient.get<TransactionAdjust>(
+      `${this.getUrl()}/${id}`,
       this._get_httpHeader(id)
     );
   }

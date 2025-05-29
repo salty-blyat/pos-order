@@ -94,7 +94,7 @@ export const LANGUAGES: {
 
 export const SIZE_COLUMNS = {
   DRAG: "20px",
-  ID: "35px",
+  ID: "45px",
   NAME: "200px",
   CODE: "100px",
   DESCRIPTION: "150px",

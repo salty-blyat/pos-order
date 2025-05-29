@@ -17,7 +17,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
     <div class="page-content" style="padding: 0; height: 100%">
       <div *nzModalTitle class="modal-header-ellipsis">
         <span *ngIf="!modal?.model?.id"> {{ "loading" | translate }}</span>
-        <span *ngIf="modal?.model?.id"> {{ modal?.model?.RedeemNo }} </span>
+        <span *ngIf="modal?.model?.id"> {{ modal?.model?.redeemNo }} </span>
       </div>
       <nz-content
         [ngStyle]="{ backgroundColor: '#f0f2f5' }"
@@ -101,6 +101,7 @@ export class RedemptionPrintComponent implements OnInit, OnDestroy {
           .find(this.modal?.reportId)
           .toPromise(); 
         this.loadingReport = false;
+        console.log(this.modal?.model); 
       } catch {
         this.loadingReport = false;
         return;

@@ -1,5 +1,5 @@
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { FormBuilder, Validators } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -24,6 +24,7 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { SettingService } from "../../app-setting";
 import { Observable } from "rxjs";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
+import { CurrencyService } from "../currency/currency.service";
 
 @Component({
   selector: "app-account-operation",
@@ -75,10 +76,9 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
           <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired>
             {{ "Amount" | translate }}
           </nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
             <nz-input-group>
               <nz-input-number
-                [nzMin]="0"
                 [nzControls]="false"
                 [nzPrecision]="2"
                 formControlName="amount"
@@ -173,6 +173,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
     fb: FormBuilder,
     ref: NzModalRef<AccountOperationComponent>,
     override service: AccountService,
+    public currency: CurrencyService,
     override uiService: AccountUiService,
     private systemSettingService: SystemSettingService,
     private settingService: SettingService,
@@ -189,15 +190,26 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
     showDownloadIcon: false,
   };
   isTransactionRemove = computed(() => true);
-
+  extData: string | null = null;
+  selectedAccount: Account | null = null;
   override ngOnInit(): void {
-    super.ngOnInit(); 
+    super.ngOnInit();
     if (!this.modal?.isView) {
       this.systemSettingService.find(SETTING_KEY.TransNoAutoId).subscribe({
         next: (value?: string) => {
           if (Number(value) !== 0) {
             this.frm.get("transNo")?.disable();
           }
+        },
+      });
+    }
+    if (this.modal?.accountId) {
+      this.service.findAccount(this.modal?.accountId).subscribe({
+        next: (d: any) => {
+          this.selectedAccount = d;
+        },
+        error: (err: any) => {
+          console.error("Failed to fetch account detail:", err);
         },
       });
     }
@@ -210,7 +222,6 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
       name: f.name,
       type: f.type,
     }));
-    console.log(e);
 
     if (this.frm.valid && !this.isLoading()) {
       let operation$: Observable<TransactionAdjust> = this.service.add({
@@ -265,7 +276,8 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   }
 
   override initControl(): void {
-    const { noteMaxLengthValidator, required } = CommonValidators;
+    const { noteMaxLengthValidator, required, mustPositiveNumber } =
+      CommonValidators;
     this.frm = this.fb.group({
       transNo: [null, required],
       transDate: [new Date().toISOString()],
@@ -275,6 +287,23 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
       note: [null, noteMaxLengthValidator],
       locationId: [null, required],
       refNo: [null],
+      extData: [null, required],
+    });
+
+    setTimeout(() => {
+      if (this.modal.type != TransactionTypes.Adjust) {
+        this.frm.get("amount")?.addValidators([mustPositiveNumber]);
+      }
+    }, 50);
+    this.frm.controls["amount"]?.valueChanges.subscribe({
+      next: () => {
+        this.setExtDataControl();
+      },
+    });
+    this.frm.controls["locationId"]?.valueChanges.subscribe({
+      next: () => {
+        this.setExtDataControl();
+      },
     });
   }
 
@@ -282,6 +311,17 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   readonly TransactionTypes = TransactionTypes;
   AccountTypes = AccountTypes;
   getAccountBalance = getAccountBalance;
+
+  setExtDataControl() {
+    this.extData = JSON.stringify({
+      cardNumber: "",
+      startBalance: this.selectedAccount?.balance!,
+      endingBalance: this.currency.roundedDecimal(
+        this.selectedAccount?.balance! + this.frm.get("amount")?.value
+      ),
+    });
+    this.frm.get("extData")?.setValue(this.extData);
+  }
 
   override setFormValue(): void {
     this.frm.patchValue({
@@ -293,7 +333,23 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
       note: this.model.note,
       locationId: this.model.locationId,
       refNo: this.model.refNo,
+      extData: this.model.extData,
     });
+    if (this.model.extData) {
+      this.extData = this.model.extData;
+    }
+
+    if (this.model.accountId) {
+      this.service.find(this.model.accountId).subscribe({
+        next: (d: any) => {
+          this.selectedAccount = d; 
+        },
+        error: (err: any) => {
+          console.error("Failed to fetch account detail:", err);
+        },
+      });
+    }
+
     this.fileList =
       this.model.attachments?.map(
         (file) =>

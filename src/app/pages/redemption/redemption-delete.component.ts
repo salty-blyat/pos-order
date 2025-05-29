@@ -115,9 +115,7 @@ export class RedemptionDeleteComponent extends BaseDeleteComponent<Redemption> {
       note: [null, noteMaxLengthValidator],
     });
   }
-  override setFormValue() {
-    console.log(this.model);
-
+  override setFormValue() { 
     this.frm.setValue({
       redeemNo: this.model.redeemNo,
       note: "",

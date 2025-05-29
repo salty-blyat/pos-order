@@ -27,6 +27,7 @@ import {
 } from "../lookup/lookup-type.service";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
 import { DatetimeHelper } from "../../helpers/datetime-helper";
+import { CurrencyService } from "../currency/currency.service";
 
 @Component({
   selector: "app-account-list",
@@ -47,17 +48,17 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
             style="width:100%"
           >
             <div nz-flex nzGap="small">
-              <div class="filter-box" style="width: 230px;">
+              <div style='width:140px'>
                 <app-filter-input
                   class="fixed-width-select"
-                  [storageKey]="'account-list-' + (accounts[tabIndex]?.accountId)"
+                  [storageKey]="'account-list-' + accounts[tabIndex]?.accountId"
                   (filterChanged)="
                     searchText.set($event); param().pageIndex = 1; search()
                   "
                 ></app-filter-input>
               </div>
 
-              <div class="filter-box" style="width: 230px;">
+              <div >
                 <app-date-range-input
                   storageKey="account-date-range"
                   (valueChanged)="
@@ -65,7 +66,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                   "
                 ></app-date-range-input>
               </div>
-              <div class="filter-box" style="width: 230px;">
+              <div style='width:190px'>
                 <app-lookup-item-select
                   class="fixed-width-select"
                   showAll="AllTransactionType"
@@ -78,7 +79,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 >
                 </app-lookup-item-select>
               </div>
-              <div class="filter-box" style="width: 230px;">
+              <div style='width:190px'>
                 <app-location-select
                   class="fixed-width-select"
                   [showAllOption]="true"
@@ -96,7 +97,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 nz-button
                 nzType="primary"
                 (click)="
-                  uiService.showAdjust(
+                  uiService.showAdjust( 
                     '',
                     accounts[tabIndex]?.accountId!,
                     TransactionTypes.Adjust,

@@ -124,18 +124,16 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               <th nzWidth="60px">
                 {{ "RedeemNo" | translate }}
               </th>
-              <th nzWidth="120px">
-                {{ "Offer" | translate }}
-              </th>
-              <th nzWidth="100px" nzAlign="right">{{ "Cost" | translate }}</th>
+              <th nzWidth="60px">{{ "Offer" | translate }}</th>
+              <th nzWidth="240px"></th>
+              <th nzWidth="60px" nzAlign="right">{{ "Cost" | translate }}</th>
               <th nzWidth="85px">{{ "Date" | translate }}</th>
               <th nzWidth="50px">{{ "Location" | translate }}</th>
               <th nzWidth="50px">{{ "Status" | translate }}</th>
-              <th nzWidth="150px">{{ "Note" | translate }}</th>
+              <th>{{ "Note" | translate }}</th>
               <th nzWidth="100px" nzAlign="right">
                 {{ "Amount" | translate }}
               </th>
-
               <th nzWidth="45px"></th>
             </tr>
           </thead>
@@ -159,35 +157,34 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 >
                 <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
               </td>
-              <td nzEllipsis class="image">
-                <div style="display:flex; gap:4px">
-                  <img
-                    *ngIf="data.offerPhoto"
-                    class="image-list"
-                    height="42"
-                    [src]="data.offerPhoto"
-                    alt=""
-                  />
-                  <img
-                    *ngIf="!data.offerPhoto"
-                    class="image-list"
-                    height="42"
-                    src="./assets/image/img-not-found.jpg"
-                    alt=""
-                  />
-
-                  <div style="display:flex; flex-direction:column">
-                    {{ data.offerName }}
-                    <span style="font-size: 12px; color: #6f6f6f">
-                      {{
-                        translateService.currentLang === "km"
-                          ? data.offerTypeNameKh
-                          : data.offerTypeNameEn
-                      }}
-                    </span>
-                  </div>
-                </div>
+              <td class="image" nzAlign="right">
+                <img
+                  *ngIf="data.offerPhoto"
+                  class="image-list"
+                  height="42"
+                  [src]="data.offerPhoto"
+                  alt=""
+                />
+                <img
+                  *ngIf="!data.offerPhoto"
+                  class="image-list"
+                  height="42"
+                  src="./assets/image/img-not-found.jpg"
+                  alt=""
+                />
               </td>
+
+              <td nzEllipsis style="display: flex; flex-direction: column;"> 
+                  {{ data.offerName }} 
+                <span style="font-size: 12px; color: #6f6f6f">
+                  {{
+                    translateService.currentLang === "km"
+                      ? data.offerTypeNameKh
+                      : data.offerTypeNameEn
+                  }}
+                </span>
+              </td>
+
               <td nzEllipsis nzAlign="right">
                 @if(data.amount == 0){
                 {{ "Free" | translate }}
@@ -348,7 +345,6 @@ export class RedemptionListComponent
     this.hasAdvancedFilter.set(advancedFilter?.isAdvancedFilter ?? false);
   }
   setAdvancedFilter(advancedFilter: any) {
-    console.log(advancedFilter);
     this.offerTypeId.set(advancedFilter.offerTypeId);
     this.accountTypeId.set(advancedFilter.accountTypeId);
     this.statusId.set(advancedFilter.statusId);
@@ -441,4 +437,8 @@ export class RedemptionListComponent
   readonly AccountTypes = AccountTypes;
   readonly RedeemStatuses = RedeemStatuses;
   getAccountBalance = getAccountBalance;
+
+  override ngOnDestroy(): void {
+    this.refreshSub.unsubscribe();
+  }
 }
