@@ -160,33 +160,34 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 >
                 <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
               </td>
-              <td nzEllipsis class="image" [title]="data.offerName">
-                <div style="display:flex; gap:4px">
-                  <img
-                    *ngIf="data.offerPhoto"
-                    class="image-list"
-                    height="42"
-                    [src]="data.offerPhoto"
-                    alt=""
-                  />
-                  <img
-                    *ngIf="!data.offerPhoto"
-                    class="image-list"
-                    height="42"
-                    src="./assets/image/img-not-found.jpg"
-                    alt=""
-                  />
+              <td
+                nzEllipsis
+                class="image"
+                style="display:flex; gap:4px"
+                [title]="data.offerName"
+              >
+                <img
+                  class="image-list"
+                  *ngIf="data.offerPhoto"
+                  [src]="data.offerPhoto"
+                  alt=""
+                />
+                <img
+                  class="image-list"
+                  *ngIf="!data.offerPhoto"
+                  src="./assets/image/img-not-found.jpg"
+                  alt=""
+                />
 
-                  <div style="display:flex; flex-direction:column">
-                    {{ data.offerName }}
-                    <span style="font-size: 12px; color: #6f6f6f">
-                      {{
-                        translateService.currentLang === "km"
-                          ? data.offerTypeNameKh
-                          : data.offerTypeNameEn
-                      }}
-                    </span>
-                  </div>
+                <div style="display:flex; flex-direction:column">
+                  {{ data.offerName }}
+                  <span style="font-size: 12px; color: #6f6f6f">
+                    {{
+                      translateService.currentLang === "km"
+                        ? data.offerTypeNameKh
+                        : data.offerTypeNameEn
+                    }}
+                  </span>
                 </div>
               </td>
 
@@ -263,6 +264,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
       }
       .image-list {
         width: 60px;
+        height: 42px;
         object-fit: scale-down;
       }
     `,

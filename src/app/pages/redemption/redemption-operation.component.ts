@@ -294,7 +294,7 @@ import { Currency, CurrencyService } from "../currency/currency.service";
                 {{ "TransactionSummary" | translate }}
               </h3>
               <div nz-flex nzJustify="space-between">
-                <span>{{ "CurrentBalance" | translate }}</span>
+                <span>{{ "Balance" | translate }}</span>
                 <span>{{
                   getAccountBalance(selectedOffer?.redeemWith!, currentB)
                 }}</span>

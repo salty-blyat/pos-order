@@ -357,14 +357,14 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
 
       let operation$ = this.service.add({
         ...this.frm.value,
-        image: this.image,
+        image: this.file[0].url,
       });
 
       if (this.model?.id) {
         operation$ = this.service.edit({
           ...this.frm.value,
           id: this.model?.id,
-          image: this.image,
+          image: this.file[0].url,
         });
       }
       if (e.detail === 1 || e.detail === 0) {
