@@ -309,17 +309,10 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
     showDownloadIcon: false,
   };
   override ngOnInit(): void {
-    super.ngOnInit();
-    if (!this.modal?.isView) {
-      this.systemSettingService.find(SETTING_KEY.OfferAutoId).subscribe({
-        next: (value?: string) => {
-          if (Number(value) !== 0) {
-            this.frm.get("code")?.disable();
-          }
-        },
-      });
-    }
+    if (this.isLoading()) return;
+    this.initControl();
     if (this.modal?.isView) {
+      this.frm.disable();
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
         if (e.key === "edited") {
           this.isLoading.set(true);
@@ -348,6 +341,24 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
         }
       });
     }
+    if (this.modal?.id) {
+      this.isLoading.set(true);
+      this.service.find(this.modal?.id).subscribe((result: Offer) => {
+        this.model = result;
+        this.setFormValue();
+        this.isLoading.set(false);
+      });
+    }
+    if (!this.modal?.isView) {
+      this.systemSettingService.find(SETTING_KEY.OfferAutoId).subscribe({
+        next: (value?: string) => {
+          if (Number(value) !== 0) {
+            this.frm.get("code")?.disable();
+          }
+        },
+      });
+    }
+
     this.uploadRefresh$ = this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];
@@ -357,7 +368,6 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       }
     });
   }
-
 
   handleUpload(info: NzUploadChangeParam): void {
     let fileListOfferGroupItems = [...info.fileList];
@@ -474,8 +484,8 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       });
     }
   }
-override ngOnDestroy(): void {
-  this.refreshSub$?.unsubscribe();
-  this.uploadRefresh$?.unsubscribe();
-}
+  override ngOnDestroy(): void {
+    this.refreshSub$?.unsubscribe();
+    this.uploadRefresh$?.unsubscribe();
+  }
 }
