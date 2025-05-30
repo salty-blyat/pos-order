@@ -216,7 +216,8 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     showDownloadIcon: false,
   };
   override ngOnInit(): void {
-    super.ngOnInit();
+    if (this.isLoading()) return;
+    this.initControl();
     if (this.modal?.isView) {
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
         if (e.key === "edited") {
@@ -244,6 +245,14 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
             },
           });
         }
+      });
+    }
+    if (this.modal?.id) {
+      this.isLoading.set(true);
+      this.service.find(this.modal?.id).subscribe((result: OfferGroup) => {
+        this.model = result;
+        this.setFormValue();
+        this.isLoading.set(false);
       });
     }
     this.uiService.refresher.subscribe((e) => {
@@ -294,8 +303,6 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     this.file = fileList;
   }
 
- 
-
   override onSubmit(e?: any): void {
     if (this.frm.valid) {
       this.isLoading.set(true);
@@ -343,5 +350,9 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
         url: this.model.image,
       });
     }
+  }
+
+  override ngOnDestroy(): void {
+    this.refreshSub$?.unsubscribe();
   }
 }

@@ -9,12 +9,17 @@ import {
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { LookupItem, LookupItemService } from "./lookup-item.service";
 import { LookupItemUiService } from "./lookup-item-ui.service";
-import { LOOKUP_TYPE } from "../lookup-type.service";
+import {
+  AccountTypes,
+  LOOKUP_TYPE,
+  TransactionTypes,
+} from "../lookup-type.service";
 import { SessionStorageService } from "../../../utils/services/sessionStorage.service";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../../helpers/auth.service";
 import { BaseSelectComponent } from "../../../utils/components/base-select.component";
 import { AuthKeys } from "../../../const";
+import { REMOVE_STYLES_ON_COMPONENT_DESTROY } from "@angular/platform-browser";
 @Component({
   providers: [
     {
@@ -153,41 +158,42 @@ export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem> {
   showAll = input<string>("All");
   allowClear = input<boolean>(false);
   lookupType = input<LOOKUP_TYPE>(LOOKUP_TYPE.AccountType);
-  statuses = input<number[]>([]);
+  removedData = input<number[]>([]);
   typeLabelAll = input<string>("");
   isLookupAdd = signal(false);
 
   override search() {
     this.isLoading.set(true);
     setTimeout(() => {
-      setTimeout(() => {
-        this.param().filters = JSON.stringify([
-          { field: "Name", operator: "contains", value: this.searchText() },
-          { field: "lookupTypeId", operator: "eq", value: this.lookupType() },
-        ]);
-        if (this.searchText() && this.param().pageIndex === 1) {
-          this.lists.set([]);
-        }
-        this.service.search(this.param()).subscribe({
-          next: (result: { results: LookupItem[] }) => {
-            this.isLoading.set(false);
-            if (this.statuses.length > 0) {
-              this.lists.set(
-                result.results.filter(
-                  (x: LookupItem) => !this.statuses().includes(x?.valueId!)
-                )
-              );
-            } else {
-              this.lists.set(result.results);
-            }
-          },
-          error: (error: any) => {
-            console.log(error);
-          },
-        });
+      this.param().filters = JSON.stringify([
+        { field: "Name", operator: "contains", value: this.searchText() },
+        { field: "lookupTypeId", operator: "eq", value: this.lookupType() },
+      ]);
+      if (this.searchText() && this.param().pageIndex === 1) {
+        this.lists.set([]);
+      }
+      this.service.search(this.param()).subscribe({
+        next: (result: { results: LookupItem[] }) => {
+          this.isLoading.set(false);
+          console.log(this.removedData());
+
+          if (this.removedData().length > 0) {
+            this.lists.set(
+              result.results.filter(
+                (x: LookupItem) => !this.removedData().includes(x?.valueId!)
+              )
+            );
+          } else {
+            this.lists.set(result.results);
+          }
+        },
+        error: (error: any) => {
+          console.log(error);
+        },
       });
     }, 50);
   }
   isLookupItemAdd = computed(() => true);
   protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
+  protected readonly AccountTypes = AccountTypes;
 }

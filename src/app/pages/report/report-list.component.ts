@@ -82,7 +82,7 @@ import { AuthKeys, SIZE_COLUMNS } from "../../const";
               <th [nzWidth]="SIZE_COLUMNS.NAME">
                 {{ "DisplayName" | translate }}
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.NOTE">{{ "Note" | translate }}</th>
+              <th nzEllipsis>{{ "Note" | translate }}</th>
               <th nzWidth="200px"></th>
             </tr>
           </thead>

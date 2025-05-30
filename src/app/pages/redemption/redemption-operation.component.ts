@@ -20,7 +20,7 @@ import {
 import { Offer, OfferService } from "../offer/offer.service";
 import { SettingService } from "../../app-setting";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
-import { Observable } from "rxjs";
+import { Observable, Subscriber, Subscription } from "rxjs";
 import { Currency, CurrencyService } from "../currency/currency.service";
 import { ReportService } from "../report/report.service";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
@@ -250,23 +250,10 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                   <nz-input-number
                     nzSize="small"
                     style="width: 60px; margin-left:auto"
-                    formControlName="qty"
+                    formControlName="qty"  
                     [nzMin]="1"
                     [nzStep]="1"
                   ></nz-input-number>
-                  <!-- <div>
-                    <div
-                      style="padding:8; border-radius: 100px; border:1px solid black;"
-                    >
-                      <span nz-icon nzType="minus"></span>
-                    </div>
-                    {{ frm.get("qty")?.value }}
-                    <div
-                      style="padding:8; border-radius: 100px; border:1px solid black;"
-                    >
-                      <span nz-icon nzType="plus"></span>
-                    </div>
-                  </div> -->
                 </div>
               </div>
             </div>
@@ -374,7 +361,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
             <span nz-icon nzType="printer" nzTheme="outline"></span>
             {{ "Print" | translate }}
           </a>
-          <div>
+          <div class="col-action">
             <a
               *ngIf="!isLoading() && isRedemptionRemove()"
               class="delete"
@@ -414,6 +401,12 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
   :host ::ng-deep .anticon-delete {
     color:red !important;
   }
+  :host .delete{
+  color: var(--ant-error-color) !important;
+}
+  :host .delete:hover{
+  color: var(--ant-error-color);
+} 
 .empty-card {
   opacity: 0.6;
   background-color: #fafafa;
@@ -471,26 +464,33 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   selectedMember: Member | null = null;
+  memberSub$ = new Subscription();
+  offerSub$ = new Subscription();
+  settingSub$ = new Subscription();
+  reportSub$ = new Subscription();
   selectedOffer: Offer | null = null;
-  extData!: { cardNumber: String; startBalance: number; endingBalance: number };
+  extData: { cardNumber: String; startBalance: number; endingBalance: number } =
+    { cardNumber: "", startBalance: 0, endingBalance: 0 };
   RedeemPrint = 1;
 
   override ngOnInit(): void {
     super.ngOnInit();
     this.getReports();
     if (!this.modal?.isView) {
-      this.systemSettingService.find(SETTING_KEY.RedemptionAutoId).subscribe({
-        next: (value?: string) => {
-          if (Number(value) !== 0) {
-            this.frm.get("redeemNo")?.disable();
-          }
-        },
-      });
+      this.settingSub$ = this.systemSettingService
+        .find(SETTING_KEY.RedemptionAutoId)
+        .subscribe({
+          next: (value?: string) => {
+            if (Number(value) !== 0) {
+              this.frm.get("redeemNo")?.disable();
+            }
+          },
+        });
     }
   }
   reports: Report[] = [];
   getReports() {
-    this.reportService
+    this.reportSub$ = this.reportService
       .search({
         pageIndex: 1,
         pageSize: 9999999,
@@ -523,7 +523,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     const memberId = this.frm.get("memberId")?.value;
 
     if (memberId != null) {
-      this.memberService.find(memberId).subscribe({
+      this.memberSub$ = this.memberService.find(memberId).subscribe({
         next: (m: any) => {
           this.selectedMember = m;
           if (!this.modal?.isView) this.selectedOffer = null; // prevent reset selected offer because this block run on init
@@ -710,12 +710,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     });
   }
 
-  // itemPrice(): number {
-  //   const balance = Number(this.selectedOffer?.redeemCost);
-  //   const amount = Number(this.frm.get("amount")?.value);
-  //   return balance - amount;
-  // }
-
   getCurrectBalance() {
     if (this.modal?.isView && this.model?.extData) {
       try {
@@ -749,7 +743,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         this.extData.endingBalance =
           this.selectedAccount?.balance! - this.frm.get("amount")?.value;
       } else {
-        this.extData.endingBalance = 0;
+        this.extData.endingBalance! = 0;
       }
     }
   }
@@ -774,7 +768,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     }
 
     if (this.model.offerId && this.modal?.isView) {
-      this.offerService.find(this.model.offerId).subscribe({
+      this.offerSub$ = this.offerService.find(this.model.offerId).subscribe({
         next: (d: any) => {
           this.selectedOffer = d;
           this.frm.get("offerId")?.setValue(this.model?.offerId);
@@ -786,7 +780,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     }
 
     if (this.model.memberId && this.modal?.isView) {
-      this.memberService.find(this.model.memberId).subscribe({
+      this.memberSub$ = this.memberService.find(this.model.memberId).subscribe({
         next: (d: any) => {
           this.selectedMember = d;
         },
@@ -807,6 +801,12 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       ) ?? [];
   }
 
+  override ngOnDestroy(): void {
+    this.refreshSub$?.unsubscribe();
+    this.memberSub$?.unsubscribe();
+    this.reportSub$?.unsubscribe();
+    this.offerSub$?.unsubscribe();
+  }
   readonly getAccountBalance = getAccountBalance;
   readonly RedeemStatuses = RedeemStatuses;
   readonly AccountTypes = AccountTypes;

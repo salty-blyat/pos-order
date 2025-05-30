@@ -1,5 +1,5 @@
-import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { Component, computed, ViewEncapsulation } from "@angular/core";
+import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -8,12 +8,7 @@ import {
   SystemSettingService,
 } from "../system-setting/system-setting.service";
 import { AuthService } from "../../helpers/auth.service";
-import {
-  Account,
-  AccountService,
-  Transaction,
-  TransactionAdjust,
-} from "./account.service";
+import { Account, AccountService, TransactionAdjust } from "./account.service";
 import { AccountUiService } from "./account-ui.service";
 import {
   AccountTypes,
@@ -22,7 +17,7 @@ import {
 } from "../lookup/lookup-type.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { SettingService } from "../../app-setting";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
 import { CurrencyService } from "../currency/currency.service";
 
@@ -165,6 +160,13 @@ import { CurrencyService } from "../currency/currency.service";
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
+  styles: [
+    `
+      :host ::ng-deep .anticon-delete {
+        color: red !important;
+      }
+    `,
+  ],
   encapsulation: ViewEncapsulation.None,
 })
 export class AccountOperationComponent extends BaseOperationComponent<TransactionAdjust> {
@@ -180,6 +182,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   ) {
     super(fb, ref, service, uiService);
   }
+  
   fileList: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   disabled = false;
@@ -191,29 +194,35 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   isTransactionRemove = computed(() => true);
   extData: string | null = null;
   selectedAccount: Account | null = null;
+  accountRefresh$ = new Subscription();
+  settingRefresh$ = new Subscription();
   override ngOnInit(): void {
     super.ngOnInit();
     if (!this.modal?.isView) {
-      this.systemSettingService.find(SETTING_KEY.TransNoAutoId).subscribe({
-        next: (value?: string) => {
-          if (Number(value) !== 0) {
-            this.frm.get("transNo")?.disable();
-          }
-        },
-      });
+      this.settingRefresh$ = this.systemSettingService
+        .find(SETTING_KEY.TransNoAutoId)
+        .subscribe({
+          next: (value?: string) => {
+            if (Number(value) !== 0) {
+              this.frm.get("transNo")?.disable();
+            }
+          },
+        });
     }
     if (this.modal?.isView) {
       this.nzShowIconList.showRemoveIcon = false;
     }
     if (this.modal?.accountId) {
-      this.service.findAccount(this.modal?.accountId).subscribe({
-        next: (d: any) => {
-          this.selectedAccount = d;
-        },
-        error: (err: any) => {
-          console.error("Failed to fetch account detail:", err);
-        },
-      });
+      this.accountRefresh$ = this.service
+        .findAccount(this.modal?.accountId)
+        .subscribe({
+          next: (d: any) => {
+            this.selectedAccount = d;
+          },
+          error: (err: any) => {
+            console.error("Failed to fetch account detail:", err);
+          },
+        });
     }
   }
 
@@ -363,6 +372,8 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
       ) ?? [];
   }
   override ngOnDestroy(): void {
-    this.refreshSub$.unsubscribe();
+    this.refreshSub$?.unsubscribe();
+    this.settingRefresh$?.unsubscribe();
+    this.accountRefresh$?.unsubscribe();
   }
 }

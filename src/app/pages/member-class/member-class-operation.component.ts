@@ -211,7 +211,8 @@ export class MemberClassOperationComponent extends BaseOperationComponent<Member
   isMemberClassEdit = signal<boolean>(true);
   isMemberClassRemove = signal<boolean>(true);
   override ngOnInit(): void {
-    super.ngOnInit();
+    if (this.isLoading()) return;
+    this.initControl();
     if (this.modal?.isView) {
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
         if (e.key === "edited") {
@@ -239,6 +240,14 @@ export class MemberClassOperationComponent extends BaseOperationComponent<Member
             },
           });
         }
+      });
+    }
+    if (this.modal?.id) {
+      this.isLoading.set(true);
+      this.service.find(this.modal?.id).subscribe((result: MemberClass) => {
+        this.model = result;
+        this.setFormValue();
+        this.isLoading.set(false);
       });
     }
     this.uiService.refresher.subscribe((e) => {
@@ -282,7 +291,7 @@ export class MemberClassOperationComponent extends BaseOperationComponent<Member
       let photo = this.file[0]?.url;
       if (this.file.length > 0) {
         this.frm.patchValue({
-          photo: photo ,
+          photo: photo,
         });
       }
       let operation$: Observable<MemberClass> = this.service.add(
@@ -347,5 +356,9 @@ export class MemberClassOperationComponent extends BaseOperationComponent<Member
         url: this.model.photo,
       });
     }
+  }
+
+  override ngOnDestroy(): void {
+    this.refreshSub$.unsubscribe();
   }
 }

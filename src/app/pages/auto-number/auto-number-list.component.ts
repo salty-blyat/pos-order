@@ -68,7 +68,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               <th [nzWidth]="SIZE_COLUMNS.FORMAT">
                 {{ "Format" | translate }}
               </th>
-              <th>{{ "Note" | translate }}</th>
+              <th nzEllipsis>{{ "Note" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>

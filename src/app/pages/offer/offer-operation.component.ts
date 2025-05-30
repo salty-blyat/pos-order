@@ -9,7 +9,7 @@ import { Offer, OfferService } from "./offer.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { SettingService } from "../../app-setting";
-import { Observable } from "rxjs";
+import { Observable, Subscriber, Subscription } from "rxjs";
 import {
   SETTING_KEY,
   SystemSettingService,
@@ -302,6 +302,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
     showPreviewIcon: true,
     showRemoveIcon: false,
   };
+  uploadRefresh$ = new Subscription();
   nzShowIconList = {
     showPreviewIcon: true,
     showRemoveIcon: true,
@@ -347,7 +348,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
         }
       });
     }
-    this.uiService.refresher.subscribe((e) => {
+    this.uploadRefresh$ = this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];
         if (e?.value) {
@@ -356,6 +357,8 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       }
     });
   }
+
+
   handleUpload(info: NzUploadChangeParam): void {
     let fileListOfferGroupItems = [...info.fileList];
     // 1. Limit 5 number of uploaded files
@@ -471,4 +474,8 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       });
     }
   }
+override ngOnDestroy(): void {
+  this.refreshSub$?.unsubscribe();
+  this.uploadRefresh$?.unsubscribe();
+}
 }

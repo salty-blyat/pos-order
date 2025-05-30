@@ -28,6 +28,7 @@ import {
 import { getAccountBalance } from "../../utils/components/get-account-balance";
 import { DatetimeHelper } from "../../helpers/datetime-helper";
 import { CurrencyService } from "../currency/currency.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-account-list",
@@ -45,6 +46,22 @@ import { CurrencyService } from "../currency/currency.service";
               "
             ></app-filter-input>
           </div>
+
+          <div class="filter-box">
+            <app-lookup-item-select
+              class="fixed-width-select"
+              showAll="AllTransactionType"
+              [showAllOption]="true"
+              [removedData]="removedData()"
+              storageKey="acc-trans-type-list-search"
+              [lookupType]="LOOKUP_TYPE.TransactionType"
+              (valueChanged)="
+                typeId.set($event); param().pageIndex = 1; search()
+              "
+            >
+            </app-lookup-item-select>
+          </div>
+
           <div class="filter-box">
             <app-date-range-input
               storageKey="account-date-range"
@@ -229,10 +246,7 @@ import { CurrencyService } from "../currency/currency.service";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class AccountListComponent
-  extends BaseListComponent<Transaction>
-  implements OnChanges
-{
+export class AccountListComponent extends BaseListComponent<Transaction> {
   constructor(
     override service: AccountService,
     override uiService: AccountUiService,
@@ -257,6 +271,11 @@ export class AccountListComponent
   @Input() accountId = 0;
   @Input() accountType = 0;
   transDate: any = [];
+  removedData = computed(() =>
+    this.accountType == AccountTypes.Wallet
+      ? [TransactionTypes.Earn]
+      : [TransactionTypes.Topup]
+  );
   isTransactionView = computed(() => true);
   isAccountTopup = computed(() => true);
   isAccountReward = computed(() => true);
@@ -264,20 +283,19 @@ export class AccountListComponent
   account!: Account;
   isTopup = false;
   locationId = signal<number>(0);
+  typeId = signal<number>(0);
+  accountRefresh$ = new Subscription();
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if (changes["tabIndex"] && this.accounts[this.tabIndex] != undefined) {
-  //     if (this.accounts[this.tabIndex].accountType! == AccountTypes.Wallet) {
-  //       this.isTopup = true;
-  //     } else {
-  //       this.isTopup = false;
-  //     }
-  //     this.search();
-  //   }
-  // }
   protected override getCustomFilters(): Filter[] {
     let filters: Filter[] = [];
 
+    if (this.typeId()) {
+      filters.push({
+        field: "type",
+        operator: "eq",
+        value: this.typeId(),
+      });
+    }
     if (this.locationId()) {
       filters.push({
         field: "locationId",
@@ -313,16 +331,18 @@ export class AccountListComponent
     setTimeout(() => {
       this.param.set({ ...this.param(), sorts: "-transDate" });
       this.param().filters = this.buildFilters();
-      this.service.getTransactions(this.accountId, this.param()).subscribe({
-        next: (result: { results: Transaction[]; param: QueryParam }) => {
-          this.lists.set(result.results);
-          this.param.set(result.param);
-          this.isLoading.set(false);
-        },
-        error: () => {
-          this.isLoading.set(false);
-        },
-      });
+      this.accountRefresh$ = this.service
+        .getTransactions(this.accountId, this.param())
+        .subscribe({
+          next: (result: { results: Transaction[]; param: QueryParam }) => {
+            this.lists.set(result.results);
+            this.param.set(result.param);
+            this.isLoading.set(false);
+          },
+          error: () => {
+            this.isLoading.set(false);
+          },
+        });
     }, delay);
   }
 
@@ -332,6 +352,6 @@ export class AccountListComponent
   readonly getAccountBalance = getAccountBalance;
   override ngOnDestroy(): void {
     this.refreshSub?.unsubscribe();
+    this.accountRefresh$?.unsubscribe();
   }
-  ngOnChanges() {}
 }

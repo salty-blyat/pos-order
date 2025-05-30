@@ -32,6 +32,7 @@ import {
 } from "../lookup/lookup-item/lookup-item.service";
 import { getAccountBalance } from "../../utils/components/get-account-balance";
 import { DatetimeHelper } from "../../helpers/datetime-helper";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-redemption-list",
@@ -143,7 +144,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
               <th [nzWidth]="SIZE_COLUMNS.STATUS">
                 {{ "Status" | translate }}
               </th>
-              <th>{{ "Note" | translate }}</th>
+              <th nzEllipsis>{{ "Note" | translate }}</th>
               <th nzWidth="100px" nzAlign="right">
                 {{ "Amount" | translate }}
               </th>
@@ -170,12 +171,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
                 >
                 <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
               </td>
-              <td
-                nzEllipsis
-                class="image"
-                style="display:grid;grid-template-columns:42px 1fr; gap:8px"
-                [title]="data.offerName"
-              >
+              <td nzEllipsis class="image col-img" [title]="data.offerName">
                 <img
                   class="image-list"
                   height="42px"
@@ -207,11 +203,29 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
 
               <td nzEllipsis>{{ data.redeemedDate | customDateTime }}</td>
               <td nzEllipsis>{{ data.locationName }}</td>
-
               <td
+                class="image col-img"
+                style="display: flex; 
+    align-items: center;"
                 nzEllipsis
                 [ngStyle]="{ color: getStatusColor(data.status!) }"
               >
+                <img
+                  class="image-list"
+                  style="width: 18px"
+                  height="42px"
+                  *ngIf="data.statusImage"
+                  [src]="data.statusImage"
+                  alt=""
+                />
+                <img
+                  class="image-list"
+                  height="42px"
+                  style="width: 18px"
+                  *ngIf="!data.statusImage"
+                  src="./assets/image/img-not-found.jpg"
+                  alt=""
+                />
                 <span>
                   {{
                     translateService.currentLang === "km"
@@ -250,6 +264,11 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
   standalone: false,
   styles: [
     `
+      .col-img {
+        display: grid;
+        grid-template-columns: 42px 1fr;
+        gap: 8px;
+      }
       .image {
         padding: 0 !important;
       }
@@ -261,10 +280,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
   ],
   encapsulation: ViewEncapsulation.None,
 })
-export class RedemptionListComponent
-  extends BaseListComponent<Redemption>
-  implements OnChanges
-{
+export class RedemptionListComponent extends BaseListComponent<Redemption> {
   constructor(
     service: RedemptionService,
     public override uiService: RedemptionUiService,
@@ -309,16 +325,11 @@ export class RedemptionListComponent
   );
   lookup = signal<LookupItem[]>([]);
   memberId = input(0);
+  lookupRefresh$ = new Subscription();
   hasAdvancedFilter = signal<boolean>(false);
   redeemedDate: any = [];
-  ngOnChanges(changes: SimpleChanges): void {
-    // if (changes["tabIndex"].currentValue == 3) {
-    //   this.search();
-    // }
-  }
-  override ngOnInit(): void {
-    console.log(this.lists());
 
+  override ngOnInit(): void {
     this.param.set({
       pageSize:
         this.sessionStorageService.getCurrentPageSizeOption(
@@ -373,7 +384,7 @@ export class RedemptionListComponent
       sorts: "",
       filters: JSON.stringify(filter),
     };
-    this.lookupItemService
+    this.lookupRefresh$ = this.lookupItemService
       .search(lookupParam)
       .subscribe({ next: (v) => this.lookup.set(v.results) });
   }
@@ -452,5 +463,6 @@ export class RedemptionListComponent
 
   override ngOnDestroy(): void {
     this.refreshSub.unsubscribe();
+    this.lookupRefresh$.unsubscribe();
   }
 }
