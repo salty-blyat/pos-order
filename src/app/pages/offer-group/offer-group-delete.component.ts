@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { BaseDeleteComponent } from "../../utils/components/base-delete.component"; 
+import { BaseDeleteComponent } from "../../utils/components/base-delete.component";
 import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { CommonValidators } from "../../utils/services/common-validators";
@@ -17,10 +17,13 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
     </div>
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
-      <div  class="delete-error-message ">
-        <span *ngIf="errMessage() && !isLoading()" nz-typography nzType="danger">{{
-          errMessage() | translate
-        }}</span>
+      <div class="delete-error-message ">
+        <span
+          *ngIf="errMessage() && !isLoading()"
+          nz-typography
+          nzType="danger"
+          >{{ errMessage() | translate }}</span
+        >
       </div>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
         <nz-form-item>
@@ -80,15 +83,15 @@ export class OfferGroupDeleteComponent extends BaseDeleteComponent<OfferGroup> {
   override initControl(): void {
     const { noteMaxLengthValidator, required } = CommonValidators;
     this.frm = this.fb.group({
-        name: [{ value: null, disabled: true }, [required]],
+      name: [{ value: null, disabled: true }, [required]],
       note: [null, [noteMaxLengthValidator()]],
     });
   }
 
   override setFormValue() {
     this.frm.setValue({
-        name: this.model.name,
-      note: this.model.note,
+      name: this.model.name,
+      note: "",
     });
   }
 }

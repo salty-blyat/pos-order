@@ -464,10 +464,8 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   selectedMember: Member | null = null;
-  memberSub$ = new Subscription();
-  offerSub$ = new Subscription();
-  settingSub$ = new Subscription();
-  reportSub$ = new Subscription();
+  memberSub$ = new Subscription(); 
+  settingSub$ = new Subscription(); 
   selectedOffer: Offer | null = null;
   extData: { cardNumber: String; startBalance: number; endingBalance: number } =
     { cardNumber: "", startBalance: 0, endingBalance: 0 };
@@ -490,7 +488,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
   reports: Report[] = [];
   getReports() {
-    this.reportSub$ = this.reportService
+   this.reportService
       .search({
         pageIndex: 1,
         pageSize: 9999999,
@@ -522,7 +520,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   onMemberChange() {
     const memberId = this.frm.get("memberId")?.value;
 
-    if (memberId != null) {
+    if (memberId != null ) {
       this.memberSub$ = this.memberService.find(memberId).subscribe({
         next: (m: any) => {
           this.selectedMember = m;
@@ -768,7 +766,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     }
 
     if (this.model.offerId && this.modal?.isView) {
-      this.offerSub$ = this.offerService.find(this.model.offerId).subscribe({
+       this.offerService.find(this.model.offerId).subscribe({
         next: (d: any) => {
           this.selectedOffer = d;
           this.frm.get("offerId")?.setValue(this.model?.offerId);
@@ -780,7 +778,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     }
 
     if (this.model.memberId && this.modal?.isView) {
-      this.memberSub$ = this.memberService.find(this.model.memberId).subscribe({
+      this.memberService.find(this.model.memberId).subscribe({
         next: (d: any) => {
           this.selectedMember = d;
         },
@@ -803,9 +801,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   override ngOnDestroy(): void {
     this.refreshSub$?.unsubscribe();
-    this.memberSub$?.unsubscribe();
-    this.reportSub$?.unsubscribe();
-    this.offerSub$?.unsubscribe();
+    this.memberSub$?.unsubscribe();  
   }
   readonly getAccountBalance = getAccountBalance;
   readonly RedeemStatuses = RedeemStatuses;

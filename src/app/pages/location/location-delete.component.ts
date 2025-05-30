@@ -88,7 +88,7 @@ export class LocationDeleteComponent extends BaseDeleteComponent<Location> {
   override setFormValue() {
     this.frm.setValue({
       code: this.model.code,
-      note: this.model.note,
+      note: '',
     });
   }
 }

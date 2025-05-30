@@ -91,7 +91,7 @@ export class OfferDeleteComponent extends BaseDeleteComponent<Offer> {
   override setFormValue() {
     this.frm.setValue({
       code: this.model.code,
-      note: this.model.note,
+      note: '',
     });
   }
 }
