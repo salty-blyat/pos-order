@@ -219,6 +219,7 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     if (this.isLoading()) return;
     this.initControl();
     if (this.modal?.isView) {
+      this.frm.disable();
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
         if (e.key === "edited") {
           this.isLoading.set(true);

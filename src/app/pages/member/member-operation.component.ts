@@ -14,7 +14,7 @@ import {
 import { NzMessageService } from "ng-zorro-antd/message";
 import { AuthService } from "../../helpers/auth.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { Observable, Observer, Subscription } from "rxjs";
+import { first, Observable, Observer, Subscription } from "rxjs";
 import { AccountService } from "../account/account.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
@@ -561,8 +561,10 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   selectedAccount = signal<number>(0);
   accountRefreshSub = new Subscription();
   redemptionRefreshSub = new Subscription();
+  systemRefresh = new Subscription();
 
   file: NzUploadFile[] = [];
+  submitRefresh = new Subscription();
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   //  view
   nzShowButtonView = {
@@ -581,13 +583,15 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     if (this.isLoading()) return;
     this.initControl();
     if (!this.modal?.isView) {
-      this.systemSettingService.find(SETTING_KEY.MemberAutoId).subscribe({
-        next: (value?: string) => {
-          if (Number(value) !== 0) {
-            this.frm.get("code")?.disable();
-          }
-        },
-      });
+      this.systemRefresh = this.systemSettingService
+        .find(SETTING_KEY.MemberAutoId)
+        .subscribe({
+          next: (value?: string) => {
+            if (Number(value) !== 0) {
+              this.frm.get("code")?.disable();
+            }
+          },
+        });
     }
 
     if (this.modal?.isView) {
@@ -633,16 +637,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     };
     if (this.modal?.id) {
       this.isLoading.set(true);
-      this.service.find(this.modal?.id).subscribe({
-        next: (result: Member) => {
-          this.model = result;
-          this.setFormValue();
-          this.isLoading.set(false);
-        },
-        error: (err: any) => {
-          console.log(err);
-        },
-      });
+      refreshBalance();
     }
     this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
@@ -745,6 +740,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       let operation$: Observable<Member> = this.service.add(
         this.frm.getRawValue()
       );
+
       if (this.modal?.id) {
         operation$ = this.service.edit({
           ...this.frm.getRawValue(),
@@ -752,7 +748,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
         });
       }
       if (e.detail === 1 || e.detail === 0) {
-        operation$.subscribe({
+        this.submitRefresh = operation$.subscribe({
           next: (result: Member) => {
             this.model = result;
             this.isLoading.set(false);
@@ -814,6 +810,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     this.refreshSub$?.unsubscribe();
     this.accountRefreshSub?.unsubscribe();
     this.redemptionRefreshSub?.unsubscribe();
+    this.systemRefresh?.unsubscribe();
+    this.submitRefresh?.unsubscribe();
   }
 
   protected readonly AccountTypes = AccountTypes;
