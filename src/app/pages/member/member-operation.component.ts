@@ -18,9 +18,10 @@ import { first, Observable, Observer, Subscription } from "rxjs";
 import { AccountService } from "../account/account.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
-import { AccountUiService } from "../account/account-ui.service";  
+import { AccountUiService } from "../account/account-ui.service";
 import { RedemptionService } from "../redemption/redemption.service";
 import { RedemptionUiService } from "../redemption/redemption-ui.service";
+import { NzImageService } from "ng-zorro-antd/image";
 
 @Component({
   selector: "app-member-operation",
@@ -53,22 +54,25 @@ import { RedemptionUiService } from "../redemption/redemption-ui.service";
             </div>
 
             }@else {
+
             <nz-upload
               class="profile"
               [nzAction]="uploadUrl"
               [(nzFileList)]="file"
+              (click)="onPreviewImage()"
               [nzShowButton]="false"
               [nzDisabled]="true"
               (nzChange)="handleUpload($event)"
               [nzShowUploadList]="nzShowButtonView"
               nzListType="picture-card"
-              [nzShowButton]="file.length < 1"
+              [nzShowButton]="false"
             >
               <div photo>
                 <i nz-icon nzType="plus"></i>
                 <img src="./assets/image/man.png" alt="Photo" />
               </div>
             </nz-upload>
+
             } } @else {
             <!-- add & edit -->
             @if(file.length == 0){
@@ -150,7 +154,7 @@ import { RedemptionUiService } from "../redemption/redemption-ui.service";
                   style="margin-right: 8px;"
                 ></i>
                 <div>
-                    {{ account.balance | accountBalance : account.accountType }} 
+                  {{ account.balance | accountBalance : account.accountType }}
                 </div>
               </div>
             </li>
@@ -200,10 +204,11 @@ import { RedemptionUiService } from "../redemption/redemption-ui.service";
                             >{{ "JoinDate" | translate }}
                           </nz-form-label>
                           <nz-form-control [nzSm]="14" [nzXs]="24">
-                            <nz-date-picker
-                              [nzAllowClear]="false"
+                            <app-date-input
+                              [allowClear]="false"
                               formControlName="joinDate"
-                            ></nz-date-picker>
+                            >
+                            </app-date-input>
                           </nz-form-control>
                         </nz-form-item>
                       </div>
@@ -297,10 +302,10 @@ import { RedemptionUiService } from "../redemption/redemption-ui.service";
                             [nzXs]="24"
                             nzErrorTip=""
                           >
-                            <nz-date-picker
-                              [nzAllowClear]="false"
+                            <app-date-input
+                              [allowClear]="false"
                               formControlName="birthDate"
-                            ></nz-date-picker>
+                            ></app-date-input>
                           </nz-form-control>
                         </nz-form-item>
                       </div>
@@ -548,7 +553,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     private systemSettingService: SystemSettingService,
     private sessionStorageService: SessionStorageService,
     private authService: AuthService,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    public nzImageService: NzImageService
   ) {
     super(fb, ref, service, uiService);
   }
@@ -561,13 +567,12 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   accountRefreshSub = new Subscription();
   redemptionRefreshSub = new Subscription();
   systemRefresh = new Subscription();
-
   file: NzUploadFile[] = [];
   submitRefresh = new Subscription();
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   //  view
   nzShowButtonView = {
-    showPreviewIcon: true,
+    showPreviewIcon: false,
     showDownloadIcon: false,
     showRemoveIcon: false,
   };
@@ -578,6 +583,11 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     showDownloadIcon: false,
   };
   tabIndex = 0;
+
+  onPreviewImage(): void {
+    this.nzImageService.preview([{ src: this.file[0].url! }]);
+  }
+
   override ngOnInit(): void {
     if (this.isLoading()) return;
     this.initControl();
@@ -814,5 +824,5 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   }
 
   protected readonly AccountTypes = AccountTypes;
-  protected readonly LOOKUP_TYPE = LOOKUP_TYPE; 
+  protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }

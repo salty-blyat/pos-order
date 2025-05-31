@@ -56,7 +56,7 @@ import { TranslateService } from "@ngx-translate/core";
           {{ "Ok" | translate }}
         </a>
         <a nz-button (click)="cancel()">
-          {{ "cancel" | translate }}
+          {{ "Cancel" | translate }}
         </a>
       </div>
     </ng-template>

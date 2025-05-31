@@ -146,14 +146,12 @@ import {
             >{{ "StartAt" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="5">
-            <nz-date-picker formControlName="offerStartAt"></nz-date-picker>
+            <app-date-input formControlName="offerStartAt"> </app-date-input>
           </nz-form-control>
 
-          <nz-form-label [nzSpan]="5" nzRequired>
-            {{ "EndAt" | translate }}</nz-form-label
-          >
+          <nz-form-label [nzSpan]="5"> {{ "EndAt" | translate }}</nz-form-label>
           <nz-form-control [nzSm]="5" nzErrorTip>
-            <nz-date-picker formControlName="offerEndAt"></nz-date-picker>
+            <app-date-input formControlName="offerEndAt"> </app-date-input>
           </nz-form-control>
         </nz-form-item>
 
@@ -446,7 +444,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       redeemCost: [0, [required]],
       redeemMinBalance: [10, [required]],
       offerStartAt: [null, [required]],
-      offerEndAt: [null, [required]],
+      offerEndAt: [null],
       photo: [null],
       note: [null, [noteMaxLengthValidator()]],
     });

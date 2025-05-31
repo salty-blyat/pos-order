@@ -62,7 +62,7 @@ import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
           {{ "Ok" | translate }}
         </a>
         <a nz-button (click)="cancel()">
-          {{ "cancel" | translate }}
+          {{ "Cancel" | translate }}
         </a>
       </div>
     </ng-template>

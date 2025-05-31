@@ -103,7 +103,7 @@ import { CurrencyService } from "../currency/currency.service";
             >{{ "Date" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-date-picker formControlName="transDate"></nz-date-picker>
+            <app-date-input formControlName="transDate"> </app-date-input>
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>

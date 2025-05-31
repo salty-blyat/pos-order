@@ -77,14 +77,14 @@ export class ReportDynamicInputComponent
         let initParam = JSON.parse(this.formItem.initParam?.toString() ?? "{}");
         this.componentRef.instance.applyInitParam(initParam);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
       try {
         this.componentRef.instance.applyDefaultValue(
           this.convertDefaultSelectValue()
         );
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
       this.changeDetectorRef.detectChanges();
     }, 100);

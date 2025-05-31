@@ -53,7 +53,7 @@ interface SharedDomain {
       <nz-option
         *ngFor="let item of lists"
         nzCustomContent
-        [nzValue]="item.id"
+        [nzValue]="item.valueId"
         [nzLabel]="'' + item.name"
       >
         <!--        <i nz-icon [nzType]="icon[item.id!]"-->
@@ -192,7 +192,7 @@ export class LookupMultipleSelectComponent
   onModalChange() {
     let defaultValue = 0; // chose first value as default value (select all)
     let lastSelectedValue = this.selectedValue[this.selectedValue.length - 1];
-    this.nzMaxCount = 1;
+    this.nzMaxCount = 1; 
 
     if (lastSelectedValue == defaultValue || !lastSelectedValue) {
       this.selectedValue = [defaultValue];
@@ -214,7 +214,7 @@ export class LookupMultipleSelectComponent
     return {
       id: this.selectedValue.join(),
       label: this.lists
-        .filter((x) => this.selectedValue.includes(x.id))
+        .filter((x) => this.selectedValue.includes(x.valueId))
         .map((x) => x.name)
         .join(),
     };
@@ -239,8 +239,9 @@ export class LookupMultipleSelectComponent
     this.selectComponent.nzOpen = false;
     this.onModalChange();
   }
-  ok() {
+  ok() { 
     this.oldSelectedValue = [...this.selectedValue];
+    console.log(this.oldSelectedValue);
     this.selectComponent.nzOpen = false;
     this.onModalChange();
   }

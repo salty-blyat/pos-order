@@ -56,10 +56,10 @@ import {
               </nz-form-label>
 
               <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-date-picker
+                <app-date-input
                   formControlName="joinDate"
-                  [nzAllowClear]="false"
-                ></nz-date-picker>
+                  [allowClear]="false"
+                ></app-date-input>
               </nz-form-control>
             </nz-form-item>
           </div>

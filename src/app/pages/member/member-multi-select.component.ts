@@ -62,7 +62,7 @@ import { Member, MemberService } from "./member.service";
           {{ "Ok" | translate }}
         </a>
         <a nz-button (click)="cancel()">
-          {{ "cancel" | translate }}
+          {{ "Cancel" | translate }}
         </a>
       </div>
     </ng-template>

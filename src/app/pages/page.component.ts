@@ -34,19 +34,29 @@ export interface Type {
         [(nzCollapsed)]="isCollapsed"
         [nzTrigger]="null"
       >
-        <div class="header-content">
+       <div class="header-content">
           <div class="sidebar-logo">
             <div class="logo-link">
               <img [src]="authService.app?.iconUrl" alt="logo" />
               <h1 *ngIf="!isCollapsed()" class="modal-header-ellipsis">
                 {{ appName() }}
               </h1>
-              <nz-icon
-                nzType="down"
-                class="icon-down"
-                (click)="redirectToMainUrl()"
-                nzTheme="outline"
-              />
+              <nz-icon class="icon-down" (click)="redirectToMainUrl()">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="ionicon"
+                  viewBox="0 0 512 512"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="48"
+                    d="M112 184l144 144 144-144"
+                  />
+                </svg>
+              </nz-icon>
             </div>
           </div>
           <div class="tenant">
