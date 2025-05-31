@@ -135,14 +135,13 @@ import { Subscription } from "rxjs";
               <th [nzWidth]="SIZE_COLUMNS.CODE" nzEllipsis>
                 {{ "RedeemNo" | translate }}
               </th>
+              <th [nzWidth]="SIZE_COLUMNS.DATE">{{ "Date" | translate }}</th>
               <th nzWidth="250px" nzEllipsis>
                 {{ "Name" | translate }}
               </th>
-                            <th nzWidth="150px" nzEllipsis>
-                {{ "OfferGroup" | translate }}
+              <th nzWidth="150px" nzEllipsis>
+                {{ "Member" | translate }}
               </th>
- 
-              <th [nzWidth]="SIZE_COLUMNS.DATE">{{ "Date" | translate }}</th>
               <th nzWidth="100px">{{ "Location" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.STATUS">
                 {{ "Status" | translate }}
@@ -175,7 +174,16 @@ import { Subscription } from "rxjs";
                 <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
               </td>
 
-              <td nzEllipsis class="image col-img" [title]="data.offerName">
+              <td nzEllipsis class="no-pad">
+                <div style="display:flex; flex-direction:column;">
+                  {{ data.redeemedDate | customDateTime }}
+                  <span class="subtitle">
+                    {{ data.createdBy }}
+                  </span>
+                </div>
+              </td>
+
+              <td nzEllipsis class="no-pad col-img" [title]="data.offerName">
                 <img
                   class="image-list"
                   height="42px"
@@ -195,7 +203,7 @@ import { Subscription } from "rxjs";
                   style="display:flex; flex-direction:column; padding-left:4px"
                 >
                   {{ data.offerName }}
-                  <span style="font-size: 10px; color: #6f6f6f">
+                  <span class="subtitle">
                     {{
                       translateService.currentLang === "km"
                         ? data.offerTypeNameKh
@@ -204,15 +212,20 @@ import { Subscription } from "rxjs";
                   </span>
                 </div>
               </td>
-              <td nzEllipsis>{{ data.offerGroupName  }}</td>
+              <td nzEllipsis class="no-pad">
+                <div style="display:flex; flex-direction:column;">
+                  {{ data.memberName }}
+                  <span class="subtitle">
+                    {{ data.memberCode }}
+                  </span>
+                </div>
+              </td>
 
-
-              <td nzEllipsis>{{ data.redeemedDate | customDateTime }}</td>
               <td nzEllipsis>{{ data.locationName }}</td>
               <td
-                class="image col-img"
+                class="no-pad col-img"
                 style="display: flex ; 
-    align-items: center;"
+                      align-items: center;"
                 nzEllipsis
                 [ngStyle]="{ color: getStatusColor(data.status!) }"
               >
@@ -270,13 +283,17 @@ import { Subscription } from "rxjs";
   standalone: false,
   styles: [
     `
+      .subtitle {
+        font-size: 10px;
+        color: #6f6f6f;
+      }
       .col-img {
         display: grid;
         grid-template-columns: 42px 1fr;
         gap: 8px;
       }
-      .image {
-        padding: 0 !important;
+      .no-pad { 
+        padding: 0 0 0 5px !important;
       }
       .image-list {
         width: 42px;

@@ -139,7 +139,7 @@ export class TransactionMultiSelectComponent
       this.lists = [
         ...this.lists,
         ...result.results.filter(
-          (x: any) => !this.lists.map((x) => x.id).includes(x.id)
+          (x: any) => !this.lists.map((x) => x.valueId).includes(x.id)
         ),
       ];
       this.loading = false;

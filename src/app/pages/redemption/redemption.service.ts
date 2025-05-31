@@ -36,8 +36,11 @@ export interface Redemption {
   extData?: string;
   offerTypeNameKh?: string;
   offerTypeNameEn?: string;
-  statusImage?:string;
-  offerGroupName?:string;
+  statusImage?: string;
+  offerGroupName?: string;
+  memberName?: string;
+  memberCode?:string;
+  createdBy?: string;
 }
 export interface RedemptionAdvancedFilter {
   offerTypeId?: number;

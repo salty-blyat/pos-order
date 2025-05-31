@@ -122,14 +122,14 @@ export class AccountMultiSelectComponent
     pageIndex: 1,
     sorts: "",
     filters: "",
-  }; 
+  };
   override search(callBack: Function = () => {}) {
     this.loading = true;
     const filters: any[] = [
-      { field: 'name', operator: 'contains', value: this.searchText },
+      { field: "name", operator: "contains", value: this.searchText },
       {
-        field: 'lookupTypeId',
-        operator: 'eq',
+        field: "lookupTypeId",
+        operator: "eq",
         value: LOOKUP_TYPE.AccountType,
       },
     ];
@@ -142,7 +142,7 @@ export class AccountMultiSelectComponent
       this.lists = [
         ...this.lists,
         ...result.results.filter(
-          (x: any) => !this.lists.map((x) => x.id).includes(x.id)
+          (x: any) => !this.lists.map((x) => x.valueId).includes(x.valueId)
         ),
       ];
       this.loading = false;
