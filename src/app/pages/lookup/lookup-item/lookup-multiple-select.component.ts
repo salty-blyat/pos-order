@@ -7,14 +7,14 @@ import {
   OnInit,
   Output,
   ViewChild,
-} from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-import { QueryParam } from '../../../utils/services/base-api.service';
-import { NzSelectComponent } from 'ng-zorro-antd/select';
-import { LOOKUP_TYPE } from '../lookup-type.service';
-import { LookupItem, LookupItemService } from './lookup-item.service';
-import { UUID } from 'uuid-generator-ts';
+} from "@angular/core";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { TranslateService } from "@ngx-translate/core";
+import { QueryParam } from "../../../utils/services/base-api.service";
+import { NzSelectComponent } from "ng-zorro-antd/select";
+import { LOOKUP_TYPE } from "../lookup-type.service";
+import { LookupItem, LookupItemService } from "./lookup-item.service";
+import { UUID } from "uuid-generator-ts";
 
 interface SharedDomain {
   id?: number;
@@ -22,15 +22,15 @@ interface SharedDomain {
 }
 
 @Component({
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => LookupMultipleSelectComponent),
-            multi: true,
-        },
-    ],
-    selector: 'app-lookup-multiple-select',
-    template: `
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => LookupMultipleSelectComponent),
+      multi: true,
+    },
+  ],
+  selector: "app-lookup-multiple-select",
+  template: `
     <nz-select
       #selectComponent
       nzShowSearch
@@ -48,7 +48,8 @@ interface SharedDomain {
       [nzCustomTemplate]="customTemplate"
       style="width: 100%"
     >
-      <nz-option [nzValue]="0" [nzLabel]="'AllStatus' | translate"> </nz-option>
+      <nz-option [nzValue]="0" [nzLabel]="allLabelName | translate">
+      </nz-option>
       <nz-option
         *ngFor="let item of lists"
         nzCustomContent
@@ -61,16 +62,16 @@ interface SharedDomain {
       </nz-option>
       <nz-option *ngIf="loading" nzDisabled nzCustomContent>
         <i nz-icon nzType="loading" class="loading-icon"></i>
-        {{ 'Loading' | translate }}
+        {{ "Loading" | translate }}
       </nz-option>
     </nz-select>
     <ng-template #actionItem>
       <div style="padding: 5px 12px; border-top: 1px solid #f0f0f0">
         <a nz-button nzType="primary" (click)="ok()" style="margin-right: 5px">
-          {{ 'ok' | translate }}
+          {{ "ok" | translate }}
         </a>
         <a nz-button (click)="cancel()">
-          {{ 'cancel' | translate }}
+          {{ "cancel" | translate }}
         </a>
       </div>
     </ng-template>
@@ -81,7 +82,7 @@ interface SharedDomain {
     <ng-template #tagPlaceHolder let-selectedList>
       {{ selectedList.length }}
       {{
-        (selectedList.length > 1 ? 'items' : 'item') + ' selected' | translate
+        (selectedList.length > 1 ? "items" : "item") + " selected" | translate
       }}
     </ng-template>
     <ng-template #removeIcon>
@@ -93,8 +94,8 @@ interface SharedDomain {
       ></span>
     </ng-template>
   `,
-    styles: [
-        `
+  styles: [
+    `
       nz-select {
         width: 220px;
       }
@@ -116,8 +117,8 @@ interface SharedDomain {
         max-width: 120px !important;
       }
     `,
-    ],
-    standalone: false
+  ],
+  standalone: false,
 })
 export class LookupMultipleSelectComponent
   implements OnInit, ControlValueAccessor, OnDestroy
@@ -126,17 +127,17 @@ export class LookupMultipleSelectComponent
     public translate: TranslateService,
     private service: LookupItemService
   ) {}
-  @ViewChild('selectComponent') selectComponent!: NzSelectComponent;
+  @ViewChild("selectComponent") selectComponent!: NzSelectComponent;
   @Input() addOption!: boolean;
   @Output() valueChanged = new EventEmitter<any>();
-  // @Input() lookupType: LOOKUP_TYPE = LOOKUP_TYPE.MEETING_STATUS;
-  allLabelName: string = 'AllStatus';
+  @Input() lookupType: LOOKUP_TYPE = LOOKUP_TYPE.Gender;
+  allLabelName: string = "AllGender";
   isAuthListAllBranch: boolean = false;
   componentId = UUID.createUUID();
   disabled = false;
   loading = false;
   branchId!: number;
-  searchText = '';
+  searchText = "";
   selectedValue: any[] = [0];
   oldSelectedValue: any[] = [...this.selectedValue];
   refreshSub$: any;
@@ -144,8 +145,8 @@ export class LookupMultipleSelectComponent
   param: QueryParam = {
     pageSize: 9999999,
     pageIndex: 1,
-    sorts: '',
-    filters: '',
+    sorts: "",
+    filters: "",
   };
   isAuthAdd: boolean = false;
   nzMaxCount: number = 1;
@@ -157,8 +158,9 @@ export class LookupMultipleSelectComponent
   }
 
   applyInitParam(model: { value: number; label: string }) {
-    // this.lookupType = model.value;
+    this.lookupType = model.value;
     this.allLabelName = model.label;
+    this.search();
   }
 
   applyDefaultValue(values: any[]) {
@@ -170,12 +172,12 @@ export class LookupMultipleSelectComponent
   search(callBack: Function = () => {}) {
     this.loading = true;
     const filters: any[] = [
-      { field: 'Name', operator: 'contains', value: this.searchText },
+      { field: "search", operator: "contains", value: this.searchText },
     ];
     filters.push({
-      field: 'lookupTypeId',
-      operator: 'eq',
-      // value: LOOKUP_TYPE.MEETING_STATUS,
+      field: "lookupTypeId",
+      operator: "eq",
+      value: this.lookupType,
     });
     this.param.filters = JSON.stringify(filters);
     if (this.searchText && this.param.pageIndex === 1) {

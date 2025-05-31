@@ -36,7 +36,7 @@ import { AccountMultiSelectComponent } from "../account/account-multi-select.com
 import { TransactionMultiSelectComponent } from "../transaction/transaction-multi-select.component";
 import { MemberMultiSelectComponent } from "../member/member-multi-select.component";
 export let ParamSelectComponent = {
-  StatusType: LookupMultipleSelectComponent,
+  Lookups: LookupMultipleSelectComponent,
   StaticDropdownMultipleSelect: StaticDropdownMultipleSelectComponent,
   StaticDropdownSingleSelect: StaticDropdownSingleSelectComponent,
   DateRange: DateRangeInputReportComponent,
