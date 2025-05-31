@@ -37,6 +37,7 @@ export interface Redemption {
   offerTypeNameKh?: string;
   offerTypeNameEn?: string;
   statusImage?:string;
+  offerGroupName?:string;
 }
 export interface RedemptionAdvancedFilter {
   offerTypeId?: number;

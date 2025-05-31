@@ -36,6 +36,7 @@ import { AccountService } from "../../account/account.service";
       [nzDropdownRender]="actionItem"
       [nzServerSearch]="true"
       [nzAllowClear]="allowClear()"
+      [nzDropdownMatchSelectWidth]='false'
       [(ngModel)]="selected"
       (ngModelChange)="onModalChange()"
       (nzOnSearch)="searchText.set($event); param().pageIndex = 1; search()"

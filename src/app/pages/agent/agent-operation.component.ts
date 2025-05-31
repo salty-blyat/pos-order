@@ -48,14 +48,18 @@ import {
               </nz-form-control>
             </nz-form-item>
           </div>
+
           <div nz-col [nzXs]="12">
             <nz-form-item>
-              <nz-form-label [nzSm]="8" [nzXs]="24"
+              <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
                 >{{ "JoinDate" | translate }}
               </nz-form-label>
 
               <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-date-picker formControlName="joinDate"></nz-date-picker>
+                <nz-date-picker
+                  formControlName="joinDate"
+                  [nzAllowClear]="false"
+                ></nz-date-picker>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -71,6 +75,7 @@ import {
               </nz-form-control>
             </nz-form-item>
           </div>
+
           <div nz-col [nzXs]="12">
             <nz-form-item>
               <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
@@ -85,7 +90,7 @@ import {
         <div nz-row>
           <div nz-col [nzXs]="12">
             <nz-form-item>
-              <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+              <nz-form-label [nzSm]="8" [nzXs]="24"
                 >{{ "Email" | translate }}
               </nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
@@ -186,7 +191,7 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
   isAgentRemove = computed(() => true);
   override ngOnInit(): void {
     super.ngOnInit();
-    if (this.modal?.isView) {
+    if (!this.modal?.isView) {
       this.systemSettingService.find(SETTING_KEY.AgentAutoId).subscribe({
         next: (value?: string) => {
           if (Number(value) !== 0) {
@@ -219,10 +224,10 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
         [nameMaxLengthValidator, required],
         [nameExistValidator(this.service, this.modal?.id)],
       ],
-      email: [null, [emailValidator, required]],
+      email: [null, [emailValidator]],
       phone: [null, [multiplePhoneValidator, required]],
       address: [null],
-      joinDate: [new Date()],
+      joinDate: [new Date(), required],
       note: [null, [noteMaxLengthValidator()]],
     });
   }

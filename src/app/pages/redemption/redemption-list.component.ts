@@ -138,6 +138,10 @@ import { Subscription } from "rxjs";
               <th nzWidth="250px" nzEllipsis>
                 {{ "Name" | translate }}
               </th>
+                            <th nzWidth="150px" nzEllipsis>
+                {{ "OfferGroup" | translate }}
+              </th>
+ 
               <th [nzWidth]="SIZE_COLUMNS.DATE">{{ "Date" | translate }}</th>
               <th nzWidth="100px">{{ "Location" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.STATUS">
@@ -170,6 +174,7 @@ import { Subscription } from "rxjs";
                 >
                 <span *ngIf="!isRedemptionView()">{{ data.redeemNo }}</span>
               </td>
+
               <td nzEllipsis class="image col-img" [title]="data.offerName">
                 <img
                   class="image-list"
@@ -199,12 +204,14 @@ import { Subscription } from "rxjs";
                   </span>
                 </div>
               </td>
+              <td nzEllipsis>{{ data.offerGroupName  }}</td>
+
 
               <td nzEllipsis>{{ data.redeemedDate | customDateTime }}</td>
               <td nzEllipsis>{{ data.locationName }}</td>
               <td
                 class="image col-img"
-                style="display: flex; 
+                style="display: flex ; 
     align-items: center;"
                 nzEllipsis
                 [ngStyle]="{ color: getStatusColor(data.status!) }"
