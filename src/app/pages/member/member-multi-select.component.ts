@@ -45,7 +45,7 @@ import { Member, MemberService } from "./member.service";
       style="width: 100%"
       (nzScrollToBottom)="searchMore()"
     >
-      <nz-option [nzValue]="0" [nzLabel]="'AllLocation' | translate">
+      <nz-option [nzValue]="0" [nzLabel]="'AllMember' | translate">
       </nz-option>
       <nz-option
         *ngFor="let item of lists"

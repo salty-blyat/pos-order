@@ -58,19 +58,18 @@ import { Subscription } from "rxjs";
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
-            <div class="filter-box">
-              <app-date-range-input
-                [storageKey]="
-                  memberId()
-                    ? 'trans-date-range' + memberId()
-                    : 'trans-date-range'
-                "
-                (valueChanged)="
-                  redeemedDate = $event; param().pageIndex = 1; search()
-                "
-              ></app-date-range-input>
-            </div>
-            <!-- keeps -->
+
+            <app-date-range-input
+              [storageKey]="
+                memberId()
+                  ? 'trans-date-range' + memberId()
+                  : 'trans-date-range'
+              "
+              (valueChanged)="
+                redeemedDate = $event; param().pageIndex = 1; search()
+              "
+            ></app-date-range-input>
+
             <app-offer-group-select
               class="fixed-width-select"
               [showAllOption]="true"
@@ -84,6 +83,7 @@ import { Subscription } from "rxjs";
               "
             >
             </app-offer-group-select>
+
             <div>
               <nz-badge [nzDot]="hasAdvancedFilter()">
                 <button

@@ -60,7 +60,6 @@ const routes: Routes = [
         path: "member",
         component: MemberListComponent,
       },
-
       {
         path: "redemption",
         component: RedemptionListComponent,

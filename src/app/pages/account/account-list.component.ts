@@ -34,8 +34,15 @@ import { Subscription } from "rxjs";
   template: `
     <nz-layout>
       <nz-header>
-        <div nz-row>
-          <div class="filter-box">
+        <div
+          nz-flex
+          nzWrap="nowrap"
+          nzJustify="space-between"
+          nzAlign="center"
+          nzGap="middle"
+          style="width:100%"
+        >
+          <div nz-flex nzGap="small">
             <app-filter-input
               class="fixed-width-select"
               [storageKey]="'account-list-' + accountId"
@@ -43,18 +50,14 @@ import { Subscription } from "rxjs";
                 searchText.set($event); param().pageIndex = 1; search()
               "
             ></app-filter-input>
-          </div>
-          
-          <div class="filter-box">
+
             <app-date-range-input
               storageKey="account-date-range"
               (valueChanged)="
                 transDate = $event; param().pageIndex = 1; search()
               "
             ></app-date-range-input>
-          </div>
 
-          <div class="filter-box">
             <app-transaction-type-select
               class="fixed-width-select"
               [showAllOption]="true"
@@ -65,9 +68,7 @@ import { Subscription } from "rxjs";
               "
             >
             </app-transaction-type-select>
-          </div>
 
-          <div class="filter-box">
             <app-location-select
               class="fixed-width-select"
               [showAllOption]="true"
@@ -78,57 +79,58 @@ import { Subscription } from "rxjs";
             >
             </app-location-select>
           </div>
-        </div>
-        <div>
-          <button
-            *ngIf="isAccountAdjust()"
-            style="margin-right: 4px;"
-            nz-button
-            nzType="primary"
-            (click)="
-              uiService.showAdjust(
-                '',
-                accountId!,
-                TransactionTypes.Adjust,
-                accountType!
-              )
-            "
-          >
-            {{ "Adjust" | translate }}
-          </button>
-          @if(isTopup){
-          <button
-            *ngIf="isAccountTopup()"
-            nz-button
-            nzType="primary"
-            (click)="
-              uiService.showAdjust(
-                '',
-                accountId!,
-                TransactionTypes.Topup,
-                accountType!
-              )
-            "
-          >
-            {{ "Topup" | translate }}
-          </button>
-          } @else{
-          <button
-            *ngIf="isAccountReward()"
-            nz-button
-            nzType="primary"
-            (click)="
-              uiService.showAdjust(
-                '',
-                accountId!,
-                TransactionTypes.Earn,
-                accountType!
-              )
-            "
-          >
-            {{ "Earn" | translate }}
-          </button>
-          }
+
+          <div nz-flex nzGap="small">
+            <button
+              *ngIf="isAccountAdjust()"
+              style="margin-right: 4px;"
+              nz-button
+              nzType="primary"
+              (click)="
+                uiService.showAdjust(
+                  '',
+                  accountId!,
+                  TransactionTypes.Adjust,
+                  accountType!
+                )
+              "
+            >
+              {{ "Adjust" | translate }}
+            </button>
+            @if(isTopup){
+            <button
+              *ngIf="isAccountTopup()"
+              nz-button
+              nzType="primary"
+              (click)="
+                uiService.showAdjust(
+                  '',
+                  accountId!,
+                  TransactionTypes.Topup,
+                  accountType!
+                )
+              "
+            >
+              {{ "Topup" | translate }}
+            </button>
+            } @else{
+            <button
+              *ngIf="isAccountReward()"
+              nz-button
+              nzType="primary"
+              (click)="
+                uiService.showAdjust(
+                  '',
+                  accountId!,
+                  TransactionTypes.Earn,
+                  accountType!
+                )
+              "
+            >
+              {{ "Earn" | translate }}
+            </button>
+            }
+          </div>
         </div>
       </nz-header>
 
@@ -163,7 +165,7 @@ import { Subscription } from "rxjs";
               <th [nzWidth]="SIZE_COLUMNS.DATE">
                 {{ "Date" | translate }}
               </th>
-              <th nzWidth="250px">
+              <th nzWidth="100px">
                 {{ "Type" | translate }}
               </th>
 
@@ -209,7 +211,7 @@ import { Subscription } from "rxjs";
               </td>
 
               <td nzEllipsis>{{ data.locationName }}</td>
-              <td nzEllipsis>{{ data.note }}</td>
+              <td nzEllipsis><span *ngIf="data.offerName">{{data.offerName+' '}}</span>{{  data.note }}</td>
               <td
                 nzEllipsis
                 nzAlign="right"

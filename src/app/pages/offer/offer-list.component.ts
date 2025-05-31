@@ -10,7 +10,7 @@ import { OfferUiService } from "./offer-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Filter } from "../../utils/services/base-api.service";
 import { AccountTypes, LOOKUP_TYPE } from "../lookup/lookup-type.service";
-import { NotificationService } from "../../utils/services/notification.service"; 
+import { NotificationService } from "../../utils/services/notification.service";
 @Component({
   selector: "app-offer-list",
   template: `
@@ -200,10 +200,9 @@ import { NotificationService } from "../../utils/services/notification.service";
                 @if(data.redeemCost == 0){
                 {{ "Free" | translate }}
                 } @else {
-                  {{ data.redeemCost | accountBalance : data.offerType! }} 
-              
-              
-              }
+                {{ data.redeemCost | accountBalance : data.offerType! }}
+
+                }
               </td>
 
               <!-- <td nzEllipsis>
@@ -343,5 +342,5 @@ export class OfferListComponent extends BaseListComponent<Offer> {
   isOfferRemove = computed(() => true);
   isOfferView = computed(() => true);
   readonly AccountTypes = AccountTypes;
-  protected readonly SIZE_COLUMNS = SIZE_COLUMNS; 
+  protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

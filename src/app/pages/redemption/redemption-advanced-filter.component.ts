@@ -65,7 +65,7 @@ import { RedemptionUiService } from "./redemption-ui.service";
           <nz-form-control>
             <app-location-select
               showAll="AllLocation"
-              [showAllOption]="true" 
+              [showAllOption]="true"
               formControlName="locationId"
             ></app-location-select>
           </nz-form-control>
