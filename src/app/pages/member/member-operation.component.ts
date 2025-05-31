@@ -18,8 +18,7 @@ import { first, Observable, Observer, Subscription } from "rxjs";
 import { AccountService } from "../account/account.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
-import { AccountUiService } from "../account/account-ui.service";
-import { getAccountBalance } from "../../utils/components/get-account-balance";
+import { AccountUiService } from "../account/account-ui.service";  
 import { RedemptionService } from "../redemption/redemption.service";
 import { RedemptionUiService } from "../redemption/redemption-ui.service";
 
@@ -151,7 +150,7 @@ import { RedemptionUiService } from "../redemption/redemption-ui.service";
                   style="margin-right: 8px;"
                 ></i>
                 <div>
-                  {{ getAccountBalance(account.accountType, account.balance) }}
+                    {{ account.balance | accountBalance : account.accountType }} 
                 </div>
               </div>
             </li>
@@ -800,8 +799,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
 
   get sortedAccounts() {
     return (this.model?.accounts ?? []).slice().sort((a, b) => {
-      if (a.accountId === AccountTypes.Wallet) return -1;
-      if (b.accountId === AccountTypes.Wallet) return 1;
+      if (a.accountType === AccountTypes.Wallet) return -1;
+      if (b.accountType === AccountTypes.Wallet) return 1;
       return 0;
     });
   }
@@ -815,6 +814,5 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   }
 
   protected readonly AccountTypes = AccountTypes;
-  protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
-  readonly getAccountBalance = getAccountBalance;
+  protected readonly LOOKUP_TYPE = LOOKUP_TYPE; 
 }

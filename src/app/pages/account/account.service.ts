@@ -8,6 +8,7 @@ import { Injectable } from "@angular/core";
 import { SettingService } from "../../app-setting";
 import { Observable } from "rxjs";
 import { Attachment } from "../member/member.service";
+import { LookupItem } from "../lookup/lookup-item/lookup-item.service";
 
 export interface Account {
   memberId?: number;
@@ -90,6 +91,22 @@ export class AccountService extends BaseApiService<Account> {
           ),
       }
     );
+  }
+
+  getTransType(query: QueryParam): Observable<SearchResult<LookupItem>> {
+    return this.httpClient.get<SearchResult<LookupItem>>(`${this.getUrl()}/trans-type`, {
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+      }),
+      params: new HttpParams()
+        .append("pageIndex", `${query.pageIndex}`)
+        .append("pageSize", `${query.pageSize}`)
+        .append("sorts", `${query.sorts === undefined ? "" : query.sorts}`)
+        .append(
+          "filters",
+          `${query.filters === undefined ? "" : query.filters}`
+        ),
+    });
   }
 
   override add(model: TransactionAdjust): Observable<TransactionAdjust> {

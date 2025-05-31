@@ -30,7 +30,6 @@ import {
   LookupItem,
   LookupItemService,
 } from "../lookup/lookup-item/lookup-item.service";
-import { getAccountBalance } from "../../utils/components/get-account-balance";
 import { DatetimeHelper } from "../../helpers/datetime-helper";
 import { Subscription } from "rxjs";
 

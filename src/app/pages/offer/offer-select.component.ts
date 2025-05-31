@@ -17,7 +17,6 @@ import { Offer, OfferService } from "./offer.service";
 import { OfferUiService } from "./offer-ui.service";
 import { Filter } from "../../utils/services/base-api.service";
 import { AccountTypes } from "../lookup/lookup-type.service";
-import { getAccountBalance } from "../../utils/components/get-account-balance";
 
 @Component({
   providers: [
@@ -65,7 +64,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
             {{ item?.name }}
           </span>
           <span style="margin-left-auto">
-            {{ getAccountBalance(item?.redeemWith!, item?.redeemCost) }}
+            {{ item?.redeemCost | accountBalance : item?.redeemWith! }}
           </span>
         </div>
       </nz-option>
@@ -144,7 +143,7 @@ export class OfferSelectComponent
 
   readonly AccountTypes = AccountTypes;
   protected override getCustomFilters(): Filter[] {
-    const filters: Filter[] = []; 
+    const filters: Filter[] = [];
 
     if (this.memberId && this.isAvailable) {
       filters.push({
@@ -165,7 +164,7 @@ export class OfferSelectComponent
     }
   }
 
-  override search(delay: number = 50) { 
+  override search(delay: number = 50) {
     if (this.isLoading()) return;
     this.isLoading.set(true);
     setTimeout(() => {
@@ -213,6 +212,5 @@ export class OfferSelectComponent
     this.selectedObject.emit(selectedOffer);
   }
 
-  getAccountBalance = getAccountBalance;
   isOfferAdd = signal<boolean>(true);
 }

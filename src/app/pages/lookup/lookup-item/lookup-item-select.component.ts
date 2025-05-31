@@ -20,6 +20,7 @@ import { AuthService } from "../../../helpers/auth.service";
 import { BaseSelectComponent } from "../../../utils/components/base-select.component";
 import { AuthKeys } from "../../../const";
 import { REMOVE_STYLES_ON_COMPONENT_DESTROY } from "@angular/platform-browser";
+import { AccountService } from "../../account/account.service";
 @Component({
   providers: [
     {
@@ -141,6 +142,7 @@ import { REMOVE_STYLES_ON_COMPONENT_DESTROY } from "@angular/platform-browser";
 export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem> {
   constructor(
     service: LookupItemService,
+    accountService: AccountService,
     uiService: LookupItemUiService,
     sessionStorageService: SessionStorageService,
     public translate: TranslateService,
@@ -175,8 +177,6 @@ export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem> {
       this.service.search(this.param()).subscribe({
         next: (result: { results: LookupItem[] }) => {
           this.isLoading.set(false);
-          console.log(this.removedData());
-
           if (this.removedData().length > 0) {
             this.lists.set(
               result.results.filter(

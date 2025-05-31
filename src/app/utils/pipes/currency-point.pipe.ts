@@ -8,17 +8,19 @@ import { AccountTypes } from "../../pages/lookup/lookup-type.service";
 export class AccountBalancePipe implements PipeTransform {
   transform(balance: number | null | undefined, type: number): string {
     const safeBalance = Number(balance);
-    const formattedBalance = isNaN(safeBalance)
-      ? "0.00"
-      : safeBalance.toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
+    if (isNaN(safeBalance)) {
+      return type === AccountTypes.Wallet ? "$ 0.00" : "0 pts";
+    }
 
     if (type === AccountTypes.Wallet) {
-      return `$ ${formattedBalance}`;
+      // Format with 2 decimal places
+      return `$ ${safeBalance.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
     } else {
-      return `${formattedBalance} pts`;
+      // Format with no decimal places
+      return `${Math.floor(safeBalance).toLocaleString("en-US")} pts`;
     }
   }
 }

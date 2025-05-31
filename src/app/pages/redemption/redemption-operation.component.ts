@@ -23,7 +23,6 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { Observable, Subscriber, Subscription } from "rxjs";
 import { Currency, CurrencyService } from "../currency/currency.service";
 import { ReportService } from "../report/report.service";
-import { getAccountBalance } from "../../utils/components/get-account-balance";
 
 @Component({
   selector: "app-redemption-operation",
@@ -143,7 +142,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                           "
                           nzTheme="outline"
                         ></i>
-                        {{ getAccountBalance(a.accountType, a.balance) }}
+                        {{ a.balance | accountBalance : a.accountType }}
                       </div>
                     </div>
                   </div>
@@ -240,17 +239,15 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                 >
                   <strong>
                     {{
-                      getAccountBalance(
-                        selectedOffer.redeemWith!,
-                        selectedOffer.redeemCost
-                      )
+                      selectedOffer.redeemCost
+                        | accountBalance : selectedOffer.redeemWith!
                     }}
                   </strong>
 
                   <nz-input-number
                     nzSize="small"
                     style="width: 60px; margin-left:auto"
-                    formControlName="qty"  
+                    formControlName="qty"
                     [nzMin]="1"
                     [nzStep]="1"
                   ></nz-input-number>
@@ -271,6 +268,7 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
                     style="width: 100%"
                   >
                     <span>-</span>
+
                     <nz-input-number
                       nzSize="small"
                       style="width: 60px; margin-left:auto"
@@ -398,6 +396,13 @@ import { getAccountBalance } from "../../utils/components/get-account-balance";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
   styles: ` 
+  .qty-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  column-gap: 8px;
+  color: #fafafa;
+}
+
   :host ::ng-deep .anticon-delete {
     color:red !important;
   }
@@ -464,8 +469,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   selectedMember: Member | null = null;
-  memberSub$ = new Subscription(); 
-  settingSub$ = new Subscription(); 
   selectedOffer: Offer | null = null;
   extData: { cardNumber: String; startBalance: number; endingBalance: number } =
     { cardNumber: "", startBalance: 0, endingBalance: 0 };
@@ -475,20 +478,18 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     super.ngOnInit();
     this.getReports();
     if (!this.modal?.isView) {
-      this.settingSub$ = this.systemSettingService
-        .find(SETTING_KEY.RedemptionAutoId)
-        .subscribe({
-          next: (value?: string) => {
-            if (Number(value) !== 0) {
-              this.frm.get("redeemNo")?.disable();
-            }
-          },
-        });
+      this.systemSettingService.find(SETTING_KEY.RedemptionAutoId).subscribe({
+        next: (value?: string) => {
+          if (Number(value) !== 0) {
+            this.frm.get("redeemNo")?.disable();
+          }
+        },
+      });
     }
   }
   reports: Report[] = [];
   getReports() {
-   this.reportService
+    this.reportService
       .search({
         pageIndex: 1,
         pageSize: 9999999,
@@ -520,8 +521,8 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   onMemberChange() {
     const memberId = this.frm.get("memberId")?.value;
 
-    if (memberId != null ) {
-      this.memberSub$ = this.memberService.find(memberId).subscribe({
+    if (memberId != null) {
+      this.memberService.find(memberId).subscribe({
         next: (m: any) => {
           this.selectedMember = m;
           if (!this.modal?.isView) this.selectedOffer = null; // prevent reset selected offer because this block run on init
@@ -530,6 +531,21 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
           console.error("Failed to fetch member detail:", err);
         },
       });
+    }
+  }
+
+  incrementQty() {
+    console.log("shdiahgeahnf;aiewh");
+
+    const current = this.frm.get("qty")?.value;
+    this.frm.get("qty")?.setValue(current + 1);
+    console.log(this.frm.get("qty")?.value);
+  }
+
+  decrementQty(): void {
+    const current = this.frm.get("qty")?.value;
+    if (current > 1) {
+      this.frm.get("qty")?.setValue(current - 1);
     }
   }
 
@@ -579,60 +595,58 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       extData: [null],
     });
 
-    if (!this.modal?.isView) {
-      if (this.modal?.memberId) {
-        setTimeout(() => {
-          this.frm.get("memberId")?.setValue(this.modal.memberId);
-          this.frm.get("memberId")?.disable();
-          this.onMemberChange();
-        }, 50);
-      }
-      this.frm.controls["memberId"]?.valueChanges.subscribe({
-        next: () => {
-          setTimeout(() => {
-            if (!this.modal?.isView) {
-              this.frm.get("offerId")?.enable();
-              this.frm.get("offerId")?.setValue(null);
-            } else {
-              // this.onMemberChange();
-              this.frm.get("offerId")?.setValue(this.model?.offerId);
-            }
-            this.onMemberChange();
-            this.remainingBalance();
-          }, 50);
-        },
-      });
-
-      this.frm.controls["qty"]?.valueChanges.subscribe({
-        next: () => {
-          setTimeout(() => {
-            this.setAmountControl();
-            this.setExtDataControl();
-            this.remainingBalance();
-          }, 50);
-        },
-      });
-
-      this.frm.controls["offerId"]?.valueChanges.subscribe({
-        next: () => {
-          setTimeout(() => {
-            this.selectedAccount =
-              this.selectedMember?.accounts?.find(
-                (a) => a.accountType == this.selectedOffer?.redeemWith
-              ) ?? null;
-
-            this.frm
-              .get("accountId")
-              ?.setValue(this.selectedAccount?.accountId);
-            this.setAmountControl();
-            this.setExtDataControl();
-
-            this.getCurrectBalance();
-            this.remainingBalance();
-          }, 50);
-        },
-      });
+    // if (!this.modal?.isView) {
+    if (this.modal?.memberId) {
+      setTimeout(() => {
+        this.frm.get("memberId")?.setValue(this.modal.memberId);
+        this.frm.get("memberId")?.disable();
+        this.onMemberChange();
+      }, 50);
     }
+    this.frm.controls["memberId"]?.valueChanges.subscribe({
+      next: () => {
+        setTimeout(() => {
+          if (!this.modal?.isView) {
+            this.frm.get("offerId")?.enable();
+            this.frm.get("offerId")?.setValue(null);
+          } else {
+            // this.onMemberChange();
+            this.frm.get("offerId")?.setValue(this.model?.offerId);
+          }
+          this.onMemberChange();
+          this.remainingBalance();
+        }, 50);
+      },
+    });
+
+    this.frm.controls["qty"]?.valueChanges.subscribe({
+      next: () => {
+        setTimeout(() => {
+          this.setAmountControl();
+          this.setExtDataControl();
+          this.remainingBalance();
+        }, 50);
+      },
+    });
+
+    this.frm.controls["offerId"]?.valueChanges.subscribe({
+      next: () => {
+        setTimeout(() => {
+          this.selectedAccount =
+            this.selectedMember?.accounts?.find(
+              (a) => a.accountType == this.selectedOffer?.redeemWith
+            ) ?? null;
+
+          this.frm.get("accountId")?.setValue(this.selectedAccount?.accountId);
+          this.setAmountControl();
+          this.setExtDataControl();
+
+          this.getCurrectBalance();
+          this.remainingBalance();
+        }, 50);
+      },
+    });
+    // }
   }
 
   setAmountControl() {
@@ -766,7 +780,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     }
 
     if (this.model.offerId && this.modal?.isView) {
-       this.offerService.find(this.model.offerId).subscribe({
+      this.offerService.find(this.model.offerId).subscribe({
         next: (d: any) => {
           this.selectedOffer = d;
           this.frm.get("offerId")?.setValue(this.model?.offerId);
@@ -801,9 +815,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   override ngOnDestroy(): void {
     this.refreshSub$?.unsubscribe();
-    this.memberSub$?.unsubscribe();  
   }
-  readonly getAccountBalance = getAccountBalance;
   readonly RedeemStatuses = RedeemStatuses;
   readonly AccountTypes = AccountTypes;
 }

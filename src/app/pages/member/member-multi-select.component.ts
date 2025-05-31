@@ -8,16 +8,22 @@ import {
   Output,
   ViewEncapsulation,
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms"; 
-import { Location, LocationService } from "./location.service";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { BaseMultipleSelectComponent } from "../../utils/components/base-multiple-select.component";
 import { TranslateService } from "@ngx-translate/core";
+import {
+  LookupItem,
+  LookupItemService,
+} from "../lookup/lookup-item/lookup-item.service";
+import { QueryParam } from "../../utils/services/base-api.service";
+import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { Member, MemberService } from "./member.service";
 @Component({
-  selector: "app-location-multi-select",
+  selector: "app-member-multi-select",
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => LocationMultiSelectComponent),
+      useExisting: forwardRef(() => MemberMultiSelectComponent),
       multi: true,
     },
   ],
@@ -39,12 +45,13 @@ import { TranslateService } from "@ngx-translate/core";
       style="width: 100%"
       (nzScrollToBottom)="searchMore()"
     >
-      <nz-option [nzValue]="0" [nzLabel]="'AllLocation' | translate"> </nz-option>
+      <nz-option [nzValue]="0" [nzLabel]="'AllLocation' | translate">
+      </nz-option>
       <nz-option
         *ngFor="let item of lists"
         nzCustomContent
         [nzValue]="item.id"
-        [nzLabel]="item.name+ ' '"
+        [nzLabel]="item.name + ' '"
       >
         <span class="b-name">{{ item.name }}</span>
       </nz-option>
@@ -89,7 +96,7 @@ import { TranslateService } from "@ngx-translate/core";
       .b-code {
         font-weight: bolder;
       }
-    
+
       ::ng-deep .ant-select-item-group {
         color: rgba(0, 0, 0, 0.4);
       }
@@ -104,11 +111,11 @@ import { TranslateService } from "@ngx-translate/core";
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class LocationMultiSelectComponent
-  extends BaseMultipleSelectComponent<Location>
+export class MemberMultiSelectComponent
+  extends BaseMultipleSelectComponent<Member>
   implements OnInit, ControlValueAccessor, OnDestroy
 {
-  constructor(service: LocationService, translate: TranslateService) {
+  constructor(service: MemberService, translate: TranslateService) {
     super(translate, service);
   }
 }

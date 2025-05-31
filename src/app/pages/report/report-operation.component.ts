@@ -30,12 +30,20 @@ import { timer } from "rxjs";
 import { NotificationService } from "../../utils/services/notification.service";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { LocationMultiSelectComponent } from "../location/location-multi-select.component";
+import { AccountTypes, TransactionTypes } from "../lookup/lookup-type.service";
+import { LookupItemSelectComponent } from "../lookup/lookup-item/lookup-item-select.component";
+import { AccountMultiSelectComponent } from "../account/account-multi-select.component";
+import { TransactionMultiSelectComponent } from "../transaction/transaction-multi-select.component";
+import { MemberMultiSelectComponent } from "../member/member-multi-select.component";
 export let ParamSelectComponent = {
   StatusType: LookupMultipleSelectComponent,
   StaticDropdownMultipleSelect: StaticDropdownMultipleSelectComponent,
   StaticDropdownSingleSelect: StaticDropdownSingleSelectComponent,
   DateRange: DateRangeInputReportComponent,
   Locations: LocationMultiSelectComponent,
+  AccountTypes: AccountMultiSelectComponent,
+  TransactionTypes: TransactionMultiSelectComponent,
+  Members: MemberMultiSelectComponent,
 };
 
 @Component({

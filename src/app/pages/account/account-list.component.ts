@@ -25,9 +25,7 @@ import {
   LOOKUP_TYPE,
   TransactionTypes,
 } from "../lookup/lookup-type.service";
-import { getAccountBalance } from "../../utils/components/get-account-balance";
 import { DatetimeHelper } from "../../helpers/datetime-helper";
-import { CurrencyService } from "../currency/currency.service";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -48,18 +46,16 @@ import { Subscription } from "rxjs";
           </div>
 
           <div class="filter-box">
-            <app-lookup-item-select
+            <app-transaction-type-select
               class="fixed-width-select"
-              showAll="AllTransactionType"
               [showAllOption]="true"
-              [removedData]="removedData()"
+              [accountType]="accountType!"
               storageKey="acc-trans-type-list-search"
-              [lookupType]="LOOKUP_TYPE.TransactionType"
               (valueChanged)="
                 typeId.set($event); param().pageIndex = 1; search()
               "
             >
-            </app-lookup-item-select>
+            </app-transaction-type-select>
           </div>
 
           <div class="filter-box">
@@ -98,7 +94,6 @@ import { Subscription } from "rxjs";
               )
             "
           >
-            <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Adjust" | translate }}
           </button>
           @if(isTopup){
@@ -115,7 +110,6 @@ import { Subscription } from "rxjs";
               )
             "
           >
-            <i nz-icon nzType="plus" nzTheme="outline"></i>
             {{ "Topup" | translate }}
           </button>
           } @else{
@@ -132,8 +126,7 @@ import { Subscription } from "rxjs";
               )
             "
           >
-            <i nz-icon nzType="plus" nzTheme="outline"></i>
-            {{ "Reward" | translate }}
+            {{ "Earn" | translate }}
           </button>
           }
         </div>
@@ -213,11 +206,6 @@ import { Subscription } from "rxjs";
                     ? data.typeNameEn
                     : data.typeNameKh
                 }}
-                {{
-                  data.type == TransactionTypes.Redeem
-                    ? " - " + data.offerName
-                    : ""
-                }}
               </td>
 
               <td nzEllipsis>{{ data.locationName }}</td>
@@ -228,14 +216,14 @@ import { Subscription } from "rxjs";
                 [ngStyle]="{
                   color:
                     data.amount! > 0
-                      ? 'green'
+                      ? 'black'
                       : data.amount! < 0
                       ? 'red'
                       : 'black',
                   'font-weight': 'semi-bold'
                 }"
               >
-                {{ getAccountBalance(data.accountType!, data.amount) }}
+                {{ data.amount | accountBalance : data.accountType! }}
               </td>
             </tr>
           </tbody>
@@ -271,11 +259,6 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   @Input() accountId = 0;
   @Input() accountType = 0;
   transDate: any = [];
-  removedData = computed(() =>
-    this.accountType == AccountTypes.Wallet
-      ? [TransactionTypes.Earn]
-      : [TransactionTypes.Topup]
-  );
   isTransactionView = computed(() => true);
   isAccountTopup = computed(() => true);
   isAccountReward = computed(() => true);
@@ -349,7 +332,6 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   readonly AccountTypes = AccountTypes;
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   readonly TransactionTypes = TransactionTypes;
-  readonly getAccountBalance = getAccountBalance;
   override ngOnDestroy(): void {
     this.refreshSub?.unsubscribe();
     this.accountRefresh$?.unsubscribe();
