@@ -4,7 +4,8 @@ import {
   OnInit,
   AfterViewInit,
   Output,
-  EventEmitter, ViewEncapsulation,
+  EventEmitter,
+  ViewEncapsulation,
 } from "@angular/core";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ReportParam } from "./report.service";
@@ -57,7 +58,7 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
         [(nzVisible)]="isVisible"
         (nzOnCancel)="isVisible = false"
         nzWidth="400px"
-        [nzBodyStyle]="{ padding: '5px 20px' }"
+        [nzBodyStyle]="{ padding: '5px 20px 20px 20px', display: 'grid', gap: '18px' }"
       >
         <div *nzModalTitle>
           <div style="text-align: center">
@@ -92,8 +93,11 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
   styles: [
     `
       [nz-form] {
+        padding-top: 0px;
+      }
+      [nz-form] {
         .ant-form-item {
-          margin-bottom: 0 !important;
+          margin-bottom: 0px !important;
         }
       }
       ::ng-deep .ant-select-multiple .ant-select-selector {
@@ -106,7 +110,8 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
     `,
   ],
   standalone: false,
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ["../../../assets/scss/operation.style.scss"],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ReportFilterComponent implements OnInit, AfterViewInit {
   constructor(private fb: FormBuilder) {}
