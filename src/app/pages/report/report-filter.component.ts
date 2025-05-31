@@ -58,7 +58,11 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
         [(nzVisible)]="isVisible"
         (nzOnCancel)="isVisible = false"
         nzWidth="400px"
-        [nzBodyStyle]="{ padding: '5px 20px 20px 20px', display: 'grid', gap: '18px' }"
+        [nzBodyStyle]="{
+          padding: '5px 20px 20px 20px',
+          display: 'grid',
+          gap: '18px'
+        }"
       >
         <div *nzModalTitle>
           <div style="text-align: center">
@@ -236,6 +240,7 @@ export class ReportFilterComponent implements OnInit, AfterViewInit {
   resetForm() {
     // Work only with muti select component
     this.formItemModal.forEach((item) => {
+      this.frm.controls[item.key || ""].setValue([0]);
       // if (
       //   item.type === 'Branches' &&
       //   !this.authService.isAuthorized(
@@ -245,6 +250,7 @@ export class ReportFilterComponent implements OnInit, AfterViewInit {
       //   this.frm.controls[item.key || ''].setValue([this.branch?.id]);
       // } else this.frm.controls[item.key || ''].setValue([0]);
     });
+    this.submit();
   }
 
   ngAfterViewInit(): void {}

@@ -45,8 +45,7 @@ import { Member, MemberService } from "./member.service";
       style="width: 100%"
       (nzScrollToBottom)="searchMore()"
     >
-      <nz-option [nzValue]="0" [nzLabel]="'AllMember' | translate">
-      </nz-option>
+      <nz-option [nzValue]="0" [nzLabel]="'AllMember' | translate"> </nz-option>
       <nz-option
         *ngFor="let item of lists"
         nzCustomContent
@@ -85,6 +84,9 @@ import { Member, MemberService } from "./member.service";
 
   styles: [
     `
+      .div-bottom {
+        margin: 4px 4px 0 4px;
+      }
       nz-select {
         width: 100%;
       }

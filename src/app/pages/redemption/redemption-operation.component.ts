@@ -519,8 +519,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   };
   memberLoading = false;
   onMemberChange() {
-    console.log("dddd");
-
     if (this.memberLoading) return;
 
     const memberId = this.frm.get("memberId")?.value;
@@ -530,7 +528,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       setTimeout(() => {
         this.memberService.find(memberId).subscribe({
           next: (m: any) => {
-            console.log("df");
             this.selectedMember = m;
             if (!this.modal?.isView) this.selectedOffer = null;
             this.memberLoading = false;

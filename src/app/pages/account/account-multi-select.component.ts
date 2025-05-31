@@ -122,18 +122,14 @@ export class AccountMultiSelectComponent
     pageIndex: 1,
     sorts: "",
     filters: "",
-  };
-  override ngOnInit(): void {
-    this.search(this.onModalChange.bind(this));
-  }
-
+  }; 
   override search(callBack: Function = () => {}) {
     this.loading = true;
     const filters: any[] = [
-      { field: "search", operator: "contains", value: this.searchText },
+      { field: 'name', operator: 'contains', value: this.searchText },
       {
-        field: "lookupTypeId",
-        operator: "eq",
+        field: 'lookupTypeId',
+        operator: 'eq',
         value: LOOKUP_TYPE.AccountType,
       },
     ];
@@ -149,49 +145,18 @@ export class AccountMultiSelectComponent
           (x: any) => !this.lists.map((x) => x.id).includes(x.id)
         ),
       ];
-      let ids = this.lists.map((item) => {
-        return item.id;
-      });
-      if (
-        this.selectedValue.filter((x) => !ids.includes(x)).length > 0 &&
-        !this.searchText
-      ) {
-        let idsFilter =
-          this.selectedValue.filter((x) => !ids.includes(x)) ?? [];
-        const filters: any[] = [];
-        if (idsFilter[0] != 0) {
-          filters.push({
-            field: "ids",
-            operator: "contains",
-            value: JSON.stringify(idsFilter),
-          });
-        }
-        this.param.filters = JSON.stringify(filters);
-        if (filters.length == 0) {
-          this.loading = false;
-          return;
-        }
-
-        this.service.search(this.param).subscribe({
-          next: (result: any) => {
-            this.loading = false;
-            return this.lists.push(
-              ...result.results.filter(
-                (x: any) => !this.lists.map((x) => x.id).includes(x.id)
-              )
-            );
-          },
-          error: (error: any) => {
-            console.log(error);
-            this.loading = false;
-          },
-        });
-      } else {
-        this.loading = false;
-      }
+      this.loading = false;
       callBack();
     });
   }
-
+  override formatOutputValue() {
+    return {
+      id: this.selectedValue.join(),
+      label: this.lists
+        .filter((x) => this.selectedValue.includes(x.valueId))
+        .map((x) => x.name)
+        .join(),
+    };
+  }
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }

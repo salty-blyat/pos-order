@@ -17,14 +17,16 @@ import {
 } from "../lookup/lookup-type.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { SettingService } from "../../app-setting";
-import { Observable, Subscription } from "rxjs"; 
+import { Observable, Subscription } from "rxjs";
 import { CurrencyService } from "../currency/currency.service";
 
 @Component({
   selector: "app-account-operation",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
-      <span *ngIf="!modal?.id">  {{ modal?.type | transactionTypeName | translate }}</span>
+      <span *ngIf="!modal?.id">
+        {{ modal?.type | transactionTypeName | translate }}</span
+      >
       <span *ngIf="modal?.id && !modal?.isView"
         >{{ "Edit" | translate }}
         {{ model?.transNo || ("Loading" | translate) }}</span
@@ -181,7 +183,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   ) {
     super(fb, ref, service, uiService);
   }
-  
+
   fileList: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   disabled = false;
@@ -196,8 +198,6 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   accountRefresh$ = new Subscription();
   settingRefresh$ = new Subscription();
   override ngOnInit(): void {
-    console.log(this.selectedAccount);
-    
     super.ngOnInit();
     if (!this.modal?.isView) {
       this.settingRefresh$ = this.systemSettingService
@@ -321,7 +321,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
 
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   readonly TransactionTypes = TransactionTypes;
-  AccountTypes = AccountTypes; 
+  AccountTypes = AccountTypes;
 
   setExtDataControl() {
     this.extData = JSON.stringify({
