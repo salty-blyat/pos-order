@@ -338,7 +338,7 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
       sorts: "-redeemedDate",
       filters: "",
     });
-    this.uiService.refresher.subscribe((result) => {
+    this.refreshSub = this.uiService.refresher.subscribe((result) => {
       if (result.key === "advanced-filter-redemption") {
         this.setAdvancedFilter(result.value);
       }
@@ -351,7 +351,6 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
         this.sessionStorageService.getValue(this.advancedStoreKey)
       );
     }
-    super.ngOnInit();
     this.getStatus();
   }
   getAdvancedFilter() {
@@ -394,7 +393,7 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
 
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
-    if (this.memberId()) {
+    if (this.memberId() != 0) {
       filters.push({
         field: "memberId",
         operator: "eq",
@@ -461,7 +460,7 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
   readonly RedeemStatuses = RedeemStatuses;
 
   override ngOnDestroy(): void {
-    this.refreshSub.unsubscribe();
-    this.lookupRefresh$.unsubscribe();
+    this.refreshSub?.unsubscribe();
+    this.lookupRefresh$?.unsubscribe();
   }
 }

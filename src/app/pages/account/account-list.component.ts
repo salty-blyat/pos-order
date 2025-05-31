@@ -44,6 +44,15 @@ import { Subscription } from "rxjs";
               "
             ></app-filter-input>
           </div>
+          
+          <div class="filter-box">
+            <app-date-range-input
+              storageKey="account-date-range"
+              (valueChanged)="
+                transDate = $event; param().pageIndex = 1; search()
+              "
+            ></app-date-range-input>
+          </div>
 
           <div class="filter-box">
             <app-transaction-type-select
@@ -56,15 +65,6 @@ import { Subscription } from "rxjs";
               "
             >
             </app-transaction-type-select>
-          </div>
-
-          <div class="filter-box">
-            <app-date-range-input
-              storageKey="account-date-range"
-              (valueChanged)="
-                transDate = $event; param().pageIndex = 1; search()
-              "
-            ></app-date-range-input>
           </div>
 
           <div class="filter-box">

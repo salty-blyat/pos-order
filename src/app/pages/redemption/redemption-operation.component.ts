@@ -403,7 +403,7 @@ import { ReportService } from "../report/report.service";
   color: #fafafa;
 }
 
-  :host ::ng-deep .anticon-delete {
+  :host   .anticon-delete {
     color:red !important;
   }
   :host .delete{
@@ -517,35 +517,30 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     showRemoveIcon: true,
     showDownloadIcon: false,
   };
-
+  memberLoading = false;
   onMemberChange() {
+    console.log("dddd");
+
+    if (this.memberLoading) return;
+
     const memberId = this.frm.get("memberId")?.value;
 
     if (memberId != null) {
-      this.memberService.find(memberId).subscribe({
-        next: (m: any) => {
-          this.selectedMember = m;
-          if (!this.modal?.isView) this.selectedOffer = null; // prevent reset selected offer because this block run on init
-        },
-        error: (err) => {
-          console.error("Failed to fetch member detail:", err);
-        },
-      });
-    }
-  }
-
-  incrementQty() {
-    console.log("shdiahgeahnf;aiewh");
-
-    const current = this.frm.get("qty")?.value;
-    this.frm.get("qty")?.setValue(current + 1);
-    console.log(this.frm.get("qty")?.value);
-  }
-
-  decrementQty(): void {
-    const current = this.frm.get("qty")?.value;
-    if (current > 1) {
-      this.frm.get("qty")?.setValue(current - 1);
+      this.memberLoading = true;
+      setTimeout(() => {
+        this.memberService.find(memberId).subscribe({
+          next: (m: any) => {
+            console.log("df");
+            this.selectedMember = m;
+            if (!this.modal?.isView) this.selectedOffer = null;
+            this.memberLoading = false;
+          },
+          error: (err) => {
+            console.error("Failed to fetch member detail:", err);
+            this.memberLoading = false;
+          },
+        });
+      }, 50);
     }
   }
 
@@ -595,7 +590,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       extData: [null],
     });
 
-    // if (!this.modal?.isView) {
     if (this.modal?.memberId) {
       setTimeout(() => {
         this.frm.get("memberId")?.setValue(this.modal.memberId);
@@ -603,6 +597,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         this.onMemberChange();
       }, 50);
     }
+
     this.frm.controls["memberId"]?.valueChanges.subscribe({
       next: () => {
         setTimeout(() => {
@@ -614,6 +609,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
             this.frm.get("offerId")?.setValue(this.model?.offerId);
           }
           this.onMemberChange();
+          this.getCurrectBalance();
           this.remainingBalance();
         }, 50);
       },
@@ -646,7 +642,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         }, 50);
       },
     });
-    // }
   }
 
   setAmountControl() {
