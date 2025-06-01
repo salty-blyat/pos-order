@@ -266,7 +266,7 @@ export let ParamSelectComponent = {
                       <textarea
                         nz-input
                         formControlName="initParam"
-                        rows="1"
+                        rows="4"
                       ></textarea>
                     </nz-form-control>
                   </nz-form-item>
