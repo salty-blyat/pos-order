@@ -100,10 +100,9 @@ import { MemberClassUiService } from "./member-class-ui.service";
       .option-text {
         font-size: 14px;
       }
+     
       .image-container {
-        height: 22px;
-        width: 22px;
-        border-radius: 50%;
+        height: 18px;  
       }
 
       .image-container img {

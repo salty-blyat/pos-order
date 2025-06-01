@@ -171,6 +171,7 @@ import { MemberMultiSelectComponent } from "./pages/member/member-multi-select.c
 import { TransactionMultiSelectComponent } from "./pages/transaction/transaction-multi-select.component";
 import { TransactionTypeSelectComponent } from "./pages/transaction/transaction-type-select.component";
 import { TransactionTypePipe } from "./utils/pipes/transaction-type.pipe";
+import { TimeInputComponent } from "./utils/components/time-input.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -218,6 +219,7 @@ export class CustomTranslate implements TranslateLoader {
     AccountBalancePipe,
     ChunkPipe,
     ConvertHourPipe,
+    TimeInputComponent,
     CustomDatePipe,
     CustomDateTimePipe,
     CustomHourPipe,

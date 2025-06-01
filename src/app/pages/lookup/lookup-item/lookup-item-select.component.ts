@@ -36,7 +36,7 @@ import { AccountService } from "../../account/account.service";
       [nzDropdownRender]="actionItem"
       [nzServerSearch]="true"
       [nzAllowClear]="allowClear()"
-      [nzDropdownMatchSelectWidth]='false'
+      [nzDropdownMatchSelectWidth]="false"
       [(ngModel)]="selected"
       (ngModelChange)="onModalChange()"
       (nzOnSearch)="searchText.set($event); param().pageIndex = 1; search()"
@@ -57,7 +57,7 @@ import { AccountService } from "../../account/account.service";
             : item.nameEn || item.name) || ''
         "
       >
-        <div class="b-name  option-container " nz-flex nzGap="small">
+        <div style="display: flex; align-items: baseline; gap: 8px;">
           <div class="image-container">
             <img *ngIf="item.image" [src]="item.image" alt="" />
             <img
@@ -66,6 +66,7 @@ import { AccountService } from "../../account/account.service";
               alt=""
             />
           </div>
+
           <span class="option-text">
             {{
               (this.translate.currentLang === "km"
@@ -95,6 +96,11 @@ import { AccountService } from "../../account/account.service";
   `,
   styles: [
     `
+      .image-container img {
+        height: 18px;
+        vertical-align: top;
+      }
+
       nz-select {
         width: 100%;
       }
@@ -113,28 +119,12 @@ import { AccountService } from "../../account/account.service";
       .image {
         padding: 0 !important;
       }
-
-      .image-list {
-        height: 38px;
-        object-fit: scale-down;
-      }
-
       .option-text {
         font-size: 14px;
       }
-      .image-container {
-        height: 22px;
-        width: 22px;
-        border-radius: 50%;
-      }
-
-      .image-container img {
-        width: 100%;
-        object-fit: cover;
-        height: 100%;
-        overflow: hidden;
-        border-radius: 50%;
-      }
+      // .image-container {
+      //   height: 18px;
+      // }
     `,
   ],
   standalone: false,
@@ -164,6 +154,7 @@ export class LookupItemSelectComponent extends BaseSelectComponent<LookupItem> {
   removedData = input<number[]>([]);
   typeLabelAll = input<string>("");
   isLookupAdd = signal(false);
+  showImage = input<boolean>(true);
 
   override search() {
     this.isLoading.set(true);

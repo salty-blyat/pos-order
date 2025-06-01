@@ -26,6 +26,7 @@ export interface Member {
 
 export interface MemberAccount {
   accountType: any;
+  accountTypeImage?: string;
   accountId?: number;
   balance?: number;
   accountTypeNameKh?: string;

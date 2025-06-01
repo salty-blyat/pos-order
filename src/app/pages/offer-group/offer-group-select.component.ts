@@ -86,8 +86,7 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
       }
 
       .image-container {
-        height: 22px;
-        width: 22px;
+        height: 18px;  
       }
 
       .image-container img {

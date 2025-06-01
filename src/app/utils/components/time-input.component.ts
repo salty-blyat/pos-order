@@ -9,7 +9,6 @@ import {
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
 import { BehaviorSubject } from "rxjs";
 import { SessionStorageService } from "../services/sessionStorage.service";
-import { DisabledTimeConfig } from "ng-zorro-antd/date-picker";
 
 interface IRecentFilter {
   key?: string;
@@ -17,75 +16,61 @@ interface IRecentFilter {
 }
 
 @Component({
-  selector: "app-date-input",
+  selector: "app-time-input",
   template: `
-    <nz-date-picker
-      [nzFormat]="nzShowTime ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd'"
+    <nz-time-picker
       [(ngModel)]="value"
-      [nzDisabledTime]="nzDisabledTime"
       (ngModelChange)="onModelChange($event)"
-      [nzShowToday]="true"
       [nzDisabled]="disabled"
-      nzMode="date"
-      [nzShowTime]="nzShowTime"
+      nzFormat="HH"
+      [nzAllowEmpty]="allowClear"
       style="width: 100% !important"
-      [nzAllowClear]="allowClear"
-    ></nz-date-picker>
+    ></nz-time-picker>
   `,
+  standalone: false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DateInputComponent),
+      useExisting: forwardRef(() => TimeInputComponent),
       multi: true,
     },
   ],
-  standalone: false,
 })
-export class DateInputComponent implements ControlValueAccessor, OnInit {
+export class TimeInputComponent implements ControlValueAccessor, OnInit {
   disabled = false;
   value: Date | null = null;
-  @Input() defaultValue: Date = new Date();
+
+  @Input() defaultValue: Date = new Date(new Date().setHours(0, 0, 0, 0));
+  @Input() storageKey!: string;
+  @Output() valueChange = new EventEmitter<any>();
+  @Input() allowClear: boolean = false;
+
   recentFilter = new BehaviorSubject<IRecentFilter[]>(
     this.sessionStorageService.getValue("recent-filter") ?? []
   );
-  @Input() storageKey!: string; // Input for storage key
-  @Output() valueChange = new EventEmitter<any>();
-  @Input() allowClear: boolean = false;
-  @Input() nzShowTime: boolean = false;
 
   constructor(private sessionStorageService: SessionStorageService) {}
 
-  nzDisabledTime = () => {
-    return {
-      nzDisabledHours: () => [],
-      nzDisabledMinutes: () => [],
-      nzDisabledSeconds: () => Array.from({ length: 60 }, (_, i) => i),
-    };
-  };
-
   ngOnInit(): void {
-    if (!this.value) {
-      this.value = new Date();
-    }
+    console.log(this.defaultValue);
 
-    // If storageKey is provided, try to load the saved date from sessionStorage
     if (this.storageKey) {
-      const savedDate = this.recentFilterValue(this.storageKey);
-      if (savedDate) {
-        this.value = new Date(savedDate);
+      const savedTime = this.recentFilterValue(this.storageKey);
+      if (savedTime) {
+        this.value = new Date(savedTime);
       } else {
-        // If no saved date, use the default value
         this.value = this.defaultValue;
       }
+    } else {
+      this.value = this.defaultValue;
     }
 
-    // Apply the default value
     this.applyDefaultValue(this.value);
   }
 
-  applyDefaultValue(values: any) {
+  applyDefaultValue(val: any) {
     try {
-      this.value = new Date(values);
+      this.value = new Date(val);
     } catch {
       this.value = new Date();
     }
@@ -94,12 +79,13 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
 
   onModelChange(date: Date | null) {
     if (date) {
+      date.setSeconds(0, 0); // Ensure no seconds/milliseconds
       const value = date.toISOString();
+
       this.valueChange.emit(value);
       this.onChangeCallback(value);
       this.onTouchedCallback(value);
 
-      // Save the selected date to sessionStorage if storageKey is provided
       if (this.storageKey) {
         this.emitRecentFilter({ key: this.storageKey, val: value });
       }
@@ -110,9 +96,9 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     const recentFilters: IRecentFilter[] =
       this.sessionStorageService.getValue("recent-filter") ?? [];
 
-    const exist = recentFilters.find((item) => item.key === recent.key);
-    if (exist) {
-      exist.val = recent.val;
+    const existing = recentFilters.find((item) => item.key === recent.key);
+    if (existing) {
+      existing.val = recent.val;
     } else {
       recentFilters.push(recent);
     }
@@ -126,7 +112,7 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
 
   recentFilterValue(key: string): any {
     return (
-      this.recentFilter.value.find((item: any) => item.key === key)?.val ?? null
+      this.recentFilter.value.find((item) => item.key === key)?.val ?? null
     );
   }
 
@@ -135,14 +121,14 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   onTouchedCallback: (val: any) => void = () => {};
 
   writeValue(val: any): void {
-    if (typeof val === "string") {
-      if (val.includes("T")) {
-        this.value = new Date(val.split("T")[0]);
-      } else {
-        this.value = val ? new Date(val) : null;
+    if (val) {
+      try {
+        this.value = new Date(val);
+      } catch {
+        this.value = null;
       }
     } else {
-      this.value = val;
+      this.value = null;
     }
   }
 

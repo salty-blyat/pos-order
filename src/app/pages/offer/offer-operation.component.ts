@@ -146,12 +146,14 @@ import {
             >{{ "StartAt" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="5">
-            <app-date-input formControlName="offerStartAt"> </app-date-input>
+            <app-date-input [nzShowTime]="true" formControlName="offerStartAt">
+            </app-date-input>
           </nz-form-control>
 
           <nz-form-label [nzSpan]="5"> {{ "EndAt" | translate }}</nz-form-label>
           <nz-form-control [nzSm]="5" nzErrorTip>
-            <app-date-input formControlName="offerEndAt"> </app-date-input>
+            <app-date-input [nzShowTime]="true" formControlName="offerEndAt">
+            </app-date-input>
           </nz-form-control>
         </nz-form-item>
 
