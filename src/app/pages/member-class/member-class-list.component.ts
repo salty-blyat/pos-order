@@ -74,10 +74,10 @@ import { NotificationService } from "../../utils/services/notification.service";
             <tr>
               <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
+              <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.IMAGE" nzAlign="center">
                 {{ "Image" | translate }}
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
 
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th nzEllipsis>{{ "Note" | translate }}</th>
@@ -110,6 +110,14 @@ import { NotificationService } from "../../utils/services/notification.service";
                         }
                 }}
               </td>
+              <td nzEllipsis style="flex: 1">
+                <a
+                  *ngIf="isMemberClassView()"
+                  (click)="uiService.showView(data.id!)"
+                  >{{ data.code }}</a
+                >
+                <span *ngIf="!isMemberClassView()"> {{ data.code }}</span>
+              </td>
               <td nzEllipsis class="image" nzAlign="center">
                 <img
                   *ngIf="data.photo"
@@ -125,14 +133,6 @@ import { NotificationService } from "../../utils/services/notification.service";
                   src="./assets/image/img-not-found.jpg"
                   alt=""
                 />
-              </td>
-              <td nzEllipsis style="flex: 1">
-                <a
-                  *ngIf="isMemberClassView()"
-                  (click)="uiService.showView(data.id!)"
-                  >{{ data.code }}</a
-                >
-                <span *ngIf="!isMemberClassView()"> {{ data.code }}</span>
               </td>
 
               <td nzEllipsis style="flex: 3">

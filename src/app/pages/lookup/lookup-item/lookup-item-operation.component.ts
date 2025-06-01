@@ -13,6 +13,7 @@ import { SettingService } from "../../../app-setting";
 import { BaseOperationComponent } from "../../../utils/components/base-operation.component";
 import { AuthKeys } from "../../../const";
 import { UUID } from "uuid-generator-ts";
+import { subscribeOn, Subscription } from "rxjs";
 
 @Component({
   selector: "app-lookup-item-operation",
@@ -286,8 +287,49 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     showRemoveIcon: true,
     showDownloadIcon: false,
   };
+  uploadRefresh$ = new Subscription();
   override ngOnInit(): void {
-    super.ngOnInit();
+    if (this.isLoading()) return;
+    this.initControl();
+    if (this.modal?.isView) {
+      this.frm.disable();
+      this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
+        if (e.key === "edited") {
+          this.isLoading.set(true);
+          this.service.find(this.modal?.id).subscribe({
+            next: (result: LookupItem) => {
+              this.model = result;
+              this.setFormValue();
+              if (this.model.image) {
+                this.file = [
+                  {
+                    uid: "",
+                    name: this.model.name!,
+                    url: this.model.image,
+                  },
+                ];
+              } else {
+                this.file = [];
+              }
+              this.isLoading.set(false);
+            },
+            error: (err: any) => {
+              console.log(err);
+            },
+          });
+        } else {
+          this.ref.triggerCancel().then();
+        }
+      });
+    }
+    if (this.modal?.id) {
+      this.isLoading.set(true);
+      this.service.find(this.modal?.id).subscribe((result: LookupItem) => {
+        this.model = result;
+        this.setFormValue();
+        this.isLoading.set(false);
+      });
+    }
     this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];
@@ -410,5 +452,10 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
         { url: this.model.image, uid: "", name: "" } as NzUploadFile,
       ];
     }
+  }
+
+  override ngOnDestroy(): void {
+    this.refreshSub$?.unsubscribe();
+    // this.uploadRefresh$?.unsubscribe();
   }
 }

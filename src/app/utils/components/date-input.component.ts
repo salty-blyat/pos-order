@@ -59,7 +59,8 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
     return {
       nzDisabledHours: () => [],
       nzDisabledMinutes: () => [],
-      nzDisabledSeconds: () => Array.from({ length: 60 }, (_, i) => i),
+      nzDisabledSeconds: () =>
+        Array.from({ length: 60 }, (_, i) => i).filter((i) => i !== 0),
     };
   };
 

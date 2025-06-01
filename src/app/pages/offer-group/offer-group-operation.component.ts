@@ -245,6 +245,8 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
               console.log(err);
             },
           });
+        } else {
+          this.ref.triggerCancel().then();
         }
       });
     }

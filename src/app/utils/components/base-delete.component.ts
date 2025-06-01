@@ -88,7 +88,7 @@ export class BaseDeleteComponent<T extends SharedDomain> implements OnInit {
     this.frm = this.fb.group({
       name: [{value:null, disabled: true}, required],
       note: [null],
-    });
+    });  
   }
   setFormValue(): void {
     this.frm.patchValue({

@@ -567,6 +567,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   accountRefreshSub = new Subscription();
   redemptionRefreshSub = new Subscription();
   systemRefresh = new Subscription();
+  uploadRefresh$ = new Subscription();
   file: NzUploadFile[] = [];
   submitRefresh = new Subscription();
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
@@ -648,7 +649,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       this.isLoading.set(true);
       refreshBalance();
     }
-    this.uiService.refresher.subscribe((e) => {
+    this.uploadRefresh$ = this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];
         if (e?.value) {
@@ -821,6 +822,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     this.redemptionRefreshSub?.unsubscribe();
     this.systemRefresh?.unsubscribe();
     this.submitRefresh?.unsubscribe();
+    this.uploadRefresh$?.unsubscribe();
   }
 
   protected readonly AccountTypes = AccountTypes;

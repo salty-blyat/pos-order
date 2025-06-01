@@ -22,8 +22,11 @@ interface IRecentFilter {
       [(ngModel)]="value"
       (ngModelChange)="onModelChange($event)"
       [nzDisabled]="disabled"
-      nzFormat="HH"
+      nzFormat="HH:mm:ss"
       [nzAllowEmpty]="allowClear"
+      [nzDisabledHours]="getDisabledHours"
+      [nzDisabledMinutes]="getDisabledMinutes"
+      [nzDisabledSeconds]="getDisabledSeconds"
       style="width: 100% !important"
     ></nz-time-picker>
   `,
@@ -52,20 +55,8 @@ export class TimeInputComponent implements ControlValueAccessor, OnInit {
   constructor(private sessionStorageService: SessionStorageService) {}
 
   ngOnInit(): void {
-    console.log(this.defaultValue);
-
-    if (this.storageKey) {
-      const savedTime = this.recentFilterValue(this.storageKey);
-      if (savedTime) {
-        this.value = new Date(savedTime);
-      } else {
-        this.value = this.defaultValue;
-      }
-    } else {
-      this.value = this.defaultValue;
-    }
-
-    this.applyDefaultValue(this.value);
+    this.value = new Date();
+    this.onModelChange(this.value);
   }
 
   applyDefaultValue(val: any) {
@@ -76,10 +67,20 @@ export class TimeInputComponent implements ControlValueAccessor, OnInit {
     }
     this.onModelChange(this.value);
   }
+  getDisabledHours = (): number[] => {
+    return Array.from({ length: 24 }, (_, i) => i).filter((i) => i !== 0);
+  };
+
+  getDisabledMinutes = (): number[] => {
+    return Array.from({ length: 60 }, (_, i) => i).filter((i) => i !== 0);
+  };
+
+  getDisabledSeconds = (): number[] => {
+    return Array.from({ length: 60 }, (_, i) => i); // disable all seconds
+  };
 
   onModelChange(date: Date | null) {
     if (date) {
-      date.setSeconds(0, 0); // Ensure no seconds/milliseconds
       const value = date.toISOString();
 
       this.valueChange.emit(value);

@@ -88,7 +88,7 @@ import { ReportService } from "../report/report.service";
                 }}</nz-form-label>
                 <nz-form-item>
                   <nz-form-control>
-                    <app-member-select formControlName="memberId" />
+                    <app-member-select formControlName="memberId" [loadMoreOption]="true" />
                   </nz-form-control>
                 </nz-form-item>
               </div>

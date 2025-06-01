@@ -90,6 +90,9 @@ import { NotificationService } from "../../../utils/services/notification.servic
               <th [nzWidth]="SIZE_COLUMNS.COLOR" nzEllipsis>
                 {{ "Color" | translate }}
               </th>
+              <th nzEllipsis>
+                {{ "Note" | translate }}
+              </th>
               <th [nzWidth]="SIZE_COLUMNS.ACTION"></th>
             </tr>
           </thead>
@@ -120,7 +123,7 @@ import { NotificationService } from "../../../utils/services/notification.servic
                         }
                 }}
               </td>
-              <td nzEllipsis class="image" nzAlign="center" style="flex: 1">
+              <td nzEllipsis class="image" nzAlign="center" style="flex: 2">
                 <img
                   *ngIf="data.image"
                   class="image-list"
@@ -136,7 +139,7 @@ import { NotificationService } from "../../../utils/services/notification.servic
                   alt=""
                 />
               </td>
-              <td nzEllipsis style="flex: 3">
+              <td nzEllipsis style="flex: 5">
                 <a
                   *ngIf="isLookupView()"
                   (click)="uiService.showView(data.id!)"
@@ -144,8 +147,8 @@ import { NotificationService } from "../../../utils/services/notification.servic
                 >
                 <span *ngIf="!isLookupView()">{{ data.name }}</span>
               </td>
-              <td nzEllipsis style="flex: 3">{{ data.nameEn }}</td>
-              <td nzEllipsis>
+              <td nzEllipsis style="flex: 6">{{ data.nameEn }}</td>
+              <td nzEllipsis style="flex: 3">
                 <div nz-flex>
                   <div
                     [ngStyle]="{ backgroundColor: data.color ?? 'white' }"
@@ -154,6 +157,7 @@ import { NotificationService } from "../../../utils/services/notification.servic
                   <span>{{ data.color | transparent }}</span>
                 </div>
               </td>
+              <td nzEllipsis style="flex: 3">{{ data.note }}</td> 
               <td class="col-action" style="flex: 4">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>

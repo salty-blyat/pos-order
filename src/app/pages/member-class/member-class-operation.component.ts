@@ -240,6 +240,8 @@ export class MemberClassOperationComponent extends BaseOperationComponent<Member
               console.log(err);
             },
           });
+        } else {
+          this.ref.triggerCancel().then();
         }
       });
     }

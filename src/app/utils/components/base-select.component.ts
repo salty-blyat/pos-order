@@ -42,13 +42,14 @@ export class BaseSelectComponent<T extends SharedDomain>
   valueChanged = output<any>();
   componentId: string = UUID.createUUID();
   disabled = signal<boolean>(false);
+  loadMoreOption = input<boolean>(false);
   isLoading = signal<boolean>(false);
   selected = signal<number>(0);
   isDefault = input<boolean>(false);
   refreshSub$: any;
   lists = signal<T[]>([]);
   param = signal<QueryParam>({
-    pageSize: 9999999,
+    pageSize: this.loadMoreOption() ? 25 : 999999,
     pageIndex: 1,
     sorts: "",
     filters: "",
@@ -100,15 +101,51 @@ export class BaseSelectComponent<T extends SharedDomain>
         this.lists.set([]);
       }
       this.service.search(this.param()).subscribe({
-        next: (result: { results: T[] }) => {
-          this.isLoading.set(false);
-          this.lists.set(result.results);
+        next: (result: { results: T[]; param: QueryParam }) => {
+          this.param.set(result.param);
           if (
             this.isDefault() &&
             this.selected() == 0 &&
             this.lists().length > 0
           ) {
-            this.selected.set(this.lists()[0]?.id!);
+            this.selected.set(result.results[0]?.id!);
+            this.onModalChange();
+          }
+          if (this.loadMoreOption()) {
+            console.log("trigger");
+            
+            this.lists.update((value) => [
+              ...value,
+              ...result.results.filter(
+                (x: any) =>
+                  !this.lists()
+                    .map((x) => x.id)
+                    .includes(x.id)
+              ),
+            ]);
+            if (
+              this.selected() &&
+              !this.searchText() &&
+              !this.lists()
+                .map((x) => x.id)
+                .includes(this.selected())
+            ) {
+              this.service.find(this.selected()).subscribe({
+                next: (result: T) => {
+                  this.isLoading.set(false);
+                  return this.lists.update((value) =>
+                    [...value, result].sort((a, b) => a.id! - b.id!)
+                  );
+                },
+                error: (error: any) => console.log(error),
+              });
+              this.lists().sort((a, b) => a.id! - b.id!);
+            } else {
+              this.isLoading.set(false);
+            }
+          } else {
+            this.lists.set(result.results);
+            this.isLoading.set(false);
           }
         },
         error: (err) => {
@@ -117,6 +154,13 @@ export class BaseSelectComponent<T extends SharedDomain>
       });
     }, delay);
   }
+  searchMore() {
+    if (this.param().pageIndex! < this.param().pageCount!) {
+      this.param().pageIndex! += 1;
+      this.search();
+    }
+  }
+
   onModalChange() {
     this.valueChanged.emit(this.selected());
     this.onChangeCallback(this.selected());

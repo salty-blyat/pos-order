@@ -1,6 +1,7 @@
 import {
   Component,
   forwardRef,
+  InputSignal,
   signal,
   ViewEncapsulation,
 } from "@angular/core";
@@ -27,6 +28,7 @@ import { QueryParam } from "../../utils/services/base-api.service";
       [nzServerSearch]="true"
       [(ngModel)]="selected"
       (ngModelChange)="onModalChange()"
+      (nzScrollToBottom)="loadMoreOption() ? searchMore() : null"
       (nzOnSearch)="searchText.set($event); param().pageIndex = 1; search()"
       [nzDisabled]="disabled()"
     >
@@ -55,6 +57,7 @@ import { QueryParam } from "../../utils/services/base-api.service";
         {{ "Loading" | translate }}
       </nz-option>
       <ng-template #actionItem>
+        <nz-spin *ngIf="isLoading() && loadMoreOption()"></nz-spin>
         <a
           *ngIf="addOption() && isMemberAdd()"
           (click)="uiService.showAdd(componentId)"
@@ -104,7 +107,7 @@ export class MemberSelectComponent extends BaseSelectComponent<Member> {
       "member-filter",
       "all-member"
     );
-  }
+  } 
   override writeValue(value: number | null): void {
     this.selected.set(value ?? 0);
     this.onChangeCallback(value);
