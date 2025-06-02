@@ -151,17 +151,19 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
         <div nz-row [nzGutter]="4">
           <div nz-col [nzSpan]="23">
             <nz-form-item>
-              <nz-form-label [nzSm]="4" nzRequired>{{
+              <nz-form-label [nzSm]="4">{{
                 "StartAt" | translate
               }}</nz-form-label>
               <nz-form-control>
                 <nz-form-control>
                   <div class="date-input-group">
                     <app-date-input
+                      [allowClear]="true"
                       formControlName="startDate"
                       [isGroup]="true"
                     ></app-date-input>
                     <app-time-input
+                      [allowClear]="true"
                       formControlName="startTime"
                       [isGroup]="true"
                     ></app-time-input>
@@ -169,7 +171,7 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
                 </nz-form-control>
               </nz-form-control>
 
-              <nz-form-label [nzSm]="4" nzRequired>{{
+              <nz-form-label [nzSm]="4">{{
                 "EndAt" | translate
               }}</nz-form-label>
               <nz-form-control>
@@ -446,23 +448,9 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
   override onSubmit(e?: any): void {
     if (this.frm.valid) {
       this.isLoading.set(true);
-      let startDateOnly = this.frm.get("startDate")?.value.split("T")[0];
-      let startTimeOnly = this.frm.get("startTime")?.value.split("T")[1];
-
-      let endDateOnly = this.frm.get("endDate")?.value.split("T")[0];
-      let endTimeOnly = this.frm.get("endTime")?.value.split("T")[1];
-
-      if (startDateOnly && startTimeOnly) {
-        this.frm
-          .get("offerStartAt")
-          ?.setValue(startDateOnly + "T" + startTimeOnly);
-      }
-      if (endDateOnly && endTimeOnly) {
-        this.frm.get("offerEndAt")?.setValue(endDateOnly + "T" + endTimeOnly);
-      }
+      this.formatDateTime();
 
       let photo = this.file[0]?.url;
-
       let operation$ = this.service.add({
         ...this.frm.getRawValue(),
         photo: photo,
@@ -518,8 +506,8 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       redeemCost: [0, [required]],
       redeemMinBalance: [10, [required]],
 
-      startDate: [null, [required]],
-      startTime: [null, [required]],
+      startDate: [null],
+      startTime: [null],
       endDate: [null],
       endTime: [null],
 
@@ -539,11 +527,75 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
         this.frm.patchValue({ redeemWith: this.modal.accountTypeId });
     }, 50);
   }
-  toTimeOnlyDate = (timeStr: string): Date => {
-    // Keep only HH:mm
+  getTime = (timeStr: string): Date => {
     const [hour, minute] = timeStr.split(":");
-    return new Date(1970, 0, 1, +hour, +minute); // 1970-01-01 HH:mm
+    return new Date(1970, 0, 1, +hour, +minute);
   };
+  getDate = (dateStr: string): Date => {
+    return new Date(dateStr);
+  };
+
+  formatDateTime() {
+    let startTime: Date | null = null;
+    let startDate: Date | null = null;
+    let endTime: Date | null = null;
+    let endDate: Date | null = null;
+
+    const startTimeValue = this.frm.get("startTime")?.value;
+    const startDateValue = this.frm.get("startDate")?.value;
+    const endTimeValue = this.frm.get("endTime")?.value;
+    const endDateValue = this.frm.get("endDate")?.value;
+
+    // START logic
+    if (startTimeValue && startDateValue) {
+      startTime = new Date(startTimeValue);
+      startDate = new Date(startDateValue);
+    } else if (startDateValue && !startTimeValue) {
+      const zeroTime = new Date();
+      zeroTime.setHours(0, 0, 0, 0);
+      startTime = zeroTime;
+      startDate = new Date(startDateValue);
+    } else if (startTimeValue && !startDateValue) {
+      startTime = null;
+      startDate = null;
+    } else {
+      startTime = null;
+      startDate = null;
+    }
+
+    // Merge date + time into one Date
+    let mergedStart: Date | null = null;
+    if (startDate && startTime) {
+      mergedStart = new Date(startDate);
+      mergedStart.setHours(startTime.getHours(), startTime.getMinutes(), 0, 0);
+    }
+
+    // END logic
+    if (endTimeValue && endDateValue) {
+      endTime = new Date(endTimeValue);
+      endDate = new Date(endDateValue);
+    } else if (endDateValue && !endTimeValue) {
+      const zeroTime = new Date();
+      zeroTime.setHours(0, 0, 0, 0);
+      endTime = zeroTime;
+      endDate = new Date(endDateValue);
+    } else if (endTimeValue && !endDateValue) {
+      endTime = null;
+      endDate = null;
+    } else {
+      endTime = null;
+      endDate = null;
+    }
+
+    let mergedEnd: Date | null = null;
+    if (endDate && endTime) {
+      mergedEnd = new Date(endDate);
+      mergedEnd.setHours(endTime.getHours(), endTime.getMinutes(), 0, 0);
+    }
+    this.frm.get("offerStartAt")?.setValue(mergedStart);
+    this.frm.get("offerEndAt")?.setValue(mergedEnd);
+  }
+
   override setFormValue() {
     this.frm.patchValue({
       name: this.model.name,
@@ -559,19 +611,18 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       offerEndat: this.model.offerEndAt,
       photo: this.model.photo,
     });
+
     if (this.model.offerStartAt) {
-      const [startDateOnly, startTimeOnly] = this.model.offerStartAt.split("T");
       this.frm.patchValue({
-        startDate: startDateOnly,
-        startTime: this.toTimeOnlyDate(startTimeOnly),
+        startDate: this.model.offerStartAt,
+        startTime: this.model.offerStartAt,
       });
     }
 
     if (this.model.offerEndAt) {
-      const [endDateOnly, endTimeOnly] = this.model.offerEndAt.split("T");
       this.frm.patchValue({
-        endDate: endDateOnly,
-        endTime: this.toTimeOnlyDate(endTimeOnly),
+        endDate: this.model.offerEndAt,
+        endTime: this.model.offerEndAt,
       });
     }
 

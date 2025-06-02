@@ -26,6 +26,7 @@ import { QueryParam } from "../../utils/services/base-api.service";
       nzShowSearch
       [nzDropdownRender]="actionItem"
       [nzServerSearch]="true"
+      [nzOptionHeightPx]="32"
       [(ngModel)]="selected"
       (ngModelChange)="onModalChange()"
       (nzScrollToBottom)="loadMoreOption() ? searchMore() : null"

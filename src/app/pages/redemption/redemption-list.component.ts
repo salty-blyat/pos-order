@@ -292,7 +292,7 @@ import { Subscription } from "rxjs";
         grid-template-columns: 42px 1fr;
         gap: 8px;
       }
-      .no-pad { 
+      .no-pad {
         padding: 0 0 0 5px !important;
       }
       .image-list {
@@ -322,18 +322,25 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
     );
   }
   @Input() isFromMember = false;
+  lookup = signal<LookupItem[]>([]);
+  memberId = input(0);
+  lookupRefresh$ = new Subscription();
+  hasAdvancedFilter = signal<boolean>(false);
+  redeemedDate: any = [];
+
   readonly offerGroupKey = "redemption-offer-group-list-search";
+
   readonly offerTypeKey = "redemption-offer-type-list-search";
   readonly accountTypeKey = "redemption-account-type-list-search";
   readonly statusKey = "redemption-status-list-search";
-  readonly advancedStoreKey = "redemption-list-advanced-filter";
+  advancedStoreKey = "";
+  readonly advancedMemberStoreKey = "redemption-list-member-advanced-filter";
   readonly locationKey = "location-list-advanced-filter";
 
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   accountTypeId = signal(
     parseInt(this.sessionStorageService.getValue(this.accountTypeKey) ?? 0)
   );
-
   offerGroupId = signal(
     parseInt(this.sessionStorageService.getValue(this.offerGroupKey) ?? 0)
   );
@@ -346,13 +353,21 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
   locationId = signal(
     parseInt(this.sessionStorageService.getValue(this.locationKey) ?? 0)
   );
-  lookup = signal<LookupItem[]>([]);
-  memberId = input(0);
-  lookupRefresh$ = new Subscription();
-  hasAdvancedFilter = signal<boolean>(false);
-  redeemedDate: any = [];
 
   override ngOnInit(): void {
+    this.advancedStoreKey = this.memberId()
+      ? "redemption-list-member-advanced-filter"
+      : "redemption-list-advanced-filter";
+    if (this.memberId() != 0) {
+      this.offerGroupId.set(0);
+      let advancedFilter = {
+        offerTypeId: 0,
+        accountTypeId: 0,
+        statusId: 0,
+        locationId: 0,
+      };
+      this.setAdvancedFilter(advancedFilter);
+    }
     this.param.set({
       pageSize:
         this.sessionStorageService.getCurrentPageSizeOption(

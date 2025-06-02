@@ -200,8 +200,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                 @if(data.redeemCost == 0){
                 {{ "Free" | translate }}
                 } @else {
-                {{ data.redeemCost | accountBalance : data.offerType! }}
-
+                {{ data.redeemCost | accountBalance : data.redeemWith! }}
                 }
               </td>
 

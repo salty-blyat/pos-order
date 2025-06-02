@@ -41,7 +41,7 @@ export class RedemptionUiService extends BaseUiService {
     });
   }
 
-  showAdvancedFilter(storageKey: string, componentId: any = '' ): void {
+  showAdvancedFilter(storageKey: string, componentId: any = ''): void {
     this.modalService.create({
       nzContent: RedemptionAdvancedFilterComponent,
       nzData: { storageKey },

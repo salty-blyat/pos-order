@@ -97,7 +97,7 @@ import { AccountService } from "../../account/account.service";
   styles: [
     `
       .image-container img {
-        height: 18px;
+        height: 20px;
         vertical-align: top;
       }
 

@@ -50,7 +50,7 @@ export class TimeInputComponent implements ControlValueAccessor, OnInit {
   disabled = false;
   value: Date | null = null;
 
-  @Input() defaultValue: Date = new Date(new Date().setHours(0, 0, 0, 0));
+  @Input() defaultValue: Date | null = null;
   @Input() storageKey!: string;
   @Output() valueChange = new EventEmitter<any>();
   @Input() allowClear: boolean = false;
@@ -63,7 +63,7 @@ export class TimeInputComponent implements ControlValueAccessor, OnInit {
   constructor(private sessionStorageService: SessionStorageService) {}
 
   ngOnInit(): void {
-    this.value = new Date();
+    this.value = null;
     this.onModelChange(this.value);
   }
 
@@ -77,16 +77,16 @@ export class TimeInputComponent implements ControlValueAccessor, OnInit {
   }
 
   onModelChange(date: Date | null) {
-    if (date) {
-      const value = date.toISOString();
+    this.value = date;
 
-      this.valueChange.emit(value);
-      this.onChangeCallback(value);
-      this.onTouchedCallback(value);
+    // Emit the Date object or null directly
+    this.valueChange.emit(date);
+    this.onChangeCallback(date);
+    this.onTouchedCallback(date);
 
-      if (this.storageKey) {
-        this.emitRecentFilter({ key: this.storageKey, val: value });
-      }
+    // Save to sessionStorage only if date is not null
+    if (date && this.storageKey) {
+      this.emitRecentFilter({ key: this.storageKey, val: date });
     }
   }
 

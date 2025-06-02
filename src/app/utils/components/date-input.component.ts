@@ -52,7 +52,7 @@ interface IRecentFilter {
 export class DateInputComponent implements ControlValueAccessor, OnInit {
   disabled = false;
   value: Date | null = null;
-  @Input() defaultValue: Date = new Date();
+  @Input() defaultValue: Date | null = null;
   recentFilter = new BehaviorSubject<IRecentFilter[]>(
     this.sessionStorageService.getValue("recent-filter") ?? []
   );
@@ -65,23 +65,20 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   constructor(private sessionStorageService: SessionStorageService) {}
 
   ngOnInit(): void {
-    if (!this.value) {
-      this.value = new Date();
-    }
-
-    // If storageKey is provided, try to load the saved date from sessionStorage
     if (this.storageKey) {
       const savedDate = this.recentFilterValue(this.storageKey);
       if (savedDate) {
         this.value = new Date(savedDate);
-      } else {
-        // If no saved date, use the default value
-        this.value = this.defaultValue;
       }
     }
 
-    // Apply the default value
-    this.applyDefaultValue(this.value);
+    if (this.value === null && this.defaultValue !== null) {
+      this.value = this.defaultValue;
+    }
+
+    if (this.value) {
+      this.onModelChange(this.value);
+    }
   }
 
   applyDefaultValue(values: any) {
@@ -91,19 +88,17 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
       this.value = new Date();
     }
     this.onModelChange(this.value);
-  }
-
+  } 
   onModelChange(date: Date | null) {
-    if (date) {
-      const value = date.toISOString();
-      this.valueChange.emit(value);
-      this.onChangeCallback(value);
-      this.onTouchedCallback(value);
+    this.value = date;
+    const emitted = date ? date : null;
+    this.valueChange.emit(emitted);
+    this.onChangeCallback(emitted);
+    this.onTouchedCallback(emitted);
 
-      // Save the selected date to sessionStorage if storageKey is provided
-      if (this.storageKey) {
-        this.emitRecentFilter({ key: this.storageKey, val: value });
-      }
+    // only save if date is non-null:
+    if (date && this.storageKey) {
+      this.emitRecentFilter({ key: this.storageKey, val: emitted });
     }
   }
 

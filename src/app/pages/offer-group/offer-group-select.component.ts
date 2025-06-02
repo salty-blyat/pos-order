@@ -90,6 +90,7 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
       }
 
       .image-container img {
+        border-radius: 0px !important;
         width: 100%;
         object-fit: cover;
         height: 100%;
