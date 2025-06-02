@@ -22,14 +22,21 @@ interface IRecentFilter {
       [(ngModel)]="value"
       (ngModelChange)="onModelChange($event)"
       [nzDisabled]="disabled"
-      nzFormat="HH:mm:ss"
+      nzFormat="HH:mm"
+      [ngClass]="isGroup ? 'date-input-right' : ''"
       [nzAllowEmpty]="allowClear"
-      [nzDisabledHours]="getDisabledHours"
-      [nzDisabledMinutes]="getDisabledMinutes"
-      [nzDisabledSeconds]="getDisabledSeconds"
       style="width: 100% !important"
     ></nz-time-picker>
   `,
+  styles: [
+    `
+      .date-input-right {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-left: 0;
+      }
+    `,
+  ],
   standalone: false,
   providers: [
     {
@@ -47,6 +54,7 @@ export class TimeInputComponent implements ControlValueAccessor, OnInit {
   @Input() storageKey!: string;
   @Output() valueChange = new EventEmitter<any>();
   @Input() allowClear: boolean = false;
+  @Input() isGroup: boolean = false;
 
   recentFilter = new BehaviorSubject<IRecentFilter[]>(
     this.sessionStorageService.getValue("recent-filter") ?? []
@@ -67,17 +75,6 @@ export class TimeInputComponent implements ControlValueAccessor, OnInit {
     }
     this.onModelChange(this.value);
   }
-  getDisabledHours = (): number[] => {
-    return Array.from({ length: 24 }, (_, i) => i).filter((i) => i !== 0);
-  };
-
-  getDisabledMinutes = (): number[] => {
-    return Array.from({ length: 60 }, (_, i) => i).filter((i) => i !== 0);
-  };
-
-  getDisabledSeconds = (): number[] => {
-    return Array.from({ length: 60 }, (_, i) => i); // disable all seconds
-  };
 
   onModelChange(date: Date | null) {
     if (date) {

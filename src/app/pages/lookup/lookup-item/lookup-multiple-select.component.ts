@@ -241,7 +241,6 @@ export class LookupMultipleSelectComponent
   }
   ok() { 
     this.oldSelectedValue = [...this.selectedValue];
-    console.log(this.oldSelectedValue);
     this.selectComponent.nzOpen = false;
     this.onModalChange();
   }

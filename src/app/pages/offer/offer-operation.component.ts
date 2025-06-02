@@ -9,11 +9,13 @@ import { Offer, OfferService } from "./offer.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { SettingService } from "../../app-setting";
-import { Observable, Subscriber, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subscriber, Subscription } from "rxjs";
 import {
   SETTING_KEY,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
+import { IRecentFilter } from "../../utils/services/logic-helper.service";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 
 @Component({
   selector: "app-offer-operation",
@@ -126,7 +128,11 @@ import {
                 "MaxQty" | translate
               }}</nz-form-label>
               <nz-form-control nzErrorTip>
-                <input nz-input formControlName="maxQty" />
+                <nz-input-number
+                  [nzMin]="1"
+                  nz-input
+                  formControlName="maxQty"
+                />
               </nz-form-control>
 
               <nz-form-label [nzSm]="4" nzRequired>{{
@@ -149,21 +155,38 @@ import {
                 "StartAt" | translate
               }}</nz-form-label>
               <nz-form-control>
-                <app-date-input
-                  [nzShowTime]="true"
-                  formControlName="offerStartAt"
-                >
-                </app-date-input>
+                <nz-form-control>
+                  <div class="date-input-group">
+                    <app-date-input
+                      formControlName="startDate"
+                      [isGroup]="true"
+                    ></app-date-input>
+                    <app-time-input
+                      formControlName="startTime"
+                      [isGroup]="true"
+                    ></app-time-input>
+                  </div>
+                </nz-form-control>
               </nz-form-control>
 
               <nz-form-label [nzSm]="4" nzRequired>{{
                 "EndAt" | translate
               }}</nz-form-label>
               <nz-form-control>
-                <app-date-input
-                  formControlName="offerEndAt"
-                  [nzShowTime]="true"
-                />
+                <nz-form-control>
+                  <div class="date-input-group">
+                    <app-date-input
+                      [allowClear]="true"
+                      formControlName="endDate"
+                      [isGroup]="true"
+                    ></app-date-input>
+                    <app-time-input
+                      formControlName="endTime"
+                      [allowClear]="true"
+                      [isGroup]="true"
+                    ></app-time-input>
+                  </div>
+                </nz-form-control>
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -184,7 +207,12 @@ import {
                       [lookupType]="LOOKUP_TYPE.AccountType"
                     ></app-lookup-item-select>
                   </ng-template>
-                  <input nz-input formControlName="redeemCost" />
+                  <nz-input-number
+                    class="input-left"
+                    [nzMin]="0"
+                    nz-input
+                    formControlName="redeemCost"
+                  />
                 </nz-input-group>
               </nz-form-control>
 
@@ -192,7 +220,11 @@ import {
                 "RedeemMinBalance" | translate
               }}</nz-form-label>
               <nz-form-control>
-                <input nz-input formControlName="redeemMinBalance" />
+                <nz-input-number
+                  [nzMin]="0"
+                  nz-input
+                  formControlName="redeemMinBalance"
+                />
               </nz-form-control>
             </nz-form-item>
           </div>
@@ -267,9 +299,14 @@ import {
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
   styles: `
-// html.cdk-global-scrollblock body div.cdk-overlay-container div.cdk-global-overlay-wrapper div#cdk-overlay-0.cdk-overlay-pane nz-modal-container.ng-tns-c3531571346-5.ng-trigger.ng-trigger-modalContainer.ng-star-inserted.ant-modal-wrap div.cdk-drag.ant-modal.ng-tns-c3531571346-5.cdk-drag-disabled div.ant-modal-content.ng-tns-c3531571346-5 div.ant-modal-body.ng-tns-c3531571346-5 app-offer-operation.ng-star-inserted div.modal-content form.ant-form.ng-untouched.ng-pristine.ant-form-horizontal nz-form-item.ant-form-item.ant-row nz-form-control.ant-form-item-control.ng-tns-c742983017-16.ng-star-inserted.ant-col.ant-col-sm-5 div.ant-form-item-control-input.ng-tns-c742983017-16 div.ant-form-item-control-input-content.ng-tns-c742983017-16 nz-input-group.ng-tns-c742983017-16.ant-input-group-wrapper span.ant-input-wrapper.ant-input-group.ng-star-inserted span.ant-input-group-addon.ng-star-inserted app-lookup-item-select.redeem-cost.ng-untouched.ng-pristine.ng-star-inserted nz-select.ant-select.ng-tns-c2061626568-22.ant-select-in-form-item.ant-select-show-arrow.ant-select-disabled.ant-select-single.ng-untouched.ng-pristine.ng-valid.ng-star-inserted nz-select-top-control.ant-select-selector.ng-tns-c2061626568-22 {  
-//   padding: 0 !important; 
-// }
+ .date-input-group {
+        display: grid;
+        grid-template-columns: 1fr 90px;
+      }
+.input-left {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
 .redeem-cost .ant-select .ant-select-selector {
   padding: 0 !important;
 }
@@ -307,15 +344,11 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
     private authService: AuthService,
     private settingService: SettingService,
     private systemSettingService: SystemSettingService,
-    override uiService: OfferUiService
+    override uiService: OfferUiService,
+    private sessionStorageService: SessionStorageService
   ) {
     super(fb, ref, service, uiService);
   }
-
-  startDate: string | null = null;
-  startTime: string | null = null;
-  endDate: string | null = null;
-  endTime: string | null = null;
 
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   isOfferEdit = computed(() => true);
@@ -413,6 +446,21 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
   override onSubmit(e?: any): void {
     if (this.frm.valid) {
       this.isLoading.set(true);
+      let startDateOnly = this.frm.get("startDate")?.value.split("T")[0];
+      let startTimeOnly = this.frm.get("startTime")?.value.split("T")[1];
+
+      let endDateOnly = this.frm.get("endDate")?.value.split("T")[0];
+      let endTimeOnly = this.frm.get("endTime")?.value.split("T")[1];
+
+      if (startDateOnly && startTimeOnly) {
+        this.frm
+          .get("offerStartAt")
+          ?.setValue(startDateOnly + "T" + startTimeOnly);
+      }
+      if (endDateOnly && endTimeOnly) {
+        this.frm.get("offerEndAt")?.setValue(endDateOnly + "T" + endTimeOnly);
+      }
+
       let photo = this.file[0]?.url;
 
       let operation$ = this.service.add({
@@ -469,11 +517,19 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       redeemWith: [null, [required]],
       redeemCost: [0, [required]],
       redeemMinBalance: [10, [required]],
-      offerStartAt: [null, [required]],
+
+      startDate: [null, [required]],
+      startTime: [null, [required]],
+      endDate: [null],
+      endTime: [null],
+
+      offerStartAt: [null],
       offerEndAt: [null],
+
       photo: [null],
       note: [null, [noteMaxLengthValidator()]],
     });
+
     setTimeout(() => {
       if (this.modal.offerTypeId !== 0 && this.modal.offerTypeId)
         this.frm.patchValue({ offerType: this.modal.offerTypeId });
@@ -483,9 +539,13 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
         this.frm.patchValue({ redeemWith: this.modal.accountTypeId });
     }, 50);
   }
-
+  toTimeOnlyDate = (timeStr: string): Date => {
+    // Keep only HH:mm
+    const [hour, minute] = timeStr.split(":");
+    return new Date(1970, 0, 1, +hour, +minute); // 1970-01-01 HH:mm
+  };
   override setFormValue() {
-    this.frm.setValue({
+    this.frm.patchValue({
       name: this.model.name,
       note: this.model.note,
       code: this.model.code,
@@ -495,10 +555,26 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       redeemWith: this.model.redeemWith,
       redeemCost: this.model.redeemCost,
       redeemMinBalance: this.model.redeemMinBalance,
-      offerStartAt: this.model.offerStartAt,
-      offerEndAt: this.model.offerEndAt,
+      offerStartat: this.model.offerStartAt,
+      offerEndat: this.model.offerEndAt,
       photo: this.model.photo,
     });
+    if (this.model.offerStartAt) {
+      const [startDateOnly, startTimeOnly] = this.model.offerStartAt.split("T");
+      this.frm.patchValue({
+        startDate: startDateOnly,
+        startTime: this.toTimeOnlyDate(startTimeOnly),
+      });
+    }
+
+    if (this.model.offerEndAt) {
+      const [endDateOnly, endTimeOnly] = this.model.offerEndAt.split("T");
+      this.frm.patchValue({
+        endDate: endDateOnly,
+        endTime: this.toTimeOnlyDate(endTimeOnly),
+      });
+    }
+
     if (this.model.photo) {
       this.file = [];
       this.file.push({
@@ -508,6 +584,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       });
     }
   }
+
   override ngOnDestroy(): void {
     this.refreshSub$?.unsubscribe();
     this.uploadRefresh$?.unsubscribe();

@@ -33,7 +33,7 @@ export class MemberUiService extends BaseUiService {
       nzFooter: null,
       nzClosable: true,
       nzWidth: "100%",
-      nzBodyStyle: this.mainPageService.getModalBodyStyle(),
+      nzBodyStyle: { height: `height: calc(100vh + 8px);`, padding: "0" },
       nzStyle: this.mainPageService.getModalFullPageSize(),
       nzData: { memberClassId, agentId, isAdd: true },
       nzMaskClosable: false,
@@ -50,7 +50,7 @@ export class MemberUiService extends BaseUiService {
       nzData: { id, isEdit: true },
       nzClosable: true,
       nzWidth: "100%",
-      nzBodyStyle: this.mainPageService.getModalBodyStyle(),
+      nzBodyStyle: { height: `height: calc(100vh + 8px);`, padding: "0" },
       nzStyle: this.mainPageService.getModalFullPageSize(),
       nzMaskClosable: false,
       nzOnOk: (e: any) => {
@@ -66,7 +66,7 @@ export class MemberUiService extends BaseUiService {
       nzData: { id, isView: true },
       nzClosable: true,
       nzWidth: "100%",
-      nzBodyStyle: this.mainPageService.getModalBodyStyle(),
+            nzBodyStyle: { height: `height: calc(100vh + 8px);`, padding: "0" },
       nzStyle: this.mainPageService.getModalFullPageSize(),
       nzMaskClosable: false,
     });

@@ -14,12 +14,11 @@ import {
 import { NzMessageService } from "ng-zorro-antd/message";
 import { AuthService } from "../../helpers/auth.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { first, Observable, Observer, Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { AccountService } from "../account/account.service";
 import { TranslateService } from "@ngx-translate/core";
 import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { AccountUiService } from "../account/account-ui.service";
-import { RedemptionService } from "../redemption/redemption.service";
 import { RedemptionUiService } from "../redemption/redemption-ui.service";
 import { NzImageService } from "ng-zorro-antd/image";
 
@@ -143,16 +142,12 @@ import { NzImageService } from "ng-zorro-antd/image";
                 *ngFor="let account of sortedAccounts"
                 style="display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
               >
-                <i
-                  nz-icon
-                  [nzType]="
-                    account.accountType == AccountTypes.Wallet
-                      ? 'wallet'
-                      : 'star'
-                  "
-                  nzTheme="outline"
-                  style="margin-right: 8px;"
-                ></i>
+                <img
+                  [src]="account.accountTypeImage"
+                  [alt]="account.accountType"
+                  style="height:22px; margin-right: 8px;"
+                />
+
                 <div>
                   {{ account.balance | accountBalance : account.accountType }}
                 </div>

@@ -28,6 +28,10 @@ export interface Offer {
   offerTypeNameEn?: string;
   redeemWithNameKh?: string;
   redeemWithNameEn?: string;
+  startDate?: string;
+  startTime?: string;
+  endDate?: string;
+  endTime?: string;
 }
 
 @Injectable({

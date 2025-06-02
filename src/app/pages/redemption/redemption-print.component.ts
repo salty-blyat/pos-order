@@ -101,7 +101,6 @@ export class RedemptionPrintComponent implements OnInit, OnDestroy {
           .find(this.modal?.reportId)
           .toPromise(); 
         this.loadingReport = false;
-        console.log(this.modal?.model); 
       } catch {
         this.loadingReport = false;
         return;

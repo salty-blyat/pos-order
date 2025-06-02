@@ -20,14 +20,14 @@ interface IRecentFilter {
   selector: "app-date-input",
   template: `
     <nz-date-picker
-      [nzFormat]="nzShowTime ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd'"
+      nzFormat="yyyy-MM-dd"
       [(ngModel)]="value"
-      [nzDisabledTime]="nzDisabledTime"
       (ngModelChange)="onModelChange($event)"
       [nzShowToday]="true"
       [nzDisabled]="disabled"
       nzMode="date"
       [nzShowTime]="nzShowTime"
+      [ngClass]="isGroup ? 'date-input-left' : ''"
       style="width: 100% !important"
       [nzAllowClear]="allowClear"
     ></nz-date-picker>
@@ -40,6 +40,14 @@ interface IRecentFilter {
     },
   ],
   standalone: false,
+  styles: [
+    `
+      .date-input-left {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    `,
+  ],
 })
 export class DateInputComponent implements ControlValueAccessor, OnInit {
   disabled = false;
@@ -52,17 +60,9 @@ export class DateInputComponent implements ControlValueAccessor, OnInit {
   @Output() valueChange = new EventEmitter<any>();
   @Input() allowClear: boolean = false;
   @Input() nzShowTime: boolean = false;
+  @Input() isGroup: boolean = false;
 
   constructor(private sessionStorageService: SessionStorageService) {}
-
-  nzDisabledTime = () => {
-    return {
-      nzDisabledHours: () => [],
-      nzDisabledMinutes: () => [],
-      nzDisabledSeconds: () =>
-        Array.from({ length: 60 }, (_, i) => i).filter((i) => i !== 0),
-    };
-  };
 
   ngOnInit(): void {
     if (!this.value) {
