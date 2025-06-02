@@ -166,12 +166,10 @@ import { LocationMultiSelectComponent } from "./pages/location/location-multi-se
 import { RedemptionPrintComponent } from "./pages/redemption/redemption-print.component";
 import { RedemptionAdvancedFilterComponent } from "./pages/redemption/redemption-advanced-filter.component";
 import { AccountBalancePipe } from "./utils/pipes/currency-point.pipe";
-import { AccountMultiSelectComponent } from "./pages/account/account-multi-select.component";
 import { MemberMultiSelectComponent } from "./pages/member/member-multi-select.component";
-import { TransactionMultiSelectComponent } from "./pages/transaction/transaction-multi-select.component";
-import { TransactionTypeSelectComponent } from "./pages/transaction/transaction-type-select.component";
 import { TransactionTypePipe } from "./utils/pipes/transaction-type.pipe";
 import { TimeInputComponent } from "./utils/components/time-input.component";
+import { TransactionTypeSelectComponent } from "./pages/transaction/transaction-type-select.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -368,11 +366,6 @@ export class CustomTranslate implements TranslateLoader {
     AccountListComponent,
     AccountOperationComponent,
     AccountSelectComponent,
-    AccountMultiSelectComponent,
-
-    // transaction
-    TransactionMultiSelectComponent,
-    TransactionTypeSelectComponent,
 
     //redem
     RedemptionDeleteComponent,
@@ -380,6 +373,8 @@ export class CustomTranslate implements TranslateLoader {
     RedemptionOperationComponent,
     RedemptionPrintComponent,
     RedemptionAdvancedFilterComponent,
+    //transaction type
+    TransactionTypeSelectComponent
   ],
   bootstrap: [AppComponent],
   imports: [

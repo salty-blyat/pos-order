@@ -32,8 +32,6 @@ import { BaseOperationComponent } from "../../utils/components/base-operation.co
 import { LocationMultiSelectComponent } from "../location/location-multi-select.component";
 import { AccountTypes, TransactionTypes } from "../lookup/lookup-type.service";
 import { LookupItemSelectComponent } from "../lookup/lookup-item/lookup-item-select.component";
-import { AccountMultiSelectComponent } from "../account/account-multi-select.component";
-import { TransactionMultiSelectComponent } from "../transaction/transaction-multi-select.component";
 import { MemberMultiSelectComponent } from "../member/member-multi-select.component";
 export let ParamSelectComponent = {
   Lookups: LookupMultipleSelectComponent,
@@ -41,8 +39,8 @@ export let ParamSelectComponent = {
   StaticDropdownSingleSelect: StaticDropdownSingleSelectComponent,
   DateRange: DateRangeInputReportComponent,
   Locations: LocationMultiSelectComponent,
-  AccountTypes: AccountMultiSelectComponent,
-  TransactionTypes: TransactionMultiSelectComponent,
+  AccountTypes: LookupMultipleSelectComponent,
+  TransactionTypes: LookupMultipleSelectComponent,
   Members: MemberMultiSelectComponent,
 };
 
