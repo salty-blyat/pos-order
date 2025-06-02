@@ -31,13 +31,13 @@ import {
     <div class="modal-content">
       <app-loading *ngIf="isLoading()"></app-loading>
       <form nz-form [formGroup]="frm" [nzAutoTips]="autoTips">
-        <div nz-row nzJustify="center" nzGutter="12">
-          <div nz-col nzSpan="14">
+        <div nz-row>
+          <div style="margin-left:4px" nz-col [nzSpan]="18">
             <nz-form-item>
               <nz-form-label [nzSm]="5" nzRequired
                 >{{ "Code" | translate }}
               </nz-form-label>
-              <nz-form-control [nzSm]="19" nzErrorTip nzHasFeedback>
+              <nz-form-control [nzSm]="16" nzErrorTip nzHasFeedback>
                 <input
                   nz-input
                   formControlName="code"
@@ -51,7 +51,7 @@ import {
               <nz-form-label [nzSm]="5" nzRequired
                 >{{ "Name" | translate }}
               </nz-form-label>
-              <nz-form-control [nzSm]="19" nzErrorTip nzHasFeedback>
+              <nz-form-control [nzSm]="16" nzErrorTip nzHasFeedback>
                 <input nz-input formControlName="name" />
               </nz-form-control>
             </nz-form-item>
@@ -59,7 +59,7 @@ import {
               <nz-form-label [nzSm]="5" nzRequired>
                 {{ "OfferGroup" | translate }}</nz-form-label
               >
-              <nz-form-control [nzSm]="19">
+              <nz-form-control [nzSm]="16">
                 <app-offer-group-select
                   formControlName="offerGroupId"
                 ></app-offer-group-select>
@@ -67,132 +67,154 @@ import {
             </nz-form-item>
           </div>
 
-          <div nz-col nzSpan="4">
-            <div nz-flex nzJustify="center" nzAlign="center">
-              <nz-form-item>
-                <nz-form-control>
-                  <div
-                    class="image-upload"
-                    (click)="uiService.showUpload()"
-                    role="button"
-                    aria-label="Upload image"
-                    *ngIf="!modal?.isView && file.length == 0"
-                  >
-                    <i nz-icon nzType="plus"></i>
-                    <p>{{ "Upload" | translate }}</p>
-                  </div>
+          <div nz-col [nzSpan]="5">
+            <nz-form-item>
+              <nz-form-control>
+                <div
+                  class="image-upload"
+                  (click)="uiService.showUpload()"
+                  role="button"
+                  aria-label="Upload image"
+                  *ngIf="!modal?.isView && file.length == 0"
+                >
+                  <i nz-icon nzType="plus"></i>
+                  <p>{{ "Upload" | translate }}</p>
+                </div>
 
-                  @if(modal?.isView){
-                  <nz-upload
-                    profile
-                    [nzAction]="uploadUrl"
-                    nzListType="picture-card"
-                    [(nzFileList)]="file"
-                    (nzChange)="handleUpload($event)"
-                    [nzShowButton]="file.length < 1"
-                    [nzShowUploadList]="nzShowUploadList"
-                    [nzDisabled]="true"
-                  >
-                    <div>
-                      <span nz-icon nzType="plus"></span>
-                      <div class="upload-text">{{ "Upload" | translate }}</div>
-                    </div>
-                  </nz-upload>
-                  } @else {
-                  <nz-upload
-                    profile
-                    *ngIf="file.length != 0"
-                    [nzAction]="uploadUrl"
-                    nzListType="picture-card"
-                    [(nzFileList)]="file"
-                    (nzChange)="handleUpload($event)"
-                    [nzShowUploadList]="nzShowIconList"
-                    [nzShowButton]="file.length < 1"
-                  >
-                    <div>
-                      <span nz-icon nzType="plus"></span>
-                      <div class="upload-text">{{ "Upload" | translate }}</div>
-                    </div>
-                  </nz-upload>
-                  }
-                </nz-form-control>
-              </nz-form-item>
-            </div>
+                @if(modal?.isView){
+                <nz-upload
+                  profile
+                  [nzAction]="uploadUrl"
+                  nzListType="picture-card"
+                  [(nzFileList)]="file"
+                  (nzChange)="handleUpload($event)"
+                  [nzShowButton]="file.length < 1"
+                  [nzShowUploadList]="nzShowUploadList"
+                  [nzDisabled]="true"
+                >
+                  <div>
+                    <span nz-icon nzType="plus"></span>
+                    <div class="upload-text">{{ "Upload" | translate }}</div>
+                  </div>
+                </nz-upload>
+                } @else {
+                <nz-upload
+                  profile
+                  *ngIf="file.length != 0"
+                  [nzAction]="uploadUrl"
+                  nzListType="picture-card"
+                  [(nzFileList)]="file"
+                  (nzChange)="handleUpload($event)"
+                  [nzShowUploadList]="nzShowIconList"
+                  [nzShowButton]="file.length < 1"
+                >
+                  <div>
+                    <span nz-icon nzType="plus"></span>
+                    <div class="upload-text">{{ "Upload" | translate }}</div>
+                  </div>
+                </nz-upload>
+                }
+              </nz-form-control>
+            </nz-form-item>
           </div>
         </div>
 
-        <nz-form-item>
-          <nz-form-label [nzSpan]="6" nzRequired>{{
-            "MaxQty" | translate
-          }}</nz-form-label>
-          <nz-form-control [nzSm]="5" nzErrorTip>
-            <input nz-input formControlName="maxQty" />
-          </nz-form-control>
+        <div nz-row [nzGutter]="4">
+          <div nz-col [nzSpan]="23">
+            <nz-form-item>
+              <nz-form-label [nzSm]="4" nzRequired>{{
+                "MaxQty" | translate
+              }}</nz-form-label>
+              <nz-form-control nzErrorTip>
+                <input nz-input formControlName="maxQty" />
+              </nz-form-control>
 
-          <nz-form-label [nzSm]="5" nzRequired>{{
-            "OfferType" | translate
-          }}</nz-form-label>
-          <nz-form-control [nzSm]="5">
-            <app-lookup-item-select
-              formControlName="offerType"
-              [lookupType]="LOOKUP_TYPE.OfferType"
-            >
-            </app-lookup-item-select>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" nzRequired
-            >{{ "StartAt" | translate }}
-          </nz-form-label>
-          <nz-form-control [nzSm]="5">
-            <app-date-input [nzShowTime]="true" formControlName="offerStartAt">
-            </app-date-input>
-          </nz-form-control>
-
-          <nz-form-label [nzSpan]="5"> {{ "EndAt" | translate }}</nz-form-label>
-          <nz-form-control [nzSm]="5" nzErrorTip>
-            <app-date-input [nzShowTime]="true" formControlName="offerEndAt">
-            </app-date-input>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" nzRequired>{{
-            "RedeemCost" | translate
-          }}</nz-form-label
-          ><nz-form-control [nzSm]="5" nzErrorTip>
-            <nz-input-group nz-input [nzAddOnAfter]="nzAddOnAfter">
-              <ng-template #nzAddOnAfter>
+              <nz-form-label [nzSm]="4" nzRequired>{{
+                "OfferType" | translate
+              }}</nz-form-label>
+              <nz-form-control>
                 <app-lookup-item-select
-                  class="redeem-cost"
-                  formControlName="redeemWith"
-                  [lookupType]="LOOKUP_TYPE.AccountType"
-                ></app-lookup-item-select>
-              </ng-template>
-              <input nz-input formControlName="redeemCost" />
-            </nz-input-group>
-          </nz-form-control>
+                  formControlName="offerType"
+                  [lookupType]="LOOKUP_TYPE.OfferType"
+                >
+                </app-lookup-item-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+        <div nz-row [nzGutter]="4">
+          <div nz-col [nzSpan]="23">
+            <nz-form-item>
+              <nz-form-label [nzSm]="4" nzRequired>{{
+                "StartAt" | translate
+              }}</nz-form-label>
+              <nz-form-control>
+                <app-date-input
+                  [nzShowTime]="true"
+                  formControlName="offerStartAt"
+                >
+                </app-date-input>
+              </nz-form-control>
 
-          <nz-form-label [nzSm]="5" nzRequired>{{
-            "RedeemMinBalance" | translate
-          }}</nz-form-label>
-          <nz-form-control [nzSm]="5" nzErrorTip>
-            <input nz-input formControlName="redeemMinBalance" />
-          </nz-form-control>
-        </nz-form-item>
+              <nz-form-label [nzSm]="4" nzRequired>{{
+                "EndAt" | translate
+              }}</nz-form-label>
+              <nz-form-control>
+                <app-date-input
+                  formControlName="offerEndAt"
+                  [nzShowTime]="true"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
 
-        <nz-form-item>
-          <nz-form-label [nzSpan]="6">{{ "Note" | translate }}</nz-form-label>
-          <nz-form-control [nzSpan]="15">
-            <textarea
-              nz-input
-              rows="3"
-              formControlName="note"
-              style="width: 100%;"
-            ></textarea>
-          </nz-form-control>
-        </nz-form-item>
+        <div nz-row [nzGutter]="4">
+          <div nz-col [nzSpan]="23">
+            <nz-form-item>
+              <nz-form-label [nzSm]="4" nzRequired>{{
+                "RedeemCost" | translate
+              }}</nz-form-label>
+              <nz-form-control nzErrorTip>
+                <nz-input-group nz-input [nzAddOnAfter]="nzAddOnAfter">
+                  <ng-template #nzAddOnAfter>
+                    <app-lookup-item-select
+                      class="redeem-cost"
+                      formControlName="redeemWith"
+                      [lookupType]="LOOKUP_TYPE.AccountType"
+                    ></app-lookup-item-select>
+                  </ng-template>
+                  <input nz-input formControlName="redeemCost" />
+                </nz-input-group>
+              </nz-form-control>
+
+              <nz-form-label [nzSm]="4" nzRequired>{{
+                "RedeemMinBalance" | translate
+              }}</nz-form-label>
+              <nz-form-control>
+                <input nz-input formControlName="redeemMinBalance" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <div nz-row [nzGutter]="4">
+          <div nz-col [nzSpan]="23">
+            <nz-form-item>
+              <nz-form-label [nzSpan]="4">{{
+                "Note" | translate
+              }}</nz-form-label>
+              <nz-form-control>
+                <textarea
+                  nz-input
+                  rows="3"
+                  formControlName="note"
+                  style="width: 100%;"
+                ></textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
       </form>
     </div>
     <div *nzModalFooter>
@@ -288,10 +310,12 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
     override uiService: OfferUiService
   ) {
     super(fb, ref, service, uiService);
-    // effect(() => {
-    //   if(this.frm.get('start'))
-    // })
   }
+
+  startDate: string | null = null;
+  startTime: string | null = null;
+  endDate: string | null = null;
+  endTime: string | null = null;
 
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   isOfferEdit = computed(() => true);

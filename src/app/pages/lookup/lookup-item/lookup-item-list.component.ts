@@ -164,7 +164,7 @@ import { NotificationService } from "../../../utils/services/notification.servic
                     <nz-divider nzType="vertical"></nz-divider>
                   </ng-template>
                   <ng-container *ngIf="isLookupEdit()">
-                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0)">
+                    <a *nzSpaceItem (click)="uiService.showEdit(data.id || 0,lookupTypeId())">
                       <i
                         nz-icon
                         nzType="edit"

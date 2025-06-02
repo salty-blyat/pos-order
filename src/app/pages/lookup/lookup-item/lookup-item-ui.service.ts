@@ -32,6 +32,21 @@ export class LookupItemUiService extends BaseUiService {
     });
   }
 
+  
+  override showEdit(id: number,parentId?: number): void {
+    this.modalService.create({
+      nzContent: LookupItemOperationComponent,
+      nzData: { id,lookupTypeId: parentId },
+      nzFooter: null,
+      nzClosable: true,
+      nzWidth: "720px",
+      nzMaskClosable: false,
+      nzOnOk: (e: any) => {
+        this.refresher.emit({ key: "edited", value: e.model }); 
+      },
+    });
+  }
+
   showUpload(
     multiple: boolean = false,
     limit: number = 1,

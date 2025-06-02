@@ -289,6 +289,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
   };
   uploadRefresh$ = new Subscription();
   override ngOnInit(): void {
+    console.log(this.modal); 
     if (this.isLoading()) return;
     this.initControl();
     if (this.modal?.isView) {
@@ -347,7 +348,7 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
       required,
       noteMaxLengthValidator,
     } = CommonValidators;
-
+    
     this.frm = this.fb.group({
       lookupTypeId: [this.modal?.lookupTypeId],
       image: [null],
