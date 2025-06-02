@@ -114,7 +114,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               <th nzWidth="220px">
                 {{ "OfferGroup" | translate }}
               </th>
-              <th [nzWidth]="SIZE_COLUMNS.DATE_RANGE">
+              <th nzWidth="290px">
                 {{ "Duration" | translate }}
               </th>
               <th nzWidth="110px" nzAlign="right">
@@ -189,8 +189,7 @@ import { NotificationService } from "../../utils/services/notification.service";
                     isExpired(data.offerEndAt ?? '') ? { color: 'red' } : {}
                   "
                 >
-                  {{ data.offerStartAt | customDate }} ~
-                  {{ data.offerEndAt | customDate }}
+                {{ !data.offerStartAt || !data.offerEndAt ? 'Unlimited' : (data.offerStartAt | customDateTime) + ' ~ ' + (data.offerEndAt | customDateTime) }} 
                 </span>
               </td>
               <td nzEllipsis nzAlign="right">

@@ -129,7 +129,7 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
               }}</nz-form-label>
               <nz-form-control nzErrorTip>
                 <nz-input-number
-                  [nzMin]="1"
+                  [nzMin]="0"
                   nz-input
                   formControlName="maxQty"
                 />

@@ -3,7 +3,7 @@ import { Member, MemberService } from "./member.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { MemberUiService } from "./member-ui.service";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../helpers/auth.service";
 import { MemberClass } from "../member-class/member-class.service";
@@ -189,10 +189,10 @@ export class MemberListComponent extends BaseListComponent<Member> {
     parseInt(this.sessionStorageService.getValue(this.memberClassIdKey) ?? 0)
   );
 
-  isMemberAdd = computed(() => true);
-  isMemberEdit = computed(() => true);
-  isMemberRemove = computed(() => true);
-  isMemberView = computed(() => true);
+  isMemberAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD));
+  isMemberEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__EDIT));
+  isMemberRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE));
+  isMemberView = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW));
 
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
