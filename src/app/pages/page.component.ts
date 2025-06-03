@@ -263,7 +263,9 @@ export class PageComponent implements OnInit {
   isAgentList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__AGENT__LIST)
   );
-  isOfferList = computed(() =>  this.authService.isAuthorized(AuthKeys.APP__OFFER__LIST));
+  isOfferList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__OFFER__LIST)
+  );
   isCardList = computed(() => true);
 
   isRedemptionList = computed(() => true);
@@ -290,6 +292,13 @@ export class PageComponent implements OnInit {
   appName = signal(this.authService.app?.appName);
 
   ngOnInit(): void {
+    this.systemSettingService.initCurrentSetting().subscribe({
+      next: (settingList) => {},
+      error: (error) => {
+        console.error("Error fetching settings:", error);
+      },
+    });
+    this.systemSettingService.initCurrency().subscribe();
     this.authService.updateClientInfo();
     if (this.authService.clientInfo.changePasswordRequired) {
       this.router.navigate([`/user-change-password`]).then();

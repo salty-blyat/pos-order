@@ -5,6 +5,7 @@ import { SettingService } from "../../app-setting";
 import { map } from "rxjs/operators";
 import { LocalStorageService } from "../../utils/services/localStorage.service";
 import { CurrencyService } from "../currency/currency.service";
+import { SharedVar } from "../../utils/services/logic-helper.service";
 
 export interface CurrentProfile {
   name?: string;
@@ -188,5 +189,18 @@ export class SystemSettingService {
         url,
       }
     );
+  }
+  initCurrency() {
+    return this.currencyService
+      .search({ pageIndex: 1, pageSize: 9999999 })
+      .pipe(
+        map((result) => {
+          this.localStorageService.setValue({
+            key: SharedVar.CURRENCIES,
+            value: result.results,
+          });
+          return result;
+        })
+      );
   }
 }

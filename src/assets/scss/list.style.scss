@@ -212,3 +212,15 @@ nz-sider.group-sider{
 .filter-box{
   width: 230px;
 }
+a.ant-typography[disabled],
+.ant-typography a[disabled],
+a.ant-typography.ant-typography-disabled,
+.ant-typography a.ant-typography-disabled, 
+a.ant-typography[disabled]:hover,
+.ant-typography a[disabled]:hover,
+a.ant-typography.ant-typography-disabled:hover,
+.ant-typography a.ant-typography-disabled:hover
+{
+  color: #929292;
+  cursor: not-allowed;
+}
