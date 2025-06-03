@@ -97,6 +97,9 @@ interface SharedDomain {
   `,
   styles: [
     `
+     .div-bottom {
+        margin: 4px 4px 0 4px;
+      }
       nz-select {
         width: 220px;
       }

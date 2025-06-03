@@ -579,10 +579,10 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE)
   );
   isCardList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__LIST)
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__LIST)
   );
   isAccountList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__ACCOUNT__LIST)
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__LIST)
   );
 
   selectedAccount = signal<number>(0);

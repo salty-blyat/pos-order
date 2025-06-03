@@ -9,6 +9,7 @@ import { AuthService } from "../../helpers/auth.service";
 import { MemberClass } from "../member-class/member-class.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { NotificationService } from "../../utils/services/notification.service";
+import { NzImageService } from "ng-zorro-antd/image";
 
 @Component({
   selector: "app-member-list",
@@ -125,7 +126,27 @@ import { NotificationService } from "../../utils/services/notification.service";
                 <span>{{ data.code }}</span>
                 }
               </td>
-              <td nzEllipsis>{{ data.name }}</td>
+              <td nzEllipsis class="img-container" [title]="data.name">
+                <nz-avatar
+                  [nzSrc]="data.photo"
+                  nzIcon="user"
+                  (mwlClick)="onPreviewImage(data.photo)"
+                ></nz-avatar>
+
+                <span *ngIf="!data.latinName">{{ data.name }}</span>
+                <div
+                  *ngIf="data.latinName"
+                  style="display:flex; flex-direction:column"
+                >
+                 <span class="title">
+                   {{ data.name }}
+                 </span>
+                  <span class="subtitle">
+                    {{ data.latinName }}
+                  </span>
+                </div>
+              </td>
+
               <td nzEllipsis>{{ data.phone }}</td>
               <td nzEllipsis>{{ data.memberClassName }}</td>
               <td nzEllipsis>{{ data.agentName }}</td>
@@ -161,6 +182,29 @@ import { NotificationService } from "../../utils/services/notification.service";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
+  styles: [
+    `
+      nz-avatar:hover {
+        cursor: pointer;
+      }
+      .title{
+        font-size: 12px;
+      }
+      .subtitle {
+        font-size: 11px;
+        color: #6f6f6f;
+      }
+      .img-container {
+        padding: 4px !important;
+        display: grid;
+        grid-template-columns: 42px 1fr;
+      }
+      .image-list {
+        width: 42px !important;
+        object-fit: scale-down;
+      }
+    `,
+  ],
   encapsulation: ViewEncapsulation.None,
 })
 export class MemberListComponent extends BaseListComponent<Member> {
@@ -170,7 +214,8 @@ export class MemberListComponent extends BaseListComponent<Member> {
     sessionStorageService: SessionStorageService,
     protected translate: TranslateService,
     private authService: AuthService,
-    notificationService: NotificationService
+    notificationService: NotificationService,
+    public nzImageService: NzImageService
   ) {
     super(
       service,
@@ -198,9 +243,13 @@ export class MemberListComponent extends BaseListComponent<Member> {
   isMemberRemove = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE)
   );
-  isMemberView = computed(
-    () =>true)
-
+  isMemberView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW)
+  );
+  onPreviewImage(img: string | undefined): void {
+    if(!img) return;
+    this.nzImageService.preview([{ src: img }]);
+  }
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
     if (this.agentId()) {

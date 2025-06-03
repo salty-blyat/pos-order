@@ -189,11 +189,11 @@ import { NotificationService } from "../../utils/services/notification.service";
                     isExpired(data.offerEndAt ?? '') ? { color: 'red' } : {}
                   "
                 >
-                {{ !data.offerStartAt || !data.offerEndAt ? 'Unlimited' : (data.offerStartAt | customDateTime) + ' ~ ' + (data.offerEndAt | customDateTime) }} 
+                {{ !data.offerStartAt || !data.offerEndAt ? ('Unlimited' | translate) : (data.offerStartAt | customDateTime) + ' ~ ' + (data.offerEndAt | customDateTime) }} 
                 </span>
               </td>
               <td nzEllipsis nzAlign="right">
-                {{ data.redeemedQty }} / {{ data.maxQty }}
+                {{ data.maxQty == 0 ? (data.redeemedQty + ' / ' + ('Unlimited' | translate)) : (data.redeemedQty + ' / ' + data.maxQty) }}
               </td>
               <td nzEllipsis nzAlign="right">
                 @if(data.redeemCost == 0){

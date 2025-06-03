@@ -78,17 +78,23 @@ import { TranslateService } from "@ngx-translate/core";
 
   styles: [
     `
+     .div-bottom {
+        margin: 4px 4px 0 4px;
+      }
       nz-select {
         width: 100%;
       }
+
       .item-action {
         flex: 0 0 auto;
         padding: 6px 8px;
         display: block;
       }
+
       .b-code {
         font-weight: bolder;
-      } 
+      }
+
       ::ng-deep .ant-select-item-group {
         color: rgba(0, 0, 0, 0.4);
       }

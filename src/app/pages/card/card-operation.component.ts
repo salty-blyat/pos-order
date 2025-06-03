@@ -148,8 +148,8 @@ export class CardOperationComponent extends BaseOperationComponent<Card> {
 
   readonly LOOKUP_TYPE = LOOKUP_TYPE; 
   
-  isCardRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__REMOVE));
-  isCardEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__EDIT));
+  isCardRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__REMOVE));
+  isCardEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__EDIT));
 
   override initControl(): void {
     const { required } = CommonValidators;

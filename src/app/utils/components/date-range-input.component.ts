@@ -60,9 +60,9 @@ interface IRecentFilter {
         font-size: 13px;
       }
 
-      nz-range-picker {
-        min-width: 230px !important;
-      }
+      // nz-range-picker {
+      //   min-width:240px !important
+      // }
     `,
   ],
   providers: [

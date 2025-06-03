@@ -52,7 +52,7 @@ import { Subscription } from "rxjs";
             ></app-filter-input>
 
             <app-date-range-input
-              storageKey="account-date-range"
+              storageKey="account-date-range"  style="width:230px;"
               (valueChanged)="
                 transDate = $event; param().pageIndex = 1; search()
               "
@@ -82,11 +82,7 @@ import { Subscription } from "rxjs";
 
           <div nz-flex nzGap="small">
             <button
-              *ngIf="
-                (accountType == AccountTypes.Wallet &&
-                  isAccountWalletAdjust()) ||
-                (accountType == AccountTypes.Point && isAccountPointAdjust())
-              "
+              *ngIf="isAccountAdjust()"
               style="margin-right: 4px;"
               nz-button
               nzType="primary"
@@ -103,7 +99,7 @@ import { Subscription } from "rxjs";
             </button>
             @if(isTopup){
             <button
-              *ngIf="isAccountWalletTopup()"
+              *ngIf="isAccountTopupEarn()"
               nz-button
               nzType="primary"
               (click)="
@@ -119,7 +115,7 @@ import { Subscription } from "rxjs";
             </button>
             } @else{
             <button
-              *ngIf="isAccountEarn()"
+              *ngIf="isAccountTopupEarn()"
               nz-button
               nzType="primary"
               (click)="
@@ -197,9 +193,7 @@ import { Subscription } from "rxjs";
               <td nzEllipsis>
                 <a
                   *ngIf="
-                    (accountType == AccountTypes.Wallet &&
-                      isAccountWalletView()) ||
-                    (accountType == AccountTypes.Point && isAccountPointView())
+                  isAccountView() 
                   "
                   (click)="
                     uiService.showTransaction(data.id || 0, data.accountType!)
@@ -207,11 +201,7 @@ import { Subscription } from "rxjs";
                   >{{ data.transNo }}</a
                 >
                 <span
-                  *ngIf="
-                    (accountType == AccountTypes.Wallet &&
-                      !isAccountWalletView()) ||
-                    (accountType == AccountTypes.Point && !isAccountPointView())
-                  "
+                  *ngIf="!isAccountView()"
                   >{{ data.transNo }}</span
                 >
               </td>
@@ -280,35 +270,19 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   @Input() accountType = 0;
   transDate: any = [];
 
-  isAccountEarn = computed(() =>
+  isAccountTopupEarn = computed(() =>
     this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__EARN
+      AuthKeys.APP__MEMBER__ACCOUNT__TOPUP_EARN
     )
   );
-  isAccountPointAdjust = computed(() =>
+  isAccountAdjust = computed(() =>
     this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__ADJUST
+      AuthKeys.APP__MEMBER__ACCOUNT__ADJUST
     )
   );
-
-  isAccountPointView = computed(() =>
+  isAccountView = computed(() =>
     this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__VIEW
-    )
-  );
-  isAccountWalletTopup = computed(() =>
-    this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__TOPUP
-    )
-  );
-  isAccountWalletAdjust = computed(() =>
-    this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__ADJUST
-    )
-  );
-  isAccountWalletView = computed(() =>
-    this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__VIEW
+      AuthKeys.APP__MEMBER__ACCOUNT__VIEW
     )
   );
 

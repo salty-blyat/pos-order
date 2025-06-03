@@ -208,10 +208,10 @@ export class CardListComponent
     }
   }
 
-  isCardAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__ADD));
-  isCardView = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__VIEW));
-  isCardRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__REMOVE));
-  isCardEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__EDIT));
+  isCardAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__ADD));
+  isCardView = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__VIEW));
+  isCardRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__REMOVE));
+  isCardEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__EDIT));
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

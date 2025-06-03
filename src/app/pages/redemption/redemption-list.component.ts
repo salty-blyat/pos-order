@@ -59,7 +59,7 @@ import { Subscription } from "rxjs";
               "
             ></app-filter-input>
 
-            <app-date-range-input
+            <app-date-range-input style="width:230px;"
               [storageKey]="
                 memberId()
                   ? 'trans-date-range' + memberId()

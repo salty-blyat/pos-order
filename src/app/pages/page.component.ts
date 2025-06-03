@@ -280,15 +280,15 @@ export class PageComponent implements OnInit {
     this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING)
   );
   isReportList = computed(()=>  
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTIONDETAIL) ||
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTIONSUMMARY) ||
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTION_DETAIL) ||
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTION_SUMMARY) ||
 
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__REDEEM__REDEEMDETAIL) ||
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__REDEEM__REDEEMSUMMARY) ||
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__REDEEM__REDEEM_DETAIL) ||
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__REDEEM__REDEEM_SUMMARY) ||
 
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION__TRANSACTIONDETAILREPORT) ||
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION__TRANSACTION_DETAIL_REPORT) ||
 
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__PRINT__REDEEMPRINT) 
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__PRINT__REDEEM_PRINT) 
   );
 
   constructor(

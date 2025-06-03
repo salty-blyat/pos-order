@@ -75,7 +75,6 @@ import { AuthKeys } from "../../const";
                   <i nz-icon nzType="plus"></i>
                   <p>{{ "Upload" | translate }}</p>
                 </div>
-
                 @if(modal?.isView){
                 <nz-upload
                   [nzAction]="uploadUrl"
@@ -200,9 +199,13 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     super(fb, ref, service, uiService);
   }
 
-  isOfferGroupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__EDIT));
-  isOfferGroupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__REMOVE));
- 
+  isOfferGroupEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__EDIT)
+  );
+  isOfferGroupRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__REMOVE)
+  );
+
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   nzShowButtonView = {
