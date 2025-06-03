@@ -33,7 +33,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               "
             >
             </app-filter-input>
- 
+
             <app-lookup-item-select
               class="fixed-width-select"
               showAll="AllOfferType"
@@ -111,10 +111,10 @@ import { NotificationService } from "../../utils/services/notification.service";
               <th nzWidth="250px" nzEllipsis>
                 {{ "Name" | translate }}
               </th>
-              <th nzWidth="220px">
+              <th nzWidth="150px">
                 {{ "OfferGroup" | translate }}
               </th>
-              <th nzWidth="290px">
+              <th nzWidth="270px">
                 {{ "Duration" | translate }}
               </th>
               <th nzWidth="110px" nzAlign="right">
@@ -183,17 +183,20 @@ import { NotificationService } from "../../utils/services/notification.service";
               </td>
 
               <td nzEllipsis>{{ data.offerGroupName }}</td>
-              <td nzEllipsis>
-                <span
-                  [ngStyle]="
-                    isExpired(data.offerEndAt ?? '') ? { color: 'red' } : {}
-                  "
-                >
-                {{ !data.offerStartAt || !data.offerEndAt ? ('Unlimited' | translate) : (data.offerStartAt | customDateTime) + ' ~ ' + (data.offerEndAt | customDateTime) }} 
+              <td
+                nzEllipsis
+                [title]="data.offerStartAt! | dateRange : data.offerEndAt!"
+              >
+                <span>
+                  {{ data.offerStartAt! | dateRange : data.offerEndAt! }}
                 </span>
               </td>
               <td nzEllipsis nzAlign="right">
-                {{ data.maxQty == 0 ? (data.redeemedQty + ' / ' + ('Unlimited' | translate)) : (data.redeemedQty + ' / ' + data.maxQty) }}
+                {{
+                  data.maxQty == 0
+                    ? data.redeemedQty + " / " + ("Unlimited" | translate)
+                    : data.redeemedQty + " / " + data.maxQty
+                }}
               </td>
               <td nzEllipsis nzAlign="right">
                 @if(data.redeemCost == 0){
@@ -202,14 +205,6 @@ import { NotificationService } from "../../utils/services/notification.service";
                 {{ data.redeemCost | accountBalance : data.redeemWith! }}
                 }
               </td>
-
-              <!-- <td nzEllipsis>
-                {{
-                  translateService.currentLang == "km"
-                    ? data.offerTypeNameKh
-                    : data.offerTypeNameEn
-                }}
-              </td> -->
               <td nzEllipsis>
                 {{ data.note }}
               </td>
@@ -335,10 +330,18 @@ export class OfferListComponent extends BaseListComponent<Offer> {
     return offerEnd < now;
   }
 
-  isOfferAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__OFFER__ADD ));
-  isOfferEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__OFFER__EDIT ));
-  isOfferRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__OFFER__REMOVE ));
-  isOfferView = computed(() => this.authService.isAuthorized(AuthKeys.APP__OFFER__VIEW));
+  isOfferAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__OFFER__ADD)
+  );
+  isOfferEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__OFFER__EDIT)
+  );
+  isOfferRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__OFFER__REMOVE)
+  );
+  isOfferView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__OFFER__VIEW)
+  );
   readonly AccountTypes = AccountTypes;
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

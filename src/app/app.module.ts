@@ -172,6 +172,7 @@ import { TimeInputComponent } from "./utils/components/time-input.component";
 import { TransactionTypeSelectComponent } from "./pages/transaction/transaction-type-select.component";
 import { OfferMultiSelectComponent } from "./pages/offer/offer-multi-select.component";
 import { OfferGroupMultiSelectComponent } from "./pages/offer-group/offer-group-multi-select.component";
+import { DateRangePipe } from "./utils/pipes/date-range.pipe";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -217,6 +218,7 @@ export class CustomTranslate implements TranslateLoader {
     AttendanceRatedPipe,
     TransparentPipe,
     AccountBalancePipe,
+    DateRangePipe,
     ChunkPipe,
     ConvertHourPipe,
     TimeInputComponent,
@@ -378,7 +380,7 @@ export class CustomTranslate implements TranslateLoader {
     RedemptionPrintComponent,
     RedemptionAdvancedFilterComponent,
     //transaction type
-    TransactionTypeSelectComponent
+    TransactionTypeSelectComponent,
   ],
   bootstrap: [AppComponent],
   imports: [

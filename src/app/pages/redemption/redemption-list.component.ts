@@ -230,15 +230,14 @@ import { Subscription } from "rxjs";
                 [ngStyle]="{ color: getStatusColor(data.status!) }"
               >
                 <img
-                  class="image-list"
-                  style="width: 18px"
+                  class="image-list status-img" 
                   height="42px"
                   *ngIf="data.statusImage"
                   [src]="data.statusImage"
                   alt=""
                 />
                 <img
-                  class="image-list"
+                  class="image-list status-img"
                   height="42px"
                   style="width: 18px"
                   *ngIf="!data.statusImage"
@@ -284,6 +283,9 @@ import { Subscription } from "rxjs";
   standalone: false,
   styles: [
     `
+    .status-img{
+      width:18px !important;
+    }
       .subtitle {
         font-size: 10px;
         color: #6f6f6f;
@@ -297,7 +299,7 @@ import { Subscription } from "rxjs";
         padding: 0 0 0 5px !important;
       }
       .image-list {
-        width: 42px;
+        width: 42px; 
         object-fit: scale-down;
       }
     `,

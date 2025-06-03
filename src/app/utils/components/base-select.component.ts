@@ -112,8 +112,6 @@ export class BaseSelectComponent<T extends SharedDomain>
             this.onModalChange();
           }
           if (this.loadMoreOption()) {
-            console.log("trigger");
-            
             this.lists.update((value) => [
               ...value,
               ...result.results.filter(

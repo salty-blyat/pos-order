@@ -1,0 +1,28 @@
+import { Pipe, PipeTransform } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
+import { CustomDateTimePipe } from "./custom-date-time.pipe";
+
+@Pipe({
+  name: "dateRange",
+  standalone: false,
+})
+export class DateRangePipe implements PipeTransform {
+  constructor(
+    private datePipe: CustomDateTimePipe,
+    private translate: TranslateService
+  ) {}
+
+  transform(startDate: string | null, endDate: string | null): string {
+    if (startDate && !endDate) {
+      return `${this.translate.instant("From")} ${this.datePipe.transform(startDate)}`;
+    } else if (!startDate && endDate) {
+      return `${this.translate.instant("Until")} ${this.datePipe.transform(endDate)}`;
+    } else if (!startDate && !endDate) {
+      return this.translate.instant("Unlimited");
+    } else {
+      const from = this.datePipe.transform(startDate);
+      const to = this.datePipe.transform(endDate);
+      return `${from} ~ ${to}`;
+    }
+  }
+}

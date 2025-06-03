@@ -48,12 +48,15 @@ import { AuthService } from "../../helpers/auth.service";
         [nzLabel]="item?.name + ''"
       >
         <div nz-flex nzAlign="center" nzGap="small">
-          <nz-avatar
-            nzSize="small"
-            nzIcon="user"
-            [nzSrc]="item.photo"
-          ></nz-avatar>
-          <span class="b-name"> {{ item.name }}</span>
+          <nz-avatar nzIcon="user" [nzSrc]="item.photo"></nz-avatar>
+          <div class="container">
+            <span class="title">
+              {{ item.name }}
+            </span>
+            <span class="subtitle">
+              {{ item.phone }}
+            </span>
+          </div>
         </div>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
@@ -75,6 +78,9 @@ import { AuthService } from "../../helpers/auth.service";
   standalone: false,
   styles: [
     `
+      :host .ant-select-item {
+        line-height: 14px !important;
+      }
       nz-select {
         width: 100%;
       }
@@ -86,9 +92,20 @@ import { AuthService } from "../../helpers/auth.service";
       .b-code {
         font-weight: bolder;
       }
-      .b-name {
-        font-size: 12px;
+      .container {
         padding-left: 5px;
+        display: flex;
+        flex-direction: column;
+        .title {
+          display: flex;
+          gap: 2px;
+          font-size: 12px;
+        }
+        .subtitle {
+          font-size: 10px;
+          line-height: 0.7;
+          color: #6f6f6f;
+        }
       }
       ::ng-deep cdk-virtual-scroll-viewport {
         min-height: 34px;
@@ -112,7 +129,7 @@ export class MemberSelectComponent extends BaseSelectComponent<Member> {
       "member-filter",
       "all-member"
     );
-  } 
+  }
   override writeValue(value: number | null): void {
     this.selected.set(value ?? 0);
     this.onChangeCallback(value);
@@ -141,7 +158,9 @@ export class MemberSelectComponent extends BaseSelectComponent<Member> {
     filters: "",
   });
 
-  isMemberAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD));
+  isMemberAdd = computed<boolean>(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD)
+  );
   override ngOnDestroy(): void {
     if (this.refreshSub$) {
       this.refreshSub$.unsubscribe();

@@ -351,7 +351,10 @@ import { AuthKeys } from "../../const";
                     ></app-account-list>
                   </nz-tab>
                 </ng-container>
-                <nz-tab [nzTitle]="'Redemption' | translate">
+                <nz-tab
+                  *ngIf="isRedemptionList()"
+                  [nzTitle]="'Redemption' | translate"
+                >
                   <app-redemption-list
                     [memberId]="modal.id"
                     [isFromMember]="true"
@@ -583,6 +586,9 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   );
   isAccountList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__LIST)
+  );
+  isRedemptionList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__LIST)
   );
 
   selectedAccount = signal<number>(0);

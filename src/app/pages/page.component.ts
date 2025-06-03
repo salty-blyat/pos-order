@@ -38,7 +38,7 @@ export interface Type {
           <div class="sidebar-logo">
             <div class="logo-link">
               <img [src]="authService.app?.iconUrl" alt="logo" />
-              <h1 *ngIf="!isCollapsed()" class="modal-header-ellipsis">
+              <h1 *ngIf="!isCollapsed()" class="modal-header-ellipsis logo">
                 {{ appName() }}
               </h1>
               <nz-icon class="icon-down" (click)="redirectToMainUrl()">
@@ -246,6 +246,13 @@ export interface Type {
   `,
   styleUrls: [`../../assets/scss/layout.style.scss`],
   encapsulation: ViewEncapsulation.None,
+  styles: [
+    `
+      .logo {
+        font-size: 16px !important;
+      }
+    `,
+  ],
   standalone: false,
 })
 export class PageComponent implements OnInit {
@@ -264,31 +271,50 @@ export class PageComponent implements OnInit {
   );
   isOfferList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__OFFER__LIST)
-  ); 
-  isRedemptionList = computed(() => this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__LIST));
-  isMemberList = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)); 
-  isSettingList = computed(() => 
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__LIST) || 
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__LIST) || 
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__LIST) || 
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__LIST) || 
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST) || 
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST) || 
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST) || 
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST) ||   
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER) ||
-    this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING)
   );
-  isReportList = computed(()=>  
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTION_DETAIL) ||
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTION_SUMMARY) ||
-
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__REDEEM__REDEEM_DETAIL) ||
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__REDEEM__REDEEM_SUMMARY) ||
-
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION__TRANSACTION_DETAIL_REPORT) ||
-
-    this.authService.isAuthorized(AuthKeys.APP__REPORT__PRINT__REDEEM_PRINT) 
+  isRedemptionList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__LIST)
+  );
+  isMemberList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
+  );
+  isSettingList = computed(
+    () =>
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__LIST) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__SETTING__MEMBER_CLASS__LIST
+      ) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST) ||
+      this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING
+      )
+  );
+  isReportList = computed(
+    () =>
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTION_DETAIL
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTION_SUMMARY
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__REDEEM__REDEEM_DETAIL
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__REDEEM__REDEEM_SUMMARY
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__TRANSACTION__TRANSACTION_DETAIL_REPORT
+      ) ||
+      this.authService.isAuthorized(AuthKeys.APP__REPORT__PRINT__REDEEM_PRINT)
   );
 
   constructor(
