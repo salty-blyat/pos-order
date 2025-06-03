@@ -6,6 +6,7 @@ import { LocationUiService } from "./location-ui.service";
 import { AuthService } from "../../helpers/auth.service";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-location-operation",
@@ -122,8 +123,8 @@ export class LocationOperationComponent extends BaseOperationComponent<Location>
     super(fb, ref, service, uiService);
   }
 
-  isLocationEdit = signal<boolean>(true);
-  isLocationRemove = signal<boolean>(true);
+  isLocationEdit = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__EDIT));
+  isLocationRemove = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__REMOVE));
 
   override initControl() {
     const {

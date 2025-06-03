@@ -1,5 +1,6 @@
 import {
     Component,
+    computed,
     forwardRef,
     signal,
     ViewEncapsulation,
@@ -9,6 +10,8 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { Location, LocationService } from "./location.service";
 import { LocationUiService } from "./location-ui.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
     providers: [
@@ -84,6 +87,7 @@ import { LocationUiService } from "./location-ui.service";
 export class LocationSelectComponent extends BaseSelectComponent<Location> {
     constructor(
         service: LocationService,
+        private authService:AuthService,
         uiService: LocationUiService,
         sessionStorageService: SessionStorageService
     ) {
@@ -96,5 +100,5 @@ export class LocationSelectComponent extends BaseSelectComponent<Location> {
         );
     }
 
-    isLocationAdd = signal<boolean>(true);
+    isLocationAdd = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__ADD));
 }

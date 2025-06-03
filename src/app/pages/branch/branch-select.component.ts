@@ -11,6 +11,7 @@ import { BaseSelectComponent } from "../../utils/components/base-select.componen
 import { AuthService } from "../../helpers/auth.service";
 import { Branch, BranchService } from "./branch.service";
 import { BranchUiService } from "./branch-ui.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   providers: [
@@ -82,5 +83,5 @@ export class BranchSelectComponent extends BaseSelectComponent<Branch> {
       "all-branch"
     );
   }
-  isBranchAdd = signal<boolean>(true);
+  isBranchAdd = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__ADD));
 }

@@ -269,8 +269,8 @@ export class LookupItemOperationComponent extends BaseOperationComponent<LookupI
     super(fb, ref, service, uiService);
   }
 
-  isLookupEdit = computed(() => true);
-  isLookupRemove = computed(() => true);
+  isLookupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__EDIT));
+  isLookupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__REMOVE));
 
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;

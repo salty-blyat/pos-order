@@ -12,6 +12,7 @@ import { AuthService } from "../../helpers/auth.service";
 import { Agent, AgentService } from "./agent.service";
 import { AgentUiService } from "./agent-ui.service";
 import { QueryParam } from "../../utils/services/base-api.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   providers: [
@@ -91,5 +92,5 @@ export class AgentSelectComponent extends BaseSelectComponent<Agent> {
     filters: "",
   });
 
-  isAgentAdd = signal<boolean>(true);
+  isAgentAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__AGENT__ADD));
 }

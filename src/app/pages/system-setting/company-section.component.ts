@@ -227,7 +227,7 @@ export class CompanySectionComponent extends BaseSettingSectionComponent {
     // SETTING_KEY.SecondCurrency,
   ];
 
-  isCompanySettingEdit = computed(() => true);
+  isCompanySettingEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING));
   override ngOnInit(): void {
     super.ngOnInit();
     this.isCompanySettingEdit() ? this.frm.enable() : this.frm.disable();

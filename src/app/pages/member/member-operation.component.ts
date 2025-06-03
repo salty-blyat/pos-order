@@ -336,15 +336,9 @@ import { AuthKeys } from "../../const";
             </div>
 
             <div *ngSwitchCase="3" class="tab-content">
-              <nz-tabset style="margin: 0 8px;">
+              <nz-tabset *ngIf="isAccountList()" style="margin: 0 8px;">
                 <ng-container *ngFor="let account of sortedAccounts">
                   <nz-tab
-                    *ngIf="
-                      (account.accountType === AccountTypes.Wallet &&
-                        isAccountWalletList()) ||
-                      (account.accountType === AccountTypes.Point &&
-                        isAccountPointList())
-                    "
                     [nzTitle]="
                       translateService.currentLang == 'km'
                         ? account.accountTypeNameKh ?? ''
@@ -365,8 +359,6 @@ import { AuthKeys } from "../../const";
                 </nz-tab>
               </nz-tabset>
             </div>
-
-            <div *ngSwitchCase="3" ngCase></div>
           </div>
         </nz-content>
       </nz-layout>
@@ -589,25 +581,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   isCardList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__LIST)
   );
-  isAccountWalletList = computed(() =>
-    this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__LIST
-    )
-  );
-  isAccountPointList = computed(() =>
-    this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__LIST
-    )
-  );
-  isAccountList = computed(
-    () =>
-      this.authService.isAuthorized(
-        AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__LIST
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__LIST
-      ) ||
-      this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__LIST)
+  isAccountList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__ACCOUNT__LIST)
   );
 
   selectedAccount = signal<number>(0);

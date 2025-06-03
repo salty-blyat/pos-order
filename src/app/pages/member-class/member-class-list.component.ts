@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { MemberClass, MemberClassService } from "./member-class.service";
 import { MemberClassUiService } from "./member-class-ui.service";
 import { NotificationService } from "../../utils/services/notification.service";
@@ -72,7 +72,7 @@ import { NotificationService } from "../../utils/services/notification.service";
           </ng-template>
           <thead>
             <tr>
-              <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
+              <th [nzWidth]="SIZE_COLUMNS.DRAG"  *ngIf="isMemberClassEdit()"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.CODE">{{ "Code" | translate }}</th>
               <th nzEllipsis [nzWidth]="SIZE_COLUMNS.IMAGE" nzAlign="center">
@@ -88,11 +88,11 @@ import { NotificationService } from "../../utils/services/notification.service";
             cdkDropList
             cdkDropListLockAxis="y"
             (cdkDropListDropped)="drop($event)"
-            [cdkDropListData]="lists()"
+            [cdkDropListData]="lists()"   
           >
-            <tr cdkDrag *ngFor="let data of lists(); let i = index">
-              <td nzEllipsis style="flex: 0.25">
-                <span
+            <tr cdkDrag *ngFor="let data of lists(); let i = index" [cdkDragDisabled]="!isMemberClassEdit()">
+              <td nzEllipsis style="flex: 0.25" *ngIf="isMemberClassEdit()" >
+                <span  
                   class="drag-handle"
                   nz-icon
                   nzType="holder"
@@ -216,9 +216,9 @@ export class MemberClassListComponent extends BaseListComponent<MemberClass> {
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
   readonly branchKey = this.sessionStorageService.getValue("branch-filter");
   branchId = signal<number>(0);
-  isMemberClassAdd = signal<boolean>(true);
-  isMemberClassEdit = signal<boolean>(true);
-  isMemberClassRemove = signal<boolean>(true);
-  isMemberClassView = signal<boolean>(true);
+  isMemberClassAdd = computed(()=>this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__ADD));
+  isMemberClassEdit = computed(()=>this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__EDIT));
+  isMemberClassRemove = computed(()=>this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__REMOVE));
+  isMemberClassView = computed(()=>this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__VIEW));
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

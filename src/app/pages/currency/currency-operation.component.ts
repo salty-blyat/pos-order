@@ -138,8 +138,8 @@ export class CurrencyOperationComponent extends BaseOperationComponent<Currency>
     super(fb, ref, service, uiService);
   }
 
-  isCurrencyEdit = computed(() => true);
-  isCurrencyRemove = computed(() => true);
+  isCurrencyEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__EDIT));
+  isCurrencyRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__REMOVE));
 
   override initControl() {
     const { codeExistValidator, nameMaxLengthValidator, required } =

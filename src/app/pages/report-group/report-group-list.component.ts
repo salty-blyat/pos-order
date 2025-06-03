@@ -48,16 +48,16 @@ import { NotificationService } from "../../utils/services/notification.service";
               >
                 <li
                   nz-menu-item
-                  cdkDrag
+                  cdkDrag 
                   (click)="changeGroupId(data.id!)"
                   [nzSelected]="reportGroupId() === data.id!"
-                  style="padding-left: 36px"
+                  style="padding-left: 36px" [cdkDragDisabled]="!isReportGroupEdit()"
                 >
                   <span
                     nz-icon
                     nzType="holder"
                     nzTheme="outline"
-                    class="drag-handle"
+                    class="drag-handle" *ngIf="isReportGroupEdit()"
                     cdkDragHandle
                   ></span>
                   {{ data.name }}
@@ -212,9 +212,9 @@ export class ReportGroupListComponent extends BaseListComponent<Report> {
   }
   readonly reportGroupSelectedKey = "report-group-selected-key";
 
-  isReportGroupAdd = computed(() => true);
-  isReportGroupEdit = computed(() => true);
-  isReportGroupRemove = computed(() => true);
+  isReportGroupAdd=  computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__ADD));
+  isReportGroupEdit   =  computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT));
+  isReportGroupRemove   = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE));
   reportGroupId = signal<number>(
     parseInt(
       this.sessionStorageService.getValue(this.reportGroupSelectedKey) ?? 0

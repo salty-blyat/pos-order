@@ -1,4 +1,4 @@
-import { Component, signal, ViewEncapsulation } from "@angular/core";
+import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { FormArray, FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { Branch, BranchService, User } from "./branch.service";
@@ -6,7 +6,7 @@ import { BranchUiService } from "./branch-ui.service";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { AuthService } from "../../helpers/auth.service";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 
 @Component({
   selector: "app-branch-operation",
@@ -196,14 +196,14 @@ import { SIZE_COLUMNS } from "../../const";
           nz-typography
           nzType="danger"
           (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isBranchDelete()"
+          *ngIf="!isLoading() && isBranchRemove()"
         >
           <i nz-icon nzType="delete" nzTheme="outline"></i>
           <span class="action-text"> {{ "Delete" | translate }}</span>
         </a>
         <nz-divider
           nzType="vertical"
-          *ngIf="!isLoading() && isBranchDelete()"
+          *ngIf="!isLoading() && isBranchRemove()"
         ></nz-divider>
         <a nz-typography (click)="cancel()" style="color: gray;">
           <i nz-icon nzType="close" nzTheme="outline"></i>
@@ -250,8 +250,8 @@ export class BranchOperationComponent extends BaseOperationComponent<Branch> {
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 
   listOfUsers: User[] = [];
-  isBranchEdit = signal<boolean>(true);
-  isBranchDelete = signal<boolean>(true);
+  isBranchEdit = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__EDIT));
+  isBranchRemove = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__REMOVE));
 
   override ngOnInit(): void {
     super.ngOnInit();

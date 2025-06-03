@@ -73,26 +73,16 @@ export class SettingComponent implements OnInit {
       value: route,
     });
   }
-  isMemberClassList = computed(() => true);
-  isOfferGroupList = computed(() => true);
-  isLookupList = computed(() => true);
-  isCurrencyList = computed(() => true);
-  isReportList = computed(() => true);
-  isMemberLevelList = computed(() => true);
-  isMemberUnitList = computed(() => true);
-  isUnitList = computed(() => true);
-  isAutoNumberList = computed(() => true);
-  isBlockList = computed(() => true);
-  isRoomTypeList = computed(() => true);
-  isItemList = computed(() => true);
-  isRoomCharge = computed(() => true);
-  isChargeList = computed(() => true);
-  isItemTypeList = computed(() => true);
-  isMemberGroupList = computed(() => true);
-  isTagsList = computed(() => true);
-  isSystemSettingList = computed(() => true);
-  isLocationList = computed(() => true);
-  isBranchList = computed(() => true);
+  isMemberClassList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__LIST));
+  isOfferGroupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__LIST));
+  isLookupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST));
+  isCurrencyList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST));
+  isReportList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST));
+  isAutoNumberList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST));
+  isBlockList = computed(() => true); 
+  isSystemSettingList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER) || this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING));
+  isLocationList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__LIST));
+  isBranchList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__LIST));
   ngOnInit(): void {
     this.setting = [
       {

@@ -86,8 +86,8 @@ export class SystemSettingComponent implements OnInit {
     private router: Router
   ) {}
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
-  isCompany = computed(() => true);
-  isAutoNumber = computed(() => true);
+  isCompany = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING));
+  isAutoNumber = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER));
 
   ngOnInit(): void {
     this.router

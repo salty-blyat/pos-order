@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { Branch, BranchService } from "./branch.service";
 import { BranchUiService } from "./branch-ui.service";
 import { NotificationService } from "../../utils/services/notification.service";
@@ -158,9 +158,9 @@ export class BranchListComponent extends BaseListComponent<Branch> {
     );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isBranchAdd = signal<boolean>(true);
-  isBranchEdit = signal<boolean>(true);
-  isBranchRemove = signal<boolean>(true);
-  isBranchView = signal<boolean>(true);
+  isBranchAdd = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__ADD));
+  isBranchEdit = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__EDIT));
+  isBranchRemove = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__REMOVE));
+  isBranchView = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__VIEW));
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

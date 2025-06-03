@@ -187,10 +187,10 @@ export class OfferGroupListComponent extends BaseListComponent<OfferGroup> {
     );
   }
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isOfferGroupAdd = computed(() => true);
-  isOfferGroupEdit = computed(() => true);
-  isOfferGroupRemove = computed(() => true);
-  isOfferGroupView = computed(() => true);
+  isOfferGroupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__ADD));
+  isOfferGroupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__EDIT));
+  isOfferGroupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__REMOVE));
+  isOfferGroupView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__VIEW));
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

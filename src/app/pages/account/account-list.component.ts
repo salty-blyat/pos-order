@@ -103,7 +103,7 @@ import { Subscription } from "rxjs";
             </button>
             @if(isTopup){
             <button
-              *ngIf="isAccountTopup()"
+              *ngIf="isAccountWalletTopup()"
               nz-button
               nzType="primary"
               (click)="
@@ -196,7 +196,11 @@ import { Subscription } from "rxjs";
               </td>
               <td nzEllipsis>
                 <a
-                  *ngIf="(accountType == AccountTypes.Wallet && isAccountWalletView()) || (accountType == AccountTypes.Point && isAccountPointView())"
+                  *ngIf="
+                    (accountType == AccountTypes.Wallet &&
+                      isAccountWalletView()) ||
+                    (accountType == AccountTypes.Point && isAccountPointView())
+                  "
                   (click)="
                     uiService.showTransaction(data.id || 0, data.accountType!)
                   "
@@ -204,11 +208,9 @@ import { Subscription } from "rxjs";
                 >
                 <span
                   *ngIf="
-                     (
-                      accountType == AccountTypes.Wallet &&
-                      !isAccountWalletView()
-                    ) ||
-                     (accountType == AccountTypes.Point && !isAccountPointView())
+                    (accountType == AccountTypes.Wallet &&
+                      !isAccountWalletView()) ||
+                    (accountType == AccountTypes.Point && !isAccountPointView())
                   "
                   >{{ data.transNo }}</span
                 >
@@ -294,9 +296,7 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
       AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__VIEW
     )
   );
-
-  // wallet
-  isAccountTopup = computed(() =>
+  isAccountWalletTopup = computed(() =>
     this.authService.isAuthorized(
       AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__TOPUP
     )

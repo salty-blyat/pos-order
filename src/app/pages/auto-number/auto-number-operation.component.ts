@@ -118,8 +118,8 @@ export class AutoNumberOperationComponent extends BaseOperationComponent<AutoNum
     super(fb, ref, service, uiService);
   }
 
-  isAutoNumberEdit = computed(() => true);
-  isAutoNumberRemove = computed(() => true);
+  isAutoNumberEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__EDIT));
+  isAutoNumberRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__REMOVE)); 
 
   override initControl(): void {
     const {

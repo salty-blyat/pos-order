@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   forwardRef,
   signal,
   ViewEncapsulation,
@@ -9,6 +10,8 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { OfferGroup, OfferGroupService } from "./offer-group.service";
 import { OfferGroupUiService } from "./offer-group-ui.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   providers: [
@@ -86,7 +89,7 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
       }
 
       .image-container {
-        height: 18px;  
+        height: 18px;
       }
 
       .image-container img {
@@ -107,6 +110,7 @@ import { OfferGroupUiService } from "./offer-group-ui.service";
 export class OfferGroupSelectComponent extends BaseSelectComponent<OfferGroup> {
   constructor(
     service: OfferGroupService,
+    private authService: AuthService,
     uiService: OfferGroupUiService,
     sessionStorageService: SessionStorageService
   ) {
@@ -119,5 +123,7 @@ export class OfferGroupSelectComponent extends BaseSelectComponent<OfferGroup> {
     );
   }
 
-  isOfferGroupAdd = signal<boolean>(true);
+  isOfferGroupAdd = computed<boolean>(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__ADD)
+  );
 }

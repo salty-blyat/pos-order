@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   EventEmitter,
   forwardRef,
   Input,
@@ -17,6 +18,8 @@ import { Offer, OfferService } from "./offer.service";
 import { OfferUiService } from "./offer-ui.service";
 import { Filter } from "../../utils/services/base-api.service";
 import { AccountTypes } from "../lookup/lookup-type.service";
+import { AuthKeys } from "../../const";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   providers: [
@@ -126,6 +129,7 @@ export class OfferSelectComponent
   constructor(
     override service: OfferService,
     uiService: OfferUiService,
+    public authService: AuthService,
     sessionStorageService: SessionStorageService
   ) {
     super(
@@ -211,5 +215,5 @@ export class OfferSelectComponent
     this.selectedObject.emit(selectedOffer);
   }
 
-  isOfferAdd = signal<boolean>(true);
+  isOfferAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__OFFER__ADD));
 }

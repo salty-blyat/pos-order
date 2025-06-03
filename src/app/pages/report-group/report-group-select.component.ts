@@ -83,5 +83,5 @@ export class ReportGroupSelectComponent extends BaseSelectComponent<ReportGroup>
     );
   }
 
-  isReportGroupAdd = computed(() => true);
+  isReportGroupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__ADD));
 }

@@ -12,7 +12,7 @@ import { SessionStorageService } from "../../utils/services/sessionStorage.servi
 import { Location, LocationService } from "./location.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { LocationUiService } from "./location-ui.service";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { Filter } from "../../utils/services/base-api.service";
 import { NotificationService } from "../../utils/services/notification.service";
 
@@ -174,10 +174,10 @@ export class LocationListComponent extends BaseListComponent<Location> {
   branchId = signal<number>(
     parseInt(this.sessionStorageService.getValue(this.branchIdKey) ?? 0)
   );
-  isLocationAdd = signal<boolean>(true);
-  isLocationEdit = signal<boolean>(true);
-  isLocationRemove = signal<boolean>(true);
-  isLocationView = signal<boolean>(true);
+  isLocationAdd = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__ADD));
+  isLocationEdit = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__EDIT));
+  isLocationRemove = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__REMOVE));
+  isLocationView = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__VIEW));
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 
   protected override getCustomFilters(): Filter[] {

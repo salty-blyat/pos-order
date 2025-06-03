@@ -157,9 +157,9 @@ export class AutoNumberListComponent extends BaseListComponent<AutoNumber> {
   }
 
   breadcrumbData = computed<Observable<any>>(() => this.activated.data);
-  isAutoNumberAdd = computed(() => true);
-  isAutoNumberEdit = computed(() => true);
-  isAutoNumberRemove = computed(() => true);
-  isAutoNumberView = computed(() => true);
+  isAutoNumberAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__ADD));
+  isAutoNumberEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__EDIT));
+  isAutoNumberRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__REMOVE));
+  isAutoNumberView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__VIEW));
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

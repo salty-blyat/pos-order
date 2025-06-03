@@ -5,6 +5,7 @@ import { BaseSettingSectionComponent } from "../../utils/components/base-setting
 import { NotificationService } from "../../utils/services/notification.service";
 import { SettingService } from "../../app-setting";
 import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-auto-number-section",
@@ -152,7 +153,7 @@ export class AutoNumberSectionComponent extends BaseSettingSectionComponent {
     SETTING_KEY.TransNoAutoId,
   ];
 
-  isAutoNumberEdit = computed(() => true);
+  isAutoNumberEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER));
 
   override ngOnInit() {
     super.ngOnInit();

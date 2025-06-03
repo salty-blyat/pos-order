@@ -538,8 +538,9 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
     return { value: x, label: x };
   });
 
-  isReportEdit = computed(() => true);
-  isReportRemove = computed(() => true);
+  isReportEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT));
+  isReportRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE));
+
   type: any;
 
   override initControl() {

@@ -83,5 +83,5 @@ export class AutoNumberSelectComponent extends BaseSelectComponent<AutoNumber> {
     );
   }
 
-  isAutoNumberAdd = computed(() => true);
+  isAutoNumberAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__ADD));
 }

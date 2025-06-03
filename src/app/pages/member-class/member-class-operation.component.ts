@@ -9,6 +9,7 @@ import { MemberClassUiService } from "./member-class-ui.service";
 import { Observable } from "rxjs";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { SettingService } from "../../app-setting";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-member-class-operation",
@@ -208,8 +209,10 @@ export class MemberClassOperationComponent extends BaseOperationComponent<Member
     showRemoveIcon: true,
     showDownloadIcon: false,
   };
-  isMemberClassEdit = signal<boolean>(true);
-  isMemberClassRemove = signal<boolean>(true);
+  
+  isMemberClassEdit = computed(()=>this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__EDIT));
+  isMemberClassRemove = computed(()=>this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__REMOVE));
+
   override ngOnInit(): void {
     if (this.isLoading()) return;
     this.initControl();

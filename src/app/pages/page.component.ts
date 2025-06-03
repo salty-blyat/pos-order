@@ -259,22 +259,37 @@ export class PageComponent implements OnInit {
   };
 
   isHomeList = computed(() => true);
-  isAccountList = computed(() => true);
   isAgentList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__AGENT__LIST)
   );
   isOfferList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__OFFER__LIST)
+  ); 
+  isRedemptionList = computed(() => this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__LIST));
+  isMemberList = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)); 
+  isSettingList = computed(() => 
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__LIST) || 
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__LIST) || 
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__LIST) || 
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__LIST) || 
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST) || 
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST) || 
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST) || 
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST) ||   
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER) ||
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING)
   );
-  isCardList = computed(() => true);
+  isReportList = computed(()=>  
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTIONDETAIL) ||
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTIONSUMMARY) ||
 
-  isRedemptionList = computed(() => true);
-  isMemberList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__REDEEM__REDEEMDETAIL) ||
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__REDEEM__REDEEMSUMMARY) ||
+
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__TRANSACTION__TRANSACTIONDETAILREPORT) ||
+
+    this.authService.isAuthorized(AuthKeys.APP__REPORT__PRINT__REDEEMPRINT) 
   );
-  isRoomList = computed(() => true);
-  isSettingList = computed(() => true);
-  isReportList = signal(() => true);
 
   constructor(
     private router: Router,

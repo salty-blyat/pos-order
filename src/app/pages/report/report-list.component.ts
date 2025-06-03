@@ -76,7 +76,7 @@ import { AuthKeys, SIZE_COLUMNS } from "../../const";
           </ng-template>
           <thead>
             <tr>
-              <th nzWidth="20px"></th>
+              <th nzWidth="20px" *ngIf="isReportEdit()"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">{{ "Name" | translate }}</th>
               <th [nzWidth]="SIZE_COLUMNS.NAME">
@@ -92,8 +92,8 @@ import { AuthKeys, SIZE_COLUMNS } from "../../const";
             (cdkDropListDropped)="drop($event)"
             [cdkDropListData]="lists()"
           >
-            <tr *ngFor="let data of lists(); let i = index" cdkDrag>
-              <td style="width: 35px; cursor: move;" cdkDragHandle>
+            <tr *ngFor="let data of lists(); let i = index" cdkDrag [cdkDragDisabled]="!isReportEdit()">
+              <td style="width: 35px; cursor: move;" cdkDragHandle *ngIf="isReportEdit()">
                 <span nz-icon nzType="holder" nzTheme="outline"></span>
               </td>
               <td nzEllipsis>
@@ -196,10 +196,10 @@ export class ReportListComponent
 
   reportGroupId = input<number>(0);
   breadcrumbData = computed<Observable<Data>>(() => this.activated.data);
-  isReportAdd = computed(() => true);
-  isReportEdit = computed(() => true);
-  isReportRemove = computed(() => true);
-  isReportView = computed(() => true);
+  isReportAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__ADD));
+  isReportEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT));
+  isReportRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE));
+  isReportView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__VIEW));
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["reportGroupId"]) {

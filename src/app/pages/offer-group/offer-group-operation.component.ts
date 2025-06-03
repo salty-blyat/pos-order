@@ -12,6 +12,7 @@ import { Observable, Observer } from "rxjs";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { TranslateService } from "@ngx-translate/core";
 import { Offer } from "../offer/offer.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-offer-group-operation",
@@ -199,9 +200,9 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     super(fb, ref, service, uiService);
   }
 
-  isOfferGroupEdit = computed(() => true);
-  isOfferGroupRemove = computed(() => true);
-
+  isOfferGroupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__EDIT));
+  isOfferGroupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__REMOVE));
+ 
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   nzShowButtonView = {
@@ -215,6 +216,7 @@ export class OfferGroupOperationComponent extends BaseOperationComponent<OfferGr
     showRemoveIcon: true,
     showDownloadIcon: false,
   };
+
   override ngOnInit(): void {
     if (this.isLoading()) return;
     this.initControl();

@@ -11,6 +11,7 @@ import { BaseSelectComponent } from "../../utils/components/base-select.componen
 import { AuthService } from "../../helpers/auth.service";
 import { MemberClass, MemberClassService } from "./member-class.service";
 import { MemberClassUiService } from "./member-class-ui.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   providers: [
@@ -132,5 +133,5 @@ export class MemberClassSelectComponent extends BaseSelectComponent<MemberClass>
       "all-member-class"
     );
   }
-  isMemberClassAdd = signal<boolean>(true);
+  isMemberClassAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__ADD));
 }
