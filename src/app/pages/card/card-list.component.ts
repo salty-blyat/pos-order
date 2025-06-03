@@ -98,9 +98,9 @@ import { Subscription } from "rxjs";
                   }}
                 </td>
                 <td nzEllipsis>
-                  <span *ngIf="!isCardAdd()">{{ data.cardNumber }}</span>
+                  <span *ngIf="!isCardView()">{{ data.cardNumber }}</span>
                   <a
-                    *ngIf="isCardAdd()"
+                    *ngIf="isCardView()"
                     (click)="uiService.showView(data.id!)"
                     >{{ data.cardNumber }}</a
                   >
@@ -208,10 +208,10 @@ export class CardListComponent
     }
   }
 
-  isCardAdd = computed(() => true);
-  isCardView = computed(() => true);
-  isCardRemove = computed(() => true);
-  isCardEdit = computed(() => true);
+  isCardAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__ADD));
+  isCardView = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__VIEW));
+  isCardRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__REMOVE));
+  isCardEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__EDIT));
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

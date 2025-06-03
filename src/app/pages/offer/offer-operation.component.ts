@@ -16,6 +16,7 @@ import {
 } from "../system-setting/system-setting.service";
 import { IRecentFilter } from "../../utils/services/logic-helper.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-offer-operation",
@@ -353,8 +354,13 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
   }
 
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
-  isOfferEdit = computed(() => true);
-  isOfferRemove = computed(() => true);
+  isOfferEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__OFFER__EDIT)
+  );
+  isOfferRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__OFFER__REMOVE)
+  );
+
   file: NzUploadFile[] = [];
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   nzShowUploadList = {

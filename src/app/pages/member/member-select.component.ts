@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   forwardRef,
   InputSignal,
   signal,
@@ -11,6 +12,8 @@ import { MemberUiService } from "./member-ui.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { QueryParam } from "../../utils/services/base-api.service";
+import { AuthKeys } from "../../const";
+import { AuthService } from "../../helpers/auth.service";
 
 @Component({
   providers: [
@@ -99,6 +102,7 @@ export class MemberSelectComponent extends BaseSelectComponent<Member> {
   constructor(
     service: MemberService,
     uiService: MemberUiService,
+    private authService: AuthService,
     sessionStorageService: SessionStorageService
   ) {
     super(
@@ -137,7 +141,7 @@ export class MemberSelectComponent extends BaseSelectComponent<Member> {
     filters: "",
   });
 
-  isMemberAdd = signal<boolean>(true);
+  isMemberAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD));
   override ngOnDestroy(): void {
     if (this.refreshSub$) {
       this.refreshSub$.unsubscribe();

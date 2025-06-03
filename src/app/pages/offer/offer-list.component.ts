@@ -335,10 +335,10 @@ export class OfferListComponent extends BaseListComponent<Offer> {
     return offerEnd < now;
   }
 
-  isOfferAdd = computed(() => true);
-  isOfferEdit = computed(() => true);
-  isOfferRemove = computed(() => true);
-  isOfferView = computed(() => true);
+  isOfferAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__OFFER__ADD ));
+  isOfferEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__OFFER__EDIT ));
+  isOfferRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__OFFER__REMOVE ));
+  isOfferView = computed(() => this.authService.isAuthorized(AuthKeys.APP__OFFER__VIEW));
   readonly AccountTypes = AccountTypes;
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

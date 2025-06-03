@@ -189,10 +189,25 @@ export class MemberListComponent extends BaseListComponent<Member> {
     parseInt(this.sessionStorageService.getValue(this.memberClassIdKey) ?? 0)
   );
 
-  isMemberAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD));
-  isMemberEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__EDIT));
-  isMemberRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE));
-  isMemberView = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW));
+  isMemberAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD)
+  );
+  isMemberEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__EDIT)
+  );
+  isMemberRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE)
+  );
+  isMemberView = computed(
+    () =>
+      this.authService.isAuthorized(
+        AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__LIST
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__LIST
+      ) ||
+      this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__LIST)
+  );
 
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];

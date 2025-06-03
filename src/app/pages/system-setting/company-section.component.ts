@@ -149,7 +149,7 @@ import { AuthService } from "../../helpers/auth.service";
           </nz-form-control>
         </nz-form-item>
 
-        <nz-form-item style="margin-bottom: 10px !important;">
+        <!-- <nz-form-item style="margin-bottom: 10px !important;">
           <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>
             {{ "SecondCurrency" | translate }}
           </nz-form-label>
@@ -158,7 +158,7 @@ import { AuthService } from "../../helpers/auth.service";
               formControlName="{{ SettingKey.SecondCurrency }}"
             ></app-currency-select>
           </nz-form-control>
-        </nz-form-item>
+        </nz-form-item> -->
       </ng-container>
 
       <nz-form-item *ngIf="isCompanySettingEdit()">
@@ -224,7 +224,7 @@ export class CompanySectionComponent extends BaseSettingSectionComponent {
     SETTING_KEY.CompanyEmail,
     SETTING_KEY.CompanyWebsite,
     SETTING_KEY.MainCurrency,
-    SETTING_KEY.SecondCurrency,
+    // SETTING_KEY.SecondCurrency,
   ];
 
   isCompanySettingEdit = computed(() => true);

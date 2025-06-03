@@ -21,6 +21,7 @@ import { Component, computed, signal, ViewEncapsulation } from "@angular/core";
 import { AccountUiService } from "../account/account-ui.service";
 import { RedemptionUiService } from "../redemption/redemption-ui.service";
 import { NzImageService } from "ng-zorro-antd/image";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-member-operation",
@@ -115,7 +116,7 @@ import { NzImageService } from "ng-zorro-antd/image";
             </li>
 
             <!-- card -->
-            @if(modal.isView){
+            @if(modal.isView && isCardList()){
             <li
               nz-menu-item
               [nzSelected]="current == 2"
@@ -127,7 +128,7 @@ import { NzImageService } from "ng-zorro-antd/image";
             }
 
             <!-- account -->
-            @if(modal.isView) {
+            @if(modal.isView && isAccountList()) {
             <li
               style="height:auto; padding-bottom:12px"
               nz-menu-item
@@ -138,19 +139,30 @@ import { NzImageService } from "ng-zorro-antd/image";
                 {{ "Account" | translate }}
               </div>
 
-              <div
-                *ngFor="let account of sortedAccounts"
-                style="display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
-              >
-                <img
-                  [src]="account.accountTypeImage"
-                  [alt]="account.accountType"
-                  style="height:22px; margin-right: 8px;"
-                />
-
-                <div>
-                  {{ account.balance | accountBalance : account.accountType }}
-                </div>
+              <div *ngFor="let account of sortedAccounts">
+                <ng-container
+                  *ngIf="
+                    (account.accountType === AccountTypes.Wallet &&
+                      isAccountWalletList()) ||
+                    (account.accountType === AccountTypes.Point &&
+                      isAccountPointList())
+                  "
+                >
+                  <div
+                    style="display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
+                  >
+                    <img
+                      [src]="account.accountTypeImage"
+                      [alt]="account.accountType"
+                      style="height:22px; margin-right: 8px;"
+                    />
+                    <div>
+                      {{
+                        account.balance | accountBalance : account.accountType
+                      }}
+                    </div>
+                  </div>
+                </ng-container>
               </div>
             </li>
             }
@@ -330,6 +342,7 @@ import { NzImageService } from "ng-zorro-antd/image";
 
             <div style="margin: 0 8px;" *ngSwitchCase="2" ngCase>
               <app-card-list
+                *ngIf="isCardList()"
                 [accountId]="model.defaultAccountId!"
                 [memberId]="modal.id"
               />
@@ -337,19 +350,26 @@ import { NzImageService } from "ng-zorro-antd/image";
 
             <div *ngSwitchCase="3" class="tab-content">
               <nz-tabset style="margin: 0 8px;">
-                <nz-tab
-                  *ngFor="let account of sortedAccounts"
-                  [nzTitle]="
-                    translateService.currentLang == 'km'
-                      ? account.accountTypeNameKh ?? ''
-                      : account.accountTypeNameEn ?? ''
-                  "
-                >
-                  <app-account-list
-                    [accountId]="account.accountId!"
-                    [accountType]="account.accountType!"
-                  ></app-account-list>
-                </nz-tab>
+                <ng-container *ngFor="let account of sortedAccounts">
+                  <nz-tab
+                    *ngIf="
+                      (account.accountType === AccountTypes.Wallet &&
+                        isAccountWalletList()) ||
+                      (account.accountType === AccountTypes.Point &&
+                        isAccountPointList())
+                    "
+                    [nzTitle]="
+                      translateService.currentLang == 'km'
+                        ? account.accountTypeNameKh ?? ''
+                        : account.accountTypeNameEn ?? ''
+                    "
+                  >
+                    <app-account-list
+                      [accountId]="account.accountId!"
+                      [accountType]="account.accountType!"
+                    ></app-account-list>
+                  </nz-tab>
+                </ng-container>
                 <nz-tab [nzTitle]="'Redemption' | translate">
                   <app-redemption-list
                     [memberId]="modal.id"
@@ -414,6 +434,23 @@ import { NzImageService } from "ng-zorro-antd/image";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
+      .account-menu-item {
+        height: auto !important;
+        padding-bottom: 12px;
+      }
+
+      .account-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        line-height: 1;
+      }
+
+      .account-icon {
+        height: 22px;
+        margin-right: 8px;
+      }
+
       .ant-tabs-tab + .ant-tabs-tab {
         margin: 0 0 0 18px !important;
       }
@@ -556,8 +593,35 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   memberName = "";
   memberNameEn = "";
   current: number = 1;
-  isMemberEdit = computed(() => true);
-  isMemberRemove = computed(() => true);
+  isMemberEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__EDIT)
+  );
+  isMemberRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE)
+  );
+  isCardList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__LIST)
+  );
+  isAccountWalletList = computed(() =>
+    this.authService.isAuthorized(
+      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__LIST
+    )
+  );
+  isAccountPointList = computed(() =>
+    this.authService.isAuthorized(
+      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__LIST
+    )
+  );
+  isAccountList = computed(
+    () =>
+      this.authService.isAuthorized(
+        AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__LIST
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__LIST
+      )
+  );
+
   selectedAccount = signal<number>(0);
   accountRefreshSub = new Subscription();
   redemptionRefreshSub = new Subscription();

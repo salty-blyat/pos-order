@@ -34,7 +34,7 @@ export interface Type {
         [(nzCollapsed)]="isCollapsed"
         [nzTrigger]="null"
       >
-       <div class="header-content">
+        <div class="header-content">
           <div class="sidebar-logo">
             <div class="logo-link">
               <img [src]="authService.app?.iconUrl" alt="logo" />
@@ -260,15 +260,16 @@ export class PageComponent implements OnInit {
 
   isHomeList = computed(() => true);
   isAccountList = computed(() => true);
-  isAgentList = computed(() => true);
-  isOfferList = computed(() => true);
+  isAgentList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__AGENT__LIST)
+  );
+  isOfferList = computed(() =>  this.authService.isAuthorized(AuthKeys.APP__OFFER__LIST));
   isCardList = computed(() => true);
 
   isRedemptionList = computed(() => true);
-  // isMemberList = computed(() =>
-  //   this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
-  // );
-  isMemberList = computed(() => true);
+  isMemberList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
+  );
   isRoomList = computed(() => true);
   isSettingList = computed(() => true);
   isReportList = signal(() => true);

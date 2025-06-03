@@ -7,6 +7,7 @@ import { AuthService } from "../../helpers/auth.service";
 import { Card, CardService } from "./card.service";
 import { CardUiService } from "./card-ui.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-card-operation",
@@ -145,9 +146,10 @@ export class CardOperationComponent extends BaseOperationComponent<Card> {
     }
   }
 
-  readonly LOOKUP_TYPE = LOOKUP_TYPE;
-  isCardEdit = computed(() => true);
-  isCardRemove = computed(() => true);
+  readonly LOOKUP_TYPE = LOOKUP_TYPE; 
+  
+  isCardRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__REMOVE));
+  isCardEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__EDIT));
 
   override initControl(): void {
     const { required } = CommonValidators;

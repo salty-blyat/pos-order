@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { Agent, AgentService } from "./agent.service";
 import { AgentUiService } from "./agent-ui.service";
 import { NotificationService } from "../../utils/services/notification.service";
@@ -159,9 +159,9 @@ export class AgentListComponent extends BaseListComponent<Agent> {
       notificationService
     );
   }
-  isAgentAdd = signal<boolean>(true);
-  isAgentEdit = signal<boolean>(true);
-  isAgentRemove = signal<boolean>(true);
-  isAgentView = signal<boolean>(true);
+  isAgentAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__AGENT__ADD));
+  isAgentEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__AGENT__EDIT));
+  isAgentRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__AGENT__REMOVE));
+  isAgentView = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__AGENT__VIEW ));
   readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

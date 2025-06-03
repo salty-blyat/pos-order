@@ -10,6 +10,7 @@ import {
   SETTING_KEY,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
+import { AuthKeys } from "../../const";
 @Component({
   selector: "app-agent-operation",
   template: ` <div *nzModalTitle class="modal-header-ellipsis">
@@ -187,8 +188,8 @@ export class AgentOperationComponent extends BaseOperationComponent<Agent> {
   ) {
     super(fb, ref, service, uiService);
   }
-  isAgentEdit = computed(() => true);
-  isAgentRemove = computed(() => true);
+  isAgentEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__AGENT__EDIT));
+  isAgentRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__AGENT__REMOVE));
   override ngOnInit(): void {
     super.ngOnInit();
     if (!this.modal?.isView) {

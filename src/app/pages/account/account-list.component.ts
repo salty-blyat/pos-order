@@ -12,7 +12,7 @@ import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { AuthService } from "../../helpers/auth.service";
 import { ActivatedRoute } from "@angular/router";
-import { SIZE_COLUMNS } from "../../const";
+import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { Account, AccountService, Transaction } from "./account.service";
 import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 import { NotificationService } from "../../utils/services/notification.service";
@@ -82,7 +82,11 @@ import { Subscription } from "rxjs";
 
           <div nz-flex nzGap="small">
             <button
-              *ngIf="isAccountAdjust()"
+              *ngIf="
+                (accountType == AccountTypes.Wallet &&
+                  isAccountWalletAdjust()) ||
+                (accountType == AccountTypes.Point && isAccountPointAdjust())
+              "
               style="margin-right: 4px;"
               nz-button
               nzType="primary"
@@ -115,7 +119,7 @@ import { Subscription } from "rxjs";
             </button>
             } @else{
             <button
-              *ngIf="isAccountReward()"
+              *ngIf="isAccountEarn()"
               nz-button
               nzType="primary"
               (click)="
@@ -192,13 +196,26 @@ import { Subscription } from "rxjs";
               </td>
               <td nzEllipsis>
                 <a
-                  *ngIf="isTransactionView()"
+                  *ngIf="
+                    (accountType == AccountTypes.Wallet &&
+                      isAccountWalletView()) ||
+                    (accountType == AccountTypes.Point && isAccountPointView())
+                  "
                   (click)="
                     uiService.showTransaction(data.id || 0, data.accountType!)
                   "
                   >{{ data.transNo }}</a
                 >
-                <span *ngIf="!isTransactionView()">{{ data.transNo }}</span>
+                <span
+                  *ngIf="
+                     (
+                      accountType == AccountTypes.Wallet &&
+                      !isAccountWalletView()
+                    ) ||
+                     (accountType == AccountTypes.Point && !isAccountPointView())
+                  "
+                  >{{ data.transNo }}</span
+                >
               </td>
               <!-- <td nzEllipsis>{{ data.offerName }}</td> -->
               <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
@@ -211,7 +228,10 @@ import { Subscription } from "rxjs";
               </td>
 
               <td nzEllipsis>{{ data.locationName }}</td>
-              <td nzEllipsis><span *ngIf="data.offerName">{{data.offerName+' '}}</span>{{  data.note }}</td>
+              <td nzEllipsis>
+                <span *ngIf="data.offerName">{{ data.offerName + " " }}</span
+                >{{ data.note }}
+              </td>
               <td
                 nzEllipsis
                 nzAlign="right"
@@ -261,10 +281,41 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   @Input() accountId = 0;
   @Input() accountType = 0;
   transDate: any = [];
-  isTransactionView = computed(() => true);
-  isAccountTopup = computed(() => true);
-  isAccountReward = computed(() => true);
-  isAccountAdjust = computed(() => true);
+
+  isAccountEarn = computed(() =>
+    this.authService.isAuthorized(
+      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__EARN
+    )
+  );
+  isAccountPointAdjust = computed(() =>
+    this.authService.isAuthorized(
+      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__ADJUST
+    )
+  );
+
+  isAccountPointView = computed(() =>
+    this.authService.isAuthorized(
+      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__POINT__VIEW
+    )
+  );
+
+  // wallet
+  isAccountTopup = computed(() =>
+    this.authService.isAuthorized(
+      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__TOPUP
+    )
+  );
+  isAccountWalletAdjust = computed(() =>
+    this.authService.isAuthorized(
+      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__ADJUST
+    )
+  );
+  isAccountWalletView = computed(() =>
+    this.authService.isAuthorized(
+      AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__VIEW
+    )
+  );
+
   account!: Account;
   isTopup = false;
   locationId = signal<number>(0);
