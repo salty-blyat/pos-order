@@ -52,7 +52,17 @@ import { Member, MemberService } from "./member.service";
         [nzValue]="item.id"
         [nzLabel]="item.name + ' '"
       >
-        <span class="b-name">{{ item.name }}</span>
+          <div nz-flex nzAlign="center" nzGap="small">
+          <nz-avatar nzIcon="user" [nzSrc]="item.photo"></nz-avatar>
+          <div class="container">
+            <span class="title">
+              {{ item.name }}
+            </span>
+            <span class="subtitle">
+              {{ item.phone }}
+            </span>
+          </div>
+        </div>
       </nz-option>
     </nz-select>
     <ng-template #actionItem>
@@ -84,6 +94,21 @@ import { Member, MemberService } from "./member.service";
 
   styles: [
     `
+    .container {
+        padding-left: 5px;
+        display: flex;
+        flex-direction: column;
+        .title {
+          display: flex;
+          gap: 2px;
+          font-size: 12px;
+        }
+        .subtitle {
+          font-size: 10px;
+          line-height: 0.7;
+          color: #6f6f6f;
+        }
+      }
       .div-bottom {
         margin: 4px 4px 0 4px;
       }
