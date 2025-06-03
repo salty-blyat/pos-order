@@ -33,6 +33,8 @@ import { LocationMultiSelectComponent } from "../location/location-multi-select.
 import { AccountTypes, TransactionTypes } from "../lookup/lookup-type.service";
 import { LookupItemSelectComponent } from "../lookup/lookup-item/lookup-item-select.component";
 import { MemberMultiSelectComponent } from "../member/member-multi-select.component";
+import { OfferMultiSelectComponent } from "../offer/offer-multi-select.component";
+import { OfferGroupMultiSelectComponent } from "../offer-group/offer-group-multi-select.component";
 export let ParamSelectComponent = {
   Lookups: LookupMultipleSelectComponent,
   StaticDropdownMultipleSelect: StaticDropdownMultipleSelectComponent,
@@ -42,6 +44,8 @@ export let ParamSelectComponent = {
   AccountTypes: LookupMultipleSelectComponent,
   TransactionTypes: LookupMultipleSelectComponent,
   Members: MemberMultiSelectComponent,
+  Offer: OfferMultiSelectComponent,
+  OfferGroup:OfferGroupMultiSelectComponent
 };
 
 @Component({

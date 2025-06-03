@@ -196,11 +196,7 @@ import { Subscription } from "rxjs";
               </td>
               <td nzEllipsis>
                 <a
-                  *ngIf="
-                    (accountType == AccountTypes.Wallet &&
-                      isAccountWalletView()) ||
-                    (accountType == AccountTypes.Point && isAccountPointView())
-                  "
+                  *ngIf="(accountType == AccountTypes.Wallet && isAccountWalletView()) || (accountType == AccountTypes.Point && isAccountPointView())"
                   (click)="
                     uiService.showTransaction(data.id || 0, data.accountType!)
                   "

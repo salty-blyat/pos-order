@@ -8,16 +8,16 @@ import {
   Output,
   ViewEncapsulation,
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms"; 
-import { Location, LocationService } from "./location.service";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";  
 import { BaseMultipleSelectComponent } from "../../utils/components/base-multiple-select.component";
 import { TranslateService } from "@ngx-translate/core";
+import { Offer, OfferService } from "./offer.service";
 @Component({
-  selector: "app-location-multi-select",
+  selector: "app-offer-multi-select",
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => LocationMultiSelectComponent),
+      useExisting: forwardRef(() => OfferMultiSelectComponent),
       multi: true,
     },
   ],
@@ -39,7 +39,7 @@ import { TranslateService } from "@ngx-translate/core";
       style="width: 100%"
       (nzScrollToBottom)="searchMore()"
     >
-      <nz-option [nzValue]="0" [nzLabel]="'AllLocation' | translate"> </nz-option>
+      <nz-option [nzValue]="0" [nzLabel]="'AllOffer' | translate"> </nz-option>
       <nz-option
         *ngFor="let item of lists"
         nzCustomContent
@@ -88,7 +88,8 @@ import { TranslateService } from "@ngx-translate/core";
       }
       .b-code {
         font-weight: bolder;
-      } 
+      }
+    
       ::ng-deep .ant-select-item-group {
         color: rgba(0, 0, 0, 0.4);
       }
@@ -103,11 +104,11 @@ import { TranslateService } from "@ngx-translate/core";
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class LocationMultiSelectComponent
-  extends BaseMultipleSelectComponent<Location>
+export class OfferMultiSelectComponent
+  extends BaseMultipleSelectComponent<Offer>
   implements OnInit, ControlValueAccessor, OnDestroy
 {
-  constructor(service: LocationService, translate: TranslateService) {
+  constructor(service: OfferService, translate: TranslateService) {
     super(translate, service);
   }
 }

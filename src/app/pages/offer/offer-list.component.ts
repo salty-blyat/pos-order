@@ -33,7 +33,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               "
             >
             </app-filter-input>
-
+ 
             <app-lookup-item-select
               class="fixed-width-select"
               showAll="AllOfferType"

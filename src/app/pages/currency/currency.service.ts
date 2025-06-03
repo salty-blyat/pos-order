@@ -1,7 +1,7 @@
-import { BaseApiService } from '../../utils/services/base-api.service';
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { SettingService } from '../../app-setting';
+import { BaseApiService } from "../../utils/services/base-api.service";
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { SettingService } from "../../app-setting";
 
 export enum DiscountType {
   Percentage = 1,
@@ -15,18 +15,17 @@ export interface Currency {
   format?: string;
   rounding?: number;
   exchangeRate?: number;
-  denominations	?: string[];
 }
- 
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class CurrencyService extends BaseApiService<Currency> {
   constructor(private http: HttpClient, settingService: SettingService) {
-    super('currency', http, settingService);
+    super("currency", http, settingService);
   }
   roundedCurrency(number: number, rounding: number) {
-    if (typeof number === 'string') number = parseFloat(number);
+    if (typeof number === "string") number = parseFloat(number);
     const toFloat: number = parseFloat(number.toFixed(4));
     const rounded = Math.floor(parseFloat((toFloat / rounding).toPrecision(6)));
     const result = rounded * rounding;
@@ -34,7 +33,7 @@ export class CurrencyService extends BaseApiService<Currency> {
   }
 
   roundedDecimal(number: number) {
-    if (typeof number === 'string') number = parseFloat(number);
+    if (typeof number === "string") number = parseFloat(number);
     const toFloat: number = parseFloat(number.toFixed(4));
     const rounded = Math.floor(parseFloat((toFloat / 0.01).toPrecision(6)));
     const result = rounded * 0.01;

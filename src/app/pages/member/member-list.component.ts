@@ -206,8 +206,7 @@ export class MemberListComponent extends BaseListComponent<Member> {
       this.authService.isAuthorized(
         AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__LIST
       ) ||
-      this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__LIST)
-  );
+      this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW__CARD__LIST))
 
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];

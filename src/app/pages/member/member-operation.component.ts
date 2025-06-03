@@ -130,39 +130,26 @@ import { AuthKeys } from "../../const";
             <!-- account -->
             @if(modal.isView && isAccountList()) {
             <li
-              style="height:auto; padding-bottom:12px"
+              style="height:auto"
               nz-menu-item
               [nzSelected]="current == 3"
               (click)="switchCurrent(3)"
             >
-              <div>
-                {{ "Account" | translate }}
-              </div>
+              {{ "Account" | translate }}
 
               <div *ngFor="let account of sortedAccounts">
-                <ng-container
-                  *ngIf="
-                    (account.accountType === AccountTypes.Wallet &&
-                      isAccountWalletList()) ||
-                    (account.accountType === AccountTypes.Point &&
-                      isAccountPointList())
-                  "
+                <div
+                  style="row-gap:12px; display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
                 >
-                  <div
-                    style="display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
-                  >
-                    <img
-                      [src]="account.accountTypeImage"
-                      [alt]="account.accountType"
-                      style="height:22px; margin-right: 8px;"
-                    />
-                    <div>
-                      {{
-                        account.balance | accountBalance : account.accountType
-                      }}
-                    </div>
+                  <img
+                    [src]="account.accountTypeImage"
+                    [alt]="account.accountType"
+                    style="height:22px; margin-right: 8px;"
+                  />
+                  <div>
+                    {{ account.balance | accountBalance : account.accountType }}
                   </div>
-                </ng-container>
+                </div>
               </div>
             </li>
             }
@@ -619,7 +606,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       ) ||
       this.authService.isAuthorized(
         AuthKeys.APP__MEMBER__VIEW__ACCOUNT__WALLET__LIST
-      )
+      ) ||
+      this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__LIST)
   );
 
   selectedAccount = signal<number>(0);

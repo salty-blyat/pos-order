@@ -23,6 +23,7 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { Observable, Subscriber, Subscription } from "rxjs";
 import { Currency, CurrencyService } from "../currency/currency.service";
 import { ReportService } from "../report/report.service";
+import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-redemption-operation",
@@ -42,7 +43,7 @@ import { ReportService } from "../report/report.service";
         <div nz-row [nzGutter]="16">
           <!-- Column 1: Form -->
           <div nz-col [nzSm]="24" [nzLg]="14">
-            <h3 style="line-height: 0.1">
+            <h3 class="header">
               <nz-icon nzType="credit-card" nzTheme="outline" />
               {{ "TransactionDetail" | translate }}
             </h3>
@@ -77,7 +78,7 @@ import { ReportService } from "../report/report.service";
                 </nz-form-item>
               </div>
             </div>
-            <h3 style="line-height: 0.1">
+            <h3 class="header">
               <nz-icon nzType="user" nzTheme="outline" />
               {{ "MemberInformation" | translate }}
             </h3>
@@ -88,13 +89,16 @@ import { ReportService } from "../report/report.service";
                 }}</nz-form-label>
                 <nz-form-item>
                   <nz-form-control>
-                    <app-member-select formControlName="memberId" [loadMoreOption]="true" />
+                    <app-member-select
+                      formControlName="memberId"
+                      [loadMoreOption]="true"
+                    />
                   </nz-form-control>
                 </nz-form-item>
               </div>
             </div>
             <!-- member card -->
-            <div class="account-card" style="margin-bottom: 12px">
+            <div class="account-card member-card">
               <div nz-flex nzGap="small">
                 <nz-avatar
                   [nzText]="selectedMember?.name?.substring(0, 2)"
@@ -185,14 +189,8 @@ import { ReportService } from "../report/report.service";
             </nz-form-item>
           </div>
           <!-- Column 2: Summary -->
-          <div
-            style="padding: 0 12px 12px 12px"
-            nz-row
-            nz-col
-            [nzSm]="24"
-            [nzLg]="10"
-          >
-            <h3 style="line-height: 0.1">
+          <div class="additional-detail" nz-row nz-col [nzSm]="24" [nzLg]="10">
+            <h3 class="headere">
               <nz-icon nzType="file" nzTheme="outline" />
               {{ "AdditionalDetail" | translate }}
             </h3>
@@ -246,7 +244,7 @@ import { ReportService } from "../report/report.service";
 
                   <nz-input-number
                     nzSize="small"
-                    style="width: 60px; margin-left:auto"
+                    class="num-input"
                     formControlName="qty"
                     [nzMin]="1"
                     [nzStep]="1"
@@ -287,7 +285,7 @@ import { ReportService } from "../report/report.service";
               nzVertical="true"
               style="margin-top: 16px;height:170px"
             >
-              <h3 style="text-weight: 600">
+              <h3 class="title">
                 <nz-icon nzType="credit-card" nzTheme="outline" />
                 {{ "TransactionSummary" | translate }}
               </h3>
@@ -313,7 +311,7 @@ import { ReportService } from "../report/report.service";
                 </span>
               </div>
               <div style="margin-top:30px">
-                <nz-divider style="margin: 8px 0"></nz-divider>
+                <nz-divider class="divider"></nz-divider>
                 <div nz-flex nzJustify="space-between">
                   <span>{{ "RemainingBalance" | translate }}</span>
                   <span
@@ -359,7 +357,7 @@ import { ReportService } from "../report/report.service";
             <span nz-icon nzType="printer" nzTheme="outline"></span>
             {{ "Print" | translate }}
           </a>
-          <div class="col-action">
+          <div class="col-action action-container">
             <a
               *ngIf="!isLoading() && isRedemptionRemove()"
               class="delete"
@@ -370,16 +368,6 @@ import { ReportService } from "../report/report.service";
               <i nz-icon nzType="delete" nzTheme="outline"></i>
               <span class="action-text"> {{ "Delete" | translate }}</span>
             </a>
-
-            <!-- <a
-              nz-typography
-              nzType="danger"
-              (click)="uiService.showDelete(model.id || 0)"
-              *ngIf="!isLoading() && isRedemptionRemove()"
-            >
-              <i nz-icon nzType="delete" nzTheme="outline"></i>
-              <span class="action-text"> {{ "Delete" | translate }}</span>
-            </a> -->
             <nz-divider
               nzType="vertical"
               *ngIf="!isLoading() && isRedemptionRemove()"
@@ -396,6 +384,21 @@ import { ReportService } from "../report/report.service";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
   styles: ` 
+  .divider {
+    margin: 8px 0;
+  }
+  .additional-detail{
+    padding: 0 12px 12px 12px;
+  }
+  .action-container{
+    margin-left:auto;
+  }
+  .header{
+    line-height:0.1;
+  }
+  .title{
+    text-weight: 600;
+  }
   .qty-container {
   display: grid;
   grid-template-columns: auto auto auto;
@@ -436,11 +439,17 @@ import { ReportService } from "../report/report.service";
 .card-value { 
   margin-top: 4px;
 }
+.num-input{
+  width: 60px !important; 
+  margin-left:auto;
+}
   
 nz-form-label{
   padding: 0px !important; 
 }   
-
+.member-card{
+  margin-bottom: 12px;
+}
 .account-card{
   border:1px solid #d3d3d3;
   min-width: 170px ;
@@ -543,8 +552,13 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   fileList: NzUploadFile[] = [];
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
-  isRedemptionPrint = computed(() => true);
-  isRedemptionRemove = computed(() => true);
+  isRedemptionPrint = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__PRINT)
+  );
+  isRedemptionRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__REMOVE)
+  );
+
   uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   selectedAccount: MemberAccount | null = null;
 

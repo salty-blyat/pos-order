@@ -66,12 +66,13 @@ interface SharedDomain {
       </nz-option>
     </nz-select>
     <ng-template #actionItem>
-      <div style="padding: 5px 12px; border-top: 1px solid #f0f0f0">
+      <nz-spin *ngIf="loading" style="bottom: 8px;"></nz-spin>
+      <div class="div-bottom">
         <a nz-button nzType="primary" (click)="ok()" style="margin-right: 5px">
-          {{ "ok" | translate }}
+          {{ "Ok" | translate }}
         </a>
         <a nz-button (click)="cancel()">
-          {{ "cancel" | translate }}
+          {{ "Cancel" | translate }}
         </a>
       </div>
     </ng-template>
@@ -114,7 +115,7 @@ interface SharedDomain {
         border: 0 !important;
       }
       :host ::ng-deep .ant-select-multiple .ant-select-selection-item {
-        max-width: 120px !important;
+        max-width: 170px !important;
       }
     `,
   ],

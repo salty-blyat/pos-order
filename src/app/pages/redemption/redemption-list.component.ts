@@ -259,6 +259,7 @@ import { Subscription } from "rxjs";
               </td>
               <td class="col-action">
                 <a
+                  *ngIf="isRedemptionRemove()"
                   class="delete"
                   [nzDisabled]="data.status === RedeemStatuses.Removed"
                   (click)="uiService.showDelete(data.id || 0)"
@@ -490,10 +491,15 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
     return filters;
   }
 
-  isRedemptionAdd = computed(() => true);
-  isRedemptionEdit = computed(() => true);
-  isRedemptionRemove = computed(() => true);
-  isRedemptionView = computed(() => true);
+  isRedemptionAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__ADD)
+  );
+  isRedemptionRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__REMOVE)
+  );
+  isRedemptionView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__VIEW)
+  );
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
   readonly AccountTypes = AccountTypes;
   readonly RedeemStatuses = RedeemStatuses;

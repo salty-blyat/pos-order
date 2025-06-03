@@ -235,10 +235,10 @@ export class LookupItemListComponent extends BaseListComponent<LookupItem> {
 
   lookupTypeId = signal<number>(0);
   loading = true;
-  isLookupAdd = computed(() => true);
-  isLookupEdit = computed(() => true);
-  isLookupRemove = computed(() => true);
-  isLookupView = computed(() => true);
+  isLookupAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__ADD));
+  isLookupEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__EDIT));
+  isLookupRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__REMOVE));
+  isLookupView = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__VIEW));
 
   override ngOnInit(): void {
     super.ngOnInit();

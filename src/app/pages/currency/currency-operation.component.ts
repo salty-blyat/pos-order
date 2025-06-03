@@ -73,22 +73,7 @@ import { AuthKeys } from "../../const";
             <input nz-input formControlName="exchangeRate" />
           </nz-form-control>
         </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label
-            [nzSm]="6"
-            [nzXs]="24"
-            nzRequired
-            nzFor="denominations"
-            >{{ "Denormination" | translate }}</nz-form-label
-          >
-          <nz-form-control [nzSm]="17" [nzXs]="24">
-            <nz-select
-              formControlName="denominations"
-              nzMode="tags"
-            ></nz-select>
-          </nz-form-control>
-        </nz-form-item>
+ 
       </form>
     </div>
     <div *nzModalFooter>
@@ -169,8 +154,7 @@ export class CurrencyOperationComponent extends BaseOperationComponent<Currency>
       name: [null, [required, nameMaxLengthValidator]],
       format: [null, [required]],
       exchangeRate: [null, [required]],
-      rounding: [null, [required]],
-      denominations: [[], [required]],
+      rounding: [null, [required]]
     });
   }
 
@@ -181,8 +165,7 @@ export class CurrencyOperationComponent extends BaseOperationComponent<Currency>
       name: this.model.name,
       format: this.model.format,
       rounding: this.model.rounding,
-      exchangeRate: this.model.exchangeRate,
-      denominations: this.model.denominations,
+      exchangeRate: this.model.exchangeRate
     });
   }
 }
