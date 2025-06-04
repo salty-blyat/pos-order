@@ -231,6 +231,41 @@ import { AuthKeys } from "../../const";
                       </div>
                     </div>
 
+                     <div nz-row>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
+                            >{{ "Gender" | translate }}
+                          </nz-form-label>
+                          <nz-form-control
+                            [nzSm]="14"
+                            [nzXs]="24"
+                            nzErrorTip=""
+                          >
+                          <app-lookup-item-select
+                              formControlName="genderId"
+                              [lookupType]="LOOKUP_TYPE.Gender" 
+                              [showImage]="false"
+                            ></app-lookup-item-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                      <div nz-col [nzXs]="12">
+                        <nz-form-item>
+                          <nz-form-label [nzSm]="8" [nzXs]="24"
+                            >{{ "Nationality" | translate }}
+                          </nz-form-label>
+                          <nz-form-control [nzSm]="14" [nzXs]="24" >
+                               <app-lookup-item-select
+                              formControlName="nationalityId"
+                              [lookupType]="LOOKUP_TYPE.Nationality" 
+                              [showImage]="false"
+                            ></app-lookup-item-select>
+                          </nz-form-control>
+                        </nz-form-item>
+                      </div>
+                    </div>
+
                     <div nz-row>
                       <div nz-col [nzXs]="12">
                         <nz-form-item>
@@ -730,6 +765,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       joinDate: [new Date(), [required]],
       photo: [null],
       defaultAccountId: [null],
+      genderId: [null, required],
+      nationalityId: [null],
     });
     setTimeout(() => {
       if (this.modal.memberClassId !== 0 && this.modal.memberClassId)
@@ -754,6 +791,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       photo: this.model.photo,
       joinDate: this.model.joinDate,
       defaultAccountId: this.model.defaultAccountId,
+      genderId: this.model.genderId,
+      nationalityId: this.model.nationalityId,
     });
 
     if (this.model.photo && this.model.photo !== "") {

@@ -24,11 +24,12 @@ export class AccountBalancePipe implements PipeTransform {
     showZero: boolean = false
   ): any {
     const safeBalance = Number(balance);
-    if (!showZero && balance == 0) {
-      return "Free";
-    }
+    
     if (isNaN(safeBalance)) {
       return type === AccountTypes.Wallet ? "$ 0.00" : "0 pts";
+    }
+    if (!showZero && safeBalance == 0) {
+      return "Free";
     }
 
     let currency: Currency[] = this.localStorageService.getValue(

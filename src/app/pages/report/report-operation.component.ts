@@ -37,12 +37,15 @@ import { OfferMultiSelectComponent } from "../offer/offer-multi-select.component
 import { OfferGroupMultiSelectComponent } from "../offer-group/offer-group-multi-select.component";
 import { AgentMultiSelectComponent } from "../agent/agent-multi-select.component";
 import { MemberClassMultiSelectComponent } from "../member-class/member-class-multi-select.component";
+import { DateRangeInputComponent } from "../../utils/components/date-range-input.component";
+import { DateInputReportComponent } from "../../utils/components/date-input-report.component";
 export let ParamSelectComponent = {
   Lookups: LookupMultipleSelectComponent,
   StaticDropdownMultipleSelect: StaticDropdownMultipleSelectComponent,
   StaticDropdownSingleSelect: StaticDropdownSingleSelectComponent,
   DateRange: DateRangeInputReportComponent,
   Locations: LocationMultiSelectComponent,
+  Date: DateInputReportComponent,
   AccountTypes: LookupMultipleSelectComponent,
   TransactionTypes: LookupMultipleSelectComponent,
   Members: MemberMultiSelectComponent,

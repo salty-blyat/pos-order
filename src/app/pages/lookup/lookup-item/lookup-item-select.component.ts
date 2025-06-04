@@ -58,7 +58,7 @@ import { AccountService } from "../../account/account.service";
         "
       >
         <div class='option-container'>
-          <div class="image-container">
+          <div class="image-container" *ngIf="showImage()">
             <img *ngIf="item.image" [src]="item.image" alt="" />
             <img
               *ngIf="!item.image"

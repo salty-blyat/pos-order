@@ -512,7 +512,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       maxQty: [1, [required, integerValidator]],
       redeemWith: [null, [required]],
       redeemCost: [0, [required]],
-      redeemMinBalance: [10, [required]],
+      redeemMinBalance: [0, [required]],
 
       startDate: [null],
       startTime: [null],

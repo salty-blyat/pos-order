@@ -314,7 +314,9 @@ export class PageComponent implements OnInit {
       this.authService.isAuthorized(
         AuthKeys.APP__REPORT__TRANSACTION__TRANSACTION_DETAIL_REPORT
       ) ||
-      this.authService.isAuthorized(AuthKeys.APP__REPORT__PRINT__REDEEM_PRINT)
+      this.authService.isAuthorized(AuthKeys.APP__REPORT__PRINT__REDEEM_PRINT) ||
+      this.authService.isAuthorized(AuthKeys.APP__REPORT__POINT__POINT_SUMMARY) ||
+      this.authService.isAuthorized(AuthKeys.APP__REPORT__POINT__MEMBER_BALANCE) 
   );
 
   constructor(
