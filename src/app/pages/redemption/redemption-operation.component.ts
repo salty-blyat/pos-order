@@ -292,7 +292,7 @@ import { AuthKeys } from "../../const";
                 <span>{{ "Balance" | translate }}</span>
                 <span>{{
                   extData?.startBalance
-                    | accountBalance : selectedOffer?.redeemWith! : true
+                    | accountBalance : selectedOffer?.redeemWith || AccountTypes.Wallet : true
                 }}</span>
               </div>
 
@@ -322,7 +322,7 @@ import { AuthKeys } from "../../const";
                   <span style="font-weight: bold">
                     {{
                       extData?.endingBalance
-                        | accountBalance : selectedOffer?.redeemWith! : true
+                        | accountBalance : selectedOffer?.redeemWith || AccountTypes.Wallet : true
                     }}
                   </span>
                 </div>
@@ -617,7 +617,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
             this.frm.get("offerId")?.enable();
             this.frm.get("offerId")?.setValue(null);
           } else {
-            // this.onMemberChange();
             this.frm.get("offerId")?.setValue(this.model?.offerId);
           }
           this.onMemberChange();

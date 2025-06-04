@@ -72,8 +72,6 @@ export class ReportDynamicInputComponent
       this.componentRef.instance.onChangeCallback = this.onChangeCallback;
       this.componentRef.instance.showAllOption = true;
       try {
-        console.log(this.formItem.initParam);
-
         let initParam = JSON.parse(this.formItem.initParam?.toString() ?? "{}");
         this.componentRef.instance.applyInitParam(initParam);
       } catch (e) {

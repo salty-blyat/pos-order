@@ -185,10 +185,10 @@ import { NotificationService } from "../../utils/services/notification.service";
               <td nzEllipsis>{{ data.offerGroupName }}</td>
               <td
                 nzEllipsis
-                [title]="data.offerStartAt! | dateRange : data.offerEndAt!"
+                [title]="data.offerStartAt! | dateRange : data.offerEndAt! : this.translateService.currentLang"
               >
                 <span>
-                  {{ data.offerStartAt! | dateRange : data.offerEndAt! }}
+                  {{ data.offerStartAt! | dateRange : data.offerEndAt! : this.translateService.currentLang}}
                 </span>
               </td>
               <td nzEllipsis nzAlign="right">

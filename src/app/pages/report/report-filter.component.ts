@@ -24,12 +24,11 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
             formControlName="{{ item.key }}"
           ></app-report-dynamic-input>
         </div>
-        <div>
+        <div *ngIf="formItemModal.length > 0">
           <button
             nz-button
             nzType="default"
             (click)="isVisible = true"
-            *ngIf="formItemModal.length > 0"
           >
             <nz-badge [nzDot]="dot">
               <i

@@ -8,9 +8,9 @@ import {
   Output,
   ViewEncapsulation,
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";  
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { BaseMultipleSelectComponent } from "../../utils/components/base-multiple-select.component";
-import { TranslateService } from "@ngx-translate/core"; 
+import { TranslateService } from "@ngx-translate/core";
 import { MemberClass, MemberClassService } from "./member-class.service";
 @Component({
   selector: "app-member-class-multi-select",
@@ -39,14 +39,25 @@ import { MemberClass, MemberClassService } from "./member-class.service";
       style="width: 100%"
       (nzScrollToBottom)="searchMore()"
     >
-      <nz-option [nzValue]="0" [nzLabel]="'AllMemberClass' | translate"> </nz-option>
+      <nz-option [nzValue]="0" [nzLabel]="'AllMemberClass' | translate">
+      </nz-option>
       <nz-option
         *ngFor="let item of lists"
         nzCustomContent
         [nzValue]="item.id"
         [nzLabel]="item.name + ' '"
       >
-        <span class="b-name">{{ item.name }}</span>
+        <div class="b-name  option-container " nz-flex nzGap="small">
+          <div class="image-container">
+            <img *ngIf="item.photo" [src]="item.photo" alt="" />
+            <img
+              *ngIf="!item.photo"
+              src="./assets/image/img-not-found.jpg"
+              alt=""
+            />
+          </div>
+          <span>{{ item.name }}</span>
+        </div>
       </nz-option>
     </nz-select>
     <ng-template #actionItem>
@@ -78,13 +89,28 @@ import { MemberClass, MemberClassService } from "./member-class.service";
 
   styles: [
     `
-     .div-bottom {
+      .image-container {
+        height: 18px;
+        display:flex;
+      }
+
+      .image-container img {
+        width: 100%;
+        object-fit: cover;
+        height: 100%;
+        overflow: hidden;
+      }
+      .div-bottom {
         margin: 4px 4px 0 4px;
       }
       nz-select {
         width: 100%;
       }
-
+  .option-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
       .item-action {
         flex: 0 0 auto;
         padding: 6px 8px;

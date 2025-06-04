@@ -149,7 +149,7 @@ import { Subscription } from "rxjs";
               </th>
               <th nzEllipsis>{{ "Note" | translate }}</th>
               <th nzWidth="100px" nzAlign="right">
-                {{ "Amount" | translate }}
+                {{ "Balance" | translate }}
               </th>
               <th nzWidth="100px"></th>
             </tr>
