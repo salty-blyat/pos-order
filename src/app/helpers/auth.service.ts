@@ -229,8 +229,5 @@ export class AuthService {
     this.titleService.setTitle(`${this.app?.appName} | ${this.tenant.name}`);
     let favIcon: HTMLLinkElement | any = document.querySelector('#favIcon');
     favIcon.href = this.app?.iconUrl;
-    console.log('this.app?.appName',this.app?.appName);
-    console.log('url',this.url);
-    
   }
 }

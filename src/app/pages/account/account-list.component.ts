@@ -165,10 +165,9 @@ import { Subscription } from "rxjs";
               <th [nzWidth]="SIZE_COLUMNS.DATE">
                 {{ "Date" | translate }}
               </th>
-              <th nzWidth="100px">
+              <th nzWidth="120px">
                 {{ "Type" | translate }}
               </th>
-
               <th nzEllipsis nzWidth="100px">{{ "Location" | translate }}</th>
               <th nzEllipsis>{{ "Note" | translate }}</th>
               <th nzWidth="100px" nzAlign="right">
@@ -204,8 +203,7 @@ import { Subscription } from "rxjs";
                   *ngIf="!isAccountView()"
                   >{{ data.transNo }}</span
                 >
-              </td>
-              <!-- <td nzEllipsis>{{ data.offerName }}</td> -->
+              </td> 
               <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
               <td nzEllipsis>
                 {{

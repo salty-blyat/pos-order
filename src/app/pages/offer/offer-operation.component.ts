@@ -403,6 +403,8 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
               console.log(err);
             },
           });
+        } else {
+          this.ref.triggerCancel().then();
         }
       });
     }

@@ -114,7 +114,7 @@ import { NotificationService } from "../../utils/services/notification.service";
               <th nzWidth="150px">
                 {{ "OfferGroup" | translate }}
               </th>
-              <th nzWidth="270px">
+              <th nzWidth="290px">
                 {{ "Duration" | translate }}
               </th>
               <th nzWidth="110px" nzAlign="right">

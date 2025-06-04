@@ -658,6 +658,8 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
               console.log(err);
             },
           });
+        } else {
+          this.ref.triggerCancel().then();
         }
       });
     }

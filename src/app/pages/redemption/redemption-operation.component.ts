@@ -109,18 +109,14 @@ import { AuthKeys } from "../../const";
 
                 <div>
                   <strong>{{ selectedMember?.name || "-" }} </strong><br />
-                  <span>
+                  <span *ngIf="selectedMember?.phone">
                     <i nz-icon nzType="phone" nzTheme="outline"></i>
-                    {{ selectedMember?.phone || "-" }}
+                    {{ selectedMember?.phone }}
                   </span>
-                  <br />
-                  <span
+                  <br *ngIf="selectedMember?.phone" />
+                  <span *ngIf="selectedMember?.joinDate"
                     ><i nz-icon nzType="calendar" nzTheme="outline"></i>
-                    {{
-                      selectedMember?.joinDate
-                        ? (selectedMember?.joinDate | customDate)
-                        : "-"
-                    }}
+                    {{ selectedMember?.joinDate | customDate }}
                   </span>
                   <br />
                 </div>
@@ -190,7 +186,7 @@ import { AuthKeys } from "../../const";
           </div>
           <!-- Column 2: Summary -->
           <div class="additional-detail" nz-row nz-col [nzSm]="24" [nzLg]="10">
-            <h3 class="headere">
+            <h3 class="header">
               <nz-icon nzType="file" nzTheme="outline" />
               {{ "AdditionalDetail" | translate }}
             </h3>
