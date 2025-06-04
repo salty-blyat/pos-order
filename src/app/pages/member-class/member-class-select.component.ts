@@ -74,6 +74,10 @@ import { AuthKeys } from "../../const";
 
   styles: [
     `
+      .image-container {
+        height: 18px;
+        display:flex;
+      }
       nz-select {
         width: 100%;
       }
@@ -111,7 +115,6 @@ import { AuthKeys } from "../../const";
         object-fit: cover;
         height: 100%;
         overflow: hidden;
-        border-radius: 50%;
       }
     `,
   ],

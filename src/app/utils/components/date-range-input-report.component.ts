@@ -86,12 +86,12 @@ export class DateRangeInputReportComponent
   @ViewChild('nzDatePickerComponent')
   nzDatePickerComponent!: NzDatePickerComponent;
   presetKey: string = 'custom';
-  @Input() dateRangeOptions = [
-    'MonthToDate',
+  @Input() dateRangeOptions = [ 
     'Today',
     'ThisWeek',
     'ThisMonth',
     'ThisYear',
+    'AllDate',
   ];
   dateRanges!: any[];
   recentFilter = new BehaviorSubject<IRecentFilter[]>(

@@ -24,6 +24,8 @@ import { OfferGroupListComponent } from "./pages/offer-group/offer-group-list.co
 import { MemberListComponent } from "./pages/member/member-list.component";
 import { OfferListComponent } from "./pages/offer/offer-list.component";
 import { RedemptionListComponent } from "./pages/redemption/redemption-list.component";
+import { AuthGuard } from "./utils/guards/auth-guard.component";
+import { AuthKeys } from "./const";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/home" },
@@ -36,10 +38,6 @@ const routes: Routes = [
         path: "home",
         component: HomeComponent,
       },
-      // {
-      //   path: "member",
-      //   component: MemberListComponent,
-      // },
       {
         path: "agent",
         component: AgentListComponent,
@@ -59,6 +57,8 @@ const routes: Routes = [
       {
         path: "member",
         component: MemberListComponent,
+        // canActivate: [AuthGuard],
+        // data: { permission: [AuthKeys.APP__MEMBER__LIST] },
       },
       {
         path: "redemption",

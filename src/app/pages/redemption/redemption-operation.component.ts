@@ -143,7 +143,9 @@ import { AuthKeys } from "../../const";
                           nzTheme="outline"
                         ></i>
                         {{
-                          a.balance | accountBalance : a.accountType : true | translate
+                          a.balance
+                            | accountBalance : a.accountType : true
+                            | translate
                         }}
                       </div>
                     </div>
@@ -292,7 +294,9 @@ import { AuthKeys } from "../../const";
                 <span>{{ "Balance" | translate }}</span>
                 <span>{{
                   extData?.startBalance
-                    | accountBalance : selectedOffer?.redeemWith || AccountTypes.Wallet : true
+                    | accountBalance
+                      : selectedOffer?.redeemWith || AccountTypes.Wallet
+                      : true
                 }}</span>
               </div>
 
@@ -322,7 +326,9 @@ import { AuthKeys } from "../../const";
                   <span style="font-weight: bold">
                     {{
                       extData?.endingBalance
-                        | accountBalance : selectedOffer?.redeemWith || AccountTypes.Wallet : true
+                        | accountBalance
+                          : selectedOffer?.redeemWith || AccountTypes.Wallet
+                          : true
                     }}
                   </span>
                 </div>
@@ -613,6 +619,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     this.frm.controls["memberId"]?.valueChanges.subscribe({
       next: () => {
         setTimeout(() => {
+          this.extData = { cardNumber: "", startBalance: 0, endingBalance: 0 };
           if (!this.modal?.isView) {
             this.frm.get("offerId")?.enable();
             this.frm.get("offerId")?.setValue(null);
@@ -722,8 +729,8 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   get sortedAccounts() {
     return (this.selectedMember?.accounts ?? []).slice().sort((a, b) => {
-      if (a.accountId === AccountTypes.Wallet) return -1;
-      if (b.accountId === AccountTypes.Wallet) return 1;
+      if (a.accountType === AccountTypes.Wallet) return -1;
+      if (b.accountType === AccountTypes.Wallet) return 1;
       return 0;
     });
   }

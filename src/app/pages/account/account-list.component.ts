@@ -171,7 +171,7 @@ import { Subscription } from "rxjs";
               <th nzEllipsis nzWidth="100px">{{ "Location" | translate }}</th>
               <th nzEllipsis>{{ "Note" | translate }}</th>
               <th nzWidth="100px" nzAlign="right">
-                {{ "Amount" | translate }}
+                {{ "Balance" | translate }}
               </th>
               <!-- <th [nzWidth]="SIZE_COLUMNS.ACTION"></th> -->
             </tr>

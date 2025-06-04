@@ -44,7 +44,7 @@ import { AuthKeys } from "../../const";
         [nzLabel]="item?.name + ''"
       >
         <div class="b-name  option-container " nz-flex nzGap="small">
-          <div class="image-container">
+          <div class="image-container" style="display:flex">
             <img *ngIf="item.image" [src]="item.image" alt="" />
             <img
               *ngIf="!item.image"
@@ -73,6 +73,10 @@ import { AuthKeys } from "../../const";
   standalone: false,
   styles: [
     `
+      :host .image-container {
+        height: 18px;
+        display: flex;
+      }
       nz-select {
         width: 100%;
       }

@@ -17,7 +17,6 @@ import { NzDatePickerComponent } from "ng-zorro-antd/date-picker";
 import { DateService } from "../services/date.service";
 import { BehaviorSubject } from "rxjs";
 import { SessionStorageService } from "../services/sessionStorage.service";
-import * as buffer from "buffer";
 
 interface IRecentFilter {
   key?: string;
@@ -88,12 +87,12 @@ export class DateRangeInputComponent
   @ViewChild("nzDatePickerComponent")
   nzDatePickerComponent!: NzDatePickerComponent;
   presetKey: string = "custom";
-  @Input() dateRangeOptions = [
-    "MonthToDate",
-    "Today",
-    "ThisWeek",
-    "ThisMonth",
-    "ThisYear",
+  @Input() dateRangeOptions = [ 
+    'Today',
+    'ThisWeek',
+    'ThisMonth',
+    'ThisYear',
+    'AllDate',
   ];
   dateRanges!: any[];
   recentFilter = new BehaviorSubject<IRecentFilter[]>(

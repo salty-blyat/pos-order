@@ -57,7 +57,7 @@ import { AccountService } from "../../account/account.service";
             : item.nameEn || item.name) || ''
         "
       >
-        <div style="display: flex; align-items: baseline; gap: 8px;">
+        <div class='option-container'>
           <div class="image-container">
             <img *ngIf="item.image" [src]="item.image" alt="" />
             <img
@@ -96,9 +96,10 @@ import { AccountService } from "../../account/account.service";
   `,
   styles: [
     `
-      .image-container img {
-        height: 20px;
-        vertical-align: top;
+
+     .image-container {
+        height: 18px;
+        display: flex;
       }
 
       nz-select {

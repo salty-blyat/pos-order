@@ -76,7 +76,7 @@ import { NotificationService } from "../../../utils/services/notification.servic
           </ng-template>
           <thead>
             <tr>
-              <th [nzWidth]="SIZE_COLUMNS.DRAG"></th>
+              <th [nzWidth]="SIZE_COLUMNS.DRAG" *ngIf="isLookupEdit()"></th>
               <th [nzWidth]="SIZE_COLUMNS.ID">#</th>
               <th [nzWidth]="SIZE_COLUMNS.IMAGE" nzEllipsis nzAlign="center">
                 {{ "Image" | translate }}
@@ -100,10 +100,10 @@ import { NotificationService } from "../../../utils/services/notification.servic
             cdkDropList
             cdkDropListLockAxis="y"
             (cdkDropListDropped)="drop($event)"
-            [cdkDropListData]="lists()"
+            [cdkDropListData]="lists()" 
           >
-            <tr cdkDrag *ngFor="let data of lists(); let i = index">
-              <td nzEllipsis style="flex: 0.25">
+            <tr cdkDrag *ngFor="let data of lists(); let i = index" [cdkDragDisabled]="!isLookupEdit()">
+              <td nzEllipsis style="flex: 0.25" *ngIf="isLookupEdit()">
                 <span
                   class="drag-handle"
                   nz-icon

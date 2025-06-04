@@ -10,7 +10,7 @@ import { QueryParam } from "../../utils/services/base-api.service";
     <nz-layout>
       <nz-header>
         <div nz-row>
-          <div>
+           <div class="setting-title">
             <i nzType="container" nz-icon nzTheme="outline"></i>
             <span>{{ "Report" | translate }}</span>
           </div>

@@ -23,11 +23,12 @@ export class DateService {
   public getListRanges(startDate?: Date): { key: string; val: [Date, Date] }[] {
     const today = new Date();
     return [
-      //{key: 'month_to_date',val: this.getMonthToDate(today)},
+      {key: 'MonthToDate',val: this.getMonthToDate(today)},
       {key: 'Today', val: [today, today]},
       {key: 'ThisWeek', val: this.getWeekRange(today)},
       {key: 'ThisMonth', val: this.getMonthRange(today)},
       {key: 'ThisYear', val: this.getYearRange(today)},
+      {key: 'AllDate', val: this.getAllDate()},
       {key: 'NextSixMonths', val: this.getNextSixMonthsRange(startDate ?? today)},
       {key: 'NextYear', val: this.getNextYearRange(startDate ?? today)},
       {key: 'NextTwoYears', val: this.getNextTwoYearRange(startDate ?? today)},
@@ -47,6 +48,11 @@ export class DateService {
     const first = today.getDate() - today.getDay()
     const last = first + 13;
     return [new Date(d.setDate(first)),new Date(d.setDate(last))];
+  }
+  public getAllDate(): [Date, Date] {
+    const d1 = new Date(1900, 0, 1);
+    const d2 = new Date(2100, 11, 31);
+    return [d1, d2];
   }
 
   public getMonthToDate(today: Date): [Date, Date]{
