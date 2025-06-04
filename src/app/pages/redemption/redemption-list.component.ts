@@ -59,7 +59,8 @@ import { Subscription } from "rxjs";
               "
             ></app-filter-input>
 
-            <app-date-range-input style="width:230px;"
+            <app-date-range-input
+              style="width:230px;"
               [storageKey]="
                 memberId()
                   ? 'trans-date-range' + memberId()
@@ -230,7 +231,7 @@ import { Subscription } from "rxjs";
                 [ngStyle]="{ color: getStatusColor(data.status!) }"
               >
                 <img
-                  class="image-list status-img" 
+                  class="image-list status-img"
                   height="42px"
                   *ngIf="data.statusImage"
                   [src]="data.statusImage"
@@ -253,8 +254,8 @@ import { Subscription } from "rxjs";
                 </span>
               </td>
               <td nzEllipsis>{{ data.note }}</td>
-              <td nzEllipsis nzAlign="right">
-                {{ data?.amount | accountBalance : data?.redeemWith! }}
+              <td nzEllipsis nzAlign="right"> 
+                {{ (data?.amount | accountBalance : data?.redeemWith! ) | translate}} 
               </td>
               <td class="col-action">
                 <a
@@ -283,9 +284,9 @@ import { Subscription } from "rxjs";
   standalone: false,
   styles: [
     `
-    .status-img{
-      width:18px !important;
-    }
+      .status-img {
+        width: 18px !important;
+      }
       .subtitle {
         font-size: 10px;
         color: #6f6f6f;
@@ -299,7 +300,7 @@ import { Subscription } from "rxjs";
         padding: 0 0 0 5px !important;
       }
       .image-list {
-        width: 42px; 
+        width: 42px;
         object-fit: scale-down;
       }
     `,

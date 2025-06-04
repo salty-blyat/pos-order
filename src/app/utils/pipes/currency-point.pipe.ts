@@ -7,22 +7,30 @@ import {
   SETTING_KEY,
   SystemSettingService,
 } from "../../pages/system-setting/system-setting.service";
-import { LocalStorageService } from "../services/localStorage.service";
+import { LocalStorageService } from "../services/localStorage.service"; 
 
 @Pipe({
   name: "accountBalance",
-  standalone: false,
+  standalone: false
 })
 export class AccountBalancePipe implements PipeTransform {
   constructor(
     private currencySettingService: SystemSettingService,
     private localStorageService: LocalStorageService
   ) {}
-  transform(balance: number | null | undefined, type: number): any {
+  transform(
+    balance: number | null | undefined,
+    type: number,
+    showZero: boolean = false
+  ): any {
     const safeBalance = Number(balance);
+    if (!showZero && balance == 0) {
+      return "Free";
+    }
     if (isNaN(safeBalance)) {
       return type === AccountTypes.Wallet ? "$ 0.00" : "0 pts";
     }
+
     let currency: Currency[] = this.localStorageService.getValue(
       SharedVar.CURRENCIES
     );

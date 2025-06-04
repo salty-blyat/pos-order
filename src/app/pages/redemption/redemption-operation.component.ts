@@ -142,7 +142,9 @@ import { AuthKeys } from "../../const";
                           "
                           nzTheme="outline"
                         ></i>
-                        {{ a.balance | accountBalance : a.accountType }}
+                        {{
+                          a.balance | accountBalance : a.accountType : true | translate
+                        }}
                       </div>
                     </div>
                   </div>
@@ -235,6 +237,7 @@ import { AuthKeys } from "../../const";
                     {{
                       selectedOffer.redeemCost
                         | accountBalance : selectedOffer.redeemWith!
+                        | translate
                     }}
                   </strong>
 
@@ -289,7 +292,7 @@ import { AuthKeys } from "../../const";
                 <span>{{ "Balance" | translate }}</span>
                 <span>{{
                   extData?.startBalance
-                    | accountBalance : selectedOffer?.redeemWith!
+                    | accountBalance : selectedOffer?.redeemWith! : true
                 }}</span>
               </div>
 
@@ -299,25 +302,27 @@ import { AuthKeys } from "../../const";
                     frm.get("qty")?.value
                   }})</span
                 >
+                @if(frm.get("amount")?.value == 0){
+                <span>
+                  {{ "Free" | translate }}
+                </span>
+                } @else {
                 <span style="color: red"
                   >-{{
                     frm.get("amount")?.value
                       | accountBalance : selectedOffer?.redeemWith!
                   }}
                 </span>
+                }
               </div>
               <div style="margin-top:30px">
                 <nz-divider class="divider"></nz-divider>
                 <div nz-flex nzJustify="space-between">
                   <span>{{ "RemainingBalance" | translate }}</span>
-                  <span
-                    [ngStyle]="{
-                      'font-weight': 'bold'
-                    }"
-                  >
+                  <span style="font-weight: bold">
                     {{
                       extData?.endingBalance
-                        | accountBalance : selectedOffer?.redeemWith!
+                        | accountBalance : selectedOffer?.redeemWith! : true
                     }}
                   </span>
                 </div>

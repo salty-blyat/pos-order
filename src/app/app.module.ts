@@ -173,6 +173,8 @@ import { TransactionTypeSelectComponent } from "./pages/transaction/transaction-
 import { OfferMultiSelectComponent } from "./pages/offer/offer-multi-select.component";
 import { OfferGroupMultiSelectComponent } from "./pages/offer-group/offer-group-multi-select.component";
 import { DateRangePipe } from "./utils/pipes/date-range.pipe";
+import { AgentMultiSelectComponent } from "./pages/agent/agent-multi-select.component";
+import { MemberClassMultiSelectComponent } from "./pages/member-class/member-class-multi-select.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -346,6 +348,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberClassOperationComponent,
     MemberClassSelectComponent,
     MemberClassDeleteComponent,
+    MemberClassMultiSelectComponent,
 
     // offer group
     OfferGroupListComponent,
@@ -367,6 +370,7 @@ export class CustomTranslate implements TranslateLoader {
     AgentOperationComponent,
     AgentDeleteComponent,
     AgentSelectComponent,
+    AgentMultiSelectComponent,
 
     // account
     AccountListComponent,

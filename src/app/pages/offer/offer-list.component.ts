@@ -198,12 +198,8 @@ import { NotificationService } from "../../utils/services/notification.service";
                     : data.redeemedQty + " / " + data.maxQty
                 }}
               </td>
-              <td nzEllipsis nzAlign="right">
-                @if(data.redeemCost == 0){
-                {{ "Free" | translate }}
-                } @else {
-                {{ data.redeemCost | accountBalance : data.redeemWith! }}
-                }
+              <td nzEllipsis nzAlign="right"> 
+                {{ (data.redeemCost | accountBalance : data.redeemWith! ) | translate}} 
               </td>
               <td nzEllipsis>
                 {{ data.note }}

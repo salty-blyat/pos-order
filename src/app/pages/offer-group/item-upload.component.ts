@@ -137,8 +137,8 @@ import { UploadFile, UploadService } from "../../utils/services/upload.service";
         .ant-upload-list-item-thumbnail
         img,
       .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img {
-        width: 100% !important;
-        height: 100% !important;
+        // width: 100% !important;
+        // height: 100% !important;
       }
     `,
   ],

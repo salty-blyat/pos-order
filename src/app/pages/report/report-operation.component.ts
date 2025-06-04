@@ -35,6 +35,7 @@ import { LookupItemSelectComponent } from "../lookup/lookup-item/lookup-item-sel
 import { MemberMultiSelectComponent } from "../member/member-multi-select.component";
 import { OfferMultiSelectComponent } from "../offer/offer-multi-select.component";
 import { OfferGroupMultiSelectComponent } from "../offer-group/offer-group-multi-select.component";
+import { AgentMultiSelectComponent } from "../agent/agent-multi-select.component";
 export let ParamSelectComponent = {
   Lookups: LookupMultipleSelectComponent,
   StaticDropdownMultipleSelect: StaticDropdownMultipleSelectComponent,
@@ -45,7 +46,10 @@ export let ParamSelectComponent = {
   TransactionTypes: LookupMultipleSelectComponent,
   Members: MemberMultiSelectComponent,
   Offer: OfferMultiSelectComponent,
-  OfferGroup:OfferGroupMultiSelectComponent
+  OfferGroup:OfferGroupMultiSelectComponent,
+  Agent:AgentMultiSelectComponent,
+  MemberClass:OfferGroupMultiSelectComponent,
+  JoinDate:DateRangeInputReportComponent,
 };
 
 @Component({

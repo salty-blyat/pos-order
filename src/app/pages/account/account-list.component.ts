@@ -231,7 +231,7 @@ import { Subscription } from "rxjs";
                   'font-weight': 'semi-bold'
                 }"
               >
-                {{ data.amount | accountBalance : data.accountType! }}
+                {{ (data.amount | accountBalance : data.accountType!) | translate }}
               </td>
             </tr>
           </tbody>

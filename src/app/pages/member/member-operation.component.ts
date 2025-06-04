@@ -147,7 +147,7 @@ import { AuthKeys } from "../../const";
                     style="height:22px; margin-right: 8px;"
                   />
                   <div>
-                    {{ account.balance | accountBalance : account.accountType }}
+                    {{ (account.balance | accountBalance : account.accountType : true) | translate }}
                   </div>
                 </div>
               </div>

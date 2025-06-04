@@ -51,7 +51,11 @@ import { AuthService } from "../../helpers/auth.service";
         *ngFor="let item of lists()"
         nzCustomContent
         [nzValue]="item?.id"
-        [nzLabel]="getRedeemLabel(item)"
+        [nzLabel]="
+          item?.name +
+          ' ' +
+           (item?.redeemCost | accountBalance : item?.redeemWith!) | translate
+        "
       >
         <div class="b-name option-container" nz-flex nzGap="small">
           <div class="image-container">
@@ -63,12 +67,14 @@ import { AuthService } from "../../helpers/auth.service";
             />
           </div>
 
-          <span>
-            {{ item?.name }}
-          </span>
-          <span style="margin-left-auto">
-            {{ item?.redeemCost | accountBalance : item?.redeemWith! }}
-          </span>
+          <div class="option">
+            <span>
+              {{ item?.name }}
+            </span>
+            <span> 
+              {{ (item?.redeemCost | accountBalance : item?.redeemWith!) | translate }} 
+            </span>
+          </div>
         </div>
       </nz-option>
       <nz-option *ngIf="isLoading()" nzDisabled nzCustomContent>
@@ -89,6 +95,11 @@ import { AuthService } from "../../helpers/auth.service";
   standalone: false,
   styles: [
     `
+      .option {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
       nz-select {
         width: 100%;
       }
@@ -107,7 +118,9 @@ import { AuthService } from "../../helpers/auth.service";
       .image-container {
         height: 18px;
       }
-      
+      .image-container {
+        display: flex;
+      }
       .image-container img {
         width: 100%;
         object-fit: cover;
@@ -215,5 +228,7 @@ export class OfferSelectComponent
     this.selectedObject.emit(selectedOffer);
   }
 
-  isOfferAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__OFFER__ADD));
+  isOfferAdd = computed<boolean>(() =>
+    this.authService.isAuthorized(AuthKeys.APP__OFFER__ADD)
+  );
 }
