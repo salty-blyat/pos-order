@@ -8,7 +8,7 @@ import { AuthService } from "../../helpers/auth.service";
 import { Offer, OfferService } from "./offer.service";
 import { OfferUiService } from "./offer-ui.service";
 import { TranslateService } from "@ngx-translate/core";
-import { Filter } from "../../utils/services/base-api.service";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { AccountTypes, LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { NotificationService } from "../../utils/services/notification.service";
 @Component({
@@ -185,10 +185,20 @@ import { NotificationService } from "../../utils/services/notification.service";
               <td nzEllipsis>{{ data.offerGroupName }}</td>
               <td
                 nzEllipsis
-                [title]="data.offerStartAt! | dateRange : data.offerEndAt! : this.translateService.currentLang"
+                [title]="
+                  data.offerStartAt!
+                    | dateRange
+                      : data.offerEndAt!
+                      : this.translateService.currentLang
+                "
               >
                 <span>
-                  {{ data.offerStartAt! | dateRange : data.offerEndAt! : this.translateService.currentLang}}
+                  {{
+                    data.offerStartAt!
+                      | dateRange
+                        : data.offerEndAt!
+                        : this.translateService.currentLang
+                  }}
                 </span>
               </td>
               <td nzEllipsis nzAlign="right">
@@ -198,8 +208,12 @@ import { NotificationService } from "../../utils/services/notification.service";
                     : data.redeemedQty + " / " + data.maxQty
                 }}
               </td>
-              <td nzEllipsis nzAlign="right"> 
-                {{ (data.redeemCost | accountBalance : data.redeemWith! ) | translate}} 
+              <td nzEllipsis nzAlign="right">
+                {{
+                  data.redeemCost
+                    | accountBalance : data.redeemWith!
+                    | translate
+                }}
               </td>
               <td nzEllipsis>
                 {{ data.note }}
@@ -281,6 +295,16 @@ export class OfferListComponent extends BaseListComponent<Offer> {
   readonly offerGroupKey = "offer-group-list-search";
   readonly offerTypeKey = "offer-type-list-search";
   readonly accountTypeKey = "account-type-list-search";
+
+  override param = signal<QueryParam>({
+    pageSize:
+      this.sessionStorageService.getCurrentPageSizeOption(
+        this.pageSizeOptionKey()
+      ) ?? 25,
+    pageIndex: 1,
+    sorts: "code",
+    filters: "",
+  });
 
   readonly LOOKUP_TYPE = LOOKUP_TYPE;
   accountTypeId = signal(

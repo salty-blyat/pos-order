@@ -250,6 +250,15 @@ export class MemberListComponent extends BaseListComponent<Member> {
     if(!img) return;
     this.nzImageService.preview([{ src: img }]);
   }
+  override param = signal<QueryParam>({
+    pageSize:
+      this.sessionStorageService.getCurrentPageSizeOption(
+        this.pageSizeOptionKey()
+      ) ?? 25,
+    pageIndex: 1,
+    sorts: "code",
+    filters: "",
+  });
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
     if (this.agentId()) {

@@ -13,7 +13,7 @@ import { Location, LocationService } from "./location.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { LocationUiService } from "./location-ui.service";
 import { AuthKeys, SIZE_COLUMNS } from "../../const";
-import { Filter } from "../../utils/services/base-api.service";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
 import { NotificationService } from "../../utils/services/notification.service";
 
 @Component({
@@ -174,6 +174,16 @@ export class LocationListComponent extends BaseListComponent<Location> {
   branchId = signal<number>(
     parseInt(this.sessionStorageService.getValue(this.branchIdKey) ?? 0)
   );
+  override param = signal<QueryParam>({
+    pageSize:
+      this.sessionStorageService.getCurrentPageSizeOption(
+        this.pageSizeOptionKey()
+      ) ?? 25,
+    pageIndex: 1,
+    sorts: "code",
+    filters: "",
+  });
+  
   isLocationAdd = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__ADD));
   isLocationEdit = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__EDIT));
   isLocationRemove = computed(()=> this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__REMOVE));

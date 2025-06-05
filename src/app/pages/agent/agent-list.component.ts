@@ -8,6 +8,7 @@ import { AuthKeys, SIZE_COLUMNS } from "../../const";
 import { Agent, AgentService } from "./agent.service";
 import { AgentUiService } from "./agent-ui.service";
 import { NotificationService } from "../../utils/services/notification.service";
+import { QueryParam } from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-agent-list",
@@ -159,6 +160,15 @@ export class AgentListComponent extends BaseListComponent<Agent> {
       notificationService
     );
   }
+  override param = signal<QueryParam>({
+      pageSize:
+        this.sessionStorageService.getCurrentPageSizeOption(
+          this.pageSizeOptionKey()
+        ) ?? 25,
+      pageIndex: 1,
+      sorts: "code",
+      filters: "",
+    });
   isAgentAdd = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__AGENT__ADD));
   isAgentEdit = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__AGENT__EDIT));
   isAgentRemove = computed<boolean>(() => this.authService.isAuthorized(AuthKeys.APP__AGENT__REMOVE));
