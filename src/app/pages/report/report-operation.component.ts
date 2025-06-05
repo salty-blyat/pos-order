@@ -815,11 +815,9 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
     return this.frm.get("params") as FormArray;
   }
 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(
-      this.paramFrmArray.value,
-      event.previousIndex,
-      event.currentIndex
-    );
+ drop(event: CdkDragDrop<FormGroup[]>) {
+    const control = this.paramFrmArray.at(event.previousIndex);
+    this.paramFrmArray.removeAt(event.previousIndex);
+    this.paramFrmArray.insert(event.currentIndex, control);
   }
 }

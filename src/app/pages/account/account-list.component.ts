@@ -3,9 +3,7 @@ import {
   computed,
   inject,
   Input,
-  OnChanges,
   signal,
-  SimpleChanges,
   ViewEncapsulation,
 } from "@angular/core";
 import { BaseListComponent } from "../../utils/components/base-list.component";
@@ -17,7 +15,6 @@ import { Account, AccountService, Transaction } from "./account.service";
 import { NZ_MODAL_DATA, NzModalRef } from "ng-zorro-antd/modal";
 import { NotificationService } from "../../utils/services/notification.service";
 import { Filter, QueryParam } from "../../utils/services/base-api.service";
-import { MemberAccount } from "../member/member.service";
 import { AccountUiService } from "./account-ui.service";
 import { TranslateService } from "@ngx-translate/core";
 import {
@@ -97,10 +94,9 @@ import { Subscription } from "rxjs";
               "
             >
               {{ "Adjust" | translate }}
-            </button>
-            @if(isTopup){
+            </button> 
             <button
-              *ngIf="isAccountTopupEarn()"
+              *ngIf="isTopup && isAccountTopup()"
               nz-button
               nzType="primary"
               (click)="
@@ -114,9 +110,8 @@ import { Subscription } from "rxjs";
             >
               {{ "Topup" | translate }}
             </button>
-            } @else{
             <button
-              *ngIf="isAccountTopupEarn()"
+              *ngIf="!isTopup && isAccountEarn()"
               nz-button
               nzType="primary"
               (click)="
@@ -130,7 +125,6 @@ import { Subscription } from "rxjs";
             >
               {{ "Earn" | translate }}
             </button>
-            }
           </div>
         </div>
       </nz-header>
@@ -210,10 +204,12 @@ import { Subscription } from "rxjs";
               </td>
 
               <td nzEllipsis>
-                <span *ngIf="!data.locationName">{{ data.branchName}}</span>
-                <span *ngIf="data.locationName">{{ data.branchName +', '}}</span>
+                <span *ngIf="!data.locationName">{{ data.branchName }}</span>
+                <span *ngIf="data.locationName">{{
+                  data.branchName + ", "
+                }}</span>
                 <span *ngIf="data.locationName">
-                 {{ data.locationName }}
+                  {{ data.locationName }}
                 </span>
               </td>
               <td nzEllipsis>
@@ -272,9 +268,14 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   @Input() accountType = 0;
   transDate: any = [];
 
-  isAccountTopupEarn = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__TOPUP_EARN)
+  isAccountTopup = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__TOPUP)
   );
+
+  isAccountEarn = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__EARN)
+  );
+
   isAccountAdjust = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__ADJUST)
   );
