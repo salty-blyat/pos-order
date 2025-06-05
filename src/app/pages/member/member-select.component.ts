@@ -1,7 +1,7 @@
 import {
   Component,
   computed,
-  forwardRef, signal,
+  forwardRef, input, signal,
   ViewEncapsulation
 } from "@angular/core";
 import { BaseSelectComponent } from "../../utils/components/base-select.component";

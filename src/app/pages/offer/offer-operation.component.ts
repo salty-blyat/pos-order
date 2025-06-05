@@ -513,12 +513,12 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
       redeemWith: [null, [required]],
       redeemCost: [0, [required]],
       redeemMinBalance: [0, [required]],
-
+      // for display
       startDate: [null],
       startTime: [null],
       endDate: [null],
       endTime: [null],
-
+      // actual data
       offerStartAt: [null],
       offerEndAt: [null],
 

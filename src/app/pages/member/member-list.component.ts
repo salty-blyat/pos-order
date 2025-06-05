@@ -148,9 +148,9 @@ import { NzImageService } from "ng-zorro-antd/image";
               </td>
 
               <td nzEllipsis>{{ data.phone }}</td>
-              <td nzEllipsis>{{ data.memberClassName }}</td>
+              <td nzEllipsis [title]="data.memberClassName">{{ data.memberClassName }}</td>
               <td nzEllipsis>{{ data.agentName }}</td>
-              <td nzEllipsis>{{ data.address }}</td>
+              <td nzEllipsis [title]="data.address">{{ data.address }}</td>
               <td class="col-action">
                 <nz-space [nzSplit]="spaceSplit">
                   <ng-template #spaceSplit>

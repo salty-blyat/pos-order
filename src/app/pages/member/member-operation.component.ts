@@ -147,7 +147,10 @@ import { AuthKeys } from "../../const";
                     style="height:22px; margin-right: 8px;"
                   />
                   <div>
-                    {{ (account.balance | accountBalance : account.accountType : true) | translate }}
+                    {{
+                      account.balance
+                        | accountBalance : account.accountType : true
+                    }}
                   </div>
                 </div>
               </div>
@@ -231,7 +234,7 @@ import { AuthKeys } from "../../const";
                       </div>
                     </div>
 
-                     <div nz-row>
+                    <div nz-row>
                       <div nz-col [nzXs]="12">
                         <nz-form-item>
                           <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
@@ -242,9 +245,9 @@ import { AuthKeys } from "../../const";
                             [nzXs]="24"
                             nzErrorTip=""
                           >
-                          <app-lookup-item-select
+                            <app-lookup-item-select
                               formControlName="genderId"
-                              [lookupType]="LOOKUP_TYPE.Gender" 
+                              [lookupType]="LOOKUP_TYPE.Gender"
                               [showImage]="false"
                             ></app-lookup-item-select>
                           </nz-form-control>
@@ -255,11 +258,13 @@ import { AuthKeys } from "../../const";
                           <nz-form-label [nzSm]="8" [nzXs]="24"
                             >{{ "Nationality" | translate }}
                           </nz-form-label>
-                          <nz-form-control [nzSm]="14" [nzXs]="24" >
-                               <app-lookup-item-select
+                          <nz-form-control [nzSm]="14" [nzXs]="24">
+                            <app-lookup-item-select
                               formControlName="nationalityId"
-                              [lookupType]="LOOKUP_TYPE.Nationality" 
+                              [lookupType]="LOOKUP_TYPE.Nationality"
                               [showImage]="false"
+                              [showAllOption]="true"
+                              typeLabelAll=" "
                             ></app-lookup-item-select>
                           </nz-form-control>
                         </nz-form-item>
@@ -332,7 +337,7 @@ import { AuthKeys } from "../../const";
                             nzErrorTip=""
                           >
                             <app-date-input
-                              [allowClear]="false"
+                              [allowClear]="true"
                               formControlName="birthDate"
                             ></app-date-input>
                           </nz-form-control>
@@ -642,7 +647,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   };
   // add | edit
   nzShowIconList = {
-    showPreviewIcon: true,
+    showPreviewIcon: false,
     showRemoveIcon: true,
     showDownloadIcon: false,
   };
@@ -766,7 +771,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
       photo: [null],
       defaultAccountId: [null],
       genderId: [null, required],
-      nationalityId: [null],
+      nationalityId: [0],
     });
     setTimeout(() => {
       if (this.modal.memberClassId !== 0 && this.modal.memberClassId)

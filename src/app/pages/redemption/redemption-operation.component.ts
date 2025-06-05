@@ -177,7 +177,7 @@ import { AuthKeys } from "../../const";
                   "
                   (nzChange)="handleUpload($event)"
                 >
-                  <button nz-button [disabled]="modal?.isView">
+                  <button nz-button [disabled]="modal?.isView" type="button">
                     <i nz-icon nzType="upload"></i> Upload
                   </button>
                 </nz-upload>
@@ -627,7 +627,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
             this.frm.get("offerId")?.setValue(this.model?.offerId);
           }
           this.onMemberChange();
-          this.getCurrectBalance();
+          this.getCurrentBalance();
           this.remainingBalance();
         }, 50);
       },
@@ -655,7 +655,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
           this.setAmountControl();
           this.setExtDataControl();
 
-          this.getCurrectBalance();
+          this.getCurrentBalance();
           this.remainingBalance();
         }, 50);
       },
@@ -663,9 +663,15 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   setAmountControl() {
+    // TODO: CHANGE TO USE ORIGINAL PRICE LATER.
     let qty = this.frm.controls["qty"].value;
-    let amount = this.selectedOffer?.redeemCost! * qty;
-    this.frm.get("amount")?.setValue(amount);
+    if (this.modal?.isView) {
+      let amount =this.currency.roundedDecimal( this.extData.endingBalance - this.extData.startBalance);
+      this.frm.get("amount")?.setValue(amount * -1);
+    } else {
+      let amount = this.currency.roundedDecimal( this.selectedOffer?.redeemCost! * qty);
+      this.frm.get("amount")?.setValue(amount);
+    }
   }
 
   setExtDataControl() {
@@ -735,7 +741,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     });
   }
 
-  getCurrectBalance() {
+  getCurrentBalance() {
     if (this.modal?.isView && this.model?.extData) {
       try {
         const parsed: { startBalance: number } = JSON.parse(
@@ -761,6 +767,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         console.error("Failed to parse extData:", error);
       }
     } else {
+      // add
       if (
         this.selectedAccount?.balance != null &&
         this.selectedAccount?.balance != undefined

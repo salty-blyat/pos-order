@@ -15,6 +15,7 @@ export interface Currency {
   format?: string;
   rounding?: number;
   exchangeRate?: number;
+  denominations?: string[];
 }
 
 @Injectable({

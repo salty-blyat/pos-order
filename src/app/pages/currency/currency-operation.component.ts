@@ -154,7 +154,8 @@ export class CurrencyOperationComponent extends BaseOperationComponent<Currency>
       name: [null, [required, nameMaxLengthValidator]],
       format: [null, [required]],
       exchangeRate: [null, [required]],
-      rounding: [null, [required]]
+      rounding: [null, [required]],
+      denominations: [[]],
     });
   }
 
@@ -165,6 +166,7 @@ export class CurrencyOperationComponent extends BaseOperationComponent<Currency>
       name: this.model.name,
       format: this.model.format,
       rounding: this.model.rounding,
+      denominations: this.model.denominations,
       exchangeRate: this.model.exchangeRate
     });
   }

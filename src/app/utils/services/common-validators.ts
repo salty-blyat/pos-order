@@ -381,31 +381,54 @@ export class CommonValidators extends Validators {
         };
   }
 
-static mustPositiveNumber(control: AbstractControl): MyValidationErrors | null {
-  const value = control.value;
+  static mustPositiveNumber(
+    control: AbstractControl
+  ): MyValidationErrors | null {
+    const value = control.value;
 
-  function isEmptyInputValue(val: any): boolean {
-    return val == null || val === '';
+    function isEmptyInputValue(val: any): boolean {
+      return val == null || val === "";
+    }
+
+    if (isEmptyInputValue(value)) {
+      return null; // Let required validator handle empty case
+    }
+
+    const numericValue = Number(value);
+
+    if (isNaN(numericValue) || numericValue <= 0) {
+      return {
+        mustPositiveNumber: {
+          km: `តម្លៃត្រូវតែធំជាងសូន្យ!`,
+          en: `Value must be a positive number!`,
+        },
+      };
+    }
+    return null;
   }
 
-  if (isEmptyInputValue(value)) {
-    return null; // Let required validator handle empty case
+  static mustNotZero(control: AbstractControl): MyValidationErrors | null {
+    const value = control.value;
+
+    function isEmptyInputValue(val: any): boolean {
+      return val == null || val === "";
+    }
+
+    if (isEmptyInputValue(value)) {
+      return null; // Let required validator handle empty case
+    }
+
+    const numericValue = Number(value);
+    if (isNaN(numericValue) || numericValue == 0) {
+      return {
+        mustPositiveNumber: {
+          km: `តម្លៃត្រូវតែខុសពីសូន្យ!`,
+          en: `Value must be not be zero!`,
+        },
+      };
+    }
+    return null;
   }
-
-  const numericValue = Number(value);
-
-  if (isNaN(numericValue) || numericValue <= 0) {
-    return {
-      mustPositiveNumber: {
-        km: `តម្លៃត្រូវតែធំជាងសូន្យ!`,
-        en: `Value must be a positive number!`,
-      },
-    };
-  } 
-  return null;
-}
-
-
 
   static notSpaceValidator(
     control: AbstractControl

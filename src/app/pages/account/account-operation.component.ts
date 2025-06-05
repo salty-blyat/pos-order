@@ -131,7 +131,7 @@ import { CurrencyService } from "../currency/currency.service";
               [nzShowUploadList]="nzShowIconList"
               (nzChange)="handleUpload($event)"
             >
-              <button nz-button [disabled]="modal?.isView">
+              <button nz-button [disabled]="modal?.isView" type="button">
                 <i nz-icon nzType="upload"></i>
                 Upload
               </button>
@@ -292,13 +292,13 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   }
 
   override initControl(): void {
-    const { noteMaxLengthValidator, required, mustPositiveNumber } =
+    const { noteMaxLengthValidator, required, mustPositiveNumber, mustNotZero } =
       CommonValidators;
     this.frm = this.fb.group({
       transNo: [null, [required]],
       transDate: [new Date()],
       accountId: [this.modal.accountId, [required]],
-      amount: [{ value: 1, disabled: false }, [required]],
+      amount: [{ value: 1, disabled: false }, [required,mustNotZero]],
       type: [this.modal.type, required],
       note: [null, noteMaxLengthValidator],
       locationId: [null, required],
@@ -316,7 +316,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
       }
     }, 50);
     this.frm.controls["amount"]?.valueChanges.subscribe({
-      next: () => {
+      next: () => {  
         this.setExtDataControl();
       },
     });

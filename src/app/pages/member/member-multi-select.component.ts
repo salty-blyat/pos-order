@@ -21,7 +21,7 @@ import { Member, MemberService } from "./member.service";
       nzShowSearch
       [nzMaxTagCount]="nzMaxCount"
       nzMode="multiple"
-      [nzOptionHeightPx]="50"
+      [nzOptionHeightPx]="45"
       [nzServerSearch]="true"
       [(ngModel)]="selectedValue"
       (ngModelChange)="onModalChange()"
