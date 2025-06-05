@@ -830,9 +830,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       redeemedDate: this.model?.redeemedDate,
       extData: this.model?.extData,
     });
-    if (this.model.extData) {
-      this.extData = JSON.parse(this.model.extData);
-    }
 
     if (this.model.offerId && this.modal?.isView) {
       this.offerService.find(this.model.offerId).subscribe({
@@ -844,6 +841,15 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
           console.error("Failed to fetch offer detail:", err);
         },
       });
+    }
+    if (this.model.extData) {
+      const parsed: { redeemCost: number } = JSON.parse(this.model?.extData);
+      if (!parsed.redeemCost) {
+        this.extData.redeemCost =
+          this.frm.get("amount")?.value / this.frm.get("qty")?.value;
+      } else {
+        this.extData = JSON.parse(this.model.extData);
+      }
     }
 
     if (this.model.memberId && this.modal?.isView) {
