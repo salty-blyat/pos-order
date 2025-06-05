@@ -42,10 +42,11 @@ export interface Transaction {
   offerName?: string;
   locationId?: number;
   accountType?: number;
-  redeemWith?: number;
-  locationName?: string;
+  redeemWith?: number; 
   redeemWithNameKh?: string;
   redeemWithNameEn?: string;
+  branchName?: string;
+  locationName?: string;
 }
 
 export interface TransactionAdjust {

@@ -168,7 +168,7 @@ import { Subscription } from "rxjs";
               <th nzWidth="120px">
                 {{ "Type" | translate }}
               </th>
-              <th nzEllipsis nzWidth="100px">{{ "Location" | translate }}</th>
+              <th nzEllipsis nzWidth="180px">{{ "Location" | translate }}</th>
               <th nzEllipsis>{{ "Note" | translate }}</th>
               <th nzWidth="100px" nzAlign="right">
                 {{ "Balance" | translate }}
@@ -213,7 +213,7 @@ import { Subscription } from "rxjs";
                 }}
               </td>
 
-              <td nzEllipsis>{{ data.locationName }}</td>
+              <td nzEllipsis>{{data.branchName + ", " + data.locationName }}</td>
               <td nzEllipsis>
                 <span *ngIf="data.offerName">{{ data.offerName + " " }}</span
                 >{{ data.note }}
