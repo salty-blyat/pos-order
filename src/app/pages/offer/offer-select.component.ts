@@ -51,11 +51,7 @@ import { AuthService } from "../../helpers/auth.service";
         *ngFor="let item of lists()"
         nzCustomContent
         [nzValue]="item?.id"
-        [nzLabel]="
-          item?.name +
-            ' ' +
-            (item?.redeemCost | accountBalance : item?.redeemWith!) | translate
-        "
+        [nzLabel]="item?.name + ' '"
       >
         <div class="b-name option-container" nz-flex nzGap="small">
           <div class="image-container">

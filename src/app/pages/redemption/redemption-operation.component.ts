@@ -308,7 +308,7 @@ import { AuthKeys } from "../../const";
                 </span>
                 } @else {
                 <span style="color: red"
-                  >-{{
+                  >{{
                     frm.get("amount")?.value
                       | accountBalance : selectedOffer?.redeemWith!
                   }}
@@ -664,14 +664,17 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   setAmountControl() {
     // TODO: CHANGE TO USE ORIGINAL PRICE LATER.
+    if (this.modal?.isView) return;
     let qty = this.frm.controls["qty"].value;
-    if (this.modal?.isView) {
-      let amount =this.currency.roundedDecimal( this.extData.endingBalance - this.extData.startBalance);
-      this.frm.get("amount")?.setValue(amount * -1);
-    } else {
-      let amount = this.currency.roundedDecimal( this.selectedOffer?.redeemCost! * qty);
-      this.frm.get("amount")?.setValue(amount);
-    }
+    // if (this.modal?.isView) {
+    //   let amount =this.currency.roundedDecimal( this.extData.endingBalance - this.extData.startBalance);
+    //   this.frm.get("amount")?.setValue(amount * -1);
+    // } else {
+    let amount = this.currency.roundedDecimal(
+      this.selectedOffer?.redeemCost! * qty
+    );
+    this.frm.get("amount")?.setValue(amount);
+    // }
   }
 
   setExtDataControl() {
