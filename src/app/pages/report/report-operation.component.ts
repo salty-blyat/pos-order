@@ -54,9 +54,9 @@ export let ParamSelectComponent = {
   TransactionTypes: LookupMultipleSelectComponent,
   Members: MemberMultiSelectComponent,
   Offer: OfferMultiSelectComponent,
-  OfferGroup:OfferGroupMultiSelectComponent,
-  Agent:AgentMultiSelectComponent,
-  MemberClass:MemberClassMultiSelectComponent,
+  OfferGroup: OfferGroupMultiSelectComponent,
+  Agent: AgentMultiSelectComponent,
+  MemberClass: MemberClassMultiSelectComponent,
 };
 
 @Component({
@@ -532,6 +532,10 @@ export let ParamSelectComponent = {
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
+      .cdk-drag.ant-modal.ng-tns-c3531571346-7.cdk-drag-disabled {
+        height: calc(100vh - 100px) !important;
+      }
+
       :host ::ng-deep .ant-tabs-tab {
         margin-right: 32px !important;
       }
@@ -599,8 +603,12 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
 
   isCopied = signal(false);
   isPasted = signal(false);
-  isReportEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT));
-  isReportRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE));
+  isReportEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT)
+  );
+  isReportRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE)
+  );
 
   type: any;
 
@@ -635,7 +643,7 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
 
     this.frm.patchValue({ reportGroupId: this.modal?.reportGroupId });
   }
- onPaste() {
+  onPaste() {
     this.isPasted.set(true);
     navigator.clipboard.readText().then((text) => {
       if (text) {
@@ -661,7 +669,7 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
       }
     });
   }
-  
+
   onCopy(id: number) {
     if (id) {
       this.isCopied.set(true);
