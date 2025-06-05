@@ -44,6 +44,10 @@ import { DatetimeHelper } from "../../helpers/datetime-helper";
           <span class="action-text"> {{ 'Excel' | translate }}</span>
         </a>
         <nz-divider nzType="vertical"></nz-divider> -->
+        <a (click)="onPrint()" target="_blank">
+          <span nz-icon nzType="printer" nzTheme="outline"></span> 
+        </a>
+        <nz-divider nzType="vertical"></nz-divider> 
         <a href="{{ this.publicUrl }}" target="_blank">
           <i nz-icon nzTheme="outline" nzType="cloud-upload"></i>
         </a>
@@ -99,7 +103,7 @@ export class RedemptionPrintComponent implements OnInit, OnDestroy {
         this.loadingReport = true;
         this.report = await this.reportService
           .find(this.modal?.reportId)
-          .toPromise(); 
+          .toPromise();
         this.loadingReport = false;
       } catch {
         this.loadingReport = false;
