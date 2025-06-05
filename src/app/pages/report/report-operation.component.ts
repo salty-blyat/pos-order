@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  signal,
   ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
@@ -10,6 +11,7 @@ import { CommonValidators } from "../../utils/services/common-validators";
 import {
   Report,
   ReportParam,
+  ReportSchema,
   ReportService,
   TAB_INDEX_REPORT,
 } from "./report.service";
@@ -39,6 +41,8 @@ import { AgentMultiSelectComponent } from "../agent/agent-multi-select.component
 import { MemberClassMultiSelectComponent } from "../member-class/member-class-multi-select.component";
 import { DateRangeInputComponent } from "../../utils/components/date-range-input.component";
 import { DateInputReportComponent } from "../../utils/components/date-input-report.component";
+import Ajv from "ajv";
+import { Base64 } from "js-base64";
 export let ParamSelectComponent = {
   Lookups: LookupMultipleSelectComponent,
   StaticDropdownMultipleSelect: StaticDropdownMultipleSelectComponent,
@@ -430,50 +434,98 @@ export let ParamSelectComponent = {
       </form>
     </div>
     <div *nzModalFooter>
-      <div *ngIf="!modal?.isView">
-        <button
-          nz-button
-          nzType="primary"
-          [disabled]="!frm.valid"
-          (click)="onSubmit($event)"
-        >
-          <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
-          {{ "Save" | translate }}
-        </button>
-        <button nz-button nzType="default" (click)="cancel()">
-          {{ "Cancel" | translate }}
-        </button>
-      </div>
-      <div *ngIf="modal?.isView">
-        <a
-          nz-typography
-          (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isReportEdit()"
-        >
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Edit" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isReportEdit()"
-        ></nz-divider>
-        <a
-          nz-typography
-          nzType="danger"
-          (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isReportRemove()"
-        >
-          <i nz-icon nzType="delete" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Delete" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isReportRemove()"
-        ></nz-divider>
-        <a nz-typography (click)="cancel()" style="color: gray;">
-          <i nz-icon nzType="close" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Close" | translate }}</span>
-        </a>
+      <div nz-flex nzJustify="space-between">
+        <div>
+          <a *ngIf="modal?.isView" type="button" (click)="onCopy(model.id!)">
+            <i
+              nz-icon
+              [nzType]="isCopied() ? 'check' : 'copy'"
+              nzTheme="outline"
+            ></i>
+            {{ isCopied() ? ("Copied" | translate) : ("Copy" | translate) }}
+          </a>
+          <button
+            *ngIf="!modal?.isView"
+            nz-button
+            type="button"
+            (click)="onPaste()"
+            nzType="dashed"
+          >
+            <nz-icon>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="ionicon"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  d="M336 64h32a48 48 0 0148 48v320a48 48 0 01-48 48H144a48 48 0 01-48-48V112a48 48 0 0148-48h32"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linejoin="round"
+                  stroke-width="32"
+                />
+                <rect
+                  x="176"
+                  y="32"
+                  width="160"
+                  height="64"
+                  rx="26.13"
+                  ry="26.13"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linejoin="round"
+                  stroke-width="32"
+                />
+              </svg>
+            </nz-icon>
+            {{ (isPasted() ? "Pasted" : "Paste") | translate }}
+          </button>
+        </div>
+        <div *ngIf="!modal?.isView">
+          <button
+            nz-button
+            nzType="primary"
+            [disabled]="!frm.valid"
+            (click)="onSubmit($event)"
+          >
+            <i *ngIf="isLoading()" nz-icon nzType="loading"></i>
+            {{ "Save" | translate }}
+          </button>
+          <button nz-button nzType="default" (click)="cancel()">
+            {{ "Cancel" | translate }}
+          </button>
+        </div>
+        <div *ngIf="modal?.isView">
+          <a
+            nz-typography
+            (click)="uiService.showEdit(model.id || 0)"
+            *ngIf="!isLoading() && isReportEdit()"
+          >
+            <i nz-icon nzType="edit" nzTheme="outline"></i>
+            <span class="action-text"> {{ "Edit" | translate }}</span>
+          </a>
+          <nz-divider
+            nzType="vertical"
+            *ngIf="!isLoading() && isReportEdit()"
+          ></nz-divider>
+          <a
+            nz-typography
+            nzType="danger"
+            (click)="uiService.showDelete(model.id || 0)"
+            *ngIf="!isLoading() && isReportRemove()"
+          >
+            <i nz-icon nzType="delete" nzTheme="outline"></i>
+            <span class="action-text"> {{ "Delete" | translate }}</span>
+          </a>
+          <nz-divider
+            nzType="vertical"
+            *ngIf="!isLoading() && isReportRemove()"
+          ></nz-divider>
+          <a nz-typography (click)="cancel()" style="color: gray;">
+            <i nz-icon nzType="close" nzTheme="outline"></i>
+            <span class="action-text"> {{ "Close" | translate }}</span>
+          </a>
+        </div>
       </div>
     </div>
   `,
@@ -545,6 +597,8 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
     return { value: x, label: x };
   });
 
+  isCopied = signal(false);
+  isPasted = signal(false);
   isReportEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__EDIT));
   isReportRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__REMOVE));
 
@@ -580,6 +634,57 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
     this.paramFrm = this.getParamControl();
 
     this.frm.patchValue({ reportGroupId: this.modal?.reportGroupId });
+  }
+ onPaste() {
+    this.isPasted.set(true);
+    navigator.clipboard.readText().then((text) => {
+      if (text) {
+        try {
+          let report = JSON.parse(Base64.decode(text));
+          report.id = 0;
+          if (this.isValidReport(report)) {
+            this.model = report;
+            this.setFormValue();
+          } else {
+            this.notificationService.customErrorNotification(
+              "Data is invalid."
+            );
+          }
+          setTimeout(() => {
+            this.isPasted.set(false);
+          }, 1500);
+        } catch (e) {
+          this.notificationService.customErrorNotification(
+            "No text found in the clipboard."
+          );
+        }
+      }
+    });
+  }
+  
+  onCopy(id: number) {
+    if (id) {
+      this.isCopied.set(true);
+      this.service.find(id).subscribe({
+        next: (result: Report) => {
+          this.isCopied.set(true);
+          navigator.clipboard
+            .writeText(Base64.encode(JSON.stringify(result)))
+            .then(() => {
+              setTimeout(() => this.isCopied.set(false), 1500);
+            });
+        },
+        error: (err) => {
+          console.log(err);
+          this.isCopied.set(true);
+        },
+      });
+    }
+  }
+  isValidReport(report: Report): boolean {
+    const ajv = new Ajv();
+    const validateReport = ajv.compile(ReportSchema);
+    return validateReport(report);
   }
 
   getParamControl(model: ReportParam = {}) {

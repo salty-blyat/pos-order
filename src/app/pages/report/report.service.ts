@@ -21,6 +21,51 @@ export interface Report {
   ordering?: number;
 }
 
+export const ReportSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'number' },
+    reportGroupName: { type: ['string', 'null'] },
+    reportGroupId: { type: 'number' },
+    name: { type: ['string', 'null']  },
+    label: { type: ['string', 'null']  },
+    note: { type: ['string', 'null']  },
+    params: {
+      type: ['array', 'null', 'object', 'string'],
+      items: {
+        type: 'object',
+        properties: {
+          key: { type: ['string', 'null'] },
+          label: { type: ['string', 'null'] },
+          type: { type: ['string', 'null', 'number'] },
+          defaultValue: {},
+          display: { type: 'number' },
+          initParam: { type: ['string', 'null'] }
+        },
+        required: ['key', 'type', 'display'],
+        additionalProperties: false,
+        nullable: true
+      }
+    },
+    template: { type: 'string' },
+    command: { type: 'string' },
+    printOption: {
+      type: 'object',
+      properties: {
+        pageSize: { type: 'number' },
+        orientation: { type: 'number' }
+      },
+      required: ['pageSize', 'orientation'],
+      additionalProperties: false
+    },
+    isHidden: { type: 'boolean' },
+    permissionKey: { type: 'number' },
+    ordering: { type: 'number' },
+    valueId: { type: 'number' }
+  },
+  required: ['id', 'name', 'params', 'printOption', 'isHidden', 'permissionKey'],
+  additionalProperties: false
+};
 export interface ReportParam {
   key?: string;
   label?: string;
