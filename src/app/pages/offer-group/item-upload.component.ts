@@ -4,7 +4,8 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  signal
+  signal,
+  ViewEncapsulation,
 } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
@@ -14,11 +15,11 @@ import { debounceTime, Observable, Observer, Subscription } from "rxjs";
 import { NzMessageService } from "ng-zorro-antd/message";
 import { TranslateService } from "@ngx-translate/core";
 import { SettingService } from "../../app-setting";
-import { CommonValidators } from "../../utils/services/common-validators";
 import { UploadFile, UploadService } from "../../utils/services/upload.service";
+import { CommonValidators } from "../../utils/services/common-validators";
 
 @Component({
-  selector: "app-item-upload",
+  selector: "app-staff-history-upload",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
       <span>{{ "UploadImage" | translate }}</span>
@@ -51,10 +52,10 @@ import { UploadFile, UploadService } from "../../utils/services/upload.service";
               nz-icon
               nzType="cloud-upload"
               nzTheme="outline"
-            ></i> 
+            ></i>
             <p>
               {{ "PleaseClickOrDropImageToUpload" | translate }}
-            </p> 
+            </p>
           </div>
         </nz-upload>
       </div>
@@ -87,17 +88,9 @@ import { UploadFile, UploadService } from "../../utils/services/upload.service";
   standalone: false,
   styles: [
     `
-      input {
-        border-radius: 6px;
-      }
       .hover-transition {
         transition: background 0.3s ease;
       }
-
-      ::ng-deep .ant-upload {
-        display: block !important;
-      }
-
       .upload-container {
         width: 100%;
         height: 100%;
@@ -116,6 +109,9 @@ import { UploadFile, UploadService } from "../../utils/services/upload.service";
         justify-content: center;
         gap: 8px;
         padding: 16px 0;
+      }
+      .upload-item:hover {
+        cursor: pointer;
       }
       :host ::ng-deep .ant-upload {
         display: flex;
@@ -137,8 +133,8 @@ import { UploadFile, UploadService } from "../../utils/services/upload.service";
         .ant-upload-list-item-thumbnail
         img,
       .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img {
-        // width: 100% !important;
-        // height: 100% !important;
+        width: 100% !important;
+        height: 100% !important;
       }
     `,
   ],
@@ -152,8 +148,7 @@ export class ItemUploadComponent implements OnInit, OnDestroy {
     private uploadService: UploadService,
     public translate: TranslateService
   ) {}
-
-  isHover = signal<boolean>(false);
+  isHover = signal(false);
   isValidUrl: boolean = false;
   loading: boolean = false;
   @HostListener("paste", ["$event"])
@@ -216,14 +211,15 @@ export class ItemUploadComponent implements OnInit, OnDestroy {
       link: ["", [imageValidator]],
     });
   }
-
   handleUpload(info?: NzUploadChangeParam): void {
     this.isLast = false;
     if (info?.type === "success") {
       this.isLast = true;
       let fileList = [...info.fileList];
+
       // 1. Limit 5 number of uploaded files
       fileList = fileList.slice(-10);
+
       // 2. Read from response and show file link
       fileList = fileList.map((file) => {
         if (file.response) {

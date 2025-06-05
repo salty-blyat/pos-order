@@ -1,10 +1,8 @@
 import {
   Component,
   computed,
-  forwardRef,
-  InputSignal,
-  signal,
-  ViewEncapsulation,
+  forwardRef, signal,
+  ViewEncapsulation
 } from "@angular/core";
 import { BaseSelectComponent } from "../../utils/components/base-select.component";
 import { Member, MemberService } from "./member.service";
@@ -29,7 +27,7 @@ import { AuthService } from "../../helpers/auth.service";
       nzShowSearch
       [nzDropdownRender]="actionItem"
       [nzServerSearch]="true"
-      [nzOptionHeightPx]="32"
+      [nzOptionHeightPx]="50"
       [(ngModel)]="selected"
       (ngModelChange)="onModalChange()"
       (nzScrollToBottom)="loadMoreOption() ? searchMore() : null"
@@ -51,11 +49,16 @@ import { AuthService } from "../../helpers/auth.service";
           <nz-avatar nzIcon="user" [nzSrc]="item.photo"></nz-avatar>
           <div class="container">
             <span class="title">
-              {{ item.name }}
+             {{ item.code }} {{ item.name }}
             </span>
-            <span class="subtitle">
-              {{ item.phone }}
-            </span>
+            <div *ngIf="item.latinName || item.phone" class="subtitle">
+              <span *ngIf="item.latinName">
+                {{ item.latinName }}
+              </span> <br *ngIf="item.latinName" />
+              <span *ngIf="item.phone">
+                {{ item.phone }}
+              </span>
+            </div>
           </div>
         </div>
       </nz-option>
@@ -100,10 +103,11 @@ import { AuthService } from "../../helpers/auth.service";
           display: flex;
           gap: 2px;
           font-size: 12px;
+          line-height: 1.6;
         }
         .subtitle {
           font-size: 10px;
-          line-height: 0.7;
+          line-height: 1.1;
           color: #6f6f6f;
         }
       }

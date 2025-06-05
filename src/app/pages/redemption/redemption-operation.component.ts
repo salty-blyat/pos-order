@@ -122,7 +122,7 @@ import { AuthKeys } from "../../const";
                 </div>
 
                 <div
-                  style="margin-left:auto"
+                  class="account-container"
                   nz-flex
                   nzVertical
                   *ngIf="sortedAccounts.length > 0"
@@ -130,18 +130,14 @@ import { AuthKeys } from "../../const";
                   <strong style="text-align:right">{{
                     selectedMember?.memberClassName || "-"
                   }}</strong>
-                  <div style="margin-top:auto" nz-flex nzGap="small">
+                  <div
+                    style="margin-top:auto; margin-left: auto;"
+                    nz-flex
+                    nzGap="small"
+                  >
                     <div nz-flex nzVertical *ngFor="let a of sortedAccounts">
                       <div class="card-value">
-                        <i
-                          nz-icon
-                          [nzType]="
-                            a.accountType == AccountTypes.Wallet
-                              ? 'wallet'
-                              : 'star'
-                          "
-                          nzTheme="outline"
-                        ></i>
+                        <img [src]="a.accountTypeImage" [alt]="a.accountType" />
                         {{
                           a.balance
                             | accountBalance : a.accountType : true
@@ -391,6 +387,9 @@ import { AuthKeys } from "../../const";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
   styles: ` 
+  .account-container{
+margin-left:auto;
+  }
   .divider {
     margin: 8px 0;
   }
@@ -444,7 +443,9 @@ import { AuthKeys } from "../../const";
 } 
 
 .card-value { 
-  margin-top: 4px;
+  margin-top: 4px;display: flex; align-items: center; 
+  img{ margin-right: 4px; height:22px;
+  }
 }
 .num-input{
   width: 60px !important; 
@@ -619,7 +620,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     this.frm.controls["memberId"]?.valueChanges.subscribe({
       next: () => {
         setTimeout(() => {
-          this.extData = { cardNumber: "", startBalance: 0, endingBalance: 0 };
           if (!this.modal?.isView) {
             this.frm.get("offerId")?.enable();
             this.frm.get("offerId")?.setValue(null);

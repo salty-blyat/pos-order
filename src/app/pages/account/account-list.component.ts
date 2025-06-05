@@ -52,7 +52,8 @@ import { Subscription } from "rxjs";
             ></app-filter-input>
 
             <app-date-range-input
-              storageKey="account-date-range"  style="width:230px;"
+              storageKey="account-date-range"
+              style="width:230px;"
               (valueChanged)="
                 transDate = $event; param().pageIndex = 1; search()
               "
@@ -191,19 +192,14 @@ import { Subscription } from "rxjs";
               </td>
               <td nzEllipsis>
                 <a
-                  *ngIf="
-                  isAccountView() 
-                  "
+                  *ngIf="isAccountView()"
                   (click)="
                     uiService.showTransaction(data.id || 0, data.accountType!)
                   "
                   >{{ data.transNo }}</a
                 >
-                <span
-                  *ngIf="!isAccountView()"
-                  >{{ data.transNo }}</span
-                >
-              </td> 
+                <span *ngIf="!isAccountView()">{{ data.transNo }}</span>
+              </td>
               <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
               <td nzEllipsis>
                 {{
@@ -213,7 +209,13 @@ import { Subscription } from "rxjs";
                 }}
               </td>
 
-              <td nzEllipsis>{{data.branchName + ", " + data.locationName }}</td>
+              <td nzEllipsis>
+                <span *ngIf="!data.locationName">{{ data.branchName}}</span>
+                <span *ngIf="data.locationName">{{ data.branchName +', '}}</span>
+                <span *ngIf="data.locationName">
+                 {{ data.locationName }}
+                </span>
+              </td>
               <td nzEllipsis>
                 <span *ngIf="data.offerName">{{ data.offerName + " " }}</span
                 >{{ data.note }}
@@ -231,7 +233,9 @@ import { Subscription } from "rxjs";
                   'font-weight': 'semi-bold'
                 }"
               >
-                {{ (data.amount | accountBalance : data.accountType!) | translate }}
+                {{
+                  data.amount | accountBalance : data.accountType! | translate
+                }}
               </td>
             </tr>
           </tbody>
@@ -269,19 +273,13 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   transDate: any = [];
 
   isAccountTopupEarn = computed(() =>
-    this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__ACCOUNT__TOPUP_EARN
-    )
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__TOPUP_EARN)
   );
   isAccountAdjust = computed(() =>
-    this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__ACCOUNT__ADJUST
-    )
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__ADJUST)
   );
   isAccountView = computed(() =>
-    this.authService.isAuthorized(
-      AuthKeys.APP__MEMBER__ACCOUNT__VIEW
-    )
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__VIEW)
   );
 
   account!: Account;

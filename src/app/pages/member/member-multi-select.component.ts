@@ -1,22 +1,10 @@
 import {
-  Component,
-  EventEmitter,
-  forwardRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewEncapsulation,
+  Component, forwardRef, OnDestroy,
+  OnInit, ViewEncapsulation
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { BaseMultipleSelectComponent } from "../../utils/components/base-multiple-select.component";
 import { TranslateService } from "@ngx-translate/core";
-import {
-  LookupItem,
-  LookupItemService,
-} from "../lookup/lookup-item/lookup-item.service";
-import { QueryParam } from "../../utils/services/base-api.service";
-import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { Member, MemberService } from "./member.service";
 @Component({
   selector: "app-member-multi-select",
@@ -33,6 +21,7 @@ import { Member, MemberService } from "./member.service";
       nzShowSearch
       [nzMaxTagCount]="nzMaxCount"
       nzMode="multiple"
+      [nzOptionHeightPx]="50"
       [nzServerSearch]="true"
       [(ngModel)]="selectedValue"
       (ngModelChange)="onModalChange()"
@@ -52,15 +41,19 @@ import { Member, MemberService } from "./member.service";
         [nzValue]="item.id"
         [nzLabel]="item.name + ' '"
       >
-          <div nz-flex nzAlign="center" nzGap="small">
+        <div nz-flex nzAlign="center" nzGap="small">
           <nz-avatar nzIcon="user" [nzSrc]="item.photo"></nz-avatar>
           <div class="container">
-            <span class="title">
-              {{ item.name }}
-            </span>
-            <span class="subtitle">
-              {{ item.phone }}
-            </span>
+            <span class="title"> {{ item.code }} {{ item.name }} </span>
+            <div *ngIf="item.latinName || item.phone" class="subtitle">
+              <span *ngIf="item.latinName">
+                {{ item.latinName }}
+              </span>
+              <br *ngIf="item.latinName" />
+              <span *ngIf="item.phone">
+                {{ item.phone }}
+              </span>
+            </div>
           </div>
         </div>
       </nz-option>
@@ -94,7 +87,7 @@ import { Member, MemberService } from "./member.service";
 
   styles: [
     `
-    .container {
+      .container {
         padding-left: 5px;
         display: flex;
         flex-direction: column;
@@ -105,7 +98,7 @@ import { Member, MemberService } from "./member.service";
         }
         .subtitle {
           font-size: 10px;
-          line-height: 0.7;
+          line-height: 1.1;
           color: #6f6f6f;
         }
       }
