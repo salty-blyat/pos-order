@@ -39,7 +39,7 @@ export interface Redemption {
   statusImage?: string;
   offerGroupName?: string;
   memberName?: string;
-  memberCode?:string;
+  memberCode?: string;
   createdBy?: string;
 }
 export interface RedemptionAdvancedFilter {
@@ -49,7 +49,12 @@ export interface RedemptionAdvancedFilter {
   statusId?: number;
   isAdvancedFilter: boolean;
 }
-// format like  this extData {"cardNumber":"", "startBalance":100, "endingBalance":100}
+export interface ExtData {
+  cardNumber?: string;
+  redeemCost?: number;
+  startBalance?: number;
+  endingBalance?: number;
+}
 
 @Injectable({
   providedIn: "root",

@@ -10,7 +10,7 @@ import {
   OfferType,
   RedeemStatuses,
 } from "../lookup/lookup-type.service";
-import { Redemption, RedemptionService } from "./redemption.service";
+import { ExtData, Redemption, RedemptionService } from "./redemption.service";
 import { RedemptionUiService } from "./redemption-ui.service";
 import { Member, MemberAccount, MemberService } from "../member/member.service";
 import { TranslateService } from "@ngx-translate/core";
@@ -497,12 +497,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   selectedMember: Member | null = null;
   selectedOffer: Offer | null = null;
-  extData: {
-    cardNumber: String;
-    redeemCost: number;
-    startBalance: number;
-    endingBalance: number;
-  } = { cardNumber: "", redeemCost: 0, startBalance: 0, endingBalance: 0 };
+  extData: ExtData = { cardNumber: "", redeemCost: 0, startBalance: 0, endingBalance: 0 };
   RedeemPrint = 1;
 
   override ngOnInit(): void {
@@ -842,11 +837,11 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         },
       });
     }
+
     if (this.model.extData) {
       const parsed: { redeemCost: number } = JSON.parse(this.model?.extData);
       if (!parsed.redeemCost) {
-        this.extData.redeemCost =
-          this.frm.get("amount")?.value / this.frm.get("qty")?.value;
+        this.extData.redeemCost = this.currency.roundedDecimal( this.frm.get("amount")?.value / this.frm.get("qty")?.value);
       } else {
         this.extData = JSON.parse(this.model.extData);
       }

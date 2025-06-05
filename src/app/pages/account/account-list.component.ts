@@ -80,7 +80,10 @@ import { Subscription } from "rxjs";
 
           <div nz-flex nzGap="small">
             <button
-              *ngIf="isAccountAdjust()"
+              *ngIf="
+                (accountType == AccountTypes.Wallet && isWalletAdjust()) ||
+                (accountType == AccountTypes.Point && isPointAdjust())
+              "
               style="margin-right: 4px;"
               nz-button
               nzType="primary"
@@ -94,9 +97,9 @@ import { Subscription } from "rxjs";
               "
             >
               {{ "Adjust" | translate }}
-            </button> 
+            </button>
             <button
-              *ngIf="isTopup && isAccountTopup()"
+              *ngIf="isTopup && isWalletTopup()"
               nz-button
               nzType="primary"
               (click)="
@@ -111,7 +114,7 @@ import { Subscription } from "rxjs";
               {{ "Topup" | translate }}
             </button>
             <button
-              *ngIf="!isTopup && isAccountEarn()"
+              *ngIf="!isTopup && isPointEarn()"
               nz-button
               nzType="primary"
               (click)="
@@ -186,13 +189,19 @@ import { Subscription } from "rxjs";
               </td>
               <td nzEllipsis>
                 <a
-                  *ngIf="isAccountView()"
+                  *ngIf="
+                    (accountType == AccountTypes.Wallet && isWalletView()) ||
+                    (accountType == AccountTypes.Point && isPointView())
+                  "
                   (click)="
                     uiService.showTransaction(data.id || 0, data.accountType!)
                   "
                   >{{ data.transNo }}</a
                 >
-                <span *ngIf="!isAccountView()">{{ data.transNo }}</span>
+                <span   *ngIf="
+                    (accountType == AccountTypes.Wallet && !isWalletView()) ||
+                    (accountType == AccountTypes.Point && !isPointView())
+                  " >{{ data.transNo }}</span>
               </td>
               <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
               <td nzEllipsis>
@@ -229,9 +238,7 @@ import { Subscription } from "rxjs";
                   'font-weight': 'semi-bold'
                 }"
               >
-                {{
-                  data.amount | accountBalance : data.accountType! : true
-                }}
+                {{ data.amount | accountBalance : data.accountType! : true }}
               </td>
             </tr>
           </tbody>
@@ -267,20 +274,24 @@ export class AccountListComponent extends BaseListComponent<Transaction> {
   @Input() accountId = 0;
   @Input() accountType = 0;
   transDate: any = [];
-
-  isAccountTopup = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__TOPUP)
+  isWalletTopup = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__WALLET__TOPUP)
+  );
+  isWalletAdjust = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__WALLET__ADJUST)
+  );
+  isWalletView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__WALLET__VIEW)
   );
 
-  isAccountEarn = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__EARN)
+  isPointEarn = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__EARN)
   );
-
-  isAccountAdjust = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__ADJUST)
+  isPointAdjust = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__ADJUST)
   );
-  isAccountView = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__VIEW)
+  isPointView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__VIEW)
   );
 
   account!: Account;

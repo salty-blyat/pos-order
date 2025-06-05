@@ -111,7 +111,7 @@ import { AuthKeys } from "../../const";
               [nzSelected]="current == 1"
               (click)="switchCurrent(1)"
             >
-              <i nz-icon nzType="user"></i>
+              <nz-icon nzType="idcard" nzTheme="outline" />
               <span>{{ "Information" | translate }}</span>
             </li>
 
@@ -135,10 +135,22 @@ import { AuthKeys } from "../../const";
               [nzSelected]="current == 3"
               (click)="switchCurrent(3)"
             >
-              {{ "Account" | translate }}
+              <span>
+                <i
+                  *ngIf="!isWalletList() && !isPointList()"
+                  nz-icon
+                  nzType="user"
+                ></i>
+                {{ "Account" | translate }}
+              </span>
 
               <div *ngFor="let account of sortedAccounts">
                 <div
+                  *ngIf="
+                    (account.accountType == AccountTypes.Wallet &&
+                      isWalletList()) ||
+                    (account.accountType == AccountTypes.Point && isPointList())
+                  "
                   style="row-gap:12px; display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
                 >
                   <img
@@ -379,6 +391,12 @@ import { AuthKeys } from "../../const";
               <nz-tabset *ngIf="isAccountList()" style="margin: 0 8px;">
                 <ng-container *ngFor="let account of sortedAccounts">
                   <nz-tab
+                    *ngIf="
+                      (account.accountType == AccountTypes.Wallet &&
+                        isWalletList()) ||
+                      (account.accountType == AccountTypes.Point &&
+                        isPointList())
+                    "
                     [nzTitle]="
                       translateService.currentLang == 'km'
                         ? account.accountTypeNameKh ?? ''
@@ -624,12 +642,16 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   isCardList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__LIST)
   );
-  isAccountList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__LIST)
-  );
   isRedemptionList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__LIST)
   );
+  isWalletList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__WALLET__LIST)
+  );
+  isPointList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__LIST)
+  );
+  isAccountList = computed(() => true); // always show the account tab
 
   selectedAccount = signal<number>(0);
   accountRefreshSub = new Subscription();

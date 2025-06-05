@@ -217,6 +217,8 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
     if (this.modal?.isView) {
       this.nzShowIconList.showRemoveIcon = false;
     }
+    console.log("this.modal", this.modal);
+
     if (this.modal?.accountId) {
       this.accountRefresh$ = this.service
         .findAccount(this.modal?.accountId)
@@ -292,13 +294,17 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
   }
 
   override initControl(): void {
-    const { noteMaxLengthValidator, required, mustPositiveNumber, mustNotZero } =
-      CommonValidators;
+    const {
+      noteMaxLengthValidator,
+      required,
+      mustPositiveNumber,
+      mustNotZero,
+    } = CommonValidators;
     this.frm = this.fb.group({
       transNo: [null, [required]],
       transDate: [new Date()],
       accountId: [this.modal.accountId, [required]],
-      amount: [{ value: 1, disabled: false }, [required,mustNotZero]],
+      amount: [{ value: 1, disabled: false }, [required, mustNotZero]],
       type: [this.modal.type, required],
       note: [null, noteMaxLengthValidator],
       locationId: [null, required],
@@ -316,7 +322,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
       }
     }, 50);
     this.frm.controls["amount"]?.valueChanges.subscribe({
-      next: () => {  
+      next: () => {
         this.setExtDataControl();
       },
     });
@@ -335,6 +341,7 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
     this.extData = JSON.stringify({
       cardNumber: "",
       startBalance: this.selectedAccount?.balance!,
+      redeemCost: 0,
       endingBalance: this.currency.roundedDecimal(
         this.selectedAccount?.balance! + this.frm.get("amount")?.value
       ),
