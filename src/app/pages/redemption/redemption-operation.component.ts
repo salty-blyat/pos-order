@@ -7,6 +7,7 @@ import { AuthService } from "../../helpers/auth.service";
 import {
   AccountTypes,
   LOOKUP_TYPE,
+  OfferType,
   RedeemStatuses,
 } from "../lookup/lookup-type.service";
 import { Redemption, RedemptionService } from "./redemption.service";
@@ -233,7 +234,7 @@ import { AuthKeys } from "../../const";
                 >
                   <strong>
                     {{
-                      selectedOffer.redeemCost
+                      extData.redeemCost
                         | accountBalance : selectedOffer.redeemWith!
                         | translate
                     }}
@@ -296,13 +297,14 @@ import { AuthKeys } from "../../const";
                 }}</span>
               </div>
 
-              <div nz-flex nzJustify="space-between" *ngIf="selectedOffer">
-                <span
-                  >{{ "RedeemCost" | translate }} (x{{
-                    frm.get("qty")?.value
-                  }})</span
-                >
-                @if(frm.get("amount")?.value == 0){
+              <div nz-flex nzJustify="space-between">
+                <div>
+                  <span>{{ "RedeemCost" | translate }}</span>
+                  <span *ngIf="selectedOffer">
+                    (x{{ frm.get("qty")?.value }})</span
+                  >
+                </div>
+                @if(selectedOffer){ @if(frm.get("amount")?.value == 0){
                 <span>
                   {{ "Free" | translate }}
                 </span>
@@ -313,13 +315,21 @@ import { AuthKeys } from "../../const";
                       | accountBalance : selectedOffer?.redeemWith!
                   }}
                 </span>
+                } } @else {
+                <span>-</span>
                 }
               </div>
+
               <div style="margin-top:30px">
                 <nz-divider class="divider"></nz-divider>
                 <div nz-flex nzJustify="space-between">
                   <span>{{ "RemainingBalance" | translate }}</span>
-                  <span style="font-weight: bold">
+                  <span
+                    [ngStyle]="{
+                      'font-weight': 'bold',
+                      color: extData?.endingBalance! < 0 ? 'red' : ''
+                    }"
+                  >
                     {{
                       extData?.endingBalance
                         | accountBalance
@@ -487,8 +497,12 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   selectedMember: Member | null = null;
   selectedOffer: Offer | null = null;
-  extData: { cardNumber: String; startBalance: number; endingBalance: number } =
-    { cardNumber: "", startBalance: 0, endingBalance: 0 };
+  extData: {
+    cardNumber: String;
+    redeemCost: number;
+    startBalance: number;
+    endingBalance: number;
+  } = { cardNumber: "", redeemCost: 0, startBalance: 0, endingBalance: 0 };
   RedeemPrint = 1;
 
   override ngOnInit(): void {
@@ -654,12 +668,27 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
           this.frm.get("accountId")?.setValue(this.selectedAccount?.accountId);
           this.setAmountControl();
           this.setExtDataControl();
-
           this.getCurrentBalance();
           this.remainingBalance();
+          this.blockQty();
         }, 50);
       },
     });
+  }
+
+  blockQty() {
+    if (
+      this.selectedOffer?.offerType == OfferType.Voucher ||
+      this.selectedOffer?.offerType == OfferType.Coupon
+    ) {
+      this.frm.get("qty")?.disable();
+      this.frm.get("qty")?.setValue(1);
+    } else if (
+      this.selectedOffer?.offerType == OfferType.Gift &&
+      !this.modal?.isView
+    ) {
+      this.frm.get("qty")?.enable();
+    }
   }
 
   setAmountControl() {
@@ -678,8 +707,10 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   setExtDataControl() {
+    if (this.modal?.isView) return;
     this.extData = {
       cardNumber: "",
+      redeemCost: this.selectedOffer?.redeemCost!,
       startBalance: this.selectedAccount?.balance!,
       endingBalance: this.currency.roundedDecimal(
         this.selectedAccount?.balance! - this.frm.get("amount")?.value
@@ -688,6 +719,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     this.frm.get("extData")?.setValue(
       JSON.stringify({
         cardNumber: "",
+        redeemCost: this.selectedOffer?.redeemCost,
         startBalance: this.selectedAccount?.balance,
         endingBalance: this.currency.roundedDecimal(
           this.selectedAccount?.balance! - this.frm.get("amount")?.value
@@ -841,4 +873,5 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
   readonly RedeemStatuses = RedeemStatuses;
   readonly AccountTypes = AccountTypes;
+  readonly OfferType = OfferType;
 }
