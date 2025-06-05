@@ -8,7 +8,7 @@ import {
   Output,
   ViewEncapsulation,
 } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";  
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { BaseMultipleSelectComponent } from "../../utils/components/base-multiple-select.component";
 import { TranslateService } from "@ngx-translate/core";
 import { Offer, OfferService } from "./offer.service";
@@ -44,9 +44,31 @@ import { Offer, OfferService } from "./offer.service";
         *ngFor="let item of lists"
         nzCustomContent
         [nzValue]="item.id"
-        [nzLabel]="item.name+ ' '"
+        [nzLabel]="item.name + ' '"
       >
-        <span class="b-name">{{ item.name }}</span>
+        <div class="b-name option-container" nz-flex nzGap="small">
+          <div class="image-container">
+            <img *ngIf="item.photo" [src]="item.photo" alt="" />
+            <img
+              *ngIf="!item.photo"
+              src="./assets/image/img-not-found.jpg"
+              alt=""
+            />
+          </div>
+
+          <div class="option">
+            <span>
+              {{ item?.name }}
+            </span>
+            <span>
+              {{
+                item?.redeemCost
+                  | accountBalance : item?.redeemWith!
+                  | translate
+              }}
+            </span>
+          </div>
+        </div>
       </nz-option>
     </nz-select>
     <ng-template #actionItem>
@@ -78,7 +100,27 @@ import { Offer, OfferService } from "./offer.service";
 
   styles: [
     `
-     .div-bottom {
+      .option {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .option-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .image-container {
+        display: flex;
+        height: 18px;
+      }
+      .image-container img {
+        width: 100%;
+        object-fit: cover;
+        height: 100%;
+        overflow: hidden;
+      }
+      .div-bottom {
         margin: 4px 4px 0 4px;
       }
       nz-select {
@@ -92,7 +134,7 @@ import { Offer, OfferService } from "./offer.service";
       .b-code {
         font-weight: bolder;
       }
-    
+
       ::ng-deep .ant-select-item-group {
         color: rgba(0, 0, 0, 0.4);
       }

@@ -107,8 +107,12 @@ import { CurrencyService } from "../currency/currency.service";
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-label [nzSm]="8" [nzXs]="24"
-            >{{ "Note" | translate }}
+          <nz-form-label
+            [nzSm]="8"
+            [nzXs]="24"
+            [nzRequired]="modal.type == TransactionTypes.Adjust"
+          >
+            {{ "Note" | translate }}
           </nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24">
             <textarea nz-input formControlName="note" rows="3"></textarea>
@@ -305,6 +309,10 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
     setTimeout(() => {
       if (this.modal.type != TransactionTypes.Adjust) {
         this.frm.get("amount")?.addValidators([mustPositiveNumber]);
+        this.frm.get("note")?.updateValueAndValidity();
+      } else {
+        this.frm.get("note")?.addValidators([required]);
+        this.frm.get("note")?.updateValueAndValidity();
       }
     }, 50);
     this.frm.controls["amount"]?.valueChanges.subscribe({

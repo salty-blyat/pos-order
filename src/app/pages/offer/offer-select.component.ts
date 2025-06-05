@@ -53,8 +53,8 @@ import { AuthService } from "../../helpers/auth.service";
         [nzValue]="item?.id"
         [nzLabel]="
           item?.name +
-          ' ' +
-           (item?.redeemCost | accountBalance : item?.redeemWith!) | translate
+            ' ' +
+            (item?.redeemCost | accountBalance : item?.redeemWith!) | translate
         "
       >
         <div class="b-name option-container" nz-flex nzGap="small">
@@ -71,8 +71,12 @@ import { AuthService } from "../../helpers/auth.service";
             <span>
               {{ item?.name }}
             </span>
-            <span> 
-              {{ (item?.redeemCost | accountBalance : item?.redeemWith!) | translate }} 
+            <span>
+              {{
+                item?.redeemCost
+                  | accountBalance : item?.redeemWith!
+                  | translate
+              }}
             </span>
           </div>
         </div>
@@ -116,10 +120,8 @@ import { AuthService } from "../../helpers/auth.service";
       }
 
       .image-container {
-        height: 18px;
-      }
-      .image-container {
         display: flex;
+        height: 18px;
       }
       .image-container img {
         width: 100%;

@@ -658,6 +658,7 @@ export class ReportOperationComponent extends BaseOperationComponent<Report> {
               "Data is invalid."
             );
           }
+          this.frm.markAllAsTouched();
           setTimeout(() => {
             this.isPasted.set(false);
           }, 1500);
