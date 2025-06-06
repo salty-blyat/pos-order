@@ -623,7 +623,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     public accountService: AccountService,
     private settingService: SettingService,
     private systemSettingService: SystemSettingService,
-    private sessionStorageService: SessionStorageService,
     private authService: AuthService,
     public translateService: TranslateService,
     public nzImageService: NzImageService
@@ -651,7 +650,7 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   isPointList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__LIST)
   );
-  isAccountList = computed(() => true); // always show the account tab
+  isAccountList = computed(() => this.isWalletList() || this.isPointList() || this.isRedemptionList()); 
 
   selectedAccount = signal<number>(0);
   accountRefreshSub = new Subscription();

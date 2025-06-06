@@ -28,6 +28,7 @@ import { AuthService } from "../../helpers/auth.service";
       [nzDropdownRender]="actionItem"
       [nzServerSearch]="true"
       [nzOptionHeightPx]="50"
+      [nzDropdownMatchSelectWidth]="false"  
       [(ngModel)]="selected"
       (ngModelChange)="onModalChange()"
       (nzScrollToBottom)="loadMoreOption() ? searchMore() : null"

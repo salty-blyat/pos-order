@@ -34,6 +34,7 @@ import { AuthService } from "../../helpers/auth.service";
     <nz-select
       class="offer-select"
       nzShowSearch
+      [nzDropdownMatchSelectWidth]="false"
       [nzDropdownRender]="actionItem"
       [nzServerSearch]="true"
       [(ngModel)]="selected"

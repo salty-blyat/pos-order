@@ -13,7 +13,6 @@ import { TagGroupUiService } from "./tag-group-ui.service";
 import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 import { CommonValidators } from "../../utils/services/common-validators";
 import { AuthService } from "../../helpers/auth.service";
-import { AuthKeys } from "../../const";
 
 @Component({
   selector: "app-tag-group-operation",

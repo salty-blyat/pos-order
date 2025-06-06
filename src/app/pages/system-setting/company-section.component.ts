@@ -133,7 +133,7 @@ import { AuthService } from "../../helpers/auth.service";
         </nz-form-control>
       </nz-form-item>
 
-      <ng-container>
+      <ng-container *ngIf="isAdvanceSetting()">
         <div class="sub-section">
           <h5>{{ "Currency" | translate }}</h5>
         </div>
@@ -161,7 +161,7 @@ import { AuthService } from "../../helpers/auth.service";
         </nz-form-item> -->
       </ng-container>
 
-      <nz-form-item *ngIf="isCompanySettingEdit()">
+      <nz-form-item *ngIf="isBasicSetting()">
         <nz-form-label [nzSm]="7" [nzXs]="24" nzNoColon></nz-form-label>
         <nz-form-control [nzSm]="8" [nzXs]="24" style="text-align: right">
           <button
@@ -227,10 +227,12 @@ export class CompanySectionComponent extends BaseSettingSectionComponent {
     // SETTING_KEY.SecondCurrency,
   ];
 
-  isCompanySettingEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING));
+  isAdvanceSetting = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__ADVANCED_SETTING));
+  isBasicSetting = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__BASIC_SETTING));
+
   override ngOnInit(): void {
     super.ngOnInit();
-    this.isCompanySettingEdit() ? this.frm.enable() : this.frm.disable();
+    this.isAdvanceSetting() || this.isBasicSetting() ? this.frm.enable()  : this.frm.disable();
   }
 
   uploadUrl = `${this.appSettingService.setting.AUTH_API_URL}/upload/file`;

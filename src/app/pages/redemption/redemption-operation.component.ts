@@ -251,7 +251,8 @@ import { AuthKeys } from "../../const";
                     nzSize="small"
                     class="num-input"
                     formControlName="qty"
-                    [nzMin]="1"
+                    [nzPrecision]="2"
+                    [nzMin]="0"
                     [nzStep]="1"
                   ></nz-input-number>
                 </div>
@@ -274,9 +275,10 @@ import { AuthKeys } from "../../const";
 
                     <nz-input-number
                       nzSize="small"
-                      style="width: 60px; margin-left:auto"
+                      class="num-input"
                       formControlName="qty"
-                      [nzMin]="1"
+                      [nzPrecision]="2"
+                      [nzMin]="0"
                       [nzStep]="1"
                     ></nz-input-number>
                   </div>
@@ -307,11 +309,11 @@ import { AuthKeys } from "../../const";
               <div nz-flex nzJustify="space-between">
                 <div>
                   <span>{{ "RedeemCost" | translate }}</span>
-                  <span *ngIf="selectedOffer">
-                    (x{{ frm.get("qty")?.value }})</span
+                  <span *ngIf="selectedOffer && frm.get('amount')?.value">
+                    (x {{ frm.get("qty")?.value }})</span
                   >
                 </div>
-                @if(selectedOffer){ @if(frm.get("amount")?.value == 0){
+                @if(selectedOffer ){ @if(frm.get("amount")?.value == 0){
                 <span>
                   {{ "Free" | translate }}
                 </span>
@@ -465,7 +467,7 @@ margin-left:auto;
   }
 }
 .num-input{
-  width: 60px !important; 
+  width: 100px !important; 
   margin-left:auto;
 }
   
@@ -564,16 +566,18 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   memberLoading = false;
   onMemberChange() {
     if (this.memberLoading) return;
-
     const memberId = this.frm.get("memberId")?.value;
-
     if (memberId != null) {
       this.memberLoading = true;
       setTimeout(() => {
         this.memberService.find(memberId).subscribe({
           next: (m: any) => {
             this.selectedMember = m;
-            if (!this.modal?.isView) this.selectedOffer = null;
+            if (!this.modal?.isView) {
+              this.clearExtData(); 
+              this.selectedOffer = null;
+              this.selectedAccount = null;
+            }
             this.memberLoading = false;
           },
           error: (err) => {
@@ -618,7 +622,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
 
   override initControl(): void {
-    const { noteMaxLengthValidator, required, integerValidator } =
+    const { noteMaxLengthValidator, required, integerValidator, mustNotZero } =
       CommonValidators;
 
     this.frm = this.fb.group({
@@ -627,7 +631,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       accountId: [{ value: null, disabled: true }, required],
       redeemedDate: [new Date(), required],
       offerId: [{ value: null, disabled: true }, [required]],
-      qty: [{ value: 1, disabled: false }, [integerValidator, required]],
+      qty: [{ value: 1, disabled: false }, [required, mustNotZero]],
       amount: [{ value: 0, disabled: false }, [required]],
       note: [null, [noteMaxLengthValidator]],
       status: [RedeemStatuses.Used, [required, integerValidator]],
@@ -637,6 +641,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     });
 
     if (this.modal?.memberId) {
+      //enter from redemption
       setTimeout(() => {
         this.frm.get("memberId")?.setValue(this.modal.memberId);
         this.frm.get("memberId")?.disable();
@@ -650,12 +655,13 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
           if (!this.modal?.isView) {
             this.frm.get("offerId")?.enable();
             this.frm.get("offerId")?.setValue(null);
+            console.log("!this.modal?.isView");
           } else {
             this.frm.get("offerId")?.setValue(this.model?.offerId);
           }
           this.onMemberChange();
-          this.getCurrentBalance();
-          this.remainingBalance();
+          // this.getCurrentBalance();
+          // this.remainingBalance();
         }, 50);
       },
     });
@@ -673,6 +679,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     this.frm.controls["offerId"]?.valueChanges.subscribe({
       next: () => {
         setTimeout(() => {
+          if (!this.selectedMember || !this.selectedOffer) return;
           this.selectedAccount =
             this.selectedMember?.accounts?.find(
               (a) => a.accountType == this.selectedOffer?.redeemWith
@@ -683,35 +690,23 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
           this.setExtDataControl();
           this.getCurrentBalance();
           this.remainingBalance();
-          this.blockQty();
         }, 50);
       },
     });
   }
-
-  blockQty() {
-    if (
-      this.selectedOffer?.offerType == OfferType.Voucher ||
-      this.selectedOffer?.offerType == OfferType.Coupon
-    ) {
-      this.frm.get("qty")?.disable();
-      this.frm.get("qty")?.setValue(1);
-    } else if (
-      this.selectedOffer?.offerType == OfferType.Gift &&
-      !this.modal?.isView
-    ) {
-      this.frm.get("qty")?.enable();
-    }
+  clearExtData() {
+    this.extData = {
+      cardNumber: "",
+      redeemCost: 0,
+      startBalance: 0,
+      endingBalance: 0,
+    };
+    this.frm.get("extData")?.setValue(JSON.stringify(this.extData));
   }
 
   setAmountControl() {
-    // TODO: CHANGE TO USE ORIGINAL PRICE LATER.
     if (this.modal?.isView) return;
     let qty = this.frm.controls["qty"].value;
-    // if (this.modal?.isView) {
-    //   let amount =this.currency.roundedDecimal( this.extData.endingBalance - this.extData.startBalance);
-    //   this.frm.get("amount")?.setValue(amount * -1);
-    // } else {
     let amount = this.currency.roundedDecimal(
       this.selectedOffer?.redeemCost! * qty
     );
@@ -820,8 +815,9 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
         this.selectedAccount?.balance != null &&
         this.selectedAccount?.balance != undefined
       ) {
-        this.extData.endingBalance =
-          this.selectedAccount?.balance! - this.frm.get("amount")?.value;
+        this.extData.endingBalance = this.currency.roundedDecimal(
+          this.selectedAccount?.balance! - this.frm.get("amount")?.value
+        );
       } else {
         this.extData.endingBalance! = 0;
       }
@@ -894,5 +890,4 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
   }
   readonly RedeemStatuses = RedeemStatuses;
   readonly AccountTypes = AccountTypes;
-  readonly OfferType = OfferType;
 }

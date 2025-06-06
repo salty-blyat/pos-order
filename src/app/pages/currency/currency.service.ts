@@ -36,7 +36,7 @@ export class CurrencyService extends BaseApiService<Currency> {
   roundedDecimal(number: number) {
     if (typeof number === "string") number = parseFloat(number);
     const toFloat: number = parseFloat(number.toFixed(4));
-    const rounded = Math.floor(parseFloat((toFloat / 0.01).toPrecision(6)));
+    const rounded = Math.floor(parseFloat((toFloat / 0.01).toFixed(6)));
     const result = rounded * 0.01;
     return parseFloat(result.toFixed(4));
   }

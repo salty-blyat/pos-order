@@ -217,7 +217,6 @@ export class AccountOperationComponent extends BaseOperationComponent<Transactio
     if (this.modal?.isView) {
       this.nzShowIconList.showRemoveIcon = false;
     }
-    console.log("this.modal", this.modal);
 
     if (this.modal?.accountId) {
       this.accountRefresh$ = this.service
