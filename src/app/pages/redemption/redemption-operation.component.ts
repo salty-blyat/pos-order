@@ -137,7 +137,14 @@ import { AuthKeys } from "../../const";
                     nzGap="small"
                   >
                     <div nz-flex nzVertical *ngFor="let a of sortedAccounts">
-                      <div class="card-value">
+                      <div
+                        class="card-value"
+                        *ngIf="
+                          (a.accountType == AccountTypes.Wallet &&
+                            isWallet()) ||
+                          (a.accountType == AccountTypes.Point && isPoint())
+                        "
+                      >
                         <img [src]="a.accountTypeImage" [alt]="a.accountType" />
                         {{
                           a.balance
@@ -497,8 +504,19 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
 
   selectedMember: Member | null = null;
   selectedOffer: Offer | null = null;
-  extData: ExtData = { cardNumber: "", redeemCost: 0, startBalance: 0, endingBalance: 0 };
+  extData: ExtData = {
+    cardNumber: "",
+    redeemCost: 0,
+    startBalance: 0,
+    endingBalance: 0,
+  };
   RedeemPrint = 1;
+  isWallet = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__WALLET__LIST)
+  );
+  isPoint = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__LIST)
+  );
 
   override ngOnInit(): void {
     super.ngOnInit();
@@ -841,7 +859,9 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
     if (this.model.extData) {
       const parsed: { redeemCost: number } = JSON.parse(this.model?.extData);
       if (!parsed.redeemCost) {
-        this.extData.redeemCost = this.currency.roundedDecimal( this.frm.get("amount")?.value / this.frm.get("qty")?.value);
+        this.extData.redeemCost = this.currency.roundedDecimal(
+          this.frm.get("amount")?.value / this.frm.get("qty")?.value
+        );
       } else {
         this.extData = JSON.parse(this.model.extData);
       }
