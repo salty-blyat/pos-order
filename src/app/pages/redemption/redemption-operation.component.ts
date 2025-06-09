@@ -309,7 +309,7 @@ import { AuthKeys } from "../../const";
               <div nz-flex nzJustify="space-between">
                 <div>
                   <span>{{ "RedeemCost" | translate }}</span>
-                  <span *ngIf="selectedOffer && frm.get('amount')?.value">
+                  <span *ngIf="selectedOffer && frm.get('amount')?.value >= 0">
                     (x {{ frm.get("qty")?.value }})</span
                   >
                 </div>
@@ -711,7 +711,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
       this.selectedOffer?.redeemCost! * qty
     );
     this.frm.get("amount")?.setValue(amount);
-    // }
   }
 
   setExtDataControl() {
