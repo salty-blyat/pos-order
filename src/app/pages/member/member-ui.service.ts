@@ -6,6 +6,7 @@ import { MainPageService } from "../../utils/services/main-page.service";
 import { MemberDeleteComponent } from "./member-delete.component";
 import { ItemUploadComponent } from "../offer-group/item-upload.component";
 import { AccountListComponent } from "../account/account-list.component";
+import { MemberViewComponent } from "./member-view.component";
 
 @Injectable({ providedIn: "root" })
 export class MemberUiService extends BaseUiService {
@@ -66,7 +67,7 @@ export class MemberUiService extends BaseUiService {
       nzData: { id, isView: true },
       nzClosable: true,
       nzWidth: "100%",
-            nzBodyStyle: { height: `height: calc(100vh + 8px);`, padding: "0" },
+      nzBodyStyle: { height: `height: calc(100vh + 8px);`, padding: "0" },
       nzStyle: this.mainPageService.getModalFullPageSize(),
       nzMaskClosable: false,
     });

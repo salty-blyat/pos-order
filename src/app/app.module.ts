@@ -175,6 +175,11 @@ import { OfferGroupMultiSelectComponent } from "./pages/offer-group/offer-group-
 import { DateRangePipe } from "./utils/pipes/date-range.pipe";
 import { AgentMultiSelectComponent } from "./pages/agent/agent-multi-select.component";
 import { MemberClassMultiSelectComponent } from "./pages/member-class/member-class-multi-select.component";
+import { MemberViewComponent } from "./pages/member/member-view.component";
+import { Chart } from "chart.js";
+import { HomeComponent } from "./pages/home/home.component";
+import { GraphComponent } from "./utils/components/graph.component";
+import { PeopleCountPipe } from "./utils/pipes/people-count.pipe";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -240,6 +245,7 @@ export class CustomTranslate implements TranslateLoader {
     ItemTypeLabelPipe,
     LocationTextPipe,
     DecimalFormatPipe,
+    PeopleCountPipe,
     BaseListComponent,
     BaseOperationComponent,
     BaseDeleteComponent,
@@ -296,7 +302,9 @@ export class CustomTranslate implements TranslateLoader {
     ReportOperationComponent,
     StaticDropdownMultipleSelectComponent,
     StaticDropdownSingleSelectComponent,
-    InputNumberComponent,
+    InputNumberComponent, 
+    HomeComponent,
+    GraphComponent,
 
     //block
     BlockListComponent,
@@ -323,6 +331,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberPullComponent,
     MemberSelectComponent,
     MemberMultiSelectComponent,
+    MemberViewComponent,
 
     // card
     CardListComponent,
