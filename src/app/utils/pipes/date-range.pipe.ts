@@ -8,8 +8,7 @@ import { CustomDateTimePipe } from "./custom-date-time.pipe";
 })
 export class DateRangePipe implements PipeTransform {
   constructor(
-    private datePipe: CustomDateTimePipe,
-    private translate: TranslateService
+    private datePipe: CustomDateTimePipe, 
   ) {}
 
   transform(startDate: string | null, endDate: string | null, lang:string): string { 

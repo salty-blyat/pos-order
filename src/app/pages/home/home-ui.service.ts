@@ -11,4 +11,5 @@ export class HomeUiService extends BaseUiService {
   constructor(modalService: NzModalService) {
     super(modalService, "", "", "450px", "450px", "450px", "450px");
   }
+  
 }

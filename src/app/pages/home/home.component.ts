@@ -19,6 +19,7 @@ import { Dashboard, DateRange, HomeService } from "./home.service";
 import { Subscription } from "rxjs";
 import { AccountTypes } from "../lookup/lookup-type.service";
 import { DateService } from "../../utils/services/date.service";
+import { TranslateService } from "@ngx-translate/core";
 Chart.register(
   BarController,
   BarElement,
@@ -36,12 +37,12 @@ Chart.register(
         (nzSelectedIndexChange)="onTabChange($event)"
         style="margin-left:auto;"
       >
-        <nz-tab nzTitle="Today"> </nz-tab>
-        <nz-tab nzTitle="This Week"> </nz-tab>
-        <nz-tab nzTitle="This Month"> </nz-tab>
-        <nz-tab nzTitle="This Year"> </nz-tab>
-        <nz-tab nzTitle="All"> </nz-tab>
-        <nz-tab nzTitle="Custom"> </nz-tab>
+        <nz-tab [nzTitle]="'Today' | translate"> </nz-tab>
+        <nz-tab [nzTitle]="'ThisWeek' | translate"> </nz-tab>
+        <nz-tab [nzTitle]="'ThisMonth' | translate"> </nz-tab>
+        <nz-tab [nzTitle]="'ThisYear' | translate"> </nz-tab>
+        <nz-tab [nzTitle]="'All' | translate"> </nz-tab>
+        <!-- <nz-tab [nzTitle]="'Custom' | translate"> </nz-tab> -->
       </nz-tabset>
     </nz-header>
 
@@ -64,7 +65,8 @@ Chart.register(
             <div class="value-row">
               <span class="value-label">{{ "Total" | translate }}</span>
               <span class="value-number">{{
-                data.summary?.totalUsers | peopleCount | translate
+                data.summary?.totalUsers
+                  | peopleCount : translateService.currentLang
               }}</span>
             </div>
           </div>
@@ -87,7 +89,9 @@ Chart.register(
 
             <div class="value-row">
               <span class="value-label">{{ "Total" | translate }}</span>
-              <span class="value-number">{{ data.summary?.agents }}</span>
+              <span class="value-number">{{
+                data.summary?.agents || "0"
+              }}</span>
             </div>
           </div>
         </div>
@@ -95,16 +99,36 @@ Chart.register(
         <!-- top balance -->
         <div class="card">
           <span class="graph-label">{{ "MemberClass" | translate }}</span>
-          <div nz-flex nzJustify="center" class="graph">
-            <app-graph [config]="memberClassChart"></app-graph>
-          </div>
+          <ng-container *ngIf="memberClassChart; else noResult">
+            <div nz-flex nzJustify="center" class="graph">
+              <app-graph [config]="memberClassChart"></app-graph>
+            </div>
+          </ng-container>
+
+          <ng-template #noResult>
+            <div class="graph-noresult">
+              <app-no-result-found> </app-no-result-found>
+            </div>
+          </ng-template>
         </div>
 
         <div class="card agent-card">
           <span class="graph-label">{{ "Agent" | translate }}</span>
-          <div nz-flex nzAlign="end">
-            <app-graph style="width:100%" [config]="topAgentChart"></app-graph>
-          </div>
+
+          <ng-container *ngIf="topAgentChart; else noResult">
+            <div nz-flex nzAlign="end" class="graph">
+              <app-graph
+                style="width:100%"
+                [config]="topAgentChart"
+              ></app-graph>
+            </div>
+          </ng-container>
+
+          <ng-template #noResult>
+            <div class="graph-noresult">
+              <app-no-result-found> </app-no-result-found>
+            </div>
+          </ng-template>
         </div>
       </div>
 
@@ -124,7 +148,9 @@ Chart.register(
             [nzFrontPagination]="false"
           >
             <ng-template #noResult>
-              <app-no-result-found></app-no-result-found>
+              <div class="graph-noresult">
+                <app-no-result-found> </app-no-result-found>
+              </div>
             </ng-template>
             <thead>
               <tr>
@@ -183,7 +209,9 @@ Chart.register(
             [nzFrontPagination]="false"
           >
             <ng-template #noResult>
-              <app-no-result-found></app-no-result-found>
+              <div class="graph-noresult">
+                <app-no-result-found> </app-no-result-found>
+              </div>
             </ng-template>
             <thead>
               <tr>
@@ -213,7 +241,7 @@ Chart.register(
         </div>
 
         <div class="  card-nopad">
-          <h3>{{ "TopPoints" | translate }}</h3>
+          <h3>{{ "TopPoint" | translate }}</h3>
           <nz-table
             class="table"
             nz-col
@@ -228,7 +256,8 @@ Chart.register(
             [nzFrontPagination]="false"
           >
             <ng-template #noResult>
-              <app-no-result-found></app-no-result-found>
+              <app-no-result-found style="margin-top: 100px;">
+              </app-no-result-found>
             </ng-template>
             <thead>
               <tr>
@@ -257,24 +286,36 @@ Chart.register(
           </nz-table>
         </div>
       </div>
-      <!-- recent tran -->
     </nz-content>
   </nz-layout>`,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   encapsulation: ViewEncapsulation.None,
   styles: [
     `
+      .graph-noresult {
+        height: 75%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .ant-tabs-tab {
+        margin-left: 8px !important;
+      }
       nz-table {
         height: auto !important;
       }
       .grid-one {
         display: grid;
         grid-template-columns: 4fr 10fr 10fr;
+        // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-rows: 380px;
         gap: 8px;
+        margin-bottom: 8px;
       }
       .grid-two {
         display: grid;
         grid-template-columns: 12fr 6fr 6fr;
+        grid-template-rows: 485px;
         gap: 8px;
       }
 
@@ -294,7 +335,7 @@ Chart.register(
       .agent-card {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        // justify-content: space-between;
       }
       .graph-label {
         font-size: 16px;
@@ -309,13 +350,11 @@ Chart.register(
         padding: 16px;
         background: #fff;
         border: 1px solid #d9d9d9;
-        margin-bottom: 16px;
       }
       .card-nopad {
         border-radius: 6px;
         background: #fff;
         border: 1px solid #d9d9d9;
-        margin-bottom: 16px;
         padding: 8px;
         h3 {
           padding: 8px 4px;
@@ -377,20 +416,24 @@ Chart.register(
   standalone: false,
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  constructor(private service: HomeService, public dateService: DateService) {}
+  constructor(
+    private service: HomeService,
+    public dateService: DateService,
+    public translateService: TranslateService
+  ) {}
   data: Dashboard = {};
   dateRange: DateRange = { fromDate: new Date(), toDate: new Date() };
   refreshSub: Subscription = new Subscription();
   isLoading = signal<boolean>(false);
+  AccountTypes = AccountTypes;
 
   memberClassChart!: ChartConfiguration<"doughnut">;
   topAgentChart!: ChartConfiguration<"bar">;
 
   ngOnInit(): void {
-    this.dashboard();
+    // this.dashboard();
   }
 
-  AccountTypes = AccountTypes;
   dashboard(delay: number = 50) {
     if (this.isLoading()) return;
     this.isLoading.set(true);
@@ -408,6 +451,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
     }, delay);
   }
+
   onTabChange(index: number): void {
     const today = new Date();
     let from: Date = today;
@@ -458,12 +502,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       options: {
         plugins: {
           legend: {
-            position: "bottom", // 🔵 This moves the legend to the right
+            position: "bottom",
           },
         },
       },
     };
   }
+
   setTopAgentChart() {
     this.topAgentChart = {
       type: "bar",
@@ -479,6 +524,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
     };
   }
+
   ngOnDestroy(): void {
     this.refreshSub?.unsubscribe();
   }
