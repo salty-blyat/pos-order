@@ -292,6 +292,59 @@ Chart.register(
   encapsulation: ViewEncapsulation.None,
   styles: [
     `
+      .grid-one,
+      .grid-two {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      /* Default: Mobile-first approach */
+      .grid-one {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+
+      .grid-two {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+
+      /* Tablet screens */
+      @media (min-width: 768px) {
+        .grid-one {
+          grid-template-columns: 1fr 2fr;
+          grid-template-rows: 300px;
+        }
+
+        .grid-two {
+          grid-template-columns: 2fr 1fr 1fr;
+          grid-template-rows: 400px;
+        }
+      }
+
+      /* Desktop screens */
+      @media (min-width: 1024px) {
+        .grid-one {
+          grid-template-columns: 4fr 10fr 10fr;
+          grid-template-rows: 380px;
+        }
+
+        .grid-two {
+          grid-template-columns: 12fr 6fr 6fr;
+          grid-template-rows: 485px;
+        }
+      }
+
+      /* Larger desktops */
+      @media (min-width: 1300px) {
+        .grid-one,
+        .grid-two {
+          grid-template-columns: 4fr 10fr 10fr;
+        }
+      }
+
+      /////////////////////////////////////
       .graph-noresult {
         height: 75%;
         display: flex;
@@ -303,20 +356,6 @@ Chart.register(
       }
       nz-table {
         height: auto !important;
-      }
-      .grid-one {
-        display: grid;
-        grid-template-columns: 4fr 10fr 10fr;
-        // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        grid-template-rows: 380px;
-        gap: 8px;
-        margin-bottom: 8px;
-      }
-      .grid-two {
-        display: grid;
-        grid-template-columns: 12fr 6fr 6fr;
-        grid-template-rows: 485px;
-        gap: 8px;
       }
 
       .two-col-card {
@@ -431,7 +470,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   topAgentChart!: ChartConfiguration<"bar">;
 
   ngOnInit(): void {
-    // this.dashboard();
+    this.dashboard();
   }
 
   dashboard(delay: number = 50) {
