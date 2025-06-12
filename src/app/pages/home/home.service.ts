@@ -49,6 +49,7 @@ export interface RecentTransaction {
   amount?: number;
   memberCode?: string;
   memberName?: string;
+  accountType?: number;
 }
 
 export interface TopPoint {

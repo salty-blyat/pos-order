@@ -3,6 +3,7 @@ import {
   OnDestroy,
   OnInit,
   signal,
+  ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
 import {
@@ -20,6 +21,11 @@ import { Subscription } from "rxjs";
 import { AccountTypes } from "../lookup/lookup-type.service";
 import { DateService } from "../../utils/services/date.service";
 import { TranslateService } from "@ngx-translate/core";
+import {
+  NzContextMenuService,
+  NzDropdownMenuComponent,
+} from "ng-zorro-antd/dropdown";
+import { NzDatePickerComponent } from "ng-zorro-antd/date-picker";
 Chart.register(
   BarController,
   BarElement,
@@ -33,16 +39,38 @@ Chart.register(
   template: ` <nz-layout class="layout">
     <!-- Header -->
     <nz-header>
+      <h2>
+        {{ "Summary" | translate }}
+        @if(current == 0){
+        {{ this.dateRange.toDate | customDate }}
+        } @else if(current == 4 ){ } @else { 
+        {{
+          (this.dateRange.fromDate | customDate) +
+            " ~ " +
+            (this.dateRange.toDate | customDate)
+        }}
+        }
+      </h2>
       <nz-tabset
         (nzSelectedIndexChange)="onTabChange($event)"
         style="margin-left:auto;"
       >
-        <nz-tab [nzTitle]="'Today' | translate"> </nz-tab>
-        <nz-tab [nzTitle]="'ThisWeek' | translate"> </nz-tab>
-        <nz-tab [nzTitle]="'ThisMonth' | translate"> </nz-tab>
-        <nz-tab [nzTitle]="'ThisYear' | translate"> </nz-tab>
-        <nz-tab [nzTitle]="'All' | translate"> </nz-tab>
-        <!-- <nz-tab [nzTitle]="'Custom' | translate"> </nz-tab> -->
+        <nz-tab [nzTitle]="'Today' | translate"></nz-tab>
+        <nz-tab [nzTitle]="'ThisWeek' | translate"></nz-tab>
+        <nz-tab [nzTitle]="'ThisMonth' | translate"></nz-tab>
+        <nz-tab [nzTitle]="'ThisYear' | translate"></nz-tab>
+        <nz-tab [nzTitle]="'All' | translate"></nz-tab>
+        <nz-tab [nzTitle]="'Custom' | translate" style="position: relative;">
+          <a nz-dropdown [nzDropdownMenu]="menu" class="custom-dropdown">{{
+            "Custom" | translate
+          }}</a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <app-date-range-input
+              [inline]="true"
+              (valueChanged)="onDateChange($event)"
+            ></app-date-range-input>
+          </nz-dropdown-menu>
+        </nz-tab>
       </nz-tabset>
     </nz-header>
 
@@ -158,17 +186,17 @@ Chart.register(
                 <th nzEllipsis nzWidth="120px">
                   {{ "TransNo" | translate }}
                 </th>
-                <th nzEllipsis nzWidth="150px">
+                <th nzEllipsis nzWidth="170px">
                   {{ "Date" | translate }}
                 </th>
-                <th nzEllipsis>
+                <th nzEllipsis nzWidth="150px">
                   {{ "Member" | translate }}
                 </th>
                 <th nzEllipsis nzWidth="80px">
                   {{ "Type" | translate }}
                 </th>
                 <th nzEllipsis nzWidth="180px">{{ "Location" | translate }}</th>
-                <th nzWidth="70px" nzAlign="right">
+                <th nzWidth="100px" nzAlign="right">
                   {{ "Balance" | translate }}
                 </th>
               </tr>
@@ -187,7 +215,17 @@ Chart.register(
                 <td nzEllipsis>{{ d.memberCode + " " + d.memberName }}</td>
                 <td nzEllipsis>{{ d.type }}</td>
                 <td nzEllipsis>{{ d.location }}</td>
-                <td nzEllipsis nzAlign="right">{{ d.amount }}</td>
+                <td nzEllipsis nzAlign="right"   [ngStyle]="{
+                  color:
+                    d.amount! > 0
+                      ? 'black'
+                      : d.amount! < 0
+                      ? 'red'
+                      : 'black',
+                  'font-weight': 'semi-bold'
+                }">
+                  {{ d.amount | accountBalance : d.accountType! : true }}
+                </td>
               </tr>
             </tbody>
           </nz-table>
@@ -216,7 +254,7 @@ Chart.register(
             <thead>
               <tr>
                 <th nzWidth="30px">#</th>
-                <th nzEllipsis>
+                <th nzEllipsis nzWidth="150px">
                   {{ "Member" | translate }}
                 </th>
                 <th nzWidth="100px" nzAlign="right">
@@ -262,7 +300,7 @@ Chart.register(
             <thead>
               <tr>
                 <th nzWidth="30px">#</th>
-                <th nzEllipsis>
+                <th nzEllipsis nzWidth="150px">
                   {{ "Member" | translate }}
                 </th>
                 <th nzWidth="100px" nzAlign="right">
@@ -292,6 +330,15 @@ Chart.register(
   encapsulation: ViewEncapsulation.None,
   styles: [
     `
+      .custom-dropdown {
+        position: absolute;
+        padding: 0px 11px;
+        right: -7px;
+        top: -47px;
+        color: transparent;
+        z-index: 1000;
+      }
+
       .grid-one,
       .grid-two {
         display: grid;
@@ -458,7 +505,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private service: HomeService,
     public dateService: DateService,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    private nzContextMenuService: NzContextMenuService
   ) {}
   data: Dashboard = {};
   dateRange: DateRange = { fromDate: new Date(), toDate: new Date() };
@@ -468,8 +516,16 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   memberClassChart!: ChartConfiguration<"doughnut">;
   topAgentChart!: ChartConfiguration<"bar">;
+  current = 0;
 
   ngOnInit(): void {
+    this.dashboard();
+  }
+  onDateChange(event: any) {
+    const [from, to] = event;
+    if (!from || !to) return; // reason: call on init and "from" is undefined
+
+    this.dateRange = { fromDate: from, toDate: to };
     this.dashboard();
   }
 
@@ -493,6 +549,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onTabChange(index: number): void {
     const today = new Date();
+    this.current = index;
     let from: Date = today;
     let to: Date = today;
 
@@ -534,7 +591,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           {
             label: "Members by Class",
             data: this.data?.membersByClass?.map((d) => d.count ?? 0) || [],
-            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+            backgroundColor: ["#4383F0", "#5545e9", "#e9455e"],
           },
         ],
       },
@@ -557,7 +614,18 @@ export class HomeComponent implements OnInit, OnDestroy {
           {
             label: "Agent",
             data: this.data?.topAgents?.map((d) => d.value ?? 0) || [],
-            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+            backgroundColor: [
+              "#4383F0",
+              "#F45B69",
+              "#29C785",
+              "#FFB347",
+              "#9B59B6",
+              "#F39C12",
+              "#16A085",
+              "#E74C3C",
+              "#8E44AD",
+              "#3498DB",
+            ],
           },
         ],
       },

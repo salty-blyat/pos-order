@@ -17,6 +17,7 @@ import { NzDatePickerComponent } from "ng-zorro-antd/date-picker";
 import { DateService } from "../services/date.service";
 import { BehaviorSubject } from "rxjs";
 import { SessionStorageService } from "../services/sessionStorage.service";
+import { NzPlacement } from "ng-zorro-antd/date-picker/date-picker.component";
 
 interface IRecentFilter {
   key?: string;
@@ -26,20 +27,21 @@ interface IRecentFilter {
 @Component({
   selector: "app-date-range-input",
   template: `
-    <nz-range-picker
+    <nz-range-picker 
       *ngIf="value"
       [(ngModel)]="value"
       (ngModelChange)="
         valueChanged.emit(value);
         onChangeCallback(value);
-        onTouchedCallback(value)
-      "
+        onTouchedCallback(value)"
       [nzAllowClear]="allowClear"
       (nzOnCalendarChange)="calendarChange($event)"
       nzFormat="dd-MM-yyyy"
       [nzShowToday]="true"
       [nzRenderExtraFooter]="extraTemplate"
+      [nzInline]='inline'
       [nzDisabled]="disabled"
+      [nzPlacement]='placement'
       #nzDatePickerComponent
     ></nz-range-picker>
     <ng-template #extraTemplate>
@@ -57,11 +59,7 @@ interface IRecentFilter {
     `
       .preset-item {
         font-size: 13px;
-      }
-
-      // nz-range-picker {
-      //   min-width:240px !important
-      // }
+      } 
     `,
   ],
   providers: [
@@ -79,6 +77,8 @@ export class DateRangeInputComponent
 {
   d1!: Date;
   @Input() allowClear: boolean = false;
+  @Input() inline: boolean = false;
+  @Input() placement: NzPlacement = 'bottomLeft';
   @Input() storageKey!: string;
   @Input() formControl!: AbstractControl;
   @Input() value: [Date, Date] = [this.d1, new Date()];
