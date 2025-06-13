@@ -123,14 +123,26 @@ import { AuthKeys } from "../../const";
                 </div>
 
                 <div
-                  class="account-container"
+                  class="account-container-redem"
                   nz-flex
                   nzVertical
                   *ngIf="sortedAccounts.length > 0"
                 >
-                  <strong style="text-align:right">{{
+                  <div
+                    class="member-class-badge-redem"
+                    *ngIf="selectedMember?.memberClassName"
+                  >
+                    <img
+                      [src]="selectedMember?.memberClassPhoto"
+                      [alt]="selectedMember?.memberClassName"
+                    />
+                    <span>
+                      {{ selectedMember?.memberClassName || "-" }}
+                    </span>
+                  </div>
+                  <!-- <strong style="text-align:right">{{
                     selectedMember?.memberClassName || "-"
-                  }}</strong>
+                  }}</strong> -->
                   <div
                     style="margin-top:auto; margin-left: auto;"
                     nz-flex
@@ -405,12 +417,23 @@ import { AuthKeys } from "../../const";
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
-  styles: ` 
-  .account-container{
-margin-left:auto;
-  }
-  .divider {
-    margin: 8px 0;
+  styles: `
+   .member-class-badge-redem {
+        padding: 4px 8px;
+        background-color: #e9f3ff;
+        color: #3b82f6;
+        border-radius: 6px;
+        width: fit-content;
+       margin-left: auto;
+        display: flex;
+        gap: 4px;
+        img {
+          width: 20px;
+        }
+      }
+
+  .account-container-redem{
+    margin-left:auto;
   }
   .additional-detail{
     padding: 0 12px 12px 12px;
@@ -574,7 +597,7 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
           next: (m: any) => {
             this.selectedMember = m;
             if (!this.modal?.isView) {
-              this.clearExtData(); 
+              this.clearExtData();
               this.selectedOffer = null;
               this.selectedAccount = null;
             }
@@ -655,7 +678,6 @@ export class RedemptionOperationComponent extends BaseOperationComponent<Redempt
           if (!this.modal?.isView) {
             this.frm.get("offerId")?.enable();
             this.frm.get("offerId")?.setValue(null);
-            console.log("!this.modal?.isView");
           } else {
             this.frm.get("offerId")?.setValue(this.model?.offerId);
           }

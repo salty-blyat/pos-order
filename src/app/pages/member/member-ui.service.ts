@@ -62,7 +62,7 @@ export class MemberUiService extends BaseUiService {
 
   override showView(id: number): any {
     this.modalService.create({
-      nzContent: MemberOperationComponent,
+      nzContent: MemberViewComponent,
       nzFooter: null,
       nzData: { id, isView: true },
       nzClosable: true,

@@ -111,9 +111,9 @@ import { AuthService } from "../../helpers/auth.service";
       }
 
       .option-container {
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        display: grid;
+        gap:8px;
+        grid-template-columns: 20px 1fr;
       }
 
       .image-container {

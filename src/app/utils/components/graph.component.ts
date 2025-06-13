@@ -31,6 +31,7 @@ export class GraphComponent implements OnChanges {
       }
     }, 50);
   }
+  
   ngOnDestroy() {
     if (this.chart) {
       this.chart.destroy();

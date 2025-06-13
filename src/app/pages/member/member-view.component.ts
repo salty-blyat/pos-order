@@ -26,15 +26,6 @@ import { AuthKeys } from "../../const";
   selector: "app-member-view",
   template: `
     <div *nzModalTitle class="modal-header-ellipsis">
-      <span *ngIf="!modal?.id">{{ "Add" | translate }}</span>
-      <span *ngIf="modal?.id && !modal?.isView"
-        >{{ "Edit" | translate
-        }}{{
-          model?.code && model?.name
-            ? model?.code + " " + model?.name
-            : ("Loading" | translate)
-        }}</span
-      >
       <span *ngIf="modal?.id && modal?.isView">{{
         model?.code && model?.name
           ? model?.code + " " + model?.name
@@ -43,417 +34,339 @@ import { AuthKeys } from "../../const";
     </div>
     <div class="modal-content">
       <nz-layout>
-        <nz-sider nzTheme="light" class="sider-member" nzWidth="220px">
-          <ul class="menu-item" nz-menu nzTheme="light" nzMode="inline">
-            <!-- info -->
-            <li
-              nz-menu-item
-              style="height:auto"
-              [nzSelected]="current == 1"
-              (click)="switchCurrent(1)"
-            >
-              <div class="card">
-                <div class="card-content" style="display: flex;">
-                  <div class="photo">
-                    <!-- view -->
-                    @if(file.length == 0){
-                    <div class="image-no-profile" *ngIf="file.length == 0">
-                      <img src="./assets/image/man.png" alt="Photo" />
-                    </div>
-                    }@else {
-                    <nz-upload
-                      class="profile"
-                      [nzAction]="uploadUrl"
-                      [(nzFileList)]="file"
-                      (click)="onPreviewImage()"
-                      [nzShowButton]="false"
-                      [nzDisabled]="true"
-                      (nzChange)="handleUpload($event)"
-                      [nzShowUploadList]="nzShowButtonView"
-                      nzListType="picture-card"
-                      [nzShowButton]="false"
-                    >
-                      <div photo>
-                        <i nz-icon nzType="plus"></i>
-                        <img src="./assets/image/man.png" alt="Photo" />
-                      </div>
-                    </nz-upload>
-                    }
-                  </div>
+        <nz-sider nzTheme="light" class="sider-mem" nzWidth="250px">
+          <div class="photo">
+            <!-- view -->
+            @if(file.length == 0){
+            <div class="image-no-profile" *ngIf="file.length == 0">
+              <img src="./assets/image/man.png" alt="Photo" />
+            </div>
 
-                  <div class="info">
-                    <div>
-                      <span *ngIf="model?.code">{{ model?.code }}</span>
-                      <span *ngIf="model?.name">{{ model?.name }}</span>
-                    </div>
-                    <p *ngIf="model?.genderId">{{ model?.genderId }}</p>
-                    <p *ngIf="model?.birthDate">{{ model?.birthDate }}</p>
-                    <p *ngIf="model?.phone">{{ model?.phone }}</p>
-                    <p *ngIf="model?.agentName">{{ model?.agentName }}</p>
-                    <p *ngIf="model?.address">{{ model?.address }}</p>
-                  </div>
-                </div>
+            }@else {
+            <nz-upload
+              class="profile"
+              [(nzFileList)]="file"
+              (click)="onPreviewImage()"
+              [nzShowButton]="false"
+              [nzDisabled]="true"
+              [nzShowUploadList]="nzShowButtonView"
+              nzListType="picture-card"
+              [nzShowButton]="false"
+            >
+              <div photo>
+                <i nz-icon nzType="plus"></i>
+                <img src="./assets/image/man.png" alt="Photo" />
               </div>
-            </li>
-            <!-- card -->
-            <li
-              *ngIf="isCardList()"
-              nz-menu-item
-              style="height:auto"
-              (click)="switchCurrent(2)"
-            >
-              <i nz-icon nzType="credit-card"></i>
-              <span>{{ "Card" | translate }}</span>
-            </li>
+            </nz-upload>
 
-            <!-- account -->
-
-            <li
-              nz-menu-item
-              style="height:auto"
-              *ngIf="isAccountList()"
-              style="height:auto"
-              (click)="switchCurrent(3)"
-            >
+            }
+          </div>
+          <div class="member-name">
+            <p>{{ model?.name }}</p>
+            <div class="member-class-badge" *ngIf="model?.memberClassName">
+              <img
+                [src]="model?.memberClassPhoto"
+                [alt]="model?.memberClassName"
+              />
               <span>
-                <i
-                  *ngIf="!isWalletList() && !isPointList()"
-                  nz-icon
-                  nzType="user"
-                ></i>
-                {{ "Account" | translate }}
+                {{ model?.memberClassName }}
               </span>
+            </div>
+          </div>
+          <nz-divider class="divider"></nz-divider>
+          <div class="info-section">
+            <h3>{{ "Information" | translate }}</h3>
+            <div class="info">
+              <nz-icon
+                class="label"
+                nzType="borderless-table"
+                nzTheme="outline"
+              />
+              <div class="info-peice">
+                <span class="label"> {{ ("Code" | translate) + ": " }} </span>
+                <span class="value"> {{ model?.code }} </span>
+              </div>
+            </div>
 
-              <div *ngFor="let account of sortedAccounts">
-                <div
-                  *ngIf="
-                    (account.accountType == AccountTypes.Wallet &&
-                      isWalletList()) ||
-                    (account.accountType == AccountTypes.Point && isPointList())
-                  "
-                  style="row-gap:12px; display: flex; align-items: center; margin-bottom: 12px; line-height: 1"
-                >
-                  <img
-                    [src]="account.accountTypeImage"
-                    [alt]="account.accountType"
-                    style="height:22px; margin-right: 8px;"
-                  />
-                  <div>
-                    {{
-                      account.balance
-                        | accountBalance : account.accountType : true
-                    }}
+            <div class="info">
+              <nz-icon class="label" nzType="phone" nzTheme="outline" />
+              <div class="info-peice">
+                <span class="label"> {{ ("Phone" | translate) + ": " }} </span>
+                <span class="value"> {{ model?.phone }} </span>
+              </div>
+            </div>
+            <div *ngIf="model?.email" class="info">
+              <nz-icon
+                class="label"
+                nzType="mail"
+                nzTheme="outline"
+                class="label"
+              />
+            </div>
+
+            <div class="info">
+              <nz-icon nzType="calendar" nzTheme="outline" class="label" />
+              <div class="info-peice">
+                <span class="label">
+                  {{ ("JoinDate" | translate) + ": " }}
+                </span>
+                <span class="value">
+                  {{ model?.joinDate | customDate }}
+                </span>
+              </div>
+            </div>
+            <div class="info">
+              <nz-icon nzType="user" nzTheme="outline" class="label" />
+              <div class="info-peice">
+                <span class="label"> {{ ("Agent" | translate) + ": " }} </span>
+                <span class="value"> {{ model?.agentName }} </span>
+              </div>
+            </div>
+          </div>
+          <nz-divider class="divider"></nz-divider>
+
+          <ul class="menu-item" nz-menu nzTheme="light" nzMode="inline">
+            <!-- account -->
+            <li
+              *ngFor="let a of sortedAccounts; let i = index"
+              class="side-select"
+              (click)="switchCurrent(i)"
+              [nzSelected]="current == i"
+              nz-menu-item
+            >
+              <div class="account-container">
+                <div class="account-left">
+                  <div class="account-icon-mem">
+                    <img
+                      *ngIf="a?.accountTypeImage"
+                      [src]="a?.accountTypeImage"
+                      class="account-img"
+                    />
+                  </div>
+
+                  <div class="account-info">
+                    <span>{{
+                      translateService.currentLang == "km"
+                        ? a.accountTypeNameKh
+                        : a.accountTypeNameEn
+                    }}</span>
+                    <div class="account-points">
+                      {{ a.balance | accountBalance : a.accountType : true }}
+                    </div>
                   </div>
                 </div>
               </div>
             </li>
+            @if( isCardList()){
+            <li
+              [nzSelected]="current == 2"
+              (click)="switchCurrent(2)"
+              class="side-select"
+              nz-menu-item
+            >
+              <div class="account-container">
+                <!-- Left Side: Icon + Text -->
+                <div class="account-left">
+                  <div class="account-icon-mem">
+                    <i nz-icon nzType="credit-card" class="credit-icon"></i>
+                  </div>
+
+                  <div class="account-info">
+                    <span>{{ "Card" | translate }}</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+            }
           </ul>
         </nz-sider>
 
-        <nz-content [ngStyle]="{ padding: current == 3 ? '0' : '' }">
+        <nz-content>
           <app-loading *ngIf="isLoading()"></app-loading>
           <div [ngSwitch]="current" [style.height.%]="100">
-            <div *ngSwitchCase="1" ngCase>
-              <form
-                nz-form
-                [formGroup]="frm"
-                [style.height.%]="100"
-                [nzAutoTips]="autoTips"
-              >
-                <div nz-row>
-                  <div nz-col [nzXs]="24">
-                    <div nz-row>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                            >{{ "Code" | translate }}
-                          </nz-form-label>
-                          <nz-form-control
-                            [nzSm]="14"
-                            [nzXs]="24"
-                            nzHasFeedback
-                          >
-                            <input
-                              [autofocus]="true"
-                              nz-input
-                              formControlName="code"
-                              [placeholder]="
-                                frm.controls['code'].disabled
-                                  ? ('NewCode' | translate)
-                                  : ''
-                              "
-                            />
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                            >{{ "JoinDate" | translate }}
-                          </nz-form-label>
-                          <nz-form-control [nzSm]="14" [nzXs]="24">
-                            <app-date-input
-                              [allowClear]="false"
-                              formControlName="joinDate"
-                            >
-                            </app-date-input>
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                    </div>
+            <ng-container *ngFor="let account of sortedAccounts; let i = index">
+              <div *ngSwitchCase="i" class="tab-content">
+                <nz-tabset class="tab"  [(nzSelectedIndex)]="tranTab">
+                  <nz-tab [nzTitle]="'Transaction' | translate">
+                    <app-account-list
+                      [accountId]="account.accountId!"
+                      [accountType]="account.accountType!"
+                    ></app-account-list>
+                  </nz-tab>
 
-                    <div nz-row>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                            >{{ "Name" | translate }}
-                          </nz-form-label>
-                          <nz-form-control [nzSm]="14" [nzXs]="24">
-                            <input nz-input formControlName="name" />
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24"
-                            >{{ "LatinName" | translate }}
-                          </nz-form-label>
-                          <nz-form-control [nzSm]="14" [nzXs]="24">
-                            <input nz-input formControlName="latinName" />
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                    </div>
-
-                    <div nz-row>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                            >{{ "Gender" | translate }}
-                          </nz-form-label>
-                          <nz-form-control
-                            [nzSm]="14"
-                            [nzXs]="24"
-                            nzErrorTip=""
-                          >
-                            <app-lookup-item-select
-                              formControlName="genderId"
-                              [lookupType]="LOOKUP_TYPE.Gender"
-                              [showImage]="false"
-                            ></app-lookup-item-select>
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24"
-                            >{{ "Nationality" | translate }}
-                          </nz-form-label>
-                          <nz-form-control [nzSm]="14" [nzXs]="24">
-                            <app-lookup-item-select
-                              formControlName="nationalityId"
-                              [lookupType]="LOOKUP_TYPE.Nationality"
-                              [showImage]="false"
-                              [showAllOption]="true"
-                              typeLabelAll=" "
-                            ></app-lookup-item-select>
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                    </div>
-
-                    <div nz-row>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired
-                            >{{ "Phone" | translate }}
-                          </nz-form-label>
-                          <nz-form-control
-                            [nzSm]="14"
-                            [nzXs]="24"
-                            nzErrorTip=""
-                          >
-                            <input nz-input formControlName="phone" />
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24"
-                            >{{ "Email" | translate }}
-                          </nz-form-label>
-                          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip>
-                            <input nz-input formControlName="email" />
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                    </div>
-
-                    <div nz-row>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired=""
-                            >{{ "MemberClass" | translate }}
-                          </nz-form-label>
-                          <nz-form-control [nzSm]="14" [nzXs]="24">
-                            <app-member-class-select
-                              formControlName="memberClassId"
-                            ></app-member-class-select>
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24" nzRequired=""
-                            >{{ "Agent" | translate }}
-                          </nz-form-label>
-                          <nz-form-control [nzSm]="14" [nzXs]="24">
-                            <app-agent-select
-                              formControlName="agentId"
-                            ></app-agent-select>
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                    </div>
-
-                    <div nz-row>
-                      <div nz-col [nzXs]="12">
-                        <nz-form-item>
-                          <nz-form-label [nzSm]="8" [nzXs]="24"
-                            >{{ "DateOfBirth" | translate }}
-                          </nz-form-label>
-                          <nz-form-control
-                            [nzSm]="14"
-                            [nzXs]="24"
-                            nzErrorTip=""
-                          >
-                            <app-date-input
-                              [allowClear]="true"
-                              formControlName="birthDate"
-                            ></app-date-input>
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                    </div>
-
-                    <div nz-row>
-                      <div nz-col [nzSpan]="24">
-                        <nz-form-item>
-                          <nz-form-label [nzSpan]="4"
-                            >{{ "Address" | translate }}
-                          </nz-form-label>
-                          <nz-form-control [nzXs]="19">
-                            <textarea
-                              nz-input
-                              type="text"
-                              formControlName="address"
-                              rows="3"
-                            ></textarea>
-                          </nz-form-control>
-                        </nz-form-item>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-
-            <div style="margin: 0 8px;" *ngSwitchCase="2" ngCase>
+                  <nz-tab
+                    *ngIf="isRedemptionList()"
+                    [nzTitle]="'Redemption' | translate"
+                  >
+                    <app-redemption-list
+                      [memberId]="modal.id"
+                      [isFromMember]="true"
+                      [accountTypeInput]="account.accountType!"
+                    />
+                  </nz-tab>
+                </nz-tabset>
+              </div>
+            </ng-container>
+            <div class="tab" *ngSwitchCase="2" ngCase>
               <app-card-list
                 *ngIf="isCardList()"
                 [accountId]="model.defaultAccountId!"
                 [memberId]="modal.id"
               />
             </div>
-
-            <div *ngSwitchCase="3" class="tab-content">
-              <nz-tabset *ngIf="isAccountList()" style="margin: 0 8px;">
-                <ng-container *ngFor="let account of sortedAccounts">
-                  <nz-tab
-                    *ngIf="
-                      (account.accountType == AccountTypes.Wallet &&
-                        isWalletList()) ||
-                      (account.accountType == AccountTypes.Point &&
-                        isPointList())
-                    "
-                    [nzTitle]="
-                      translateService.currentLang == 'km'
-                        ? account.accountTypeNameKh ?? ''
-                        : account.accountTypeNameEn ?? ''
-                    "
-                  >
-                    <app-account-list
-                      [accountId]="account.accountId!"
-                      [accountType]="account.accountType!"
-                    ></app-account-list>
-                  </nz-tab>
-                </ng-container>
-                <nz-tab
-                  *ngIf="isRedemptionList()"
-                  [nzTitle]="'Redemption' | translate"
-                >
-                  <app-redemption-list
-                    [memberId]="modal.id"
-                    [isFromMember]="true"
-                  />
-                </nz-tab>
-              </nz-tabset>
-            </div>
           </div>
         </nz-content>
       </nz-layout>
     </div>
     <div *nzModalFooter>
-      <div *ngIf="modal?.isView">
-        <a
-          (click)="uiService.showEdit(model.id || 0)"
-          *ngIf="!isLoading() && isMemberEdit()"
-        >
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Edit" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isMemberEdit()"
-        ></nz-divider>
-        <a
-          nz-typography
-          nzType="danger"
-          (click)="uiService.showDelete(model.id || 0)"
-          *ngIf="!isLoading() && isMemberRemove()"
-        >
-          <i nz-icon nzType="delete" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Delete" | translate }}</span>
-        </a>
-        <nz-divider
-          nzType="vertical"
-          *ngIf="!isLoading() && isMemberRemove()"
-        ></nz-divider>
-        <a nz-typography (click)="cancel()" style="color: gray;">
-          <i nz-icon nzType="close" nzTheme="outline"></i>
-          <span class="action-text"> {{ "Close" | translate }}</span>
-        </a>
-      </div>
+      <a
+        (click)="uiService.showEdit(model.id || 0)"
+        *ngIf="!isLoading() && isMemberEdit()"
+      >
+        <i nz-icon nzType="edit" nzTheme="outline"></i>
+        <span class="action-text"> {{ "Edit" | translate }}</span>
+      </a>
+      <nz-divider
+        nzType="vertical"
+        *ngIf="!isLoading() && isMemberEdit()"
+      ></nz-divider>
+      <a
+        nz-typography
+        nzType="danger"
+        (click)="uiService.showDelete(model.id || 0)"
+        *ngIf="!isLoading() && isMemberRemove()"
+      >
+        <i nz-icon nzType="delete" nzTheme="outline"></i>
+        <span class="action-text"> {{ "Delete" | translate }}</span>
+      </a>
+      <nz-divider
+        nzType="vertical"
+        *ngIf="!isLoading() && isMemberRemove()"
+      ></nz-divider>
+      <a nz-typography (click)="cancel()" class="grey-color">
+        <i nz-icon nzType="close" nzTheme="outline"></i>
+        <span class="action-text"> {{ "Close" | translate }}</span>
+      </a>
     </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   styles: [
     `
-      .account-menu-item {
-        height: auto !important;
-        padding-bottom: 12px;
+      .grey-color {
+        color: gray !important;
+      }
+      .tab {
+        margin: 0 8px;
+      }
+      .credit-icon {
+        font-size: 18px !important;
       }
 
-      .account-item {
+      .account-container {
         display: flex;
         align-items: center;
-        margin-bottom: 12px;
-        line-height: 1;
+        justify-content: space-between;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 12px;
+      }
+      .ant-menu-item-selected {
+        .ant-menu-title-content {
+          .account-container {
+            .account-left {
+              .account-icon-mem {
+                border: 1px solid #4470c240;
+              }
+            }
+          }
+        }
+      }
+      .info-peice {
+        display: grid;
+        grid-template-columns: 95px 1fr;
+        .value {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      .member-class-badge {
+        padding: 4px 8px;
+        background-color: #e9f3ff;
+        color: #3b82f6;
+        border-radius: 6px;
+        width: fit-content;
+        margin: auto;
+        display: flex;
+        gap: 4px;
+        img {
+          width: 20px;
+        }
+      }
+      .account-left {
+        display: flex;
+        align-items: center;
       }
 
-      .account-icon {
+      .account-icon-mem {
+        width: 45px;
+        height: 45px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+      }
+      .divider {
+        margin: 16px 0;
+      }
+
+      .account-img {
         height: 22px;
-        margin-right: 8px;
+      }
+
+      .account-info {
+        line-height: 20px;
+      }
+
+      .account-points {
+        font-size: 18px;
+        font-weight: bold;
+        margin-top: 4px;
+      }
+      ////
+
+      .side-select {
+        padding: 0 !important;
+        height: auto !important;
+        border-radius: 8px !important;
+      }
+      .info-section {
+        h3 {
+          font-weight: bold;
+          font-size: 16px;
+          margin-bottom: 4px;
+        }
+
+        .info {
+          display: flex;
+          gap: 4px;
+          text-wrap: balance;
+        }
+      }
+      .label {
+        color: gray;
+      }
+
+      .member-name {
+        text-align: center;
+
+        p {
+          margin-top: 5px;
+          font-weight: bold;
+          margin-bottom: 4px;
+        }
       }
 
       .ant-tabs-tab + .ant-tabs-tab {
@@ -529,29 +442,22 @@ import { AuthKeys } from "../../const";
         height: auto;
         padding: 1px;
         min-height: 2cm;
+        margin: 16px auto 0;
         border-radius: 4px;
 
         img {
           width: 100%;
         }
       }
-
-      .member-name {
-        text-align: center;
-
-        p {
-          margin-top: 5px;
-          font-weight: bold;
-        }
-      }
-
       .menu-item {
         background: #fff;
       }
 
-      .sider-member {
+      .sider-mem {
         height: calc(100vh - 160px);
         border-right: 1px solid #d9d9d9;
+        padding: 16px;
+        overflow: scroll !important;
       }
 
       [profile] {
@@ -580,13 +486,11 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
     fb: FormBuilder,
     ref: NzModalRef<MemberViewComponent>,
     service: MemberService,
-    private msg: NzMessageService,
     override uiService: MemberUiService,
     private redemptionUiService: RedemptionUiService,
     public accountUiService: AccountUiService,
     public accountService: AccountService,
     private settingService: SettingService,
-    private systemSettingService: SystemSettingService,
     private authService: AuthService,
     public translateService: TranslateService,
     public nzImageService: NzImageService
@@ -595,7 +499,9 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
   }
   memberName = "";
   memberNameEn = "";
-  current: number = 1;
+  photoSetted: boolean = false;
+  current: number = 0;
+  tranTab:number = 0;
   isMemberEdit = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__EDIT)
   );
@@ -614,31 +520,18 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
   isPointList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__LIST)
   );
-  isAccountList = computed(
-    () => this.isWalletList() || this.isPointList() || this.isRedemptionList()
-  );
-
-  selectedAccount = signal<number>(0);
   accountRefreshSub = new Subscription();
   redemptionRefreshSub = new Subscription();
   systemRefresh = new Subscription();
   uploadRefresh$ = new Subscription();
   file: NzUploadFile[] = [];
   submitRefresh = new Subscription();
-  uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
   //  view
   nzShowButtonView = {
     showPreviewIcon: false,
     showDownloadIcon: false,
     showRemoveIcon: false,
   };
-  // add | edit
-  nzShowIconList = {
-    showPreviewIcon: false,
-    showRemoveIcon: true,
-    showDownloadIcon: false,
-  };
-  tabIndex = 0;
 
   onPreviewImage(): void {
     this.nzImageService.preview([{ src: this.file[0].url! }]);
@@ -647,22 +540,13 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
   override ngOnInit(): void {
     if (this.isLoading()) return;
     this.initControl();
-    if (!this.modal?.isView) {
-      this.systemRefresh = this.systemSettingService
-        .find(SETTING_KEY.MemberAutoId)
-        .subscribe({
-          next: (value?: string) => {
-            if (Number(value) !== 0) {
-              this.frm.get("code")?.disable();
-            }
-          },
-        });
-    }
 
     if (this.modal?.isView) {
       this.frm.disable();
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
-        if (e.key === "edited") {
+        console.log('e',e); 
+        if (e.key === "edited" || e.key === "upload") {
+          this.photoSetted = false;
           this.isLoading.set(true);
           this.service.find(this.modal?.id).subscribe({
             next: (result: Member) => {
@@ -730,7 +614,6 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
     this.redemptionRefreshSub =
       this.redemptionUiService.refresher.subscribe(refreshBalance);
   }
-
   override initControl(): void {
     const {
       nameMaxLengthValidator,
@@ -786,8 +669,8 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
       genderId: this.model.genderId,
       nationalityId: this.model.nationalityId,
     });
-
-    if (this.model.photo && this.model.photo !== "") {
+    if (this.model.photo && this.model.photo !== "" && !this.photoSetted) {
+      this.photoSetted = true;
       this.file = [];
       this.file.push({
         uid: "",
@@ -796,79 +679,20 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
       });
     }
   }
-  override onSubmit(e: any): void {
-    if (this.frm.valid && !this.isLoading()) {
-      this.isLoading.set(true);
-      if (this.file.length > 0) {
-        this.frm.patchValue({
-          photo: this.file[0].url,
-        });
-      } else {
-        this.frm.patchValue({
-          photo: null,
-        });
-      }
-      let operation$: Observable<Member> = this.service.add(
-        this.frm.getRawValue()
-      );
-
-      if (this.modal?.id) {
-        operation$ = this.service.edit({
-          ...this.frm.getRawValue(),
-          id: this.modal?.id,
-        });
-      }
-      if (e.detail === 1 || e.detail === 0) {
-        this.submitRefresh = operation$.subscribe({
-          next: (result: Member) => {
-            this.model = result;
-            this.isLoading.set(false);
-            this.ref.triggerOk().then();
-          },
-          error: (error: any) => {
-            console.log(error);
-            this.isLoading.set(false);
-          },
-          complete: () => {
-            this.isLoading.set(false);
-          },
-        });
-      }
-    }
-  }
 
   switchCurrent(index: number) {
     switch (index) {
+      case 0:
+        this.current = 0;
+        break;
       case 1:
         this.current = 1;
         break;
       case 2:
         this.current = 2;
         break;
-      case 3:
-        this.current = 3;
-        break;
     }
   }
-
-  handleUpload(info: NzUploadChangeParam): void {
-    let fileList = [...info.fileList];
-    // 1. Limit 5 number of uploaded files
-    fileList = fileList.slice(-5);
-    // 2. Read from response and show file link
-    fileList = fileList.map((file) => {
-      if (file.response) {
-        // Component will show file.url as link
-        file.url = file.response.url;
-        if (file.response.name) {
-          file.name = file.response.name;
-        }
-      }
-      return file;
-    });
-    this.file = fileList;
-  }
-
   get sortedAccounts() {
     return (this.model?.accounts ?? []).slice().sort((a, b) => {
       if (a.accountType === AccountTypes.Wallet) return -1;
@@ -885,7 +709,6 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
     this.submitRefresh?.unsubscribe();
     this.uploadRefresh$?.unsubscribe();
   }
-
   protected readonly AccountTypes = AccountTypes;
   protected readonly LOOKUP_TYPE = LOOKUP_TYPE;
 }

@@ -254,8 +254,10 @@ import { Subscription } from "rxjs";
                 </span>
               </td>
               <td nzEllipsis>{{ data.note }}</td>
-              <td nzEllipsis nzAlign="right"> 
-                {{ (data?.amount | accountBalance : data?.redeemWith! ) | translate}} 
+              <td nzEllipsis nzAlign="right">
+                {{
+                  data?.amount | accountBalance : data?.redeemWith! | translate
+                }}
               </td>
               <td class="col-action">
                 <a
@@ -328,6 +330,7 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
   @Input() isFromMember = false;
   lookup = signal<LookupItem[]>([]);
   memberId = input(0);
+  accountTypeInput = input(0);
   lookupRefresh$ = new Subscription();
   hasAdvancedFilter = signal<boolean>(false);
   redeemedDate: any = [];
@@ -466,6 +469,12 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
         field: "redeemWith",
         operator: "eq",
         value: this.accountTypeId(),
+      });
+    } else if (this.accountTypeInput()) {
+      filters.push({
+        field: "redeemWith",
+        operator: "eq",
+        value: this.accountTypeInput(),
       });
     }
 

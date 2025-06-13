@@ -138,10 +138,10 @@ import { NzImageService } from "ng-zorro-antd/image";
                   *ngIf="data.latinName"
                   style="display:flex; flex-direction:column"
                 >
-                 <span class="title">
+                 <span class="title-mem">
                    {{ data.name }}
                  </span>
-                  <span class="subtitle">
+                  <span class="subtitle-mem">
                     {{ data.latinName }}
                   </span>
                 </div>
@@ -187,10 +187,10 @@ import { NzImageService } from "ng-zorro-antd/image";
       nz-avatar:hover {
         cursor: pointer;
       }
-      .title{
+      .title-mem{
         font-size: 12px;
       }
-      .subtitle {
+      .subtitle-mem {
         font-size: 11px;
         color: #6f6f6f;
       }

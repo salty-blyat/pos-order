@@ -53,8 +53,7 @@ import { AuthKeys } from "../../const";
               <img src="./assets/image/man.png" alt="Photo" />
             </div>
 
-            }@else {
-
+            }@else { 
             <nz-upload
               class="profile"
               [nzAction]="uploadUrl"
@@ -420,6 +419,7 @@ import { AuthKeys } from "../../const";
                 </nz-tab>
               </nz-tabset>
             </div>
+            
           </div>
         </nz-content>
       </nz-layout>
