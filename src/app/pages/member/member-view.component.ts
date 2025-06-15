@@ -186,13 +186,22 @@ import { AuthKeys } from "../../const";
           <div [ngSwitch]="current" [style.height.%]="100">
             <ng-container *ngFor="let account of sortedAccounts; let i = index">
               <div *ngSwitchCase="i" class="tab-content">
-                <nz-tabset class="tab"  [(nzSelectedIndex)]="tranTab">
-                  <nz-tab [nzTitle]="'Transaction' | translate">
-                    <app-account-list
-                      [accountId]="account.accountId!"
-                      [accountType]="account.accountType!"
-                    ></app-account-list>
-                  </nz-tab>
+                <nz-tabset class="tab" [(nzSelectedIndex)]="tranTab">
+                  <ng-container
+                    *ngIf="
+                      (account.accountType == AccountTypes.Wallet &&
+                        isWalletList()) ||
+                      (account.accountType == AccountTypes.Point &&
+                        isPointList())
+                    "
+                  >
+                    <nz-tab [nzTitle]="'Transaction' | translate">
+                      <app-account-list
+                        [accountId]="account.accountId!"
+                        [accountType]="account.accountType!"
+                      ></app-account-list>
+                    </nz-tab>
+                  </ng-container>
 
                   <nz-tab
                     *ngIf="isRedemptionList()"
@@ -457,7 +466,6 @@ import { AuthKeys } from "../../const";
         height: calc(100vh - 160px);
         border-right: 1px solid #d9d9d9;
         padding: 16px;
-        overflow: scroll !important;
       }
 
       [profile] {
@@ -501,7 +509,7 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
   memberNameEn = "";
   photoSetted: boolean = false;
   current: number = 0;
-  tranTab:number = 0;
+  tranTab: number = 0;
   isMemberEdit = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__EDIT)
   );
@@ -544,7 +552,7 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
     if (this.modal?.isView) {
       this.frm.disable();
       this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
-        console.log('e',e); 
+        console.log("e", e);
         if (e.key === "edited" || e.key === "upload") {
           this.photoSetted = false;
           this.isLoading.set(true);
