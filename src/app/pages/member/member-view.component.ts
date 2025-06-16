@@ -63,12 +63,14 @@ import { AuthKeys } from "../../const";
           </div>
           <div class="member-name">
             <p>{{ model?.name }}</p>
-            <div class="member-class-badge" *ngIf="model?.memberClassName">
+            <div class="member-class"   >
               <img
-                [src]="model?.memberClassPhoto"
+                *ngIf="model?.memberClassPhoto"
+                class="member-class-img"
+                [src]="model.memberClassPhoto"
                 [alt]="model?.memberClassName"
               />
-              <span>
+              <span class="member-class-badge" *ngIf="model?.memberClassName">
                 {{ model?.memberClassName }}
               </span>
             </div>
@@ -94,14 +96,6 @@ import { AuthKeys } from "../../const";
                 <span class="label"> {{ ("Phone" | translate) + ": " }} </span>
                 <span class="value"> {{ model?.phone }} </span>
               </div>
-            </div>
-            <div *ngIf="model?.email" class="info">
-              <nz-icon
-                class="label"
-                nzType="mail"
-                nzTheme="outline"
-                class="label"
-              />
             </div>
 
             <div class="info">
@@ -223,7 +217,7 @@ import { AuthKeys } from "../../const";
             </ng-container>
             <div class="tab" *ngSwitchCase="2" ngCase>
               <app-card-list
-                *ngIf="isCardList()"
+                *ngIf="isCardList() && model"
                 [accountId]="model.defaultAccountId!"
                 [memberId]="modal.id"
               />
@@ -304,18 +298,21 @@ import { AuthKeys } from "../../const";
           white-space: nowrap;
         }
       }
+      .member-class-img {
+        width: 20px;
+      }
+      .member-class {
+        display: flex;
+        margin: auto;
+        width: fit-content;
+        gap: 4px;
+      }
       .member-class-badge {
         padding: 4px 8px;
         background-color: #e9f3ff;
         color: #3b82f6;
         border-radius: 6px;
-        width: fit-content;
-        margin: auto;
-        display: flex;
         gap: 4px;
-        img {
-          width: 20px;
-        }
       }
       .account-left {
         display: flex;
@@ -552,10 +549,9 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
 
   override ngOnInit(): void {
     if (this.isLoading()) return;
-    this.initControl(); 
+    this.initControl();
     this.frm.disable();
     this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
-      console.log("e", e);
       if (e.key === "edited" || e.key === "upload") {
         this.photoSetted = false;
         this.isLoading.set(true);
@@ -584,6 +580,7 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
         this.ref.triggerCancel().then();
       }
     });
+
     const refreshBalance = () => {
       this.service.find(this.modal?.id).subscribe({
         next: (result: Member) => {
@@ -596,10 +593,12 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
         },
       });
     };
+
     if (this.modal?.id) {
       this.isLoading.set(true);
       refreshBalance();
     }
+
     this.uploadRefresh$ = this.uiService.refresher.subscribe((e) => {
       if (e.key === "upload") {
         this.file = [];
@@ -608,6 +607,7 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
         }
       }
     });
+
     this.frm.get("name")?.valueChanges.subscribe({
       next: (event: any) => {
         this.memberName = event;
@@ -654,6 +654,13 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
       nationalityId: [0],
     });
     setTimeout(() => {
+      if (!this.isWalletList() && !this.isPointList()) {
+        this.current = 2;
+      } else if (!this.isWalletList()) {
+        this.current = 1;
+      } else if (!this.isPointList()) {
+        this.current = 0;
+      }
       if (this.modal.memberClassId !== 0 && this.modal.memberClassId)
         this.frm.patchValue({ memberClassId: this.modal.memberClassId });
       if (this.modal.agentId !== 0 && this.modal.agentId)
@@ -679,6 +686,7 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
       genderId: this.model.genderId,
       nationalityId: this.model.nationalityId,
     });
+
     if (this.model.photo && this.model.photo !== "" && !this.photoSetted) {
       this.photoSetted = true;
       this.file = [];
@@ -703,6 +711,7 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
         break;
     }
   }
+
   get sortedAccounts() {
     return (this.model?.accounts ?? []).slice().sort((a, b) => {
       if (a.accountType === AccountTypes.Wallet) return -1;

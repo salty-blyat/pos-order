@@ -672,7 +672,6 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
     showRemoveIcon: true,
     showDownloadIcon: false,
   };
-  tabIndex = 0;
 
   onPreviewImage(): void {
     this.nzImageService.preview([{ src: this.file[0].url! }]);

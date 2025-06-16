@@ -2,12 +2,14 @@ import {
   Component,
   computed,
   Inject,
+  OnChanges,
   OnInit,
   signal,
+  SimpleChanges,
   ViewEncapsulation,
 } from "@angular/core";
 import { AuthKeys, LANGUAGES } from "../const";
-import { Router } from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
 import { AuthService } from "../helpers/auth.service";
 import { DOCUMENT } from "@angular/common";
 import { LanguageService } from "../utils/services/language.service";
@@ -16,6 +18,7 @@ import { LocalStorageService } from "../utils/services/localStorage.service";
 import { SystemSettingService } from "./system-setting/system-setting.service";
 import { TranslateService } from "@ngx-translate/core";
 import { AppVersionService } from "../utils/services/app-version.service";
+import { filter, Subscription } from "rxjs";
 
 export interface Type {
   sub1: boolean;
@@ -234,7 +237,12 @@ export interface Type {
       </nz-sider>
       <nz-layout>
         <nz-content>
-          <div class="inner-content" nz-flex [nzVertical]="true">
+          <div
+            class="inner-content"
+            [ngStyle]="{ padding: isDashboard ? '0px' : '' }"
+            nz-flex
+            [nzVertical]="true"
+          >
             <app-loading *ngIf="isLoading()"></app-loading>
             <div>
               <router-outlet *ngIf="!isLoading()"></router-outlet>
@@ -264,6 +272,9 @@ export class PageComponent implements OnInit {
     sub1: false,
     sub2: false,
   };
+
+  isDashboard: boolean = false;
+  routerSub: Subscription;
 
   isHomeList = computed(() => true);
   isAgentList = computed(() =>
@@ -314,9 +325,13 @@ export class PageComponent implements OnInit {
       this.authService.isAuthorized(
         AuthKeys.APP__REPORT__TRANSACTION__TRANSACTION_DETAIL_REPORT
       ) ||
-      this.authService.isAuthorized(AuthKeys.APP__REPORT__PRINT__REDEEM_PRINT) ||
-      this.authService.isAuthorized(AuthKeys.APP__REPORT__POINT__POINT_SUMMARY) ||
-      this.authService.isAuthorized(AuthKeys.APP__REPORT__POINT__MEMBER_BALANCE) 
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__PRINT__REDEEM_PRINT
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__POINT__POINT_SUMMARY
+      ) ||
+      this.authService.isAuthorized(AuthKeys.APP__REPORT__POINT__MEMBER_BALANCE)
   );
 
   constructor(
@@ -331,6 +346,11 @@ export class PageComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document
   ) {
     this.eventRouterOpen();
+    this.routerSub = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.isDashboard = event.urlAfterRedirects === "/home";
+      });
   }
   appName = signal(this.authService.app?.appName);
 
@@ -400,5 +420,9 @@ export class PageComponent implements OnInit {
       key: key,
       value: item,
     });
+  }
+  
+  ngOnDestroy(): void {
+    this.routerSub?.unsubscribe();
   }
 }

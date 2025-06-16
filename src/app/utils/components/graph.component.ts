@@ -12,9 +12,7 @@ Chart.register(...registerables);
 
 @Component({
   selector: "app-graph",
-  template: ` 
-      <canvas #canvas></canvas> 
-  `,
+  template: ` <canvas #canvas></canvas> `,
   standalone: false,
 })
 export class GraphComponent implements OnChanges {
@@ -23,15 +21,17 @@ export class GraphComponent implements OnChanges {
 
   chart!: Chart;
 
-  ngOnChanges() { 
+  ngOnChanges() {
+    console.log("this.chart", this.chart);
+
+    if (this.chart) this.chart.destroy();
     setTimeout(() => {
       if (this.config && this.canvasRef) {
-        if (this.chart) this.chart.destroy();
         this.chart = new Chart(this.canvasRef.nativeElement, this.config);
       }
     }, 50);
   }
-  
+
   ngOnDestroy() {
     if (this.chart) {
       this.chart.destroy();

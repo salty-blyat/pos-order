@@ -138,9 +138,9 @@ import { NzImageService } from "ng-zorro-antd/image";
                   *ngIf="data.latinName"
                   style="display:flex; flex-direction:column"
                 >
-                 <span class="title-mem">
-                   {{ data.name }}
-                 </span>
+                  <span class="title-mem">
+                    {{ data.name }}
+                  </span>
                   <span class="subtitle-mem">
                     {{ data.latinName }}
                   </span>
@@ -148,7 +148,9 @@ import { NzImageService } from "ng-zorro-antd/image";
               </td>
 
               <td nzEllipsis>{{ data.phone }}</td>
-              <td nzEllipsis [title]="data.memberClassName">{{ data.memberClassName }}</td>
+              <td nzEllipsis [title]="data.memberClassName">
+                {{ data.memberClassName }}
+              </td>
               <td nzEllipsis>{{ data.agentName }}</td>
               <td nzEllipsis [title]="data.address">{{ data.address }}</td>
               <td class="col-action">
@@ -183,11 +185,11 @@ import { NzImageService } from "ng-zorro-antd/image";
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
   styles: [
-    `
+    ` 
       nz-avatar:hover {
         cursor: pointer;
       }
-      .title-mem{
+      .title-mem {
         font-size: 12px;
       }
       .subtitle-mem {
@@ -244,10 +246,12 @@ export class MemberListComponent extends BaseListComponent<Member> {
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE)
   );
   isMemberView = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__VIEW)
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__WALLET__LIST)||
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__EARN)||
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__LIST) 
   );
   onPreviewImage(img: string | undefined): void {
-    if(!img) return;
+    if (!img) return;
     this.nzImageService.preview([{ src: img }]);
   }
   override param = signal<QueryParam>({

@@ -75,7 +75,7 @@ export class HomeService extends BaseApiService<any> {
     super("dashboard", http, settingService);
   }
 
-  dashboard(date: DateRange): Observable<Dashboard> {
-    return this.http.post<Dashboard>(this.getUrl(),date  );
+  dashboard(): Observable<Dashboard> {
+    return this.http.post<Dashboard>(this.getUrl(),{});
   } 
 }

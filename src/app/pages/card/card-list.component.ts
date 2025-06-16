@@ -166,8 +166,7 @@ import { Subscription } from "rxjs";
   standalone: false,
 })
 export class CardListComponent
-  extends BaseListComponent<Card>
-  implements OnChanges
+  extends BaseListComponent<Card> 
 {
   constructor(
     override service: CardService,
@@ -202,16 +201,24 @@ export class CardListComponent
     return filters;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes["accountId"]) {
-      this.search();
-    }
-  }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes["accountId"]) {
+  //     this.search();
+  //   }
+  // }
 
-  isCardAdd = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__ADD));
-  isCardView = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__VIEW));
-  isCardRemove = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__REMOVE));
-  isCardEdit = computed(() => this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__EDIT));
+  isCardAdd = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__ADD)
+  );
+  isCardView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__VIEW)
+  );
+  isCardRemove = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__REMOVE)
+  );
+  isCardEdit = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__EDIT)
+  );
 
   protected readonly SIZE_COLUMNS = SIZE_COLUMNS;
 }

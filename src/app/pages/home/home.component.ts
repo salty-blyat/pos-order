@@ -36,43 +36,13 @@ Chart.register(
 );
 @Component({
   selector: "app-home",
-  template: ` <nz-layout class="layout">
+  template: ` <nz-layout class="dashboard-layout">
     <!-- Header -->
-    <nz-header>
+    <!-- <nz-header>
       <h2>
         {{ "Summary" | translate }}
-        @if(current == 0){
-        {{ this.dateRange.toDate | customDate }}
-        } @else if(current == 4 ){ } @else { 
-        {{
-          (this.dateRange.fromDate | customDate) +
-            " ~ " +
-            (this.dateRange.toDate | customDate)
-        }}
-        }
       </h2>
-      <nz-tabset
-        (nzSelectedIndexChange)="onTabChange($event)"
-        style="margin-left:auto;"
-      >
-        <nz-tab [nzTitle]="'Today' | translate"></nz-tab>
-        <nz-tab [nzTitle]="'ThisWeek' | translate"></nz-tab>
-        <nz-tab [nzTitle]="'ThisMonth' | translate"></nz-tab>
-        <nz-tab [nzTitle]="'ThisYear' | translate"></nz-tab>
-        <nz-tab [nzTitle]="'All' | translate"></nz-tab>
-        <nz-tab [nzTitle]="'Custom' | translate" style="position: relative;">
-          <a nz-dropdown [nzDropdownMenu]="menu" class="custom-dropdown">{{
-            "Custom" | translate
-          }}</a>
-          <nz-dropdown-menu #menu="nzDropdownMenu">
-            <app-date-range-input
-              [inline]="true"
-              (valueChanged)="onDateChange($event)"
-            ></app-date-range-input>
-          </nz-dropdown-menu>
-        </nz-tab>
-      </nz-tabset>
-    </nz-header>
+    </nz-header> -->
 
     <nz-content>
       <div class="grid-one ">
@@ -99,7 +69,7 @@ Chart.register(
             </div>
           </div>
 
-          <nz-divider style="margin:8px 0 !important"></nz-divider>
+          <nz-divider class="separator"></nz-divider>
 
           <!-- agent -->
           <div class="inside-card">
@@ -215,15 +185,15 @@ Chart.register(
                 <td nzEllipsis>{{ d.memberCode + " " + d.memberName }}</td>
                 <td nzEllipsis>{{ d.type }}</td>
                 <td nzEllipsis>{{ d.location }}</td>
-                <td nzEllipsis nzAlign="right"   [ngStyle]="{
-                  color:
-                    d.amount! > 0
-                      ? 'black'
-                      : d.amount! < 0
-                      ? 'red'
-                      : 'black',
-                  'font-weight': 'semi-bold'
-                }">
+                <td
+                  nzEllipsis
+                  nzAlign="right"
+                  [ngStyle]="{
+                    color:
+                      d.amount! > 0 ? 'black' : d.amount! < 0 ? 'red' : 'black',
+                    'font-weight': 'semi-bold'
+                  }"
+                >
                   {{ d.amount | accountBalance : d.accountType! : true }}
                 </td>
               </tr>
@@ -330,6 +300,18 @@ Chart.register(
   encapsulation: ViewEncapsulation.None,
   styles: [
     `
+      .separator {
+        margin: 8px 0 !important;
+      }
+      .dashboard-layout {
+        background-color: #eeeeee !important;
+        padding: 14px;
+        height: calc(100vh);
+        // height: 100%;
+        nz-header {
+          margin-top: 12px;
+        }
+      }
       .custom-dropdown {
         position: absolute;
         padding: 0px 11px;
@@ -346,7 +328,6 @@ Chart.register(
         margin-bottom: 8px;
       }
 
-      /* Default: Mobile-first approach */
       .grid-one {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
@@ -355,21 +336,7 @@ Chart.register(
       .grid-two {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
-      }
-
-      /* Tablet screens */
-      @media (min-width: 768px) {
-        .grid-one {
-          grid-template-columns: 1fr 2fr;
-          grid-template-rows: 300px;
-        }
-
-        .grid-two {
-          grid-template-columns: 2fr 1fr 1fr;
-          grid-template-rows: 400px;
-        }
-      }
-
+      } 
       /* Desktop screens */
       @media (min-width: 1024px) {
         .grid-one {
@@ -379,19 +346,10 @@ Chart.register(
 
         .grid-two {
           grid-template-columns: 12fr 6fr 6fr;
-          grid-template-rows: 485px;
+          height:50%;
         }
-      }
+      } 
 
-      /* Larger desktops */
-      @media (min-width: 1300px) {
-        .grid-one,
-        .grid-two {
-          grid-template-columns: 4fr 10fr 10fr;
-        }
-      }
-
-      /////////////////////////////////////
       .graph-noresult {
         height: 75%;
         display: flex;
@@ -415,9 +373,6 @@ Chart.register(
         flex-direction: column;
         flex-grow: 2;
       }
-      .ant-divider-horizontal {
-        margin: 0 !important;
-      }
       .agent-card {
         display: flex;
         flex-direction: column;
@@ -435,12 +390,10 @@ Chart.register(
         border-radius: 6px;
         padding: 16px;
         background: #fff;
-        border: 1px solid #d9d9d9;
       }
       .card-nopad {
         border-radius: 6px;
         background: #fff;
-        border: 1px solid #d9d9d9;
         padding: 8px;
         h3 {
           padding: 8px 4px;
@@ -504,12 +457,9 @@ Chart.register(
 export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private service: HomeService,
-    public dateService: DateService,
-    public translateService: TranslateService,
-    private nzContextMenuService: NzContextMenuService
+    public translateService: TranslateService
   ) {}
   data: Dashboard = {};
-  dateRange: DateRange = { fromDate: new Date(), toDate: new Date() };
   refreshSub: Subscription = new Subscription();
   isLoading = signal<boolean>(false);
   AccountTypes = AccountTypes;
@@ -521,19 +471,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.dashboard();
   }
-  onDateChange(event: any) {
-    const [from, to] = event;
-    if (!from || !to) return; // reason: call on init and "from" is undefined
-
-    this.dateRange = { fromDate: from, toDate: to };
-    this.dashboard();
-  }
 
   dashboard(delay: number = 50) {
     if (this.isLoading()) return;
     this.isLoading.set(true);
     setTimeout(() => {
-      this.refreshSub = this.service.dashboard(this.dateRange).subscribe({
+      this.refreshSub = this.service.dashboard().subscribe({
         next: (result) => {
           this.data = result;
           this.setMemberClassChart();
@@ -547,40 +490,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     }, delay);
   }
 
-  onTabChange(index: number): void {
-    const today = new Date();
-    this.current = index;
-    let from: Date = today;
-    let to: Date = today;
-
-    switch (index) {
-      case 0: // Today
-        from = to = today;
-        break;
-
-      case 1: // This Week
-        [from, to] = this.dateService.getWeekRange(today);
-        break;
-
-      case 2: // This Month
-        [from, to] = this.dateService.getMonthRange(today);
-        break;
-
-      case 3: // This Year
-        [from, to] = this.dateService.getYearRange(today);
-        break;
-
-      case 4: // All
-        [from, to] = this.dateService.getAllDate();
-        break;
-
-      case 5:
-        return;
-    }
-
-    this.dateRange = { fromDate: from, toDate: to };
-    this.dashboard();
-  }
+  backgroundColor = [
+    "#4383F0",
+    "#F45B69",
+    "#29C785",
+    "#FFB347",
+    "#9B59B6",
+    "#F39C12",
+    "#16A085",
+    "#E74C3C",
+    "#8E44AD",
+    "#3498DB",
+  ];
 
   setMemberClassChart() {
     this.memberClassChart = {
@@ -591,7 +512,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           {
             label: "Members by Class",
             data: this.data?.membersByClass?.map((d) => d.count ?? 0) || [],
-            backgroundColor: ["#4383F0", "#5545e9", "#e9455e"],
+            backgroundColor: this.backgroundColor,
           },
         ],
       },
@@ -614,20 +535,16 @@ export class HomeComponent implements OnInit, OnDestroy {
           {
             label: "Agent",
             data: this.data?.topAgents?.map((d) => d.value ?? 0) || [],
-            backgroundColor: [
-              "#4383F0",
-              "#F45B69",
-              "#29C785",
-              "#FFB347",
-              "#9B59B6",
-              "#F39C12",
-              "#16A085",
-              "#E74C3C",
-              "#8E44AD",
-              "#3498DB",
-            ],
+            backgroundColor: this.backgroundColor,
           },
         ],
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
       },
     };
   }
