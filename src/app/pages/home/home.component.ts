@@ -115,8 +115,7 @@ Chart.register(
 
           <ng-container *ngIf="topAgentChart; else noResult">
             <div nz-flex nzAlign="end" class="graph">
-              <app-graph
-                style="width:100%"
+              <app-graph   
                 [config]="topAgentChart"
               ></app-graph>
             </div>
@@ -307,10 +306,6 @@ Chart.register(
         background-color: #eeeeee !important;
         padding: 14px;
         height: calc(100vh);
-        // height: 100%;
-        nz-header {
-          margin-top: 12px;
-        }
       }
       .custom-dropdown {
         position: absolute;
@@ -336,7 +331,7 @@ Chart.register(
       .grid-two {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
-      } 
+      }
       /* Desktop screens */
       @media (min-width: 1024px) {
         .grid-one {
@@ -346,9 +341,9 @@ Chart.register(
 
         .grid-two {
           grid-template-columns: 12fr 6fr 6fr;
-          height:50%;
+          height: 50%;
         }
-      } 
+      }
 
       .graph-noresult {
         height: 75%;
@@ -383,7 +378,6 @@ Chart.register(
         font-weight: 600;
       }
       .graph {
-        margin-top: 12px;
         height: 100%;
       }
       .card {
@@ -467,7 +461,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   memberClassChart!: ChartConfiguration<"doughnut">;
   topAgentChart!: ChartConfiguration<"bar">;
   current = 0;
-
+  backgroundColor = [
+    "#4383F0",
+    "#F45B69",
+    "#29C785",
+    "#FFB347",
+    "#9B59B6",
+    "#F39C12",
+    "#16A085",
+    "#E74C3C",
+    "#8E44AD",
+    "#3498DB",
+  ];
   ngOnInit(): void {
     this.dashboard();
   }
@@ -489,19 +494,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
     }, delay);
   }
-
-  backgroundColor = [
-    "#4383F0",
-    "#F45B69",
-    "#29C785",
-    "#FFB347",
-    "#9B59B6",
-    "#F39C12",
-    "#16A085",
-    "#E74C3C",
-    "#8E44AD",
-    "#3498DB",
-  ];
 
   setMemberClassChart() {
     this.memberClassChart = {
@@ -539,7 +531,8 @@ export class HomeComponent implements OnInit, OnDestroy {
           },
         ],
       },
-      options: {
+      options: { 
+        aspectRatio:1,
         plugins: {
           legend: {
             display: false,

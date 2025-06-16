@@ -19,11 +19,9 @@ export class GraphComponent implements OnChanges {
   @Input() config!: ChartConfiguration;
   @ViewChild("canvas") canvasRef!: ElementRef<HTMLCanvasElement>;
 
-  chart!: Chart;
+  public chart!: Chart;
 
-  ngOnChanges() {
-    console.log("this.chart", this.chart);
-
+  ngOnChanges() { 
     if (this.chart) this.chart.destroy();
     setTimeout(() => {
       if (this.config && this.canvasRef) {

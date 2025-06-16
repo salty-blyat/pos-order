@@ -89,9 +89,16 @@ import { MemberClass, MemberClassService } from "./member-class.service";
 
   styles: [
     `
+      .option {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+
       .image-container {
         height: 18px;
-        display:flex;
+        display: flex;
+        width: 18px;
       }
 
       .image-container img {
@@ -106,10 +113,11 @@ import { MemberClass, MemberClassService } from "./member-class.service";
       nz-select {
         width: 100%;
       }
-  .option-container {
-        display: flex;
-        align-items: center;
+
+      .option-container {
+        display: grid;
         gap: 8px;
+        grid-template-columns: 20px 1fr;
       }
       .item-action {
         flex: 0 0 auto;

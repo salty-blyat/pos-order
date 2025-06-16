@@ -87,7 +87,7 @@ import { AuthKeys } from "../../const";
         display: block;
       }
 
-      .option-container {
+     .option-container {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -108,6 +108,7 @@ import { AuthKeys } from "../../const";
      
       .image-container {
         height: 18px;  
+        width: 18px;
       }
 
       .image-container img {

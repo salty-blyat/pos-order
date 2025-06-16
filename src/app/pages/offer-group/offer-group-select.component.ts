@@ -75,7 +75,6 @@ import { AuthKeys } from "../../const";
     `
       :host .image-container {
         height: 18px;
-        display: flex;
       }
       nz-select {
         width: 100%;
@@ -94,6 +93,7 @@ import { AuthKeys } from "../../const";
 
       .image-container {
         height: 18px;
+        width: 18px;
       }
 
       .image-container img {
