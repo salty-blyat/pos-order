@@ -27,12 +27,12 @@ export class RedemptionUiService extends BaseUiService {
     );
   }
 
-  override showAdd(componentId: any = "", memberId?: number): void {
+  override showAdd(componentId: any = "", memberId?: number, accountTypeInput?:number): void {
     this.modalService.create({
       nzContent: RedemptionOperationComponent,
       nzFooter: null,
       nzClosable: true,
-      nzData: { memberId },
+      nzData: { memberId,accountTypeInput },
       nzWidth: "900px",
       nzMaskClosable: false,
       nzOnOk: (e: any) => {

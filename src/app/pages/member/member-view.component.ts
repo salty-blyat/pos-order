@@ -127,36 +127,41 @@ import { AuthKeys } from "../../const";
 
           <ul class="menu-item" nz-menu nzTheme="light" nzMode="inline">
             <!-- account -->
-            <li
-              *ngFor="let a of sortedAccounts; let i = index"
-              class="side-select"
-              (click)="switchCurrent(i)"
-              [nzSelected]="current == i"
-              nz-menu-item
-            >
-              <div class="account-container">
-                <div class="account-left">
-                  <div class="account-icon-mem">
-                    <img
-                      *ngIf="a?.accountTypeImage"
-                      [src]="a?.accountTypeImage"
-                      class="account-img"
-                    />
-                  </div>
+            <ng-container *ngFor="let a of sortedAccounts; let i = index">
+              <li
+                *ngIf="
+                  (a.accountType == AccountTypes.Wallet && isWalletList()) ||
+                  (a.accountType == AccountTypes.Point && isPointList())
+                "
+                class="side-select"
+                (click)="switchCurrent(i)"
+                [nzSelected]="current == i"
+                nz-menu-item
+              >
+                <div class="account-container">
+                  <div class="account-left">
+                    <div class="account-icon-mem">
+                      <img
+                        *ngIf="a?.accountTypeImage"
+                        [src]="a?.accountTypeImage"
+                        class="account-img"
+                      />
+                    </div>
 
-                  <div class="account-info">
-                    <span>{{
-                      translateService.currentLang == "km"
-                        ? a.accountTypeNameKh
-                        : a.accountTypeNameEn
-                    }}</span>
-                    <div class="account-points">
-                      {{ a.balance | accountBalance : a.accountType : true }}
+                    <div class="account-info">
+                      <span>{{
+                        translateService.currentLang == "km"
+                          ? a.accountTypeNameKh
+                          : a.accountTypeNameEn
+                      }}</span>
+                      <div class="account-points">
+                        {{ a.balance | accountBalance : a.accountType : true }}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </li>
+              </li></ng-container
+            >
             @if( isCardList()){
             <li
               [nzSelected]="current == 2"
@@ -547,41 +552,38 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
 
   override ngOnInit(): void {
     if (this.isLoading()) return;
-    this.initControl();
-
-    if (this.modal?.isView) {
-      this.frm.disable();
-      this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
-        console.log("e", e);
-        if (e.key === "edited" || e.key === "upload") {
-          this.photoSetted = false;
-          this.isLoading.set(true);
-          this.service.find(this.modal?.id).subscribe({
-            next: (result: Member) => {
-              this.model = result;
-              this.setFormValue();
-              if (this.model.photo) {
-                this.file = [
-                  {
-                    uid: "",
-                    name: this.model.name!,
-                    url: this.model.photo,
-                  },
-                ];
-              } else {
-                this.file = [];
-              }
-              this.isLoading.set(false);
-            },
-            error: (err: any) => {
-              console.log(err);
-            },
-          });
-        } else {
-          this.ref.triggerCancel().then();
-        }
-      });
-    }
+    this.initControl(); 
+    this.frm.disable();
+    this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
+      console.log("e", e);
+      if (e.key === "edited" || e.key === "upload") {
+        this.photoSetted = false;
+        this.isLoading.set(true);
+        this.service.find(this.modal?.id).subscribe({
+          next: (result: Member) => {
+            this.model = result;
+            this.setFormValue();
+            if (this.model.photo) {
+              this.file = [
+                {
+                  uid: "",
+                  name: this.model.name!,
+                  url: this.model.photo,
+                },
+              ];
+            } else {
+              this.file = [];
+            }
+            this.isLoading.set(false);
+          },
+          error: (err: any) => {
+            console.log(err);
+          },
+        });
+      } else {
+        this.ref.triggerCancel().then();
+      }
+    });
     const refreshBalance = () => {
       this.service.find(this.modal?.id).subscribe({
         next: (result: Member) => {

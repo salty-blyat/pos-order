@@ -220,6 +220,7 @@ import { AuthKeys } from "../../const";
                 <app-offer-select
                   [memberId]="frm.get('memberId')?.value"
                   formControlName="offerId"
+                  [redeemWith]='modal?.accountTypeInput'
                   (selectedObject)="selectedOffer = $event"
                   [isAvailable]="!modal?.isView"
                 />

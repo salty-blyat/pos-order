@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { BaseApiService } from "../../utils/services/base-api.service";
 import { HttpClient } from "@angular/common/http";
 import { SettingService } from "../../app-setting";
+import { AccountTypes } from "../lookup/lookup-type.service";
 
 export interface Member {
   id?: number;
@@ -22,8 +23,8 @@ export interface Member {
   defaultAccountId?: number;
   joinDate?: string;
   memberClassPhoto?: string;
-  genderId?:string;
-  nationalityId?:string;
+  genderId?: string;
+  nationalityId?: string;
 }
 
 export interface MemberAccount {
@@ -42,6 +43,12 @@ export interface Attachment {
   type?: string;
   date?: Date;
   by?: string;
+}
+
+export type TabType = AccountTypes | CardTab;
+
+export enum CardTab {
+  Card = 4,
 }
 
 @Injectable({ providedIn: "root" })

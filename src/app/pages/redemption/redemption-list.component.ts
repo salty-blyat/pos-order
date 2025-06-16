@@ -101,7 +101,7 @@ import { Subscription } from "rxjs";
             *ngIf="isRedemptionAdd()"
             nz-button
             nzType="primary"
-            (click)="uiService.showAdd('', memberId())"
+            (click)="uiService.showAdd('', memberId(), accountTypeInput())"
           >
             <i nz-icon nzType="plus" nzTheme="outline"></i
             >{{ "Add" | translate }}

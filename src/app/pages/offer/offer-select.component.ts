@@ -112,7 +112,7 @@ import { AuthService } from "../../helpers/auth.service";
 
       .option-container {
         display: grid;
-        gap:8px;
+        gap: 8px;
         grid-template-columns: 20px 1fr;
       }
 
@@ -155,6 +155,7 @@ export class OfferSelectComponent
   @Output() selectedObject = new EventEmitter<Offer>();
   @Input() memberId = 0;
   @Input() isAvailable = false;
+  @Input() redeemWith: string | null = null;
 
   readonly AccountTypes = AccountTypes;
   protected override getCustomFilters(): Filter[] {
@@ -167,8 +168,16 @@ export class OfferSelectComponent
         value: this.memberId,
       });
     }
+    if (this.memberId && this.redeemWith) {
+      filters.push({
+        field: "redeemWith",
+        operator: "eq",
+        value: this.redeemWith,
+      });
+    }
     return filters;
   }
+
   getRedeemLabel(item: any): string {
     if (item.redeemWith === AccountTypes.Point) {
       return `${item.name} ${item.redeemCost} pts`;
