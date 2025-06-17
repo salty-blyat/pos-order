@@ -2,7 +2,7 @@ import { FormBuilder } from "@angular/forms";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { BaseOperationComponent } from "../../utils/components/base-operation.component";
 import { CommonValidators } from "../../utils/services/common-validators";
-import { Member, MemberService } from "./member.service";
+import { AccountTabs, Member, MemberService } from "./member.service";
 import { MemberUiService } from "./member-ui.service";
 import { SettingService } from "../../app-setting";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
@@ -550,16 +550,16 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
 
   override ngOnInit(): void {
     if (this.isLoading()) return;
-    this.initControl();
-    this.frm.disable();
+    // this.initControl();
+    // this.frm.disable();
     this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
-      if (e.key === "edited" || e.key === "upload") {
+      if (e.key === "edited") {
         this.photoSetted = false;
         this.isLoading.set(true);
         this.service.find(this.modal?.id).subscribe({
           next: (result: Member) => {
             this.model = result;
-            this.setFormValue();
+            // this.setFormValue();
             if (this.model.photo) {
               this.file = [
                 {
@@ -586,7 +586,7 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
       this.service.find(this.modal?.id).subscribe({
         next: (result: Member) => {
           this.model = result;
-          this.setFormValue();
+          // this.setFormValue();
           this.isLoading.set(false);
         },
         error: (err: any) => {
@@ -608,107 +608,30 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
         }
       }
     });
-
-    this.frm.get("name")?.valueChanges.subscribe({
-      next: (event: any) => {
-        this.memberName = event;
-      },
-    });
-    this.frm.get("latinName")?.valueChanges.subscribe({
-      next: (event: any) => {
-        this.memberNameEn = event;
-      },
-    });
+    if (!this.isWalletList() && !this.isPointList()) {
+      this.current = AccountTabs.Card;
+    } else if (!this.isWalletList()) {
+      this.current = AccountTabs.Point;
+    } else if (!this.isPointList()) {
+      this.current = AccountTabs.Wallet;
+    }
 
     this.accountRefreshSub =
       this.accountUiService.refresher.subscribe(refreshBalance);
     this.redemptionRefreshSub =
       this.redemptionUiService.refresher.subscribe(refreshBalance);
   }
-  override initControl(): void {
-    const {
-      nameMaxLengthValidator,
-      required,
-      codeExistValidator,
-      multiplePhoneValidator,
-      codeMaxLengthValidator,
-      emailValidator,
-    } = CommonValidators;
-    this.frm = this.fb.group({
-      code: [
-        { value: null, disabled: false },
-        [required, codeMaxLengthValidator],
-        [codeExistValidator(this.service, this.modal?.id)],
-      ],
-      name: [null, [required, nameMaxLengthValidator]],
-      latinName: [null, [nameMaxLengthValidator]],
-      birthDate: [null],
-      address: [null],
-      phone: [null, [required, multiplePhoneValidator]],
-      email: [null, [emailValidator]],
-      agentId: [null, [required]],
-      memberClassId: [null, [required]],
-      joinDate: [new Date(), [required]],
-      photo: [null],
-      defaultAccountId: [null],
-      genderId: [null, required],
-      nationalityId: [0],
-    });
-    setTimeout(() => {
-      if (!this.isWalletList() && !this.isPointList()) {
-        this.current = 2;
-      } else if (!this.isWalletList()) {
-        this.current = 1;
-      } else if (!this.isPointList()) {
-        this.current = 0;
-      }
-      if (this.modal.memberClassId !== 0 && this.modal.memberClassId)
-        this.frm.patchValue({ memberClassId: this.modal.memberClassId });
-      if (this.modal.agentId !== 0 && this.modal.agentId)
-        this.frm.patchValue({ agentId: this.modal.agentId });
-    }, 50);
-  }
 
-  override setFormValue() {
-    this.frm.patchValue({
-      id: this.model.id,
-      code: this.model.code,
-      name: this.model.name,
-      latinName: this.model.latinName,
-      email: this.model.email,
-      phone: this.model.phone,
-      address: this.model.address,
-      birthDate: this.model.birthDate,
-      agentId: this.model.agentId,
-      memberClassId: this.model.memberClassId,
-      photo: this.model.photo,
-      joinDate: this.model.joinDate,
-      defaultAccountId: this.model.defaultAccountId,
-      genderId: this.model.genderId,
-      nationalityId: this.model.nationalityId,
-    });
-
-    if (this.model.photo && this.model.photo !== "" && !this.photoSetted) {
-      this.photoSetted = true;
-      this.file = [];
-      this.file.push({
-        uid: "",
-        name: this.model.name!,
-        url: this.model.photo,
-      });
-    }
-  }
-
-  switchCurrent(index: number) {
+  switchCurrent(index: AccountTabs) {
     switch (index) {
-      case 0:
-        this.current = 0;
+      case AccountTabs.Wallet:
+        this.current = AccountTabs.Wallet;
         break;
-      case 1:
-        this.current = 1;
+      case AccountTabs.Point:
+        this.current = AccountTabs.Point;
         break;
-      case 2:
-        this.current = 2;
+      case AccountTabs.Card:
+        this.current = AccountTabs.Card;
         break;
     }
   }

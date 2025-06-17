@@ -161,14 +161,16 @@ export class OfferSelectComponent
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [];
 
-    if (this.memberId && this.isAvailable) {
+    if (!this.memberId) return filters;
+
+    if (this.isAvailable) {
       filters.push({
         field: "memberId",
         operator: "eq",
         value: this.memberId,
       });
     }
-    if (this.memberId && this.redeemWith) {
+    if (this.redeemWith) {
       filters.push({
         field: "redeemWith",
         operator: "eq",
@@ -176,16 +178,6 @@ export class OfferSelectComponent
       });
     }
     return filters;
-  }
-
-  getRedeemLabel(item: any): string {
-    if (item.redeemWith === AccountTypes.Point) {
-      return `${item.name} ${item.redeemCost} pts`;
-    } else if (item.redeemWith === AccountTypes.Wallet) {
-      return `${item.name} ${item.redeemCost} $`;
-    } else {
-      return `${item.name} ${item.redeemCost}`;
-    }
   }
 
   override search(delay: number = 50) {

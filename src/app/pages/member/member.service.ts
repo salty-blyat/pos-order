@@ -45,6 +45,12 @@ export interface Attachment {
   by?: string;
 }
 
+export enum AccountTabs {
+  Wallet = 0,
+  Point = 1,
+  Card = 2,
+}
+
 @Injectable({ providedIn: "root" })
 export class MemberService extends BaseApiService<Member> {
   constructor(private http: HttpClient, settingService: SettingService) {
