@@ -586,6 +586,19 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
       this.service.find(this.modal?.id).subscribe({
         next: (result: Member) => {
           this.model = result;
+          if (
+            this.model.photo &&
+            this.model.photo !== "" &&
+            !this.photoSetted
+          ) {
+            this.photoSetted = true;
+            this.file = [];
+            this.file.push({
+              uid: "",
+              name: this.model.name!,
+              url: this.model.photo,
+            });
+          }
           // this.setFormValue();
           this.isLoading.set(false);
         },
