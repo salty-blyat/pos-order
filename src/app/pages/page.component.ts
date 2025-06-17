@@ -111,9 +111,13 @@ export interface Type {
               routerLink="/agent"
             >
               <app-agent-icon />
-              <span style="margin-left: 6px !important;">{{
-                "Agent" | translate
-              }}</span>
+              <span
+                [ngStyle]="{
+                  'margin-left': '6px',
+                  display: isCollapsed() ? 'none' : ''
+                }"
+                >{{ "Agent" | translate }}</span
+              >
             </li>
 
             <li

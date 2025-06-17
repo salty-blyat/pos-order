@@ -467,6 +467,7 @@ import { AuthKeys } from "../../const";
       .sider-mem {
         height: calc(100vh - 160px);
         border-right: 1px solid #d9d9d9;
+        overflow: auto;
         padding: 16px;
       }
 

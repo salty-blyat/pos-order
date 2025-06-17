@@ -42,10 +42,14 @@ export interface TopAgent {
 }
 
 export interface RecentTransaction {
-  id?: string;
+  id?: number;
+  typeEn?: string;
+  typeKh?: string;
   date?: string;
+  tranNo?: string;
   type?: string;
   location?: string;
+  branchName?: string;
   amount?: number;
   memberCode?: string;
   memberName?: string;
@@ -76,6 +80,6 @@ export class HomeService extends BaseApiService<any> {
   }
 
   dashboard(): Observable<Dashboard> {
-    return this.http.post<Dashboard>(this.getUrl(),{});
-  } 
+    return this.http.post<Dashboard>(this.getUrl(), {});
+  }
 }

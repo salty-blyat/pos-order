@@ -224,7 +224,7 @@ import { Subscription } from "rxjs";
 
               <td nzEllipsis [title]="data.locationName">
                 <span *ngIf="!data.locationName">{{ data.branchName }}</span>
-                <span *ngIf="data.locationName">{{
+                <span *ngIf="data.branchName">{{
                   data.branchName + ", "
                 }}</span>
                 <span *ngIf="data.locationName">

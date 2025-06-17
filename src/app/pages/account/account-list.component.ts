@@ -198,10 +198,13 @@ import { Subscription } from "rxjs";
                   "
                   >{{ data.transNo }}</a
                 >
-                <span   *ngIf="
+                <span
+                  *ngIf="
                     (accountType == AccountTypes.Wallet && !isWalletView()) ||
                     (accountType == AccountTypes.Point && !isPointView())
-                  " >{{ data.transNo }}</span>
+                  "
+                  >{{ data.transNo }}</span
+                >
               </td>
               <td nzEllipsis>{{ data.transDate | customDateTime }}</td>
               <td nzEllipsis>
@@ -214,7 +217,7 @@ import { Subscription } from "rxjs";
 
               <td nzEllipsis>
                 <span *ngIf="!data.locationName">{{ data.branchName }}</span>
-                <span *ngIf="data.locationName">{{
+                <span *ngIf="data.branchName">{{
                   data.branchName + ", "
                 }}</span>
                 <span *ngIf="data.locationName">

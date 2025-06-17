@@ -1,9 +1,9 @@
 import {
   Component,
+  computed,
   OnDestroy,
   OnInit,
   signal,
-  ViewChild,
   ViewEncapsulation,
 } from "@angular/core";
 import {
@@ -16,16 +16,13 @@ import {
   Legend,
   ChartConfiguration,
 } from "chart.js";
-import { Dashboard, DateRange, HomeService } from "./home.service";
+import { Dashboard, HomeService } from "./home.service";
 import { Subscription } from "rxjs";
 import { AccountTypes } from "../lookup/lookup-type.service";
-import { DateService } from "../../utils/services/date.service";
 import { TranslateService } from "@ngx-translate/core";
-import {
-  NzContextMenuService,
-  NzDropdownMenuComponent,
-} from "ng-zorro-antd/dropdown";
-import { NzDatePickerComponent } from "ng-zorro-antd/date-picker";
+import { AccountUiService } from "../account/account-ui.service";
+import { AuthService } from "../../helpers/auth.service";
+import { AuthKeys } from "../../const";
 Chart.register(
   BarController,
   BarElement,
@@ -44,7 +41,7 @@ Chart.register(
       </h2>
     </nz-header> -->
 
-    <nz-content>
+    <nz-content class="dashboard-content">
       <div class="grid-one ">
         <div class="card two-col-card">
           <div class="inside-card">
@@ -115,9 +112,7 @@ Chart.register(
 
           <ng-container *ngIf="topAgentChart; else noResult">
             <div nz-flex nzAlign="end" class="graph">
-              <app-graph   
-                [config]="topAgentChart"
-              ></app-graph>
+              <app-graph [config]="topAgentChart"></app-graph>
             </div>
           </ng-container>
 
@@ -130,7 +125,7 @@ Chart.register(
       </div>
 
       <div class="grid-two">
-        <div class="card-nopad">
+        <div class="card-nopad" style="overflow:auto;">
           <h3>{{ "RecentTransaction" | translate }}</h3>
           <nz-table
             class="table"
@@ -161,10 +156,10 @@ Chart.register(
                 <th nzEllipsis nzWidth="150px">
                   {{ "Member" | translate }}
                 </th>
-                <th nzEllipsis nzWidth="80px">
+                <th nzEllipsis nzWidth="120px">
                   {{ "Type" | translate }}
                 </th>
-                <th nzEllipsis nzWidth="180px">{{ "Location" | translate }}</th>
+                <th nzEllipsis nzWidth="140px">{{ "Location" | translate }}</th>
                 <th nzWidth="100px" nzAlign="right">
                   {{ "Balance" | translate }}
                 </th>
@@ -176,14 +171,35 @@ Chart.register(
                   {{ i | rowNumber : { index: 1, size: 1 } }}
                 </td>
                 <td nzEllipsis>
-                  {{ d.id }}
+                  <a
+                    *ngIf="isWalletView() || isPointView()"
+                    (click)="
+                      accUiService.showTransaction(d.id || 0, d.accountType!)
+                    "
+                    >{{ d.tranNo }}</a
+                  >
+                  <span *ngIf="!isWalletView() || !isPointView()">{{
+                    d.tranNo
+                  }}</span>
                 </td>
                 <td nzEllipsis>
                   {{ d.date | customDateTime }}
                 </td>
-                <td nzEllipsis>{{ d.memberCode + " " + d.memberName }}</td>
-                <td nzEllipsis>{{ d.type }}</td>
-                <td nzEllipsis>{{ d.location }}</td>
+                <td nzEllipsis [title]="d.memberCode + ' ' + d.memberName">
+                  {{ d.memberCode + " " + d.memberName }}
+                </td>
+                <td nzEllipsis>
+                  {{
+                    translateService.currentLang == "km" ? d.typeKh : d.typeEn
+                  }}
+                </td>
+                <td nzEllipsis>
+                  <span *ngIf="!d.location">{{ d.location }}</span>
+                  <span *ngIf="d.branchName">{{ d.branchName + ", " }}</span>
+                  <span *ngIf="d.location">
+                    {{ d.location }}
+                  </span>
+                </td>
                 <td
                   nzEllipsis
                   nzAlign="right"
@@ -299,6 +315,9 @@ Chart.register(
   encapsulation: ViewEncapsulation.None,
   styles: [
     `
+      .dashboard-content {
+        overflow: auto;
+      }
       .separator {
         margin: 8px 0 !important;
       }
@@ -341,7 +360,7 @@ Chart.register(
 
         .grid-two {
           grid-template-columns: 12fr 6fr 6fr;
-          height: 50%;
+          height: 55%;
         }
       }
 
@@ -451,13 +470,20 @@ Chart.register(
 export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private service: HomeService,
+    public accUiService: AccountUiService,
+    private authService: AuthService,
     public translateService: TranslateService
   ) {}
   data: Dashboard = {};
   refreshSub: Subscription = new Subscription();
   isLoading = signal<boolean>(false);
   AccountTypes = AccountTypes;
-
+  isWalletView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__WALLET__VIEW)
+  );
+  isPointView = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__VIEW)
+  );
   memberClassChart!: ChartConfiguration<"doughnut">;
   topAgentChart!: ChartConfiguration<"bar">;
   current = 0;
@@ -502,7 +528,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         labels: this.data?.membersByClass?.map((d) => d.name) || [],
         datasets: [
           {
-            label: "Members by Class",
+            label:
+              this.translateService.currentLang == "km" ? "ចំនួន" : "Total",
             data: this.data?.membersByClass?.map((d) => d.count ?? 0) || [],
             backgroundColor: this.backgroundColor,
           },
@@ -525,14 +552,15 @@ export class HomeComponent implements OnInit, OnDestroy {
         labels: this.data?.topAgents?.map((d) => d.name) || [],
         datasets: [
           {
-            label: "Agent",
+            label:
+              this.translateService.currentLang == "km" ? "ចំនួន" : "Total",
             data: this.data?.topAgents?.map((d) => d.value ?? 0) || [],
             backgroundColor: this.backgroundColor,
           },
         ],
       },
-      options: { 
-        aspectRatio:1,
+      options: {
+        aspectRatio: 1,
         plugins: {
           legend: {
             display: false,
