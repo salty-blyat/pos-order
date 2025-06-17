@@ -63,7 +63,7 @@ import { AuthKeys } from "../../const";
           </div>
           <div class="member-name">
             <p>{{ model?.name }}</p>
-            <div class="member-class"   >
+            <div class="member-class">
               <img
                 *ngIf="model?.memberClassPhoto"
                 class="member-class-img"
@@ -110,7 +110,7 @@ import { AuthKeys } from "../../const";
               </div>
             </div>
             <div class="info">
-              <nz-icon nzType="user" nzTheme="outline" class="label" />
+              <app-agent-icon class="label" />
               <div class="info-peice">
                 <span class="label"> {{ ("Agent" | translate) + ": " }} </span>
                 <span class="value"> {{ model?.agentName }} </span>

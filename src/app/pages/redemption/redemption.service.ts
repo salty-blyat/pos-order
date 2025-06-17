@@ -22,6 +22,7 @@ export interface Redemption {
   status?: number;
   locationId?: number;
   id?: number;
+  branchName?: string;
   locationName?: string;
   offerName?: string;
   statusNameKh?: string;

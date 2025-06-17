@@ -180,6 +180,7 @@ import { Chart } from "chart.js";
 import { HomeComponent } from "./pages/home/home.component";
 import { GraphComponent } from "./utils/components/graph.component";
 import { PeopleCountPipe } from "./utils/pipes/people-count.pipe";
+import { AgentIconComponent } from "./utils/components/agent-icon.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -302,7 +303,7 @@ export class CustomTranslate implements TranslateLoader {
     ReportOperationComponent,
     StaticDropdownMultipleSelectComponent,
     StaticDropdownSingleSelectComponent,
-    InputNumberComponent, 
+    InputNumberComponent,
     HomeComponent,
     GraphComponent,
 
@@ -376,6 +377,7 @@ export class CustomTranslate implements TranslateLoader {
 
     // agent
     AgentListComponent,
+    AgentIconComponent,
     AgentOperationComponent,
     AgentDeleteComponent,
     AgentSelectComponent,

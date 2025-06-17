@@ -110,8 +110,10 @@ export interface Type {
               [nzMatchRouter]="isActive()"
               routerLink="/agent"
             >
-              <i nz-icon nzType="user"></i>
-              <span>{{ "Agent" | translate }}</span>
+              <app-agent-icon />
+              <span style="margin-left: 6px !important;">{{
+                "Agent" | translate
+              }}</span>
             </li>
 
             <li
@@ -421,7 +423,7 @@ export class PageComponent implements OnInit {
       value: item,
     });
   }
-  
+
   ngOnDestroy(): void {
     this.routerSub?.unsubscribe();
   }

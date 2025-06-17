@@ -115,9 +115,9 @@ import { Offer, OfferService } from "./offer.service";
         height: 18px;
       }
       .image-container img {
-        width: 100%;
+        width: 18px;
+        height: 18px;
         object-fit: cover;
-        height: 100%;
         overflow: hidden;
       }
       .div-bottom {

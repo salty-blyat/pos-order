@@ -128,21 +128,20 @@ import { AuthKeys } from "../../const";
                   nzVertical
                   *ngIf="sortedAccounts.length > 0"
                 >
-                  <div
-                    class="member-class-badge-redem"
-                    *ngIf="selectedMember?.memberClassName"
-                  >
+                  <div class="member-class-redem">
                     <img
+                      *ngIf="selectedMember?.memberClassPhoto"
+                      class="member-class-img-redem"
                       [src]="selectedMember?.memberClassPhoto"
                       [alt]="selectedMember?.memberClassName"
                     />
-                    <span>
-                      {{ selectedMember?.memberClassName || "-" }}
+                    <span
+                      class="member-class-badge-redem"
+                      *ngIf="selectedMember?.memberClassName"
+                    >
+                      {{ selectedMember?.memberClassName }}
                     </span>
-                  </div>
-                  <!-- <strong style="text-align:right">{{
-                    selectedMember?.memberClassName || "-"
-                  }}</strong> -->
+                  </div> 
                   <div
                     style="margin-top:auto; margin-left: auto;"
                     nz-flex
@@ -220,7 +219,7 @@ import { AuthKeys } from "../../const";
                 <app-offer-select
                   [memberId]="frm.get('memberId')?.value"
                   formControlName="offerId"
-                  [redeemWith]='modal?.accountTypeInput'
+                  [redeemWith]="modal?.accountTypeInput"
                   (selectedObject)="selectedOffer = $event"
                   [isAvailable]="!modal?.isView"
                 />
@@ -419,19 +418,23 @@ import { AuthKeys } from "../../const";
   styleUrls: ["../../../assets/scss/operation.style.scss"],
   standalone: false,
   styles: `
-   .member-class-badge-redem {
+    .member-class-img-redem {
+        width: 20px;
+      }
+      .member-class-redem {
+        display: flex;
+        margin-left: auto;
+        width: fit-content;
+        gap: 4px;
+      }
+      .member-class-badge-redem {
         padding: 4px 8px;
         background-color: #e9f3ff;
         color: #3b82f6;
         border-radius: 6px;
-        width: fit-content;
-       margin-left: auto;
-        display: flex;
         gap: 4px;
-        img {
-          width: 20px;
-        }
       }
+ 
 
   .account-container-redem{
     margin-left:auto;

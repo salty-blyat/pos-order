@@ -155,14 +155,6 @@ export class MemberSelectComponent extends BaseSelectComponent<Member> {
       });
     }
   }
-
-  override param = signal<QueryParam>({
-    pageSize: 10,
-    pageIndex: 1,
-    sorts: "",
-    filters: "",
-  });
-
   isMemberAdd = computed<boolean>(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__ADD)
   );
