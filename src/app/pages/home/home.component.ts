@@ -96,7 +96,10 @@ Chart.register(
           <span class="graph-label">{{ "MemberClass" | translate }}</span>
           <ng-container *ngIf="memberClassChart; else noResult">
             <div nz-flex nzJustify="center" class="graph">
-              <app-graph [config]="memberClassChart"></app-graph>
+              <app-graph
+                style="width=100%"
+                [config]="memberClassChart"
+              ></app-graph>
             </div>
           </ng-container>
 
@@ -525,11 +528,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.memberClassChart = {
       type: "doughnut",
       data: {
-        labels: this.data?.membersByClass?.map((d) => d.name) || [],
+        labels:
+          this.data?.membersByClass?.map((d) => d.name! + ": " + d.count) || [],
         datasets: [
           {
-            label:
-              this.translateService.currentLang == "km" ? "ចំនួន" : "Total",
+            label: this.translateService.instant("Total"),
             data: this.data?.membersByClass?.map((d) => d.count ?? 0) || [],
             backgroundColor: this.backgroundColor,
           },
@@ -538,7 +541,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       options: {
         plugins: {
           legend: {
-            position: "bottom",
+            position: "right",
           },
         },
       },
@@ -549,11 +552,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.topAgentChart = {
       type: "bar",
       data: {
-        labels: this.data?.topAgents?.map((d) => d.name) || [],
+        labels:
+          this.data?.topAgents?.map((d) => d.name! + ": " + d.value) || [],
         datasets: [
           {
-            label:
-              this.translateService.currentLang == "km" ? "ចំនួន" : "Total",
+            label: this.translateService.instant("Total"),
             data: this.data?.topAgents?.map((d) => d.value ?? 0) || [],
             backgroundColor: this.backgroundColor,
           },

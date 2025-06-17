@@ -397,7 +397,7 @@ export class RedemptionListComponent extends BaseListComponent<Redemption> {
         this.setAdvancedFilter(result.value);
       }
       this.getAdvancedFilter();
-      this.search();
+      if (this.memberId() == 0) this.search(); // in member it call twice.
     });
     this.getAdvancedFilter();
     if (this.hasAdvancedFilter()) {
