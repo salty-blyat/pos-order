@@ -40,6 +40,7 @@ import { AuthKeys } from "../../const";
       }}</span>
     </div>
     <div class="modal-content">
+      <app-loading *ngIf="isLoading()"></app-loading>
       <form nz-form [formGroup]="frm">
         <div nz-row [nzGutter]="16">
           <!-- Column 1: Form -->

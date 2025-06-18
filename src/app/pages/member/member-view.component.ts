@@ -38,10 +38,9 @@ import { AuthKeys } from "../../const";
           <div class="photo">
             <!-- view -->
             @if(file.length == 0){
-            <div class="image-no-profile" *ngIf="file.length == 0">
+            <div class="image-no-profile">
               <img src="./assets/image/man.png" alt="Photo" />
             </div>
-
             }@else {
             <nz-upload
               class="profile"
@@ -67,18 +66,6 @@ import { AuthKeys } from "../../const";
               [photo]="model?.memberClassPhoto"
               [name]="model?.memberClassName"
             />
-
-            <!-- <div class="member-class">
-              <img
-                *ngIf="model?.memberClassPhoto"
-                class="member-class-img"
-                [src]="model.memberClassPhoto"
-                [alt]="model?.memberClassName"
-              />
-              <span class="member-class-badge" *ngIf="model?.memberClassName">
-                {{ model?.memberClassName }}
-              </span>
-            </div> -->
           </div>
           <nz-divider class="divider"></nz-divider>
           <div class="info-section">
@@ -169,7 +156,6 @@ import { AuthKeys } from "../../const";
               nz-menu-item
             >
               <div class="account-container">
-                <!-- Left Side: Icon + Text -->
                 <div class="account-left">
                   <div class="account-icon-mem">
                     <i nz-icon nzType="credit-card" class="credit-icon"></i>
@@ -336,7 +322,6 @@ import { AuthKeys } from "../../const";
         font-weight: bold;
         margin-top: 4px;
       }
-      ////
 
       .side-select {
         padding: 0 !important;

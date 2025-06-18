@@ -57,14 +57,10 @@ Chart.register(
                 </div>
                 <span class="label">{{ "Member" | translate }}</span>
               </div>
-
-              <div class="value-row">
-                <span class="value-label">{{ "Total" | translate }}</span>
-                <span class="value-number">{{
-                  data.summary?.totalUsers
-                    | peopleCount : translateService.currentLang
-                }}</span>
-              </div>
+              <span class="value-number">{{
+                data.summary?.totalUsers
+                  | peopleCount : translateService.currentLang
+              }}</span>
             </div>
 
             <nz-divider class="separator"></nz-divider>
@@ -77,12 +73,9 @@ Chart.register(
                 </div>
                 <span class="label">{{ "Agent" | translate }}</span>
               </div>
-
               <div class="value-row">
-                <span class="value-label">{{ "Total" | translate }}</span>
-                <span class="value-number">{{
-                  data.summary?.agents || "0"
-                }}</span>
+                <span class="value-label"> {{ "Count" | translate }} </span
+                ><span class="value-number">4</span>
               </div>
             </div>
           </ng-container>
@@ -342,6 +335,15 @@ Chart.register(
   encapsulation: ViewEncapsulation.None,
   styles: [
     `
+      .value-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .value-label {
+        font-size: 24px;
+        font-weight: 600;
+      }
       .ant-badge-status-dot {
         width: 12px;
         height: 12px;
@@ -470,20 +472,9 @@ Chart.register(
         font-size: 14px;
       }
 
-      .value-row {
-        display: flex;
-        margin-top: 16px;
-        align-items: baseline;
-        justify-content: space-between;
-      }
-
-      .value-label {
-        font-weight: bold;
-        font-size: 18px;
-      }
-
       .value-number {
-        font-size: 20px;
+        font-size: 24px;
+        margin-left: auto;
         font-weight: bold;
       }
 
