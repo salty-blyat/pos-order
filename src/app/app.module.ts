@@ -181,6 +181,7 @@ import { HomeComponent } from "./pages/home/home.component";
 import { GraphComponent } from "./utils/components/graph.component";
 import { PeopleCountPipe } from "./utils/pipes/people-count.pipe";
 import { AgentIconComponent } from "./utils/components/agent-icon.component";
+import { MemberClassBadge } from "./utils/components/member-class-badge.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -333,6 +334,7 @@ export class CustomTranslate implements TranslateLoader {
     MemberSelectComponent,
     MemberMultiSelectComponent,
     MemberViewComponent,
+    MemberClassBadge,
 
     // card
     CardListComponent,

@@ -63,7 +63,12 @@ import { AuthKeys } from "../../const";
           </div>
           <div class="member-name">
             <p>{{ model?.name }}</p>
-            <div class="member-class">
+            <app-member-class-badge
+              [photo]="model?.memberClassPhoto"
+              [name]="model?.memberClassName"
+            />
+
+            <!-- <div class="member-class">
               <img
                 *ngIf="model?.memberClassPhoto"
                 class="member-class-img"
@@ -73,7 +78,7 @@ import { AuthKeys } from "../../const";
               <span class="member-class-badge" *ngIf="model?.memberClassName">
                 {{ model?.memberClassName }}
               </span>
-            </div>
+            </div> -->
           </div>
           <nz-divider class="divider"></nz-divider>
           <div class="info-section">
@@ -298,22 +303,7 @@ import { AuthKeys } from "../../const";
           white-space: nowrap;
         }
       }
-      .member-class-img {
-        width: 20px;
-      }
-      .member-class {
-        display: flex;
-        margin: auto;
-        width: fit-content;
-        gap: 4px;
-      }
-      .member-class-badge {
-        padding: 4px 8px;
-        background-color: #e9f3ff;
-        color: #3b82f6;
-        border-radius: 6px;
-        gap: 4px;
-      }
+
       .account-left {
         display: flex;
         align-items: center;

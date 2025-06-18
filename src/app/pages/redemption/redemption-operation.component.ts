@@ -128,7 +128,12 @@ import { AuthKeys } from "../../const";
                   nzVertical
                   *ngIf="sortedAccounts.length > 0"
                 >
-                  <div class="member-class-redem">
+                  <app-member-class-badge
+                    class="member-class-redem"
+                    [photo]="selectedMember?.memberClassPhoto"
+                    [name]="selectedMember?.memberClassName"
+                  />
+                  <!-- <div class="member-class-redem">
                     <img
                       *ngIf="selectedMember?.memberClassPhoto"
                       class="member-class-img-redem"
@@ -141,7 +146,7 @@ import { AuthKeys } from "../../const";
                     >
                       {{ selectedMember?.memberClassName }}
                     </span>
-                  </div> 
+                  </div>  -->
                   <div
                     style="margin-top:auto; margin-left: auto;"
                     nz-flex
@@ -341,8 +346,11 @@ import { AuthKeys } from "../../const";
                 }
               </div>
 
-              <div style="margin-top:30px">
-                <nz-divider class="divider"></nz-divider>
+              <div>
+                <nz-divider
+                  class="divider"
+                  style="margin: 24px 0;"
+                ></nz-divider>
                 <div nz-flex nzJustify="space-between">
                   <span>{{ "RemainingBalance" | translate }}</span>
                   <span
@@ -421,11 +429,8 @@ import { AuthKeys } from "../../const";
     .member-class-img-redem {
         width: 20px;
       }
-      .member-class-redem {
-        display: flex;
-        margin-left: auto;
-        width: fit-content;
-        gap: 4px;
+      .member-class-redem { 
+        margin-left: auto; 
       }
       .member-class-badge-redem {
         padding: 4px 8px;

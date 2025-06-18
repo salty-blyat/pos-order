@@ -21,7 +21,7 @@ export class GraphComponent implements OnChanges {
 
   public chart!: Chart;
 
-  ngOnChanges() { 
+  ngOnChanges() {
     if (this.chart) this.chart.destroy();
     setTimeout(() => {
       if (this.config && this.canvasRef) {

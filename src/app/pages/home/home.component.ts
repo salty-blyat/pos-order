@@ -95,9 +95,9 @@ Chart.register(
         <div class="card">
           <span class="graph-label">{{ "MemberClass" | translate }}</span>
           <ng-container *ngIf="memberClassChart; else noResult">
-            <div nz-flex nzJustify="center" class="graph">
+            <div>
               <app-graph
-                style="width=100%"
+                style="position: relative; height:300px; width:600px;display:inline-block;"
                 [config]="memberClassChart"
               ></app-graph>
             </div>
@@ -114,8 +114,11 @@ Chart.register(
           <span class="graph-label">{{ "Agent" | translate }}</span>
 
           <ng-container *ngIf="topAgentChart; else noResult">
-            <div nz-flex nzAlign="end" class="graph">
-              <app-graph [config]="topAgentChart"></app-graph>
+            <div>
+              <app-graph
+                style="position: relative; height:300px; width:600px;display:inline-block; padding-top: 12px;"
+                [config]="topAgentChart"
+              ></app-graph>
             </div>
           </ng-container>
 
@@ -128,7 +131,7 @@ Chart.register(
       </div>
 
       <div class="grid-two">
-        <div class="card-nopad" style="overflow:auto;">
+        <div class="card-nopad">
           <h3>{{ "RecentTransaction" | translate }}</h3>
           <nz-table
             class="table"
@@ -175,15 +178,24 @@ Chart.register(
                 </td>
                 <td nzEllipsis>
                   <a
-                    *ngIf="isWalletView() || isPointView()"
+                    *ngIf="
+                      (d.accountType == AccountTypes.Wallet &&
+                        isWalletView()) ||
+                      (d.accountType == AccountTypes.Point && isPointView())
+                    "
                     (click)="
                       accUiService.showTransaction(d.id || 0, d.accountType!)
                     "
                     >{{ d.tranNo }}</a
                   >
-                  <span *ngIf="!isWalletView() || !isPointView()">{{
-                    d.tranNo
-                  }}</span>
+                  <span
+                    *ngIf="
+                      (d.accountType == AccountTypes.Wallet &&
+                        !isWalletView()) ||
+                      (d.accountType == AccountTypes.Point && !isPointView())
+                    "
+                    >{{ d.tranNo }}</span
+                  >
                 </td>
                 <td nzEllipsis>
                   {{ d.date | customDateTime }}
@@ -197,9 +209,8 @@ Chart.register(
                   }}
                 </td>
                 <td nzEllipsis>
-                  <span *ngIf="!d.location">{{ d.location }}</span>
                   <span *ngIf="d.branchName">{{ d.branchName + ", " }}</span>
-                  <span *ngIf="d.location">
+                  <span>
                     {{ d.location }}
                   </span>
                 </td>
@@ -353,6 +364,9 @@ Chart.register(
       .grid-two {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
+        .card-nopad {
+          overflow: auto;
+        }
       }
       /* Desktop screens */
       @media (min-width: 1024px) {
@@ -364,6 +378,9 @@ Chart.register(
         .grid-two {
           grid-template-columns: 12fr 6fr 6fr;
           height: 55%;
+          .card-nopad {
+            overflow: visible;
+          }
         }
       }
 
@@ -395,13 +412,12 @@ Chart.register(
         flex-direction: column;
         // justify-content: space-between;
       }
+
       .graph-label {
         font-size: 16px;
         font-weight: 600;
       }
-      .graph {
-        height: 100%;
-      }
+
       .card {
         border-radius: 6px;
         padding: 16px;
@@ -539,6 +555,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         ],
       },
       options: {
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             position: "right",
@@ -564,6 +581,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       options: {
         aspectRatio: 1,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             display: false,

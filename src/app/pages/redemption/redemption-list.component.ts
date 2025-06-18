@@ -213,6 +213,7 @@ import { Subscription } from "rxjs";
                   </span>
                 </div>
               </td>
+              
               <td nzEllipsis class="no-pad">
                 <div style="display:flex; flex-direction:column;">
                   {{ data.memberName }}
@@ -223,11 +224,10 @@ import { Subscription } from "rxjs";
               </td>
 
               <td nzEllipsis [title]="data.locationName">
-                <span *ngIf="!data.locationName">{{ data.branchName }}</span>
                 <span *ngIf="data.branchName">{{
                   data.branchName + ", "
                 }}</span>
-                <span *ngIf="data.locationName">
+                <span>
                   {{ data.locationName }}
                 </span>
               </td>

@@ -201,7 +201,15 @@ import { NotificationService } from "../../utils/services/notification.service";
                   }}
                 </span>
               </td>
-              <td nzEllipsis nzAlign="right">
+              <td
+                nzEllipsis
+                nzAlign="right"
+                [title]="
+                  data.maxQty == 0
+                    ? data.redeemedQty + ' / ' + ('Unlimited' | translate)
+                    : data.redeemedQty + ' / ' + data.maxQty
+                "
+              >
                 {{
                   data.maxQty == 0
                     ? data.redeemedQty + " / " + ("Unlimited" | translate)
