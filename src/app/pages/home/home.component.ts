@@ -95,11 +95,25 @@ Chart.register(
         <div class="card">
           <span class="graph-label">{{ "MemberClass" | translate }}</span>
           <ng-container *ngIf="memberClassChart; else noResult">
-            <div>
-              <app-graph
-                style="position: relative; height:300px; width:600px;display:inline-block;"
-                [config]="memberClassChart"
-              ></app-graph>
+            <div nz-row style="align-items:center; gap: 8px; ">
+              <div nz-col nzSpan="18">
+                <app-graph
+                  style="position: relative; width:100%;  display:inline-block; padding-top: 12px;"
+                  [config]="memberClassChart"
+                ></app-graph>
+              </div>
+
+              <div nz-col nzSpan="5">
+                <ng-container
+                  *ngFor="let d of data?.membersByClass; let i = index"
+                >
+                  <nz-badge
+                    [nzColor]="backgroundColor[i]"
+                    [nzText]="d.name + ': ' + d.count"
+                  ></nz-badge>
+                  <br />
+                </ng-container>
+              </div>
             </div>
           </ng-container>
 
@@ -114,11 +128,23 @@ Chart.register(
           <span class="graph-label">{{ "Agent" | translate }}</span>
 
           <ng-container *ngIf="topAgentChart; else noResult">
-            <div>
-              <app-graph
-                style="position: relative; height:300px; width:600px;display:inline-block; padding-top: 12px;"
-                [config]="topAgentChart"
-              ></app-graph>
+            <div nz-row style="align-items:center; gap: 8px; ">
+              <div nz-col nzSpan="18">
+                <app-graph
+                  style="position: relative; width:100%;  display:inline-block; padding-top: 12px;"
+                  [config]="topAgentChart"
+                ></app-graph>
+              </div>
+
+              <div nz-col nzSpan="5">
+                <ng-container *ngFor="let d of data?.topAgents; let i = index">
+                  <nz-badge
+                    [nzColor]="backgroundColor[i]"
+                    [nzText]="d.name + ': ' + d.value"
+                  ></nz-badge>
+                  <br />
+                </ng-container>
+              </div>
             </div>
           </ng-container>
 
@@ -329,6 +355,10 @@ Chart.register(
   encapsulation: ViewEncapsulation.None,
   styles: [
     `
+      .ant-badge-status-dot {
+        width: 12px;
+        height: 12px;
+      }
       .dashboard-content {
         overflow: auto;
       }
@@ -422,6 +452,7 @@ Chart.register(
         border-radius: 6px;
         padding: 16px;
         background: #fff;
+        overflow: auto;
       }
       .card-nopad {
         border-radius: 6px;
@@ -544,8 +575,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.memberClassChart = {
       type: "doughnut",
       data: {
-        labels:
-          this.data?.membersByClass?.map((d) => d.name! + ": " + d.count) || [],
+        labels: this.data?.membersByClass?.map((d) => d.name),
         datasets: [
           {
             label: this.translateService.instant("Total"),
@@ -558,7 +588,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            position: "right",
+            display: false,
           },
         },
       },
@@ -569,8 +599,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.topAgentChart = {
       type: "bar",
       data: {
-        labels:
-          this.data?.topAgents?.map((d) => d.name! + ": " + d.value) || [],
+        labels: this.data?.topAgents?.map((d) => d.name),
         datasets: [
           {
             label: this.translateService.instant("Total"),
