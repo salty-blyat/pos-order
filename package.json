@@ -25,6 +25,7 @@
     "@types/pdfmake": "^0.2.1",
     "ajv": "^8.17.1",
     "angular-calendar": "^0.31.1",
+    "decimal.js": "^10.5.0",
     "chart.js": "^4.4.9",
     "highlight.js": "^11.11.1",
     "js-base64": "^3.7.7",
