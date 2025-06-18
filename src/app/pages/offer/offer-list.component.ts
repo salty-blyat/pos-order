@@ -207,13 +207,13 @@ import { NotificationService } from "../../utils/services/notification.service";
                 [title]="
                   data.maxQty == 0
                     ? data.redeemedQty + ' / ' + ('Unlimited' | translate)
-                    : data.redeemedQty + ' / ' + data.maxQty
+                    : data.redeemedQty!.toFixed(2) + ' / ' + data.maxQty
                 "
               >
                 {{
                   data.maxQty == 0
                     ? data.redeemedQty + " / " + ("Unlimited" | translate)
-                    : data.redeemedQty + " / " + data.maxQty
+                    : data.redeemedQty!.toFixed(2) + " / " + data.maxQty
                 }}
               </td>
               <td nzEllipsis nzAlign="right">
