@@ -363,8 +363,6 @@ export class PageComponent implements OnInit {
   appName = signal(this.authService.app?.appName);
 
   ngOnInit(): void {
-    console.log(this.isHomeList());
-
     this.systemSettingService.initCurrentSetting().subscribe({
       next: (settingList) => {},
       error: (error) => {
