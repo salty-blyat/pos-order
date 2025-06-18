@@ -42,117 +42,104 @@ Chart.register(
     </nz-header> -->
 
     <nz-content class="dashboard-content">
-      <div class="grid-one ">
-        <div class="card two-col-card">
-          <div class="inside-card">
-            <div nz-flex nzAlign="center" nzGap="small">
-              <div class="icon-wrapper">
-                <i
-                  nz-icon
-                  nzType="idcard"
-                  nzTheme="outline"
-                  class="icon-small"
-                ></i>
+      <div class="grid-one">
+        <div class="card two-col-card" style="position:relative">
+          <ng-container *ngIf="!isLoading(); else loadingData">
+            <div class="inside-card">
+              <div nz-flex nzAlign="center" nzGap="small">
+                <div class="icon-wrapper">
+                  <i
+                    nz-icon
+                    nzType="idcard"
+                    nzTheme="outline"
+                    class="icon-small"
+                  ></i>
+                </div>
+                <span class="label">{{ "Member" | translate }}</span>
               </div>
-              <span class="label">{{ "Member" | translate }}</span>
-            </div>
 
-            <div class="value-row">
-              <span class="value-label">{{ "Total" | translate }}</span>
-              <span class="value-number">{{
-                data.summary?.totalUsers
-                  | peopleCount : translateService.currentLang
-              }}</span>
-            </div>
-          </div>
-
-          <nz-divider class="separator"></nz-divider>
-
-          <!-- agent -->
-          <div class="inside-card">
-            <div nz-flex nzAlign="center" nzGap="small">
-              <div class="icon-wrapper">
-                <i
-                  nz-icon
-                  nzType="user"
-                  nzTheme="outline"
-                  class="icon-small"
-                ></i>
+              <div class="value-row">
+                <span class="value-label">{{ "Total" | translate }}</span>
+                <span class="value-number">{{
+                  data.summary?.totalUsers
+                    | peopleCount : translateService.currentLang
+                }}</span>
               </div>
-              <span class="label">{{ "Agent" | translate }}</span>
             </div>
 
-            <div class="value-row">
-              <span class="value-label">{{ "Total" | translate }}</span>
-              <span class="value-number">{{
-                data.summary?.agents || "0"
-              }}</span>
+            <nz-divider class="separator"></nz-divider>
+
+            <!-- agent -->
+            <div class="inside-card">
+              <div nz-flex nzAlign="center" nzGap="small">
+                <div class="icon-wrapper">
+                  <app-agent-icon class="icon-small" />
+                </div>
+                <span class="label">{{ "Agent" | translate }}</span>
+              </div>
+
+              <div class="value-row">
+                <span class="value-label">{{ "Total" | translate }}</span>
+                <span class="value-number">{{
+                  data.summary?.agents || "0"
+                }}</span>
+              </div>
             </div>
-          </div>
+          </ng-container>
+          <ng-template #loadingData>
+            <app-loading />
+          </ng-template>
         </div>
-
         <!-- top balance -->
-        <div class="card">
+        <div class="card" style="position:relative">
           <span class="graph-label">{{ "MemberClass" | translate }}</span>
-          <ng-container *ngIf="memberClassChart; else noResult">
-            <div nz-row style="align-items:center; gap: 8px; ">
-              <div nz-col nzSpan="18">
-                <app-graph
-                  style="position: relative; width:100%;  display:inline-block; padding-top: 12px;"
-                  [config]="memberClassChart"
-                ></app-graph>
-              </div>
-
-              <div nz-col nzSpan="5">
-                <ng-container
-                  *ngFor="let d of data?.membersByClass; let i = index"
-                >
-                  <nz-badge
-                    [nzColor]="backgroundColor[i]"
-                    [nzText]="d.name + ': ' + d.count"
-                  ></nz-badge>
-                  <br />
-                </ng-container>
-              </div>
+          @if(isLoading()){
+          <div class="graph-noresult">
+            <app-loading> </app-loading>
+          </div>
+          } @else if (memberClassChart) {
+          <div nz-row style="align-items:center; gap: 8px;">
+            <div nz-col nzSpan="18">
+              <app-graph
+                style="position: relative; width:100%; display:inline-block; padding-top: 12px;"
+                [config]="memberClassChart"
+              ></app-graph>
             </div>
-          </ng-container>
-
-          <ng-template #noResult>
-            <div class="graph-noresult">
-              <app-no-result-found> </app-no-result-found>
+            <div nz-col nzSpan="5">
+              <ng-container
+                *ngFor="let d of data?.membersByClass; let i = index"
+              >
+                <nz-badge
+                  [nzColor]="backgroundColor[i]"
+                  [nzText]="d.name + ': ' + d.count"
+                ></nz-badge>
+                <br />
+              </ng-container>
             </div>
-          </ng-template>
+          </div>
+          }@else{
+          <div class="graph-noresult">
+            <app-no-result-found> </app-no-result-found>
+          </div>
+          }
         </div>
 
-        <div class="card agent-card">
+        <div class="card agent-card" style="position:relative">
           <span class="graph-label">{{ "Agent" | translate }}</span>
-
-          <ng-container *ngIf="topAgentChart; else noResult">
-            <div nz-row style="align-items:center; gap: 8px; ">
-              <div nz-col nzSpan="18">
-                <app-graph
-                  style="position: relative; width:100%;  display:inline-block; padding-top: 12px;"
-                  [config]="topAgentChart"
-                ></app-graph>
-              </div>
-
-              <div nz-col nzSpan="5">
-                <ng-container *ngFor="let d of data?.topAgents; let i = index">
-                  <nz-badge
-                    [nzColor]="backgroundColor[i]"
-                    [nzText]="d.name + ': ' + d.value"
-                  ></nz-badge>
-                  <br />
-                </ng-container>
-              </div>
-            </div>
-          </ng-container>
-
-          <ng-template #noResult>
-            <div class="graph-noresult">
-              <app-no-result-found> </app-no-result-found>
-            </div>
-          </ng-template>
+          @if(isLoading()){
+          <div class="graph-noresult">
+            <app-loading> </app-loading>
+          </div>
+          } @else if (topAgentChart) {
+          <app-graph
+            style="position: relative; width:100%;  display:inline-block; padding-top: 12px;"
+            [config]="topAgentChart"
+          ></app-graph>
+          }@else{
+          <div class="graph-noresult">
+            <app-no-result-found> </app-no-result-found>
+          </div>
+          }
         </div>
       </div>
 
