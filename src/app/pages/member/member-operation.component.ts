@@ -53,7 +53,7 @@ import { AuthKeys } from "../../const";
               <img src="./assets/image/man.png" alt="Photo" />
             </div>
 
-            }@else { 
+            }@else {
             <nz-upload
               class="profile"
               [nzAction]="uploadUrl"
@@ -419,7 +419,6 @@ import { AuthKeys } from "../../const";
                 </nz-tab>
               </nz-tabset>
             </div>
-            
           </div>
         </nz-content>
       </nz-layout>
@@ -650,7 +649,9 @@ export class MemberOperationComponent extends BaseOperationComponent<Member> {
   isPointList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__LIST)
   );
-  isAccountList = computed(() => this.isWalletList() || this.isPointList() || this.isRedemptionList()); 
+  isAccountList = computed(
+    () => this.isWalletList() || this.isPointList() || this.isRedemptionList()
+  );
 
   selectedAccount = signal<number>(0);
   accountRefreshSub = new Subscription();

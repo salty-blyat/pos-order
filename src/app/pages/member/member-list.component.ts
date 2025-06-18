@@ -185,7 +185,7 @@ import { NzImageService } from "ng-zorro-antd/image";
   styleUrls: ["../../../assets/scss/list.style.scss"],
   standalone: false,
   styles: [
-    ` 
+    `
       nz-avatar:hover {
         cursor: pointer;
       }
@@ -245,10 +245,15 @@ export class MemberListComponent extends BaseListComponent<Member> {
   isMemberRemove = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__REMOVE)
   );
-  isMemberView = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__WALLET__LIST)||
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__EARN)||
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__LIST) 
+  isMemberView = computed(
+    () =>
+      this.authService.isAuthorized(
+        AuthKeys.APP__MEMBER__ACCOUNT__WALLET__LIST
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__MEMBER__ACCOUNT__POINT__LIST
+      ) ||
+      this.authService.isAuthorized(AuthKeys.APP__MEMBER__CARD__LIST)
   );
   onPreviewImage(img: string | undefined): void {
     if (!img) return;

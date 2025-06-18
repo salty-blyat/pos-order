@@ -172,7 +172,7 @@ import { AuthKeys } from "../../const";
         </nz-sider>
 
         <nz-content>
-          <app-loading *ngIf="isLoading()"></app-loading>
+          <!-- <app-loading *ngIf="isLoading()"></app-loading> -->
           <div [ngSwitch]="current" [style.height.%]="100">
             <ng-container *ngFor="let account of sortedAccounts; let i = index">
               <div *ngSwitchCase="i" class="tab-content">
