@@ -43,7 +43,7 @@ Chart.register(
 
     <nz-content class="dashboard-content">
       <div class="grid-one">
-        <div class="card two-col-card" style="position:relative">
+        <div class="card two-col-card" style="position:relative; padding:0px;">
           <ng-container *ngIf="!isLoading(); else loadingData">
             <div class="inside-card">
               <div nz-flex nzAlign="center" nzGap="small">
@@ -55,11 +55,10 @@ Chart.register(
                     class="icon-small"
                   ></i>
                 </div>
-                <span class="label">{{ "Member" | translate }}</span>
+                <span class="graph-label">{{ "Member" | translate }}</span>
               </div>
               <span class="value-number">{{
-                data.summary?.totalUsers
-                  | peopleCount : translateService.currentLang
+                data.summary?.totalUsers || 0
               }}</span>
             </div>
 
@@ -71,14 +70,12 @@ Chart.register(
                 <div class="icon-wrapper">
                   <app-agent-icon class="icon-small" />
                 </div>
-                <span class="label">{{ "Agent" | translate }}</span>
+                <span class="graph-label">{{ "Agent" | translate }}</span>
               </div>
-              <div class="value-row">
-                <span class="value-label"> {{ "Count" | translate }} </span
-                ><span class="value-number">4</span>
-              </div>
+              <span class="value-number">{{ data.summary?.agents || 0 }}</span>
             </div>
           </ng-container>
+
           <ng-template #loadingData>
             <app-loading />
           </ng-template>
@@ -352,7 +349,7 @@ Chart.register(
         overflow: auto;
       }
       .separator {
-        margin: 8px 0 !important;
+        margin: 0px !important;
       }
       .dashboard-layout {
         background-color: #eeeeee !important;
@@ -425,6 +422,7 @@ Chart.register(
         justify-content: space-between;
         flex-direction: column;
         flex-grow: 2;
+        padding: 16px;
       }
       .agent-card {
         display: flex;
@@ -473,9 +471,8 @@ Chart.register(
       }
 
       .value-number {
-        font-size: 24px;
-        margin-left: auto;
-        font-weight: bold;
+        font-size: 50px;
+        margin: auto;
       }
 
       .ant-list-bordered .ant-list-header,
