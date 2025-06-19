@@ -530,7 +530,7 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
   submitRefresh = new Subscription();
   reports: Report[] = [];
 
-  MemberPrintId = 11;
+  MemberPrintId = 1;
   //  view
   nzShowButtonView = {
     showPreviewIcon: false,

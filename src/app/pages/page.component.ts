@@ -29,7 +29,7 @@ export interface Type {
   template: `
     <nz-layout
       class="app-layout"
-      [ngStyle]="{ 'min-width': isDashboard ? '1px !important' : '900px;' }"
+      [ngStyle]="{ 'min-width': isDashboard ? '1px !important' : '900px;'}"
     >
       <nz-sider
         class="menu-sidebar"
