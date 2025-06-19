@@ -95,7 +95,7 @@ import { ReportService } from "../report/report.service";
               <nz-icon nzType="calendar" nzTheme="outline" class="label" />
               <div class="info-peice">
                 <span class="label">
-                  {{ ("JoinDate" | translate) + ": " }}
+                  {{ ("MemberSince" | translate) + ": " }}
                 </span>
                 <span class="value">
                   {{ model?.joinDate | customDate }}
@@ -296,7 +296,7 @@ import { ReportService } from "../report/report.service";
       }
       .info-peice {
         display: grid;
-        grid-template-columns: 95px 1fr;
+        grid-template-columns: 100px 1fr;
         .value {
           overflow: hidden;
           text-overflow: ellipsis;
