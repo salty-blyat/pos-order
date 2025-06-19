@@ -27,7 +27,10 @@ export interface Type {
 @Component({
   selector: "app-page",
   template: `
-    <nz-layout class="app-layout">
+    <nz-layout
+      class="app-layout"
+      [ngStyle]="{ 'min-width': isDashboard ? '1px !important' : '900px;' }"
+    >
       <nz-sider
         class="menu-sidebar"
         nzTheme="light"
