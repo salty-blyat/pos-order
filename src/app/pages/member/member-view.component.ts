@@ -32,7 +32,7 @@ import { AuthKeys } from "../../const";
           : ("Loading" | translate)
       }}</span>
     </div>
-    <div class="modal-content">
+    <div class="modal-content" style="min-width: 1350px;">
       <nz-layout>
         <nz-sider nzTheme="light" class="sider-mem" nzWidth="250px">
           <div class="photo">
