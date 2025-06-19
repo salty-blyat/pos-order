@@ -1,8 +1,10 @@
 import {
   Component,
   computed,
-  forwardRef, input, signal,
-  ViewEncapsulation
+  forwardRef,
+  input,
+  signal,
+  ViewEncapsulation,
 } from "@angular/core";
 import { BaseSelectComponent } from "../../utils/components/base-select.component";
 import { Member, MemberService } from "./member.service";
@@ -27,8 +29,8 @@ import { AuthService } from "../../helpers/auth.service";
       nzShowSearch
       [nzDropdownRender]="actionItem"
       [nzServerSearch]="true"
-      [nzOptionHeightPx]="50"
-      [nzDropdownMatchSelectWidth]="false"  
+      [nzOptionHeightPx]="40"
+      [nzDropdownMatchSelectWidth]="false"
       [(ngModel)]="selected"
       (ngModelChange)="onModalChange()"
       (nzScrollToBottom)="loadMoreOption() ? searchMore() : null"
@@ -49,13 +51,12 @@ import { AuthService } from "../../helpers/auth.service";
         <div nz-flex nzAlign="center" nzGap="small">
           <nz-avatar nzIcon="user" [nzSrc]="item.photo"></nz-avatar>
           <div class="container">
-            <span class="title">
-             {{ item.code }} {{ item.name }}
-            </span>
+            <span class="title"> {{ item.code }} {{ item.name }} </span>
             <div *ngIf="item.latinName || item.phone" class="subtitle">
               <span *ngIf="item.latinName">
                 {{ item.latinName }}
-              </span> <br *ngIf="item.latinName" />
+              </span>
+              <br *ngIf="item.latinName" />
               <span *ngIf="item.phone">
                 {{ item.phone }}
               </span>

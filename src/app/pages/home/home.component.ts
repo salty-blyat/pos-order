@@ -49,14 +49,7 @@ Chart.register(
         [nzGutter]="[16, 16]"
         style="margin:0px !important;"
       >
-        <div
-          nz-col
-          [nzSpan]="24"
-          [nzSm]="24"
-          [nzMd]="12"
-          [nzXl]="4"
-          [nzXXl]="4"
-        >
+        <div nz-col [nzSpan]="24" [nzSm]="24" [nzMd]="8" [nzXl]="4" [nzXXl]="4">
           <div class="card two-col-card">
             <ng-container *ngIf="!isLoading(); else loadingData">
               <div class="inside-card">
@@ -102,7 +95,7 @@ Chart.register(
           nz-col
           [nzSpan]="24"
           [nzSm]="24"
-          [nzMd]="12"
+          [nzMd]="16"
           [nzXl]="10"
           [nzXXl]="10"
         >
@@ -113,14 +106,14 @@ Chart.register(
               <app-loading> </app-loading>
             </div>
             } @else if (memberClassChart) {
-            <div nz-row style="align-items:center; gap: 8px;">
-              <div nz-col nzFlex="18">
+            <div nz-row style="align-items:center; gap: 8px; flex-wrap:nowrap;">
+              <div nz-col nzFlex="14">
                 <app-graph
-                  style=" width:100%; display:inline-block;"
+                  style=" width:90%; display:inline-block;"
                   [config]="memberClassChart"
                 ></app-graph>
               </div>
-              <div nz-col nzFlex="5">
+              <div nz-col nzFlex="10" style="min-width: fit-content;">
                 <ng-container
                   *ngFor="let d of data?.membersByClass; let i = index"
                 >
