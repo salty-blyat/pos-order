@@ -7,6 +7,8 @@ import { MemberDeleteComponent } from "./member-delete.component";
 import { ItemUploadComponent } from "../offer-group/item-upload.component";
 import { AccountListComponent } from "../account/account-list.component";
 import { MemberViewComponent } from "./member-view.component";
+import { Member } from "./member.service";
+import { MemberPrintComponent } from "./member-print.component";
 
 @Injectable({ providedIn: "root" })
 export class MemberUiService extends BaseUiService {
@@ -73,6 +75,18 @@ export class MemberUiService extends BaseUiService {
     });
   }
 
+  showPrint(model: Member, id: number): any {
+    this.modalService.create({
+      nzContent: MemberPrintComponent,
+      nzFooter: null,
+      nzData: { model, reportId: id },
+      nzClosable: true,
+      nzWidth: "100%",
+      nzBodyStyle: this.mainPageService.getModalBodyStyle(),
+      nzStyle: this.mainPageService.getModalFullPageSize(),
+      nzMaskClosable: false,
+    });
+  }
   showTransaction(id: number): any {
     this.modalService.create({
       nzContent: AccountListComponent,

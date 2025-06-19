@@ -419,7 +419,7 @@ Chart.register(
       }
       .dashboard-layout {
         background-color: #eeeeee !important;
-        padding: 14px;
+        padding: 8px;
         height: calc(100vh);
       }
 

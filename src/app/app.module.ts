@@ -183,6 +183,7 @@ import { PeopleCountPipe } from "./utils/pipes/people-count.pipe";
 import { AgentIconComponent } from "./utils/components/agent-icon.component";
 import { MemberClassBadge } from "./utils/components/member-class-badge.component";
 import { FormatTwoDigitPipe } from "./utils/pipes/format-two-digit.pipe";
+import { MemberPrintComponent } from "./pages/member/member-print.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -330,6 +331,7 @@ export class CustomTranslate implements TranslateLoader {
 
     //member
     MemberListComponent,
+    MemberPrintComponent,
     MemberOperationComponent,
     MemberDeleteComponent,
     MemberPullComponent,

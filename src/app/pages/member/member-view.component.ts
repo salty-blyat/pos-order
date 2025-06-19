@@ -21,6 +21,7 @@ import { AccountUiService } from "../account/account-ui.service";
 import { RedemptionUiService } from "../redemption/redemption-ui.service";
 import { NzImageService } from "ng-zorro-antd/image";
 import { AuthKeys } from "../../const";
+import { ReportService } from "../report/report.service";
 
 @Component({
   selector: "app-member-view",
@@ -218,34 +219,47 @@ import { AuthKeys } from "../../const";
       </nz-layout>
     </div>
     <div *nzModalFooter>
-      <a
-        (click)="uiService.showEdit(model.id || 0)"
-        *ngIf="!isLoading() && isMemberEdit()"
-      >
-        <i nz-icon nzType="edit" nzTheme="outline"></i>
-        <span class="action-text"> {{ "Edit" | translate }}</span>
-      </a>
-      <nz-divider
-        nzType="vertical"
-        *ngIf="!isLoading() && isMemberEdit()"
-      ></nz-divider>
-      <a
-        nz-typography
-        nzType="danger"
-        (click)="uiService.showDelete(model.id || 0)"
-        *ngIf="!isLoading() && isMemberRemove()"
-      >
-        <i nz-icon nzType="delete" nzTheme="outline"></i>
-        <span class="action-text"> {{ "Delete" | translate }}</span>
-      </a>
-      <nz-divider
-        nzType="vertical"
-        *ngIf="!isLoading() && isMemberRemove()"
-      ></nz-divider>
-      <a nz-typography (click)="cancel()" class="grey-color">
-        <i nz-icon nzType="close" nzTheme="outline"></i>
-        <span class="action-text"> {{ "Close" | translate }}</span>
-      </a>
+      <div nz-flex nzJustify="space-between">
+        <a
+          *ngIf="isMemberPrint()"
+          nz-dropdown
+          (click)="uiService.showPrint(model, MemberPrintId)"
+        >
+          <span nz-icon nzType="printer" nzTheme="outline"></span>
+          {{ "Print" | translate }}
+        </a>
+
+        <div>
+          <a
+            (click)="uiService.showEdit(model.id || 0)"
+            *ngIf="!isLoading() && isMemberEdit()"
+          >
+            <i nz-icon nzType="edit" nzTheme="outline"></i>
+            <span class="action-text"> {{ "Edit" | translate }}</span>
+          </a>
+          <nz-divider
+            nzType="vertical"
+            *ngIf="!isLoading() && isMemberEdit()"
+          ></nz-divider>
+          <a
+            nz-typography
+            nzType="danger"
+            (click)="uiService.showDelete(model.id || 0)"
+            *ngIf="!isLoading() && isMemberRemove()"
+          >
+            <i nz-icon nzType="delete" nzTheme="outline"></i>
+            <span class="action-text"> {{ "Delete" | translate }}</span>
+          </a>
+          <nz-divider
+            nzType="vertical"
+            *ngIf="!isLoading() && isMemberRemove()"
+          ></nz-divider>
+          <a nz-typography (click)="cancel()" class="grey-color">
+            <i nz-icon nzType="close" nzTheme="outline"></i>
+            <span class="action-text"> {{ "Close" | translate }}</span>
+          </a>
+        </div>
+      </div>
     </div>
   `,
   styleUrls: ["../../../assets/scss/operation.style.scss"],
@@ -473,6 +487,7 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
     ref: NzModalRef<MemberViewComponent>,
     service: MemberService,
     override uiService: MemberUiService,
+    private reportService: ReportService,
     private redemptionUiService: RedemptionUiService,
     public accountUiService: AccountUiService,
     public accountService: AccountService,
@@ -506,12 +521,16 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
   isPointList = computed(() =>
     this.authService.isAuthorized(AuthKeys.APP__MEMBER__ACCOUNT__POINT__LIST)
   );
+  isMemberPrint = computed(() => true);
   accountRefreshSub = new Subscription();
   redemptionRefreshSub = new Subscription();
   systemRefresh = new Subscription();
   uploadRefresh$ = new Subscription();
   file: NzUploadFile[] = [];
   submitRefresh = new Subscription();
+  reports: Report[] = [];
+
+  MemberPrintId = 11;
   //  view
   nzShowButtonView = {
     showPreviewIcon: false,
@@ -522,11 +541,28 @@ export class MemberViewComponent extends BaseOperationComponent<Member> {
   onPreviewImage(): void {
     this.nzImageService.preview([{ src: this.file[0].url! }]);
   }
-
+  getReports() {
+    this.reportService
+      .search({
+        pageIndex: 1,
+        pageSize: 9999999,
+        sorts: "",
+        filters: "",
+      })
+      .subscribe({
+        next: (result: any) => {
+          this.reports = result.results;
+        },
+        error: (error: any) => {
+          console.log(error);
+        },
+      });
+  }
   override ngOnInit(): void {
     if (this.isLoading()) return;
     // this.initControl();
     // this.frm.disable();
+    this.getReports();
     this.refreshSub$ = this.uiService.refresher.subscribe((e) => {
       if (e.key === "edited") {
         this.photoSetted = false;
