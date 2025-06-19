@@ -73,16 +73,45 @@ export class SettingComponent implements OnInit {
       value: route,
     });
   }
-  isMemberClassList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__LIST));
-  isOfferGroupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__LIST));
-  isLookupList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST));
-  isCurrencyList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST));
-  isReportList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST));
-  isAutoNumberList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST));
-  isBlockList = computed(() => true); 
-  isSystemSettingList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER) || this.authService.isAuthorized(AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING));
-  isLocationList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__LIST));
-  isBranchList = computed(() => this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__LIST));
+  isMemberClassList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__MEMBER_CLASS__LIST)
+  );
+  isOfferGroupList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__LIST)
+  );
+  isLookupList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST)
+  );
+  isCurrencyList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST)
+  );
+  isReportList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST)
+  );
+  isAutoNumberList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST)
+  );
+  isSystemSettingList = computed(
+    () =>
+      this.authService.isAuthorized(
+        AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__SETTING__SYSTEM_SETTING__BASIC_SETTING
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__SETTING__SYSTEM_SETTING__ADVANCED_SETTING
+      )
+  );
+  isLocationList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__LIST)
+  );
+  isBranchList = computed(() =>
+    this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__LIST)
+  );
   ngOnInit(): void {
     this.setting = [
       {

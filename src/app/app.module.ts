@@ -165,7 +165,7 @@ import { AccountOperationComponent } from "./pages/account/account-operation.com
 import { LocationMultiSelectComponent } from "./pages/location/location-multi-select.component";
 import { RedemptionPrintComponent } from "./pages/redemption/redemption-print.component";
 import { RedemptionAdvancedFilterComponent } from "./pages/redemption/redemption-advanced-filter.component";
-import { AccountBalancePipe } from "./utils/pipes/currency-point.pipe";
+import { AccountBalancePipe } from "./utils/pipes/account-balance.pipe";
 import { MemberMultiSelectComponent } from "./pages/member/member-multi-select.component";
 import { TransactionTypePipe } from "./utils/pipes/transaction-type.pipe";
 import { TimeInputComponent } from "./utils/components/time-input.component";
@@ -182,6 +182,7 @@ import { GraphComponent } from "./utils/components/graph.component";
 import { PeopleCountPipe } from "./utils/pipes/people-count.pipe";
 import { AgentIconComponent } from "./utils/components/agent-icon.component";
 import { MemberClassBadge } from "./utils/components/member-class-badge.component";
+import { FormatTwoDigitPipe } from "./utils/pipes/format-two-digit.pipe";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -227,6 +228,7 @@ export class CustomTranslate implements TranslateLoader {
     AttendanceRatedPipe,
     TransparentPipe,
     AccountBalancePipe,
+    FormatTwoDigitPipe,
     DateRangePipe,
     ChunkPipe,
     ConvertHourPipe,

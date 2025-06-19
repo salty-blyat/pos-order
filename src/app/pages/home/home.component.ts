@@ -342,7 +342,6 @@ Chart.register(
             <nz-table
               class="table"
               nz-col
-              style="height:100%"
               nzSize="small"
               nzShowSizeChanger
               #fixedTable
@@ -438,7 +437,7 @@ Chart.register(
         align-items: center;
       }
 
-      nz-table {
+      .table {
         height: auto !important;
       }
 
@@ -476,7 +475,7 @@ Chart.register(
       }
       .card-nopad {
         border-radius: 6px;
-        min-height: 500px !important;
+        min-height: 470px !important;
         background-color: #fff;
         padding: 8px;
         h3 {

@@ -322,27 +322,32 @@ export class PageComponent implements OnInit {
   isReportList = computed(
     () =>
       this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__TRANSACTION__TRANSACTION_DETAIL_REPORT
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__TRANSACTION__TRANSACTION_SUMMARY_REPORT
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__REDEEM__REDEEM_SUMMARY
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__REDEEM__REDEEM_DETAIL
+      ) ||
+      this.authService.isAuthorized(
         AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTION_DETAIL
       ) ||
       this.authService.isAuthorized(
         AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTION_SUMMARY
       ) ||
       this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__REDEEM__REDEEM_DETAIL
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__REDEEM__REDEEM_SUMMARY
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__TRANSACTION__TRANSACTION_DETAIL_REPORT
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__PRINT__REDEEM_PRINT
-      ) ||
-      this.authService.isAuthorized(
         AuthKeys.APP__REPORT__POINT__POINT_SUMMARY
       ) ||
-      this.authService.isAuthorized(AuthKeys.APP__REPORT__POINT__MEMBER_BALANCE)
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__POINT__MEMBER_BALANCE
+      ) ||
+      this.authService.isAuthorized(
+        AuthKeys.APP__REPORT__WALLET__WALLET_SUMMARY
+      )
   );
 
   constructor(
