@@ -125,7 +125,7 @@ Chart.register(
                   *ngFor="let d of data?.membersByClass; let i = index"
                 >
                   <nz-badge
-                    [nzColor]="backgroundColor[i]"
+                    [nzColor]="backgroundColor[i % backgroundColor.length]"
                     [nzText]="d.name + ': ' + d.count"
                   ></nz-badge>
                   <br />
