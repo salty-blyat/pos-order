@@ -244,7 +244,7 @@ export interface Type {
           </div>
         </div>
       </nz-sider>
-      <nz-layout>
+      <nz-layout [ngStyle]="!isDashboard ? { 'min-width': '990px' } : null">
         <nz-content>
           <div
             class="inner-content"

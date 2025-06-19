@@ -7,7 +7,7 @@ import { UUID } from "uuid-generator-ts";
 @Component({
   selector: "app-report-view",
   template: `
-    <nz-layout>
+    <nz-layout style="min-width: 1030px;">
       <app-breadcrumb
         *ngIf="breadcrumbData()"
         [data]="breadcrumbData()"

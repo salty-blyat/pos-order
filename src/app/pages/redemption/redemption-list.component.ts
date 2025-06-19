@@ -213,7 +213,7 @@ import { Subscription } from "rxjs";
                   </span>
                 </div>
               </td>
-              
+
               <td nzEllipsis class="no-pad">
                 <div style="display:flex; flex-direction:column;">
                   {{ data.memberName }}
