@@ -170,7 +170,12 @@ import { AuthKeys } from "../../const";
           </ul>
         </nz-sider>
 
-        <nz-content [ngStyle]="{ padding: current == 3 ? '0' : '' }">
+        <nz-content
+          [ngStyle]="{
+            padding: current === 3 ? '0' : '',
+            'min-width': '720px'
+          }"
+        >
           <app-loading *ngIf="isLoading()"></app-loading>
           <div [ngSwitch]="current" [style.height.%]="100">
             <div *ngSwitchCase="1" ngCase>
