@@ -166,7 +166,11 @@ import { Subscription } from "rxjs";
               <th nzEllipsis nzWidth="180px">{{ "Location" | translate }}</th>
               <th nzEllipsis>{{ "Note" | translate }}</th>
               <th nzWidth="100px" nzAlign="right">
-                {{ "Balance" | translate }}
+                {{
+                  accountType == AccountTypes.Wallet
+                    ? ("Balance" | translate)
+                    : ("Point" | translate)
+                }}
               </th>
             </tr>
           </thead>

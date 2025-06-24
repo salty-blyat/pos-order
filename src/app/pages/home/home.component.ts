@@ -199,7 +199,7 @@ Chart.register(
                     {{ "Location" | translate }}
                   </th>
                   <th nzWidth="100px" nzAlign="right">
-                    {{ "Balance" | translate }}
+                    {{ "Amount" | translate }}
                   </th>
                 </tr>
               </thead>
@@ -355,7 +355,7 @@ Chart.register(
                     {{ "Member" | translate }}
                   </th>
                   <th nzWidth="80px" nzAlign="right">
-                    {{ "Balance" | translate }}
+                    {{ "Point" | translate }}
                   </th>
                 </tr>
               </thead>

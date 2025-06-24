@@ -9,12 +9,11 @@ import { Offer, OfferService } from "./offer.service";
 import { LOOKUP_TYPE } from "../lookup/lookup-type.service";
 import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 import { SettingService } from "../../app-setting";
-import { BehaviorSubject, Observable, Subscriber, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import {
   SETTING_KEY,
   SystemSettingService,
 } from "../system-setting/system-setting.service";
-import { IRecentFilter } from "../../utils/services/logic-helper.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { AuthKeys } from "../../const";
 
@@ -454,7 +453,7 @@ export class OfferOperationComponent extends BaseOperationComponent<Offer> {
     this.file = fileListOfferGroupItems;
   }
   override onSubmit(e?: any): void {
-    if (this.frm.valid) {
+    if (this.frm.valid && !this.isLoading()) {
       this.isLoading.set(true);
       this.formatDateTime();
 
