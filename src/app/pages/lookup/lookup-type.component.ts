@@ -33,7 +33,7 @@ import { NotificationService } from "../../utils/services/notification.service";
           @for (data of lists(); track data.id){
           <li
             nz-menu-item
-            *ngIf="translate.currentLang == 'en'"
+            *ngIf="translate.currentLang != 'km'"
             [routerLink]="['/setting/lookup', data.id]"
             [nzMatchRouter]="isActive()"
           >
