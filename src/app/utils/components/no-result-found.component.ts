@@ -1,21 +1,19 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
+
 
 @Component({
   selector: "app-no-result-found",
   template: `
     <div class="container">
       <h5 style="font-size: 36px; margin-bottom: 6px;">
-        <i
-          nz-icon
-          [nzType]="branch === 0 ? 'info-circle' : 'file-search'"
+        <nz-icon
+          nzType ='file-search'
           nzTheme="outline"
-        ></i>
+        ></nz-icon>
       </h5>
       <h5>
         {{
-          branch === 0
-            ? ("Please select branch!" | translate)
-            : ("RowNotFound" | translate)
+            "RowNotFound" | translate 
         }}
       </h5>
     </div>
@@ -34,10 +32,6 @@ import { Component, Input, OnInit } from "@angular/core";
   ],
   standalone: false,
 })
-export class NoResultFoundComponent implements OnInit {
-  @Input() branch?: number;
-
-  constructor() {}
-
-  ngOnInit(): void {}
+export class NoResultFoundComponent   {
+ 
 }

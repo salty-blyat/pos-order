@@ -1,417 +1,42 @@
-import {
-  Component,
-  computed,
-  Inject,
-  OnChanges,
-  OnInit,
-  signal,
-  SimpleChanges,
-  ViewEncapsulation,
-} from "@angular/core";
-import { AuthKeys, LANGUAGES } from "../const";
-import { NavigationEnd, Router } from "@angular/router";
-import { AuthService } from "../helpers/auth.service";
-import { DOCUMENT } from "@angular/common";
+
+import { Router } from "@angular/router";
+import { AuthService } from "../helpers/auth.service"; 
 import { LanguageService } from "../utils/services/language.service";
 import { SettingService } from "../app-setting";
-import { LocalStorageService } from "../utils/services/localStorage.service";
-import { SystemSettingService } from "./system-setting/system-setting.service";
-import { TranslateService } from "@ngx-translate/core";
-import { AppVersionService } from "../utils/services/app-version.service";
-import { filter, Subscription } from "rxjs";
+import { LocalStorageService } from "../utils/services/localStorage.service"; 
+import { AppVersionService } from "../utils/services/app-version.service";   
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 
-export interface Type {
-  sub1: boolean;
-  sub3: boolean;
-}
 @Component({
   selector: "app-page",
   template: `
-    <nz-layout
-      class="app-layout"
-      [ngStyle]="{ 'min-width': isDashboard ? '1px !important' : '900px;' }"
-    >
-      <nz-sider
-        class="menu-sidebar"
-        nzTheme="light"
-        nzCollapsible
-        nzWidth="220px"
-        nzBreakpoint="md"
-        [(nzCollapsed)]="isCollapsed"
-        [nzTrigger]="null"
-      >
-        <div class="header-content">
-          <div class="sidebar-logo">
-            <div class="logo-link">
-              <img [src]="authService.app?.iconUrl" alt="logo" />
-              <h1 *ngIf="!isCollapsed()" class="modal-header-ellipsis logo">
-                {{ appName() }}
-              </h1>
-              <nz-icon class="icon-down" (click)="redirectToMainUrl()">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="ionicon"
-                  viewBox="0 0 512 512"
-                >
-                  <path
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="48"
-                    d="M112 184l144 144 144-144"
-                  />
-                </svg>
-              </nz-icon>
-            </div>
-          </div>
-          <div class="tenant">
-            <div class="tenant-logo">
-              <img
-                [src]="authService.tenant?.logo"
-                alt="tenant"
-                style="margin-right: 4px;"
-              />
-              <span class="tenant-name" *ngIf="!isCollapsed()">{{
-                authService.tenant?.name
-              }}</span>
-            </div>
-            <div class="app-center-icon">
-              <!--              <nz-icon nzType="down" (click)="redirectToMainUrl()" nzTheme="outline"/>-->
-            </div>
-          </div>
-        </div>
-        <div class="menu-container">
-          <ul
-            class="nz-menu-custom"
-            nz-menu
-            nzMode="inline"
-            [nzInlineCollapsed]="isCollapsed()"
-          >
-            <li
-              *ngIf="isHomeList()"
-              nz-menu-item
-              [nzMatchRouter]="isActive()"
-              routerLink="/home"
-            >
-              <i nz-icon nzType="home"></i>
-              <span>{{ "Home" | translate }}</span>
-            </li>
-
-            <li
-              *ngIf="isMemberList()"
-              nz-menu-item
-              [nzMatchRouter]="isActive()"
-              routerLink="/member"
-            >
-              <i nz-icon nzType="idcard"></i>
-              <span>{{ "Member" | translate }}</span>
-            </li>
-            <li
-              *ngIf="isAgentList()"
-              nz-menu-item
-              [nzMatchRouter]="isActive()"
-              routerLink="/agent"
-            >
-              <app-agent-icon />
-              <span
-                [ngStyle]="{
-                  'margin-left': '6px',
-                  display: isCollapsed() ? 'none' : ''
-                }"
-                >{{ "Agent" | translate }}</span
-              >
-            </li>
-
-            <li
-              *ngIf="isOfferList()"
-              nz-menu-item
-              [nzMatchRouter]="isActive()"
-              routerLink="/offer"
-            >
-              <nz-icon nzType="tags" nzTheme="outline" />
-              <span>{{ "Offer" | translate }}</span>
-            </li>
-            <li
-              *ngIf="isRedemptionList()"
-              nz-menu-item
-              [nzMatchRouter]="isActive()"
-              routerLink="/redemption"
-            >
-              <i nz-icon nzType="file-sync"></i>
-              <span>{{ "Redemption" | translate }}</span>
-            </li>
-            <li
-              *ngIf="isSettingList()"
-              nz-menu-item
-              [nzMatchRouter]="isActive()"
-              routerLink="/setting"
-            >
-              <i nz-icon nzType="setting"></i>
-              <span>{{ "Setting" | translate }}</span>
-            </li>
-            <li
-              *ngIf="isReportList()"
-              nz-menu-item
-              [nzMatchRouter]="isActive()"
-              routerLink="/report"
-            >
-              <i nz-icon nzType="container"></i>
-              <span>{{ "Report" | translate }}</span>
-            </li>
-          </ul>
-
-          <div>
-            <div class="version">
-              <span>
-                {{ appVersionService.getVersion()?.version }}
-              </span>
-              <br *ngIf="isCollapsed()" />
-              <span style="color: #8c8c8c;">
-                ({{ appVersionService.getVersion()?.release_date }})
-              </span>
-            </div>
-            <nz-divider
-              style="margin: 4px 0 4px 0; border-color: #eaeaea;"
-            ></nz-divider>
-            <div class="user-info-container">
-              <div class="user-info">
-                <div nz-flex nzAlign="center" nzGap="4px">
-                  <nz-avatar
-                    [nzSrc]="authService.clientInfo.profile"
-                    [nzSize]="32"
-                    style="margin-right: 4px;"
-                    (click)="redirectToViewProfileUrl()"
-                    nzIcon="user"
-                  ></nz-avatar>
-                  <div
-                    nz-flex
-                    [nzVertical]="true"
-                    *ngIf="!isCollapsed()"
-                    (click)="redirectToViewProfileUrl()"
-                  >
-                    <span style="font-size: 14px">{{
-                      authService.clientInfo.fullName
-                    }}</span>
-                    <span style="font-size: 10px">{{
-                      authService.clientInfo.email ?? "-"
-                    }}</span>
-                  </div>
-                </div>
-
-                <span
-                  *ngIf="!isCollapsed()"
-                  nzTrigger="click"
-                  nzPlacement="bottomRight"
-                  nz-dropdown
-                  style="padding: 0 6px; float: right; cursor: pointer;"
-                  [nzDropdownMenu]="language"
-                >
-                  <img
-                    class="img-head"
-                    [src]="
-                      translateService.currentLang === 'km'
-                        ? './assets/image/kh_FLAG.png'
-                        : translateService.currentLang === 'en'
-                        ? './assets/image/en_FLAG.png'
-                        : './assets/image/ch_FLAG.png'
-                    "
-                    alt="language"
-                  />
-                  <nz-dropdown-menu #language="nzDropdownMenu">
-                    <ul nz-menu style="width: 125px;">
-                      <li
-                        nz-menu-item
-                        *ngFor="let lang of languages"
-                        (click)="languageService.switchLanguage(lang.key)"
-                      >
-                        <img class="img" [src]="lang.image" alt="language" />
-                        <span>{{ lang.label }}</span>
-                        <i
-                          style="position: absolute; right: 5px;"
-                          class="primary-color"
-                          *ngIf="
-                            lang.key.localId == translateService.currentLang
-                          "
-                          nz-icon
-                          nzType="check"
-                          nzTheme="outline"
-                        ></i>
-                      </li>
-                    </ul>
-                  </nz-dropdown-menu>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nz-sider>
-      <nz-layout [ngStyle]="!isDashboard ? { 'min-width': '990px' } : null">
-        <nz-content>
-          <div
-            class="inner-content"
-            [ngStyle]="{ padding: isDashboard ? '0px' : '' }"
-            nz-flex
-            [nzVertical]="true"
-          >
-            <app-loading *ngIf="isLoading()"></app-loading>
-            <div>
-              <router-outlet *ngIf="!isLoading()"></router-outlet>
-            </div>
-          </div>
-        </nz-content>
-      </nz-layout>
-    </nz-layout>
-  `,
-  styleUrls: [`../../assets/scss/layout.style.scss`],
+<app-home/>
+  `, 
   encapsulation: ViewEncapsulation.None,
-  styles: [
-    `
-      .logo {
-        font-size: 16px !important;
-      }
-    `,
-  ],
   standalone: false,
 })
-export class PageComponent implements OnInit {
-  isActive = signal(true);
-  isLoading = signal(false);
-  isCollapsed = signal(false);
-  languages = LANGUAGES;
-  openMap: { [name: string]: boolean } = {
-    sub1: false,
-    sub2: false,
-  };
-
-  isDashboard: boolean = false;
-  routerSub: Subscription;
-
-  isHomeList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__HOME)
-  );
-  isAgentList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__AGENT__LIST)
-  );
-  isOfferList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__OFFER__LIST)
-  );
-  isRedemptionList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__REDEMPTION__LIST)
-  );
-  isMemberList = computed(() =>
-    this.authService.isAuthorized(AuthKeys.APP__MEMBER__LIST)
-  );
-  isSettingList = computed(
-    () =>
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__LOCATION__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__BRANCH__LIST) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__SETTING__MEMBER_CLASS__LIST
-      ) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__OFFER_GROUP__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__CURRENCY__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__LOOKUP__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__REPORT__LIST) ||
-      this.authService.isAuthorized(AuthKeys.APP__SETTING__AUTO_NUMBER__LIST) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__SETTING__SYSTEM_SETTING__AUTO_NUMBER
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__SETTING__SYSTEM_SETTING__COMPANY_SETTING
-      )
-  );
-  isReportList = computed(
-    () =>
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__TRANSACTION__TRANSACTION_DETAIL_REPORT
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__TRANSACTION__TRANSACTION_SUMMARY_REPORT
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__REDEEM__REDEEM_SUMMARY
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__REDEEM__REDEEM_DETAIL
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTION_DETAIL
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__TRANSACTION_MOBILE__TRANSACTION_SUMMARY
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__POINT__POINT_SUMMARY
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__POINT__MEMBER_BALANCE
-      ) ||
-      this.authService.isAuthorized(
-        AuthKeys.APP__REPORT__WALLET__WALLET_SUMMARY
-      )
-  );
+export class PageComponent implements OnInit { 
+  isLoading = false; 
+  openMap: any;
 
   constructor(
     private router: Router,
     public authService: AuthService,
     public languageService: LanguageService,
-    private settingService: SettingService,
-    public systemSettingService: SystemSettingService,
-    private localStorageService: LocalStorageService,
-    public translateService: TranslateService,
-    public appVersionService: AppVersionService,
-    @Inject(DOCUMENT) private document: Document
-  ) {
-    this.eventRouterOpen();
-    this.routerSub = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.isDashboard = event.urlAfterRedirects === "/home";
-      });
+    private settingService: SettingService, 
+    private localStorageService: LocalStorageService, 
+    public appVersionService: AppVersionService, 
+  ) { 
+    
   }
-  appName = signal(this.authService.app?.appName);
+  appName = this.authService.app?.appName;
 
-  ngOnInit(): void {
-    this.systemSettingService.initCurrentSetting().subscribe({
-      next: (settingList) => {},
-      error: (error) => {
-        console.error("Error fetching settings:", error);
-      },
-    });
-    this.systemSettingService.initCurrency().subscribe();
+  ngOnInit(): void { 
     this.authService.updateClientInfo();
     if (this.authService.clientInfo.changePasswordRequired) {
       this.router.navigate([`/user-change-password`]).then();
     }
-    //OPTION 1 => SUB REMEMBER LAST TOUCH
-    let sub1 = this.localStorageService.getValue("sub1");
-    let sub3 = this.localStorageService.getValue("sub3");
-    let sub4 = this.localStorageService.getValue("sub4");
-    this.openMap["sub1"] = sub1 == true && sub1 != null;
-    this.openMap["sub3"] = sub3 == true && sub3 != null;
-    this.openMap["sub4"] = sub4 == true && sub4 != null;
-    //END
-  }
-
-  eventRouterOpen() {
-    let url = this.router.url;
-
-    if (url.includes("sale")) {
-      this.openMap["sub1"] = true;
-    } else if (url.includes("purchase")) {
-      this.openMap["sub2"] = true;
-    } else if (url.includes("product")) {
-      this.openMap["sub3"] = true;
-    } else if (url.includes("stock")) {
-      this.openMap["sub4"] = true;
-    }
-  }
-  openHandler(event: any, value: any): void {
-    this.openMap[value] = event;
-    let collapse: boolean = this.localStorageService.getValue(value) || false;
-    this.setLastCollapsed(value, !collapse);
-  }
+  } 
 
   logout() {
     this.authService.logout().subscribe(() => {
@@ -431,16 +56,5 @@ export class PageComponent implements OnInit {
       `${this.settingService.setting.AUTH_UI_URL}/appcenter/user-view`,
       "app-center"
     );
-  }
-
-  setLastCollapsed(key: string, item: boolean) {
-    this.localStorageService.setValue({
-      key: key,
-      value: item,
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.routerSub?.unsubscribe();
   }
 }

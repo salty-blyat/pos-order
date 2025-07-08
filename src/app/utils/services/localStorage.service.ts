@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { APP_STORAGE_KEY } from '../../const';
 import { App, Tenant } from '../../helpers/auth.service';
+import { APP_STORAGE_KEY } from '../../const';
+import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class LocalStorageService {

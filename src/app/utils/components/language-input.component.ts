@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {LANGUAGES, Locale} from "../../const";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core'; 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {TranslateService} from "@ngx-translate/core";
+import { LANGUAGES, Locale } from '../../const';
 
 export interface MultiLanguageInput
 {

@@ -1,3 +1,3 @@
-# vip-ui
+# pos-order
 
-Basic VIP UI
+Basic POS Order

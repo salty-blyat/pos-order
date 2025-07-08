@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "vip-ui": {
+    "pos-order": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -24,7 +24,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/vip-ui",
+            "outputPath": "dist/pos-order",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -50,7 +50,7 @@
               "node_modules/highlight.js/styles/default.css"
             ],
             "scripts": ["node_modules/chart.js/dist/chart.umd.js"],
-            "baseHref": "/vip/"
+            "baseHref": "/pos-order/"
           },
           "configurations": {
             "production": {
@@ -80,10 +80,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "vip-ui:build:production"
+              "buildTarget": "pos-order:build:production"
             },
             "development": {
-              "buildTarget": "vip-ui:build:development"
+              "buildTarget": "pos-order:build:development"
             }
           },
           "options": {
@@ -94,7 +94,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "vip-ui:build"
+            "buildTarget": "pos-order:build"
           }
         },
         "test": {

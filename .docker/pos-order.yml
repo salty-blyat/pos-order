@@ -1,14 +1,14 @@
 version: "3.2"
 services:
   ui-ctn:
-    image: dkr.sgx.bz/vip-ui
+    image: dkr.sgx.bz/pos-order
     restart: always
     ports:
       - "60346:80"
     environment:
-      - "LANG_URL=https://core.sgx.bz/files/langs/vip"
-      - "BASE_API_URL=https://latest.sgx.bz/vip/api"
+      - "LANG_URL=https://core.sgx.bz/files/langs/pos-order"
+      - "BASE_API_URL=https://latest.sgx.bz/pos-order/api"
       - "AUTH_API_URL=https://core.sgx.bz/api"
       - "AUTH_UI_URL=https://core.sgx.bz"
-      - "APP_NAME=VIP"
+      - "APP_NAME=POS Order"
       - "APP_ICON=https://core.sgx.bz/files/23/01/dt-logo-removebg-preview.png"

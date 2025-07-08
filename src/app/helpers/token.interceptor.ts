@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpHeaders, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { APP_STORAGE_KEY } from '../const';
-import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
+import { AuthService } from './auth.service'; 
 import { BehaviorSubject, throwError } from 'rxjs';
-import { NotificationService } from '../utils/services/notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingService } from '../app-setting';
+import { APP_STORAGE_KEY } from '../const';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -21,7 +20,6 @@ export class TokenInterceptor implements HttpInterceptor {
     private translate: TranslateService,
     private authService: AuthService,
     private router: Router,
-    private notificationService: NotificationService,
     private settingService: SettingService
   ) {}
   public jwtHelper: JwtHelperService = new JwtHelperService();
@@ -60,9 +58,9 @@ export class TokenInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse && error.status === 401) {
           return this.handle401Error(request, next, authorized);
         } else {
-          if (request.headers.get('disableErrorNotification') != 'yes') {
-            this.notificationService.errorNotification(error);
-          }
+          // if (request.headers.get('disableErrorNotification') != 'yes') {
+          //   this.notificationService.errorNotification(error);
+          // }
           return throwError(error);
         }
       })

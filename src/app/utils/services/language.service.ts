@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+ 
 import { NzI18nService } from 'ng-zorro-antd/i18n';
-import { LocalStorageService } from './localStorage.service';
-import { APP_STORAGE_KEY, Locale } from '../../const';
+import { LocalStorageService } from './localStorage.service'; 
 import { MultiLanguageInput } from '../components/language-input.component';
+import {TranslateService} from "@ngx-translate/core";
+import { APP_STORAGE_KEY, Locale } from '../../const';
+import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class LanguageService {
