@@ -104,6 +104,7 @@ export class MemberPrintComponent implements OnInit, OnDestroy {
         this.report = await this.reportService
           .find(this.modal?.reportId)
           .toPromise();
+          
         this.loadingReport = false;
       } catch {
         this.loadingReport = false;
@@ -153,7 +154,7 @@ export class MemberPrintComponent implements OnInit, OnDestroy {
 
         this.reportService
           .processReport({
-            reportName: this.report.name,
+            reportName: "MemberBalancePrint",
             requestId: uuidv4(),
             param: { MemberIds: { id: this.modal?.model?.id, value: "" } },
           })
