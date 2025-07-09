@@ -14,8 +14,7 @@ $border-radius: 6px;
 @mixin scrollbar-thumb-styles($color) {
     background: $color;
     border-radius: #{$scrollbar-border-radius};
-}
-
+} 
 @font-face {
     font-family: Kantumruy;
     src: url("./assets/font/Kantumruy.woff2") format("woff2");

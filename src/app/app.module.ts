@@ -1,4 +1,4 @@
-import { inject, LOCALE_ID, NgModule, APP_INITIALIZER } from "@angular/core";
+import { inject, LOCALE_ID, NgModule, APP_INITIALIZER, createComponent } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -39,6 +39,8 @@ import { HomeComponent } from "./pages/home/home.component";
 import { NzLayoutComponent } from "ng-zorro-antd/layout";
 import {  RedirectComponent } from "./redirect/redirect.component";
 import { LanguageInputComponent } from "./utils/components/language-input.component";
+import { DishComponent } from "./utils/components/dish.component";
+import { CartComponent } from "./pages/home/cart.component";
  
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -81,7 +83,8 @@ export class CustomTranslate implements TranslateLoader {
     HomeComponent,
     RedirectComponent,
     LanguageInputComponent, 
-     
+    DishComponent,
+    CartComponent
   ],
   bootstrap: [AppComponent],
   imports: [
