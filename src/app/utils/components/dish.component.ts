@@ -3,7 +3,8 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
 @Component({
   selector: "app-dish",
   template: `
-    <div class="dish-card">
+    <div class="dish-card" (click)="createRipple($event)">
+        <span class="ripple"></span> <!-- Ripple effect span -->
       <div class="dish-image-container">
         <img class="dish-image" [src]="src" alt="" />
       </div>
@@ -17,6 +18,7 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
   styles: [
     `
       .dish-info {
+        user-select: none;
         padding: 8px 8px 12px 8px;
         display: flex;
         flex-direction: column;
@@ -67,6 +69,29 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
         object-fit: cover;
         display: block;
       }
+      ////////////////
+      .dish-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  background-color: rgba(0, 0, 0, 0.15);
+  animation: ripple-animation 600ms linear;
+  pointer-events: none;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+
     `,
   ],
   encapsulation: ViewEncapsulation.None,
@@ -76,4 +101,24 @@ export class DishComponent {
   @Input() title!: string;
   @Input() price!: string;
   @Input() src!: string;
+  createRipple(event: MouseEvent) {
+    const button = event.currentTarget as HTMLElement;
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple');
+
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + 'px';
+
+    ripple.style.left = event.clientX - rect.left - size / 2 + 'px';
+    ripple.style.top = event.clientY - rect.top - size / 2 + 'px';
+
+    button.appendChild(ripple);
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 600); // matches the animation duration
+  }
+
+
 }

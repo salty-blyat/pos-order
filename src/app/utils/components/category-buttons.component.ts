@@ -30,8 +30,8 @@ import {
   `,
   styles: [
     `
-      .category-buttons {
-        height:100vh;
+      .category-buttons { 
+        user-select: none;
         padding: 16px 4px 32px 16px;
       }
 

@@ -106,6 +106,7 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.34);
         overflow-y: auto;
         padding: 16px 16px 32px 16px;
+        user-select: none;
         background-color: white;
         height: 100%;
       }

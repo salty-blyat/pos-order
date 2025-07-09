@@ -4,7 +4,7 @@ import { Component, ViewEncapsulation } from "@angular/core";
   template: `
     <nz-layout>
       <nz-content>
-        <div style="display: grid; grid-template-columns: minmax(124px, 220px) minmax(150px, auto) 250px; gap: 0 8px;">
+        <div style="display: grid; grid-template-columns: 124px  minmax(150px, auto) 250px; gap: 0 8px;">
 
           <div  class="screen-scroll hide-scrollbar">
             <div class="brand">
@@ -18,7 +18,7 @@ import { Component, ViewEncapsulation } from "@angular/core";
           </div>
           <div   style="position:relative;">
             <div class="search-input-container"> 
-                <nz-input-group style="margin-top: 24px;" [nzPrefix]="iconTem" [nzSuffix]="clearTem">
+                <nz-input-group style="margin-top: 12px;" [nzPrefix]="iconTem" [nzSuffix]="clearTem">
                   <input
                     style="border-radius:0;"
                     nz-input
@@ -103,7 +103,8 @@ import { Component, ViewEncapsulation } from "@angular/core";
         right: 0;
         padding: 0px 4px;
         background-color: #eeeeee;
-        height: 56px;
+        // background-color: red;
+        height: 43px;
       } 
       .ant-row{
         margin: 0 !important;
