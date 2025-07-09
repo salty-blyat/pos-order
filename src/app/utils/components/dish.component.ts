@@ -55,7 +55,8 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
         width: 100%;
         height: 120px;
         background-color: #f3f3f3; /* subtle background for padding effect */
-        border-radius: 4px;
+        // border-radius: 4px;
+        border-radius: 4px 4px 0px 0px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -64,7 +65,7 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
 
       .dish-image {
         max-width: 100%;
-        max-height: 100%;
+        // max-height: 100%;
         object-fit: cover;
         display: block;
       }

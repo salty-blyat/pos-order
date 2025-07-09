@@ -2,61 +2,61 @@ import { Component, ViewEncapsulation } from "@angular/core";
 @Component({
   selector: "app-home",
   template: `
-    <nz-layout style="height: 100vh; padding: 12px;">
+    <nz-layout>
       <nz-content>
-        <nz-input-group
-          nzSearch
-          [nzAddOnAfter]="suffixButton"
-          class="search-input"
-          style="width: 100%; max-width: 480px;"
-          ><input
-            type="text"
-            nz-input
-            placeholder="Search"
-            [(ngModel)]="searchTerm"
-          />
-        </nz-input-group>
-        <ng-template #suffixButton>
-          <button nz-button nzSearch><nz-icon nzType="search" /></button>
-        </ng-template>
-        <br />
-        <nz-radio-group
-          class="category-group"
-          [(ngModel)]="radioValue"
-          nzButtonStyle="solid"
-          style="margin: 12px 0;"
-        >
-          <label nz-radio-button nzValue="All">All</label>
-          <label nz-radio-button nzValue="Pizza">Pizza</label>
-          <label nz-radio-button nzValue="Burger">Burger</label>
-          <label nz-radio-button nzValue="Sushi">Sushi</label>
-          <label nz-radio-button nzValue="Steak">Steak</label>
-        </nz-radio-group>
-        <div
-          [ngStyle]="{
-            display: 'grid',
-            gap: '16px',
-            'grid-template-columns': showCart ? '16fr 8fr' : '1fr'
-          }"
-        >
-          <div nz-row [nzGutter]="[8, 8]">
-            <div
-              nz-col
-              nzSpan="8"
-              nzMd="8"
-              nzLg="6"
-              nzXl="4"
-              nzXXl="3"
-              *ngFor="let dish of filteredDishes"
+        <div nz-row [nzGutter]="[8, 8]">
+          <div nz-col nzSpan="4">
+            <nz-radio-group
+              class="category-group"
+              nzButtonStyle="outline"
+              [(ngModel)]="radioValue"
             >
-              <app-dish
-                [src]="dish.src"
-                [title]="dish.title"
-                [price]="dish.price"
-              ></app-dish>
+              <label nz-radio-button nzValue="All">All</label>
+              <label nz-radio-button nzValue="Pizza">Pizza</label>
+              <label nz-radio-button nzValue="Burger">Burger</label>
+              <label nz-radio-button nzValue="Sushi">Sushi</label>
+              <label nz-radio-button nzValue="Steak">Steak</label>
+            </nz-radio-group>
+          </div>
+          <div nz-col nzSpan="14">
+            <div nz-row [nzGutter]="[8, 8]">
+              <div nz-col nzSpan="24">
+                <nz-input-group
+                  nzSearch
+                  [nzAddOnAfter]="suffixButton"
+                  class="search-input"
+                  style="width: 100%; max-width: 480px;"
+                  ><input
+                    type="text"
+                    nz-input
+                    placeholder="Search"
+                    [(ngModel)]="searchTerm"
+                  />
+                </nz-input-group>
+                <ng-template #suffixButton>
+                  <button nz-button nzSearch>
+                    <nz-icon nzType="search" />
+                  </button>
+                </ng-template>
+              </div>
+              <div
+                nz-col
+                nzSpan="8"
+                nzMd="8"
+                nzLg="6"
+                nzXl="4"
+                nzXXl="3"
+                *ngFor="let dish of filteredDishes"
+              >
+                <app-dish
+                  [src]="dish.src"
+                  [title]="dish.title"
+                  [price]="dish.price"
+                ></app-dish>
+              </div>
             </div>
           </div>
-          <div class="cart-container" *ngIf="showCart">
+          <div nz-col nzSpan="6" class="cart-container" *ngIf="showCart">
             <app-cart></app-cart>
           </div>
         </div>
@@ -68,6 +68,7 @@ import { Component, ViewEncapsulation } from "@angular/core";
     `
       .category-group {
         display: flex !important;
+        flex-direction: column;
         gap: 12px !important;
       }
       .ant-radio-button-wrapper {
@@ -128,7 +129,7 @@ export class HomeComponent {
     "https://core.sgx.bz/files/prosit/inv/24/11/f6cf4901eeab485d8fd1c94a98d3b66b.png";
   dishes = [
     {
-      src: "https://www.moulinex-me.com/medias/?context=bWFzdGVyfHJvb3R8MTQzNTExfGltYWdlL2pwZWd8YUdObEwyaG1aQzh4TlRrMk9EWXlOVGM0TmpreE1DNXFjR2N8MmYwYzQ4YTg0MTgzNmVjYTZkMWZkZWZmMDdlMWFlMjRhOGIxMTQ2MTZkNDk4ZDU3ZjlkNDk2MzMzNDA5OWY3OA",
+      src: "https://eu.ooni.com/cdn/shop/articles/pepperoni-pizza_6ac5fa40-65b7-4e3b-a8b9-7ca5ccc05dfd.jpg?crop=center&height=800&v=1737105987&width=800",
       title: "Pepperoni Pizza",
       price: "$12.99",
       description: "Classic .",

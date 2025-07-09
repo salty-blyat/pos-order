@@ -59,11 +59,18 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
           <span>Total</span>
           <span>$12.62</span>
         </div>
+        <button nz-button nzType="primary" nzSize="small"  class='order-button'>
+          Order
+        </button>
       </div>
     </div>
   `,
   styles: [
     `
+    .order-button{
+      width: 100%;
+      margin-top: 8px;
+    }
       .payment-summary {
         margin-top: 4px;
         font-size: 11px;
