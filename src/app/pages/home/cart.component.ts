@@ -3,114 +3,141 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
 @Component({
   selector: "app-cart",
   template: `
-    <div class="cart">
-      <div nz-flex nzAlign="normal" nzJustify="space-between">
-        <span class="cart-title" style="color: #808080;">Table No #04</span>
-        <button nz-button nzType="text" nzSize="small" nzShape="round">
-          <nz-icon style="color: red;" nzType="delete" nzTheme="outline" />
-        </button>
-         
-      </div>
-      <hr style="border: 1px dotted #8080801a;"/>
-      <div>
-        <span class="cart-title">Ordered Items</span>
-        <div class="item-info" *ngFor="let dish of dish">
-          <div nz-flex nzJustify="center" nzAlign="center" nzGap="4px">
-            <button
-              nz-button
-              nzShape="circle"
-              nzSize="small"
-              nzType="text"
-              (click)="decreaseQty(dish)"
-            >
-              <nz-icon nzType="minus" nzTheme="outline"></nz-icon>
-            </button>
-            <span class="item-quantity">{{ dish.quantity }}</span>
-            <button
-              nz-button
-              nzShape="circle"
-              nzSize="small"
-              nzType="text"
-              (click)="increaseQty(dish)"
-            >
-              <nz-icon nzType="plus" nzTheme="outline"></nz-icon>
-            </button>
-          </div>
-          <span class="item-name">{{ dish.name }}</span>
-          <span class="item-price">{{ "$" + dish.price }}</span>
+    <div class="cart hide-scrollbar">
+      <div
+        style="margin-top:8px;"
+        nz-flex
+        nzAlign="normal"
+        nzJustify="space-between"
+      >
+        <div style="line-height: 1.2;">
+          <span class="cart-title">Order #001</span> <br />
+          <span class="order-number"> Wed, 9 July 2025, 10:30 AM </span>
         </div>
+        <div class="table-badge">A04</div>
       </div>
       <hr />
       <div>
+        <span class="cart-title">Ordered Detail</span>
+        <div
+          style="margin-top: 12px !important;"
+          nz-row
+          *ngFor="let dish of dish"
+        >
+          <span nz-col nzSpan="20" class="item-name">{{ dish.name }}</span>
+          <span nz-col nzSpan="4" class="item-price">{{
+            "$" + dish.price
+          }}</span>
+          <a nz-col nzSpan="12" class="item-notes"
+            ><nz-icon nzType="form" nzTheme="outline" />
+            Notes
+          </a>
+          <div nz-col nzSpan="12">
+            <div nz-flex nzJustify="end" nzAlign="center" nzGap="4px">
+              <button nz-button nzSize="small" (click)="decreaseQty(dish)">
+                <nz-icon nzType="minus" nzTheme="outline"></nz-icon>
+              </button>
+              <span class="item-quantity">{{ dish.quantity }}</span>
+              <button
+                nz-button
+                nzSize="small"
+                nzType="primary"
+                (click)="increaseQty(dish)"
+              >
+                <nz-icon nzType="plus" nzTheme="outline"></nz-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div style="margin-bottom:12px;">
         <span class="cart-title">Payment Summary</span>
         <div class="payment-summary" nz-flex nzJustify="space-between">
           <span>Subtotal (4 items)</span>
           <span>$11.48</span>
         </div>
         <div class="payment-summary" nz-flex nzJustify="space-between">
-          <span>Tax (10%)</span>
-          <span>$1.14</span>
-        </div>
-        <div class="payment-summary" nz-flex nzJustify="space-between">
           <span>Discount</span>
           <span>$0.00</span>
         </div>
-        <div class="payment-summary" nz-flex nzJustify="space-between">
-          <span>Total</span>
-          <span>$12.62</span>
-        </div>
-        <button nz-button nzType="primary" nzSize="small"  class='order-button'>
-          Order
+      </div>
+      <div
+        style="position:fixed;bottom: 12px; right: 12px;"
+      >
+        <button nz-button nzType="primary" class="order-button">
+          <span style="font-weight: bold; margin-right: 8px;">$12.62</span>
+          Proceed Order
         </button>
       </div>
     </div>
   `,
   styles: [
     `
-    .order-button{
-      width: 100%;
-      margin-top: 8px;
-    }
+      .item-notes {
+        font-size: 11px;
+        margin-top: auto;
+      }
+      .table-badge {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        background-color: #0054e9;
+        justify-content: center;
+        font-size: 12px;
+        color: white;
+        border-radius: 8px;
+      }
+      .order-button {
+        width: 224px;
+        font-size: 12px;
+        margin-top: 8px;
+      }
       .payment-summary {
         margin-top: 4px;
         font-size: 11px;
       }
       hr {
-        color: #8080801a;
+        margin: 8px 0;
+        border: 1px dotted #8080801a;
       }
       .cart {
-        padding: 12px;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.34);
+        overflow-y: auto;
+        padding: 16px 16px 32px 16px;
         background-color: white;
-        border-radius: 8px;
+        height: 100%;
       }
-      .item-info {
-        display: grid;
-        margin-top: 4px;
-        grid-template-columns: auto 1fr auto;
-        gap: 8px;
-      }
-      .item-quantity{
+      .item-quantity {
         font-size: 11px;
-        font-weight: bold; 
-      }      
+        padding: 0 8px;
+      }
       .item-price {
         text-align: right;
-        font-size: 11px;
-       }
-      .item-name{
-        font-size: 11px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .item-name {
+        font-size: 12px;
       }
       .item {
         font-size: 11px;
         font-weight: 500;
         line-height: 1.4;
       }
-
+      // color:hsl(0, 0.00%, 50.20%);
       .cart-title {
         font-size: 14px;
+        color: #343434;
         font-weight: bold;
-        color: #000000c2;
+      }
+      .order-number {
+        font-size: 12px;
+        color: grey;
+      }
+      .ant-btn-icon-only.ant-btn-sm {
+        border-radius: 8px;
       }
     `,
   ],

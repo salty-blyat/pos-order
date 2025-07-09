@@ -41,9 +41,7 @@ import { Component, Input, ViewEncapsulation } from "@angular/core";
         width: 100%;
       }
 
-      .dish-card {
-        min-height: 160px;
-        width: 100%;
+      .dish-card { 
         line-height: 1.2; 
         border-radius: 8px;
         background-color: white;

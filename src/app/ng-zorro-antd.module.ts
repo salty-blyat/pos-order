@@ -11,7 +11,7 @@ import { NzFormModule } from 'ng-zorro-antd/form'; import { NzRadioModule } from
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
-import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzInputModule } from 'ng-zorro-antd/input'; import { NzAffixModule } from 'ng-zorro-antd/affix';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button'; import { NzDividerModule } from 'ng-zorro-antd/divider';
 const icons = [
@@ -28,6 +28,7 @@ const icons = [
     NzLayoutModule,
     NzDropDownModule,
     NzGridModule, NzRadioModule,
+    NzAffixModule,
     NzSelectModule, NzDividerModule,
     NzFormModule,
     NzInputModule, NzButtonModule

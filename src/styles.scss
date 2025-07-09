@@ -15,6 +15,7 @@ $border-radius: 6px;
     background: $color;
     border-radius: #{$scrollbar-border-radius};
 } 
+
 @font-face {
     font-family: Kantumruy;
     src: url("./assets/font/Kantumruy.woff2") format("woff2");
@@ -33,31 +34,42 @@ $border-radius: 6px;
 *:not(.fas):not(.fab) {
     font-family: Gilroy, Kantumruy, serif;
 }
+.hide-scrollbar {
+    overflow: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE 10+ */
+}
 
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari */
+}
 body {
     margin: 0;
     font-family: Kantumruy, "Helvetica Neue", sans-serif;
-    background: #fafafa;
+    background-color: #eeeeee;
 
     nz-layout {
         background: unset !important;
 
-        ul {
-            background: inherit !important;
-        }
+        // ul {
+        //     background: inherit !important;
+        // }
 
-        nz-content {
-            background: inherit;
+        // nz-content {
+        //     background: inherit;
 
-            nz-table {
-                height: calc(100vh - 70px);
-                overflow-y: auto;
-            }
-        }
+        //     nz-table {
+        //         height: calc(100vh - 70px);
+        //         overflow-y: auto;
+        //     }
+        // }
 
-        nz-footer {
-            background: inherit;
-        }
+        // nz-footer {
+        //     background: inherit;
+        // }
     }
 
     //.ant-checkbox-inner,

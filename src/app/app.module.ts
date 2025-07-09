@@ -40,8 +40,8 @@ import { NzLayoutComponent } from "ng-zorro-antd/layout";
 import {  RedirectComponent } from "./redirect/redirect.component";
 import { LanguageInputComponent } from "./utils/components/language-input.component";
 import { DishComponent } from "./utils/components/dish.component";
-import { CartComponent } from "./pages/home/cart.component";
- 
+import { CartComponent } from "./pages/home/cart.component"; 
+import { CategoryButtonsComponent } from "./utils/components/category-buttons.component";
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
     return `assets/vs/base/worker/workerMain.js`;
@@ -84,7 +84,8 @@ export class CustomTranslate implements TranslateLoader {
     RedirectComponent,
     LanguageInputComponent, 
     DishComponent,
-    CartComponent
+    CartComponent,
+    CategoryButtonsComponent
   ],
   bootstrap: [AppComponent],
   imports: [

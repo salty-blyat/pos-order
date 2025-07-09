@@ -17,7 +17,10 @@ nz-header{
     }
   } 
 }
-
+.screen-scroll {
+  height: calc(100vh - 4px);
+  overflow-y: auto;
+}
 .image {
   padding: 0 !important;
 }

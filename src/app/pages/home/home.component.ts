@@ -4,60 +4,69 @@ import { Component, ViewEncapsulation } from "@angular/core";
   template: `
     <nz-layout>
       <nz-content>
-        <div nz-row [nzGutter]="[8, 8]">
-          <div nz-col nzSpan="4">
-            <nz-radio-group
-              class="category-group"
-              nzButtonStyle="outline"
-              [(ngModel)]="radioValue"
-            >
-              <label nz-radio-button nzValue="All">All</label>
-              <label nz-radio-button nzValue="Pizza">Pizza</label>
-              <label nz-radio-button nzValue="Burger">Burger</label>
-              <label nz-radio-button nzValue="Sushi">Sushi</label>
-              <label nz-radio-button nzValue="Steak">Steak</label>
-            </nz-radio-group>
+        <div style="display: grid; grid-template-columns: minmax(124px, 220px) minmax(150px, auto) 250px; gap: 0 8px;">
+
+          <div  class="screen-scroll hide-scrollbar">
+            <div class="brand">
+              <img src="{{ logo }}" alt="" />
+            </div>
+            <nz-sider nzTheme="light">
+              <app-category-buttons
+                (categoryChange)="onCategoryChange($event)"
+              ></app-category-buttons>
+            </nz-sider>
           </div>
-          <div nz-col nzSpan="14">
-            <div nz-row [nzGutter]="[8, 8]">
-              <div nz-col nzSpan="24">
-                <nz-input-group
-                  nzSearch
-                  [nzAddOnAfter]="suffixButton"
-                  class="search-input"
-                  style="width: 100%; max-width: 480px;"
-                  ><input
-                    type="text"
+          <div   style="position:relative;">
+            <div class="search-input-container"> 
+                <nz-input-group style="margin-top: 24px;" [nzPrefix]="iconTem" [nzSuffix]="clearTem">
+                  <input
+                    style="border-radius:0;"
                     nz-input
-                    placeholder="Search"
+                    placeholder="ស្វែងរក"
                     [(ngModel)]="searchTerm"
                   />
                 </nz-input-group>
-                <ng-template #suffixButton>
-                  <button nz-button nzSearch>
-                    <nz-icon nzType="search" />
-                  </button>
-                </ng-template>
-              </div>
-              <div
-                nz-col
-                nzSpan="8"
-                nzMd="8"
-                nzLg="6"
-                nzXl="4"
-                nzXXl="3"
-                *ngFor="let dish of filteredDishes"
+                <ng-template #iconTem
+                  ><nz-icon nzType="search" nzTheme="outline"
+                /></ng-template>
+                <ng-template #clearTem>
+                  <nz-icon
+                    *ngIf="searchTerm.length > 0"
+                    nzType="close"
+                    nzTheme="outline"
+                    (click)="searchTerm = ''"
+                  />
+                </ng-template> 
+            </div>
+
+            <div class="screen-scroll hide-scrollbar">
+              <div 
+                nz-row
+                [nzGutter]="['8', '8']"
+                style="padding: 72px 4px 32px 0px;"
               >
-                <app-dish
-                  [src]="dish.src"
-                  [title]="dish.title"
-                  [price]="dish.price"
-                ></app-dish>
+                <div
+                  nz-col
+                  nzSm="12"
+                  nzMd="8"
+                  nzLg="6"
+                  nzXl="4"
+                  nzXXl="3"
+                  *ngFor="let dish of filteredDishes"
+                >
+                  <app-dish
+                    [src]="dish.src"
+                    [title]="dish.title"
+                    [price]="dish.price"
+                  ></app-dish>
+                </div>
               </div>
             </div>
           </div>
-          <div nz-col nzSpan="6" class="cart-container" *ngIf="showCart">
-            <app-cart></app-cart>
+          <div   class="screen-scroll " *ngIf="showCart" >
+            <nz-sider nzTheme="light">
+              <app-cart></app-cart>
+            </nz-sider>
           </div>
         </div>
       </nz-content>
@@ -65,7 +74,7 @@ import { Component, ViewEncapsulation } from "@angular/core";
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   styles: [
-    `
+    `  
       .category-group {
         display: flex !important;
         flex-direction: column;
@@ -78,31 +87,28 @@ import { Component, ViewEncapsulation } from "@angular/core";
       .dish-container {
         overflow: auto;
       }
-      .logo {
-        height: 52px;
-        width: 52px;
-      }
-      .cart-container {
-        height: 100%;
-        overflow: auto;
-      }
-      nz-layout {
-        background-color: #f9fafb !important;
-        nz-content {
-          padding: 12px;
-          background-color: white;
+      .brand {
+        display: flex;
+        padding: 16px 0 0 16px;
+        justify-content: center;
+        img {
+          width: 52px;
         }
       }
-
-      .search-input {
-        max-width: 200px;
-        input {
-          border-radius: 12px 0 0 12px !important;
-        }
-        button {
-          border-radius: 0 12px 12px 0 !important;
-        }
+      .search-input-container {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 0px 4px;
+        background-color: #eeeeee;
+        height: 56px;
+      } 
+      .ant-row{
+        margin: 0 !important;
       }
+      
     `,
   ],
   encapsulation: ViewEncapsulation.None,
@@ -112,9 +118,11 @@ export class HomeComponent {
   isLoading = false;
   searchTerm = "";
   showFooter = false;
-  radioValue = "All";
   showCart = true;
-
+  radioValue: string = "All";
+  onCategoryChange(value: string): void {
+    this.radioValue = value;
+  }
   get filteredDishes() {
     return this.dishes.filter((dish) => {
       const matchesCategory =
@@ -126,7 +134,7 @@ export class HomeComponent {
     });
   }
   logo =
-    "https://core.sgx.bz/files/prosit/inv/24/11/f6cf4901eeab485d8fd1c94a98d3b66b.png";
+    "https://core.sgx.bz/files/trump/hr/24/12/a2081ae24a8a43f7ab3c3e56ac453f87.png";
   dishes = [
     {
       src: "https://eu.ooni.com/cdn/shop/articles/pepperoni-pizza_6ac5fa40-65b7-4e3b-a8b9-7ca5ccc05dfd.jpg?crop=center&height=800&v=1737105987&width=800",
@@ -197,6 +205,76 @@ export class HomeComponent {
       price: "$6.99",
       description: "Fluffy panup.",
       category: "Pancakes",
+    },
+    {
+      src: "https://source.unsplash.com/300x200/?soup",
+      title: "Creamy Tomato Soup",
+      price: "$4.99",
+      description: "Fresh tomato soup.",
+      category: "Soup",
+    },
+    {
+      src: "https://source.unsplash.com/300x200/?icecream",
+      title: "Mango Ice Cream",
+      price: "$5.99",
+      description: "Sweet mango ice cream.",
+      category: "Dessert",
+    },
+    {
+      src: "https://source.unsplash.com/300x200/?chickenwings",
+      title: "Spicy Chicken Wings",
+      price: "$12.99",
+      description: "Spicy chicken wings.",
+      category: "Chicken Wings",
+    },
+    {
+      src: "https://source.unsplash.com/300x200/?sushirolls",
+      title: "Sushi Rolls",
+      price: "$14.50",
+      description: "Various sushi rolls.",
+      category: "Sushi",
+    },
+    {
+      src: "https://source.unsplash.com/300x200/?steakhouse",
+      title: "Steakhouse Steak",
+      price: "$19.99",
+      description: "Grilled steak with gried potatoes.",
+      category: "Steak",
+    },
+    {
+      src: "https://source.unsplash.com/300x200/?breakfast",
+      title: "Breakfast Plate",
+      price: "$8.99",
+      description: "Scrambled eggs, bacon, and toast.",
+      category: "Breakfast",
+    },
+    {
+      src: "https://source.unsplash.com/300x200/?burrito",
+      title: "Chicken Burrito",
+      price: "$10.99",
+      description: "Soft burrito with grilled chicken and salsa.",
+      category: "Burrito",
+    },
+    {
+      src: "https://source.unsplash.com/300x200/?chickenparmesan",
+      title: "Chicken Parmesan",
+      price: "$12.99",
+      description: "Breaded chicken with marinara sauce and melted mozzarella.",
+      category: "Parmesan",
+    },
+    {
+      src: "https://source.unsplash.com/300x200/?fries",
+      title: "French Fries",
+      price: "$4.99",
+      description: "Crunchy fries.",
+      category: "Fries",
+    },
+    {
+      src: "https://source.unsplash.com/300x200/?phillycheese",
+      title: "Philly Cheese Steak",
+      price: "$14.99",
+      description: "Thinly sliced steak and melted cheese on a hoagie roll.",
+      category: "Philly Cheese Steak",
     },
   ];
 }
