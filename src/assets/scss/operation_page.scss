@@ -1,0 +1,349 @@
+@use "default-size.scss";
+
+// scrollbar
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #e2e2e2;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bcbcbc;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+  border-radius: 10px;
+}
+
+// Old scrollbar
+.scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: #e2e2e2;
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #bcbcbc;
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+  border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:active {
+  background: #909090;
+  border-radius: 10px;
+}
+
+.scrollbar {
+  overflow-y: auto;
+  height: 690px;
+  overflow-x: hidden;
+}
+
+.limitTextHeight {
+  height: 65px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+::ng-deep .ant-modal-header {
+  text-align: center !important;
+}
+nz-layout {
+  background-color: inherit;
+  height: 100%;
+  min-height: 350px;
+
+  nz-sider {
+    padding-top: 24px;
+    border-right: 1px solid #f0f0f0;
+
+    .photo {
+      width: 3cm;
+      height: auto;
+      padding: 1px;
+      min-height: 1.5cm;
+      margin-left: 30px;
+      border: 1px solid #d0cfcf;
+      border-radius: 4px;
+      img {
+        width: 100%;
+      }
+    }
+
+    .staff-name {
+      text-align: center;
+
+      p {
+        padding-right: 10px;
+        margin-top: 5px;
+        font-weight: bold;
+      }
+    }
+
+    .menu-item {
+      border-right: unset;
+    }
+
+    .ant-menu-item {
+      padding-left: 18px !important;
+    }
+  }
+
+  nz-header {
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+    margin: 0 10px;
+    justify-content: center;
+    background-color: inherit;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0;
+  }
+
+  nz-content {
+    padding: 0 25px;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+
+    [timeline] {
+      p {
+        margin-bottom: 6px;
+      }
+    }
+
+    [status] {
+      ::ng-deep .ant-form-item-label > label {
+        height: 0;
+      }
+    }
+    .modal-header-ellipsis {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 40%;
+      margin: auto;
+      text-align: center;
+    }
+
+    [expJob] {
+      p {
+        margin-bottom: 0;
+      }
+
+      [expBody] {
+        p > span {
+          font-style: normal;
+          font-weight: normal;
+        }
+
+        p:last-child {
+          font-style: italic;
+        }
+      }
+    }
+
+    nz-table {
+      thead,
+      th {
+        font-weight: bold;
+        font-size: 13px;
+        color: rgba(0, 0, 0, 0.55) !important;
+      }
+
+      ::ng-deep nz-table-title-footer {
+        padding: 1px 8px !important;
+        background-color: white;
+        border-width: 0 1px 1px 1px;
+        border-color: #f0f0f0;
+        border-style: solid;
+      }
+
+      [t-input] {
+        td {
+          strong {
+            position: relative;
+          }
+
+          nz-form-item {
+            margin: 0 !important;
+          }
+        }
+      }
+      ::ng-deep nz-pagination {
+        margin: 0;
+      }
+    }
+  }
+
+  .steps-content {
+    border-radius: 6px;
+    min-height: 200px;
+    padding-left: 20px;
+  }
+
+  button {
+    margin-right: 8px;
+  }
+
+  [nzTitle] {
+    text-align: left;
+    margin-bottom: 8px;
+    font-size: 16px;
+    padding-top: 4px;
+  }
+
+  [nzTitle]:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  nz-footer {
+    border-top: 1px solid #f0f0f0;
+    background-color: inherit;
+    padding: 12px 15px;
+    margin: 0 10px;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+::ng-deep .nz-disable-td {
+  padding: 0 !important;
+  border: none !important;
+}
+
+::ng-deep
+  .ant-table-thead
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(
+    .ant-table-row-expand-icon-cell
+  ):not([colspan])::before {
+  width: 0 !important;
+}
+
+::ng-deep .ant-picker-range {
+  width: 100% !important;
+}
+::ng-deep .ant-input-group-addon {
+  padding: 0 !important;
+  background-color: inherit;
+}
+[profile] {
+  ::ng-deep .ant-upload-list-picture-card .ant-upload-list-item-actions {
+    display: none;
+  }
+  ::ng-deep .ant-upload-list-picture-card .ant-upload-list-item-info::before {
+    display: none;
+  }
+}
+[g-show-total-date] {
+  ::ng-deep .ant-input-group-addon {
+    padding: 0 6px !important;
+    background-color: #f5f5f5;
+  }
+}
+::ng-deep .ant-upload.ant-upload-select-picture-card {
+  width: 78px;
+  height: 78px;
+  margin: 0;
+}
+::ng-deep .ant-upload-list-picture-card-container {
+  width: 78px;
+  height: 78px;
+  margin: 0;
+}
+::ng-deep .ant-upload-list-picture-card .ant-upload-list-item {
+  padding: 0;
+}
+
+::ng-deep .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img {
+  object-fit: cover !important;
+  object-position: center !important;
+}
+::ng-deep .ant-upload-list-item {
+  font-size: 12px !important;
+}
+
+::ng-deep [upload-one-only] .ant-upload-list-item {
+  margin: 0 !important;
+}
+
+[ngCase] {
+  padding-top: 22px;
+}
+
+[photo] {
+  transition: all 0.3s;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  img {
+    transition: all 0.3s;
+  }
+  i {
+    display: none;
+    transition: all 0.3s;
+    position: absolute;
+  }
+}
+[photo]:hover {
+  background-color: rgb(0, 0, 0, 0.8);
+  img {
+    opacity: 0.5;
+  }
+  i {
+    display: block;
+    font-size: 20px;
+    color: white;
+    z-index: 99;
+    opacity: 1;
+  }
+}
+
+[leave] {
+  display: flex;
+  padding: 1px 0;
+  flex-flow: row wrap;
+  label {
+    width: 50%;
+  }
+  span {
+    width: 50%;
+    b {
+      font-size: 18px;
+    }
+  }
+}
+
+[title-l] {
+  font-weight: bold;
+  padding-bottom: 4px;
+  font-size: 15px;
+  padding-top: 10px;
+}
+
+[nz-height="100%"] {
+  height: 100%;
+}
+
+::ng-deep [nz-height="100%"] .ant-tabs-content {
+  height: 100%;
+}
+
+.form-content {
+  padding: 0 10px 0 10px;
+}
+:host::ng-deep .ant-tabs-tab + .ant-tabs-tab {
+  margin: 0 0 0 10px;
+}

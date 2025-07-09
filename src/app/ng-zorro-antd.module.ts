@@ -1,0 +1,37 @@
+import { NgModule } from '@angular/core';
+import { NZ_ICONS, NzIconModule } from 'ng-zorro-antd/icon';
+import {
+  DashboardOutline,
+  FileSearchOutline,
+  FormOutline,
+  MenuFoldOutline,
+  MenuUnfoldOutline,
+} from '@ant-design/icons-angular/icons';
+import { NzFormModule } from 'ng-zorro-antd/form'; import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzButtonModule } from 'ng-zorro-antd/button'; import { NzDividerModule } from 'ng-zorro-antd/divider';
+const icons = [
+  MenuFoldOutline,
+  FileSearchOutline,
+  MenuUnfoldOutline,
+  DashboardOutline,
+  FormOutline,
+];
+@NgModule({
+  imports: [NzIconModule],
+  providers: [{ provide: NZ_ICONS, useValue: icons }],
+  exports: [NzIconModule,
+    NzLayoutModule,
+    NzDropDownModule,
+    NzGridModule, NzRadioModule,
+    NzSelectModule, NzDividerModule,
+    NzFormModule,
+    NzInputModule, NzButtonModule
+
+  ],
+})
+export class NgZorroAntdModule { }

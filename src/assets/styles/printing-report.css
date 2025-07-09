@@ -1,0 +1,231 @@
+@import "bootstrap@5.2.min.css";
+@import "page-style.css";
+/* khmer */
+@font-face {
+  font-family: "Siemreap";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../../assets/font/Siemreap-Regular.woff2) format("woff2");
+  unicode-range: U+1780-17FF, U+200C, U+25CC, U+0000-00FF, U+0131, U+0152-0153,
+    U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Moul";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../../assets/font/Moul-Regular.woff2) format("woff2");
+  unicode-range: U+1780-17FF, U+200C, U+25CC;
+}
+
+body {
+  overflow: auto;
+  background: #ddd;
+  padding-bottom: 20px;
+}
+
+* {
+  font-family: Siemreap, Verdana, Geneva, Tahoma, sans-serif;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Moul, serif;
+}
+
+h5 {
+  font-size: 16px;
+}
+
+h6 {
+  font-size: 14px;
+  padding-top: 12px;
+  padding-bottom: 2px;
+}
+
+.barcode {
+  font-family: "Libre Barcode 39", serif;
+  font-size: 34px;
+  font-weight: normal;
+}
+
+.report {
+  margin: auto;
+  display: table;
+  height: 100%;
+  background-color: white;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
+  font-family: "Siemreap", Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.report .report-header {
+  float: left;
+  width: 100%;
+}
+
+.report .report-body {
+  width: 100%;
+}
+
+.report .report-footer {
+  width: 100%;
+}
+
+.report .report-header {
+  width: 100%;
+}
+
+.report {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* a4 */
+.report.a4 {
+  padding: 20px;
+}
+
+.report.a4.portrait {
+  width: 21cm;
+  min-height: 26.7cm;
+  height: 100%;
+}
+
+label,
+.label {
+  font-size: 14px;
+}
+
+label:first-child {
+  padding-left: 0;
+}
+
+.colon::after {
+  content: " :  ";
+  margin-right: 10px;
+}
+
+.bg {
+  background: #ddd;
+}
+
+.color-blue {
+  color: blue;
+}
+
+.focus {
+  font-size: 20px;
+  background-color: lightyellow;
+}
+
+div.company-header-info h4 {
+  color: rgb(239, 131, 28);
+}
+
+@media print {
+  th.bg,
+  span.bg {
+    background: #ddd !important;
+  }
+
+  th.focus {
+    background-color: lightyellow !important;
+  }
+
+  .report {
+    height: 100% !important;
+    width: 100% !important;
+    background-color: inherit !important;
+    box-shadow: none !important;
+  }
+
+  body {
+    zoom: 100%;
+    width: 100% !important;
+    background-color: white !important;
+    padding-bottom: 0 !important;
+  }
+  .a4,
+  .portrait {
+    width: 100% !important;
+    height: 100% !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 10px !important;
+    padding-bottom: 0 !important;
+    page-break-before: always !important;
+    position: relative !important;
+  }
+}
+
+.decimal {
+  text-align: right;
+}
+
+.navbar-fixed-top {
+  position: sticky;
+  top: 0;
+}
+
+.report-header .logo {
+  position: relative;
+  height: 55px;
+  line-height: 55px;
+  padding-left: 24px;
+  overflow: hidden;
+  background: #ffffff;
+  transition: all 0.3s;
+}
+
+.report-header .logo h3 {
+  display: inline-block;
+  margin: 0 0 0 6px;
+  font-weight: 600;
+  font-size: 22px;
+  font-family: "Siemreap", Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+  vertical-align: middle;
+}
+
+.report-header .logo img {
+  display: inline-block;
+  height: 35px;
+  line-height: 35px;
+  width: auto;
+  vertical-align: middle;
+}
+
+.photo img {
+  width: 100%;
+}
+
+.group-title {
+  font-size: 14px;
+}
+
+.group-title > li > .row > .col-12,
+.group-title > li > .row > ol > li > .col-12 {
+  padding: 4px 0;
+}
+
+.ul-group {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ul-group > li::before {
+  content: "- ";
+}
+
+#family tr td {
+  padding-left: 0 !important;
+}
+
+#child tr td {
+  padding-left: 8px !important;
+}

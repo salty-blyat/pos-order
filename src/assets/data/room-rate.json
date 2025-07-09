@@ -1,0 +1,122 @@
+{
+    "results": [
+        {
+          "id": 1,
+          "code": "STD-FREE",
+          "name": "Standard Flexible",
+          "rateOptionIds": [101, 102],
+          "rateOptionNames": ["Breakfast Included", "No Prepayment"],
+          "cancelPolicyId": 1,
+          "cancelPolicyName": "Flexible Cancellation",
+          "note": "Free cancellation up to 24 hours before check-in."
+        },
+        {
+          "id": 2,
+          "code": "STD-MOD",
+          "name": "Standard Moderate",
+          "rateOptionIds": [103, 104],
+          "rateOptionNames": ["Non-Refundable", "Early Check-in"],
+          "cancelPolicyId": 2,
+          "cancelPolicyName": "Moderate Cancellation",
+          "note": "50% charge if canceled within 3 days of check-in."
+        },
+        {
+          "id": 3,
+          "code": "STD-STRICT",
+          "name": "Standard Strict",
+          "rateOptionIds": [105],
+          "rateOptionNames": ["Late Checkout"],
+          "cancelPolicyId": 3,
+          "cancelPolicyName": "Strict Cancellation",
+          "note": "No refund if canceled within 7 days of check-in."
+        },
+        {
+          "id": 4,
+          "code": "NRF",
+          "name": "Non-Refundable",
+          "rateOptionIds": [106, 107],
+          "rateOptionNames": ["Discounted Rate", "Member Exclusive"],
+          "cancelPolicyId": 4,
+          "cancelPolicyName": "Non-Refundable",
+          "note": "No refunds allowed after booking."
+        },
+        {
+          "id": 5,
+          "code": "LAST-MIN",
+          "name": "Last Minute",
+          "rateOptionIds": [108],
+          "rateOptionNames": ["Flash Deal"],
+          "cancelPolicyId": 5,
+          "cancelPolicyName": "Last Minute Cancellation",
+          "note": "Full charge if canceled within 12 hours of check-in."
+        },
+        {
+          "id": 6,
+          "code": "GROUP-FLEX",
+          "name": "Group Flexible",
+          "rateOptionIds": [109, 110],
+          "rateOptionNames": ["Corporate Rate", "Event Booking"],
+          "cancelPolicyId": 6,
+          "cancelPolicyName": "Group Booking Policy",
+          "note": "50% refund if canceled 7 days before check-in."
+        },
+        {
+          "id": 7,
+          "code": "EARLY-BIRD",
+          "name": "Early Bird Discount",
+          "rateOptionIds": [111, 112],
+          "rateOptionNames": ["Advance Booking", "Loyalty Discount"],
+          "cancelPolicyId": 7,
+          "cancelPolicyName": "Strict Non-Refundable",
+          "note": "No refund for early bird rates."
+        },
+        {
+          "id": 8,
+          "code": "CORP",
+          "name": "Corporate Package",
+          "rateOptionIds": [113, 114],
+          "rateOptionNames": ["Business Class", "Meeting Room Included"],
+          "cancelPolicyId": 8,
+          "cancelPolicyName": "Corporate Cancellation",
+          "note": "Full refund if canceled 5 days before check-in."
+        },
+        {
+          "id": 9,
+          "code": "FAM-PACK",
+          "name": "Family Package",
+          "rateOptionIds": [115, 116],
+          "rateOptionNames": ["Kids Stay Free", "Breakfast Included"],
+          "cancelPolicyId": 9,
+          "cancelPolicyName": "Moderate Refundable",
+          "note": "75% refund if canceled 48 hours before check-in."
+        },
+        {
+          "id": 10,
+          "code": "WEEKLY-STAY",
+          "name": "Weekly Stay Discount",
+          "rateOptionIds": [117],
+          "rateOptionNames": ["Long Stay Discount"],
+          "cancelPolicyId": 10,
+          "cancelPolicyName": "Extended Stay Policy",
+          "note": "50% charge if canceled within 3 days of check-in."
+        }
+      ]
+      ,
+    "param": {
+        "pageIndex": 1,
+        "pageSize": 25,
+        "sorts": "Name",
+        "filters": [
+            {
+                "field": "search",
+                "operator": "contains",
+                "value": "",
+                "logic": null,
+                "manual": true,
+                "filters": null
+            }
+        ],
+        "pageCount": 1,
+        "rowCount": 5
+    }
+}

@@ -1,0 +1,100 @@
+.page-content{
+  padding: 0 20px 20px;
+}
+
+.barcode {
+  font-size: 2.6rem;
+  font-family: barcode-font, sans-serif;
+}
+
+.page-header {
+  border-bottom: 1px solid #f2f2f2;
+
+  .more-action {
+    text-align: right;
+    margin: 16px 0;
+  }
+
+  nz-breadcrumb {
+    margin: 16px 0px;
+  }
+}
+
+.page-content {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.ant-form nz-form-item {
+  margin: 0;
+}
+
+.report-container {
+  height: 100%;
+  flex: 0 1 auto;
+  overflow-y: auto;
+
+  .header-content {
+    padding: 8px 0;
+
+    .action-content {
+      text-align: right;
+
+      button {
+        font-size: 13px;
+      }
+    }
+  }
+  th {
+    position: sticky;
+    top: 140px;
+    z-index: 999;
+    font-weight: bold;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  .ant-table-cell {
+    padding: 8px;
+  }
+
+  .report-name {
+    font-family: moul-font, Roboto, monospace !important;
+    font-size: 1.2rem;
+    line-height: 2rem;
+    margin-bottom: 2px;
+  }
+}
+
+.report-header {
+  text-align: center;
+}
+
+.report-title {
+  text-align: center;
+  position: sticky;
+  top: 0;
+  height: 140px;
+  z-index: 999;
+  background-color: #ffffff;
+}
+
+.report-filter{
+  padding: 8px 0;
+
+  .ant-picker-range {
+    width: 240px;
+    margin-right: 4px;
+  }
+
+  .btn-filter {
+    font-size: 13px;
+    top: -0.05rem;
+    height: 1.975rem;
+  }
+}
+
+button {
+  font-size: 13px;
+}

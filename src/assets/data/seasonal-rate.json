@@ -1,0 +1,82 @@
+{
+    "results": [
+        {
+          "id": 1,
+          "code": "SPRING",
+          "roomRateId": 201,
+          "roomRateName": "Standard Room",
+          "name": "Spring Special",
+          "cancelPolicyId": 1,
+          "cancelPolicyName": "Flexible Cancellation",
+          "startDate": "2025-03-01",
+          "endDate": "2025-05-31",
+          "note": "Discounted rates for spring season with free cancellation up to 24 hours before check-in."
+        },
+        {
+          "id": 2,
+          "code": "SUMMER",
+          "roomRateId": 202,
+          "roomRateName": "Deluxe Room",
+          "name": "Summer Holiday Rate",
+          "cancelPolicyId": 2,
+          "cancelPolicyName": "Moderate Cancellation",
+          "startDate": "2025-06-01",
+          "endDate": "2025-08-31",
+          "note": "Special summer rates, 50% charge if canceled within 3 days of check-in."
+        },
+        {
+          "id": 3,
+          "code": "AUTUMN",
+          "roomRateId": 203,
+          "roomRateName": "Suite",
+          "name": "Autumn Getaway",
+          "cancelPolicyId": 3,
+          "cancelPolicyName": "Strict Cancellation",
+          "startDate": "2025-09-01",
+          "endDate": "2025-11-30",
+          "note": "Exclusive autumn discounts, no refund if canceled within 7 days of check-in."
+        },
+        {
+          "id": 4,
+          "code": "WINTER",
+          "roomRateId": 204,
+          "roomRateName": "Executive Room",
+          "name": "Winter Festive Rate",
+          "cancelPolicyId": 4,
+          "cancelPolicyName": "Non-Refundable",
+          "startDate": "2025-12-01",
+          "endDate": "2025-02-28",
+          "note": "Special winter festive rates, no refunds allowed after booking."
+        },
+        {
+          "id": 5,
+          "code": "PEAK",
+          "roomRateId": 205,
+          "roomRateName": "Family Suite",
+          "name": "Peak Season Rate",
+          "cancelPolicyId": 5,
+          "cancelPolicyName": "Last Minute Cancellation",
+          "startDate": "2025-07-01",
+          "endDate": "2025-08-31",
+          "note": "Higher peak season rates, full charge if canceled within 12 hours of check-in."
+        }
+      ]      
+      ,
+    "param": {
+        "pageIndex": 1,
+        "pageSize": 25,
+        "sorts": "Name",
+        "filters": [
+            {
+                "field": "search",
+                "operator": "contains",
+                "value": "",
+                "logic": null,
+                "manual": true,
+                "filters": null
+            }
+        ],
+        "pageCount": 1,
+        "rowCount": 5
+    }
+}

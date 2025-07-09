@@ -1,0 +1,39 @@
+
+{
+  "results": [
+    {
+      "id": 1,
+      "name": "On Sidet",
+      "date": "2025-03-20",
+      "checkin": "2025-03-26",
+      "checkout": "2025-03-30",
+      "status": 1,
+      "roomTypeId": 1,
+      "roomId": 18,
+      "roomTypeName": "Signal Room",
+      "roomName": "103",
+      "adults": 2,
+      "children": 0,
+      "totalCharges": 12,
+      "amount": 0,
+      "balance": 12
+    },
+    {
+      "id": 1,
+      "name": "Rithy Devith",
+      "date": "2025-03-26",
+      "checkin": "2025-03-28",
+      "checkout": "2025-03-30",
+      "status": 1,
+      "roomTypeId": 1,
+      "roomTypeName": "Double Room",
+      "roomId": 19,
+      "roomName": "301",
+      "adults": 1,
+      "children": 0,
+      "totalCharges": 12,
+      "amount": 0,
+      "balance": 12
+    }
+  ]
+}
