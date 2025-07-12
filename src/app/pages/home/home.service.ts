@@ -16,7 +16,7 @@ export interface ServiceType {
 @Injectable({ providedIn: 'root' })
 export class HomeService extends BaseApiService<ServiceType> {
     constructor(private http: HttpClient, settingService: SettingService) {
-        super("servicetype", http, settingService);
+        super("servicetype/public", http, settingService);
     }
 
 } 

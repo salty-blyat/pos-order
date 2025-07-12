@@ -1,6 +1,10 @@
-import { Component, ViewEncapsulation } from "@angular/core";
-import { ServiceType } from "./home.service";
+import { Component, signal, ViewEncapsulation } from "@angular/core";
+import { HomeService, ServiceType } from "./home.service";
 import { Router } from "@angular/router";
+import { BaseListComponent } from "../../utils/components/base-list.component";
+import { AuthService } from "../../helpers/auth.service";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "app-home",
   template: `
@@ -25,13 +29,13 @@ import { Router } from "@angular/router";
     <div class="header-home">
       <h2>How can we assist you today?</h2>
     </div>
-    @if(isLoading){
+    @if(isLoading()){
     <app-loading></app-loading>
 
-    } @else if(lists.length === 0){
+    } @else if(lists().length === 0){
 
     <app-no-result-found></app-no-result-found>
-    } @else if(!isLoading && lists.length > 0){
+    } @else if(!isLoading() && lists().length > 0){
     <div nz-row [nzGutter]="[8, 8]">
       <div
         nz-col
@@ -39,7 +43,7 @@ import { Router } from "@angular/router";
         nzSm="8"
         nzLg="6"
         nzXL="6"
-        *ngFor="let data of lists"
+        *ngFor="let data of lists()"
       >
         <app-service-type-card
           (onClick)="onClick($event)"
@@ -114,94 +118,22 @@ import { Router } from "@angular/router";
   encapsulation: ViewEncapsulation.None,
   standalone: false,
 })
-export class HomeComponent {
-  isLoading: boolean = false;
-  constructor(private router: Router) { }
+export class HomeComponent extends BaseListComponent<ServiceType> {
+  constructor(
+    override service: HomeService,
+    sessionStorageService: SessionStorageService,
+    private authService: AuthService,
+    public router: Router
+  ) {
+    super(
+      service,
+      sessionStorageService,
+      "service-type-list",
+    );
+  }
   onClick(id: number) {
     setTimeout(() => {
       this.router.navigate([`/service/${id}`]);
     }, 100);
-  }
-  lists: ServiceType[] = [
-    {
-      id: 1,
-      name: "cleaning",
-      image:
-        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop&crop=center",
-    },
-    {
-      id: 2,
-      name: "wakeup",
-      image:
-        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop&crop=center",
-    },
-    {
-      id: 3,
-      name: "taxi",
-      image:
-        "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=400&fit=crop&crop=center",
-    },
-    {
-      id: 4,
-      name: "toiletries",
-      image:
-        "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=400&fit=crop&crop=center",
-    },
-    {
-      id: 5,
-      name: "towels",
-      image:
-        "https://images.unsplash.com/photo-1631049552240-59c37f38802b?w=600&h=400&fit=crop&crop=center",
-    },
-    {
-      id: 6,
-      name: "complimentary",
-      image:
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop&crop=center",
-    },
-    {
-      id: 7,
-      name: "restaurant",
-      image:
-        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop&crop=center",
-    },
-    { id: 8, name: "room-dining" },
-    {
-      id: 9,
-      name: "bar",
-      image:
-        "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&h=400&fit=crop&crop=center",
-    },
-    {
-      id: 10,
-      name: "gym",
-      image:
-        "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop&crop=center",
-    },
-    {
-      id: 11,
-      name: "pool",
-      image:
-        "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=400&fit=crop&crop=center",
-    },
-    {
-      id: 12,
-      name: "spa",
-      image:
-        "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&h=400&fit=crop&crop=center",
-    },
-    {
-      id: 13,
-      name: "business",
-      image:
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop&crop=center",
-    },
-  ];
-
-  ngOnInit(): void {
-    this.isLoading = true;
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1000);
   }
 }

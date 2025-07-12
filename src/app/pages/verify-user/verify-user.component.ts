@@ -1,6 +1,9 @@
 import { Component, NgZone, OnInit, Renderer2, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Subscription } from "rxjs";
+import { SessionStorageService } from "../../utils/services/sessionStorage.service";
+import { VerifyService } from "./verify.service";
 @Component({
   selector: "app-verify-user",
   template: `
@@ -64,20 +67,28 @@ import { Router } from "@angular/router";
   standalone: false,
 })
 export class VerifyUserComponent implements OnInit {
+  constructor(private fb: FormBuilder, private router: Router, private service: VerifyService, private activatedRoute: ActivatedRoute, private sessionService: SessionStorageService) { }
   frm!: FormGroup;
   isLoading = false;
   CompanyName = "Hotel Paradise";
-
-  constructor(private fb: FormBuilder, private router: Router) { }
+  routeRefresh!: Subscription;
   ngOnInit(): void {
     this.initControl();
+    this.routeRefresh = this.activatedRoute.paramMap.subscribe((params) => {
+      const uuid = params.get("uuid");
+      this.service.verify(uuid!).subscribe((res) => {
+        const guestId = res.guestId;
+        const roomId = res.roomId;
+        const stayId = res.stayId;
+        this.sessionService.setValue({ key: "guestId", value: guestId });
+        this.sessionService.setValue({ key: "roomId", value: roomId });
+        this.sessionService.setValue({ key: "stayId", value: stayId });
+      })
+    });
   }
   initControl(): void {
     this.frm = this.fb.group({
-      phone: [
-        null,
-        [Validators.required, Validators.minLength(3), Validators.maxLength(3)],
-      ],
+      phone: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
     });
   }
 

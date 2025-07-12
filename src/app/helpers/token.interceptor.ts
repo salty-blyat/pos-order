@@ -99,9 +99,13 @@ export class TokenInterceptor implements HttpInterceptor {
         catchError((error) => {
           if (this.isRefreshing) {
             this.authService.removeStorageValue(APP_STORAGE_KEY.Authorized);
-            window.location.replace(
-              `${this.settingService.setting.AUTH_UI_URL}/auth/login`
-            );
+
+            // TODO uncomment this after implement Verify PHONE NUMBER
+            // window.location.replace(
+            //   `${this.settingService.setting.AUTH_UI_URL}/auth/login`
+            // );
+
+
           } else {
             //alert("Error:"+error.message);
           }

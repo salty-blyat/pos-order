@@ -13,38 +13,41 @@ import { History } from "./history.service";
         ><span style="font-size: 16px;">History</span>
       </button>
     </div>
-    <div> 
-        <h3 class="service-op-title">
+    <div>
+      <h3 class="service-op-title">
         {{ "Your Requests" | translate }}
       </h3>
       <div nz-flex nzVertical nzGap="middle">
         <div *ngFor="let data of lists">
-            <div nz-flex nzGap="middle">
-              
-                <div>
-                    <h4>{{ data.requestTime }}</h4>
-                    <p>{{ data.note }}</p>
-                </div>
+          <div class='history-list' nz-flex nzGap="middle">
+            <div>
+              <!-- <img  [src]="
+          data.serviceItem.image
+            ? data.serviceItem.image
+            : './../../../assets/image/noimg.jpg'
+        " [alt]="data.serviceItem.name"> -->
+              <h4>{{ data.requestTime }}</h4> <br>
+              <p *ngIf="data.note">{{ data.note }}</p>
             </div>
+          </div>
         </div>
       </div>
     </div>
- 
   `,
     styleUrls: ["../../../assets/scss/list.style.scss"],
     encapsulation: ViewEncapsulation.None,
-    styles: [
-        ` 
-    `,
-    ],
+    styles: [`
+        .history-list{
+            width:100%;
+            background-color: white;
+            border-radius: 8px;
+            padding: 16px;
+        }`],
     standalone: false,
 })
 export class HistoryComponent {
     isLoading = false;
-    constructor(
-        private location: Location,
-        private router: Router
-    ) { }
+    constructor(private location: Location, private router: Router) { }
 
     goBack() {
         this.location.back();
@@ -59,7 +62,7 @@ export class HistoryComponent {
             serviceItemId: 1,
             quantity: 2,
             status: 1,
-            note: "",
+            note: "Note",
             attachments: null,
         },
         {
@@ -85,9 +88,6 @@ export class HistoryComponent {
             status: 1,
             note: "",
             attachments: null,
-        }
-    ]
-
-
-
+        },
+    ];
 }

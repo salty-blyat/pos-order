@@ -3,9 +3,9 @@ import { en_US, km_KH, zh_CN } from "ng-zorro-antd/i18n";
 export const APP_STORAGE_KEY = {
   Authorized: "authorized",
   RefreshToken: "RefreshToken",
-  Language: "pos-order-lang",
-  Tenant: "pos-order-tenant",
-  App: "pos-order-appinfo",
+  Language: "hotel-lang",
+  Tenant: "hotel-tenant",
+  App: "hotel-appinfo",
 };
 
 export const BRANCH_STORAGE_KEY = "branchStorageKey";
@@ -56,7 +56,7 @@ export enum RateType {
   Seasonal = 2,
 }
 
-export const PAGE_SIZE_OPTION = [10, 25, 50, 100]; 
+export const PAGE_SIZE_OPTION = [10, 25, 50, 100];
 export const Locale: { KH: any; EN: any; ZH: any; DEFAULT: any } | any = {
   KH: { local: km_KH, localId: "km" },
   EN: { local: en_US, localId: "en" },
@@ -69,10 +69,10 @@ export const LANGUAGES: {
   image: string;
   label: string;
 }[] = [
-  { key: Locale.KH, label: "ភាសាខ្មែរ", image: "./assets/image/kh_FLAG.png" },
-  { key: Locale.EN, label: "English", image: "./assets/image/en_FLAG.png" },
-  { key: Locale.ZH, label: "中文", image: "./assets/image/ch_FLAG.png" },
-];
+    { key: Locale.KH, label: "ភាសាខ្មែរ", image: "./assets/image/kh_FLAG.png" },
+    { key: Locale.EN, label: "English", image: "./assets/image/en_FLAG.png" },
+    { key: Locale.ZH, label: "中文", image: "./assets/image/ch_FLAG.png" },
+  ];
 
 export const SIZE_COLUMNS = {
   DRAG: "20px",

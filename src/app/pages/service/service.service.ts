@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-
+import { BaseApiService } from '../../utils/services/base-api.service';
+import { HttpClient } from '@angular/common/http';
+import { SettingService } from '../../app-setting';
+import { Observable } from 'rxjs';
+ 
 export interface Service {
     id?: number;
     trackQty?: boolean;
@@ -14,6 +18,11 @@ export interface Service {
 }
 
 @Injectable({ providedIn: 'root' })
-export class ServiceService {
-
+export class ServiceService extends BaseApiService<Service> {
+    constructor(
+        httpClient: HttpClient,
+        settingService: SettingService
+    ) {
+        super("serviceitem/public", httpClient, settingService);
+    } 
 } 

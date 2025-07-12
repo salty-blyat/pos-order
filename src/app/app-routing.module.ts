@@ -28,7 +28,7 @@ const routes: Routes = [
         component: ServiceOperationComponent,
       },
       {
-        path: "verify-user",
+        path: "verify-user/:uuid",
         component: VerifyUserComponent,
       },
       {
