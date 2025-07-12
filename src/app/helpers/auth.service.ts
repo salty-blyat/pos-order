@@ -226,7 +226,7 @@ export class AuthService {
   }
   updateTitleTab() {
     this.languageService.initialLanguage();
-    this.titleService.setTitle(`${this.app?.appName} | ${this.tenant.name}`);
+    // this.titleService.setTitle(`${this.app?.appName} | ${this.tenant.name}`);
     let favIcon: HTMLLinkElement | any = document.querySelector('#favIcon');
     favIcon.href = this.app?.iconUrl;
   }

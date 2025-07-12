@@ -14,6 +14,9 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzInputModule } from 'ng-zorro-antd/input'; import { NzAffixModule } from 'ng-zorro-antd/affix';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button'; import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzResultModule } from 'ng-zorro-antd/result';
 const icons = [
   MenuFoldOutline,
   FileSearchOutline,
@@ -27,8 +30,10 @@ const icons = [
   exports: [NzIconModule,
     NzLayoutModule,
     NzDropDownModule,
-    NzGridModule, NzRadioModule,
+    NzGridModule, NzRadioModule, NzModalModule, NzResultModule,
     NzAffixModule,
+    NzFormModule,
+    NzSpinModule,
     NzSelectModule, NzDividerModule,
     NzFormModule,
     NzInputModule, NzButtonModule

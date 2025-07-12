@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "pos-order": {
+    "hotel-portal": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -24,7 +24,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/pos-order",
+            "outputPath": "dist/hotel-portal",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -37,11 +37,6 @@
                 "glob": "**/*",
                 "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
-              },
-              {
-                "glob": "**/*",
-                "input": "./node_modules/monaco-editor/min/vs",
-                "output": "/assets/vs/"
               }
             ],
             "styles": [
@@ -49,8 +44,8 @@
               "src/styles.scss",
               "node_modules/highlight.js/styles/default.css"
             ],
-            "scripts": ["node_modules/chart.js/dist/chart.umd.js"],
-            "baseHref": "/pos-order/"
+            "scripts": [],
+            "baseHref": "/hotel-portal/"
           },
           "configurations": {
             "production": {
@@ -80,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "pos-order:build:production"
+              "buildTarget": "hotel-portal:build:production"
             },
             "development": {
-              "buildTarget": "pos-order:build:development"
+              "buildTarget": "hotel-portal:build:development"
             }
           },
           "options": {
@@ -94,7 +89,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "pos-order:build"
+            "buildTarget": "hotel-portal:build"
           }
         },
         "test": {
@@ -103,7 +98,15 @@
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/ionicons/dist/fonts",
+                "output": "assets/fonts"
+              }
+            ],
             "styles": ["src/styles.scss"],
             "scripts": []
           }

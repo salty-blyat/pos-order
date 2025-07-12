@@ -1,14 +1,14 @@
 version: "3.2"
 services:
   ui-ctn:
-    image: dkr.sgx.bz/pos-order
+    image: dkr.sgx.bz/hotel-portal
     restart: always
     ports:
       - "60346:80"
     environment:
-      - "LANG_URL=https://core.sgx.bz/files/langs/pos-order"
-      - "BASE_API_URL=https://latest.sgx.bz/pos-order/api"
+      - "LANG_URL=https://core.sgx.bz/files/langs/hotel-portal"
+      - "BASE_API_URL=https://latest.sgx.bz/hotel-portal/api"
       - "AUTH_API_URL=https://core.sgx.bz/api"
       - "AUTH_UI_URL=https://core.sgx.bz"
-      - "APP_NAME=POS Order"
+      - "APP_NAME=Hotel Portal"
       - "APP_ICON=https://core.sgx.bz/files/23/01/dt-logo-removebg-preview.png"

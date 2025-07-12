@@ -8,7 +8,7 @@ import {
 } from "@angular/common";
 import en from "@angular/common/locales/en";
 import km from "@angular/common/locales/km";
-import zh from "@angular/common/locales/zh"; 
+import zh from "@angular/common/locales/zh";
 import {
   HTTP_INTERCEPTORS,
   HttpClient,
@@ -29,19 +29,26 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 import { catchError } from "rxjs/operators";
 
 
-import { CalendarModule, DateAdapter } from "angular-calendar";
-import { adapterFactory } from "angular-calendar/date-adapters/date-fns";
 import { AppVersionService } from "./utils/services/app-version.service";
 import { NzFlexDirective } from "ng-zorro-antd/flex";
 import { NzCodeEditorModule } from "ng-zorro-antd/code-editor";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HomeComponent } from "./pages/home/home.component";
 import { NzLayoutComponent } from "ng-zorro-antd/layout";
-import {  RedirectComponent } from "./redirect/redirect.component";
+import { RedirectComponent } from "./redirect/redirect.component";;
+import { CustomDateTimePipe } from "./utils/pipes/custom-date-time.pipe";
+import { RowNumberPipe } from "./utils/pipes/row-number.pipe";
+import { TimePipe } from "./utils/pipes/time.pipe";
 import { LanguageInputComponent } from "./utils/components/language-input.component";
-import { DishComponent } from "./utils/components/dish.component";
-import { CartComponent } from "./pages/home/cart.component"; 
-import { CategoryButtonsComponent } from "./utils/components/category-buttons.component";
+import { VerifyUserComponent } from "./pages/verify-user/verify-user.component";
+import { ServiceTypeCardComponent } from "./utils/components/service-type-card.component";
+import { ServiceComponent } from "./pages/service/service.component";
+import { ServiceListComponent } from "./utils/components/service-list.component";
+import { LoadingComponent } from "./utils/components/loading.component";
+import { NoResultFoundComponent } from "./utils/components/no-result-found.component";
+import { ServiceOperationComponent } from "./pages/service/service-operation.component";
+import { HistoryComponent } from "./pages/history/history.component";
+import { SuccessPopupComponent } from "./utils/components/success-popup.component";
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
     return `assets/vs/base/worker/workerMain.js`;
@@ -64,7 +71,7 @@ export class CustomTranslate implements TranslateLoader {
   constructor(
     private http: HttpClient,
     private settingService: SettingService
-  ) {}
+  ) { }
   getTranslation(lang: string): Observable<any> {
     // Here we are making http call to our server to get the
     // translation files. lang will be our language for which we are
@@ -78,14 +85,21 @@ export class CustomTranslate implements TranslateLoader {
 
 @NgModule({
   declarations: [
-    AppComponent, 
+    AppComponent,
     PageComponent,
     HomeComponent,
     RedirectComponent,
-    LanguageInputComponent, 
-    DishComponent,
-    CartComponent,
-    CategoryButtonsComponent
+    ServiceTypeCardComponent,
+    LanguageInputComponent,
+    CustomDateTimePipe,
+    LoadingComponent,
+    VerifyUserComponent,
+    RowNumberPipe, TimePipe,
+    ServiceListComponent, ServiceComponent,
+    NoResultFoundComponent,
+    HistoryComponent,
+    ServiceOperationComponent,
+    SuccessPopupComponent
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -99,23 +113,19 @@ export class CustomTranslate implements TranslateLoader {
     DragDropModule,
     ScrollingModule,
     TranslateModule.forRoot({
-        loader: {
-            provide: TranslateLoader, // Main provider for loader
-            useClass: CustomTranslate, // Custom Loader
-            deps: [HttpClient, SettingService], // Dependencies which helps serving loader
-        },
-        isolate: false,
-    }),
-    CalendarModule.forRoot({
-        provide: DateAdapter,
-        useFactory: adapterFactory,
+      loader: {
+        provide: TranslateLoader, // Main provider for loader
+        useClass: CustomTranslate, // Custom Loader
+        deps: [HttpClient, SettingService], // Dependencies which helps serving loader
+      },
+      isolate: false,
     }),
     NzFlexDirective,
     TranslateModule,
     ReactiveFormsModule,
     NzCodeEditorModule,
     NzLayoutComponent
-],
+  ],
   providers: [
     {
       provide: NZ_I18N,
@@ -147,8 +157,8 @@ export class CustomTranslate implements TranslateLoader {
       useFactory: initializeVersion,
       deps: [AppVersionService],
       multi: true,
-    }, 
+    },
     provideHttpClient(withInterceptorsFromDi()),
   ],
 })
-export class AppModule {}
+export class AppModule { }
