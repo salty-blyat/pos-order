@@ -4,7 +4,7 @@ ng build --configuration production
 
 cd .docker
 
-export DOCKER_HOST=tcp://d3.sgx.bz:6060
+export DOCKER_HOST=tcp://d3.sgx.bz:60555
 export DOCKER_TLS_VERIFY=1
 export DOCKER_CERT_PATH=~/.docker/d3-ssl
 

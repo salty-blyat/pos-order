@@ -88,8 +88,6 @@ export class HistoryComponent extends BaseListComponent<Request> {
   override ngOnInit(): void {
     if (this.sessionStorageService.getValue("guestId")) {
       this.search();
-      console.log(this.lists());
-
     }
   }
   onClick(id: number) {

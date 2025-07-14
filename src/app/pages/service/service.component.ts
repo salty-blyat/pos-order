@@ -22,8 +22,20 @@ import { Filter } from "../../utils/services/base-api.service";
     } @else if(lists().length === 0){ 
     <app-no-result-found></app-no-result-found>
     } @else if(!isLoading() && lists().length > 0){
-    <div *ngFor="let data of lists()">
-      <app-service-tile [service]="data" (onClick)="onClick(data.id || 0)"></app-service-tile>
+    <div
+        nz-col
+        nzXs="12"
+        nzSm="8"
+        nzLg="6"
+        nzXL="6"
+        *ngFor="let data of lists()"
+      >
+      <app-card
+        (onClick)="onClick(data.id || 0)"
+        [text]="data.serviceTypeName! "
+        [id]="data.id! || 0"
+        [image]="data.image!"
+      ></app-card>
     </div>
     }`,
   standalone: false,
@@ -42,7 +54,7 @@ export class ServiceComponent extends BaseListComponent<Service> {
       sessionStorageService,
       "service-type-list",
     );
-  } 
+  }
   onClick(id: number) {
     setTimeout(() => {
       this.router.navigate([`/service/${id}/operation`]);

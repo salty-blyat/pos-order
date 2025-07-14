@@ -17,6 +17,38 @@ export interface Guest {
     guestName?: string;
     guestPhone?: string;
 }
+export interface RequestDetail {
+    requestNo?: string;
+    requestTime?: string;
+    guestId?: number;
+    statusNameEn?: string;
+    statusNameKh?: string;
+    roomId?: number;
+    stayId?: number;
+    serviceItemId?: number;
+    quantity?: number;
+    status?: number;
+    note?: string;
+    id?: number;
+    attachments?: Attachment[];
+    requestLogs?: RequestLog[];
+
+    serviceItemName?: string;
+    serviceItemImage?: string;
+}
+
+export interface RequestLog {
+    id?: number;
+    requestId?: number;
+    staffId?: number;
+    staffName?: string;
+    status?: number;
+    statusNameKh?: string;
+    statusNameEn?: string;
+    note?: string;
+    createdBy?: string;
+    createdDate?: string;
+}
 
 export interface Request {
     requestNo?: string;
@@ -37,7 +69,8 @@ export interface Request {
     lastModifiedBy?: string;
     createdDate?: string;
     createdBy?: string;
-
+    statusNameEn?: string;
+    statusNameKh?: string;
     serviceName?: string;
     serviceItemImage?: string;
 }
@@ -98,5 +131,13 @@ export class RequestService extends BaseApiService<Request> {
     verifyPhone(model: any): Observable<any> {
         return this.httpClient.post<any>(`${this.getUrl()}/guest/confirm`, model);
     }
-
+    override find(id: number): Observable<RequestDetail> {
+        return this.httpClient.get<RequestDetail>(
+            `${this.getUrl()}/public/${id}`
+        );
+    }
+    getCompanyInfo(tenantCode: string): Observable<any> {
+        const url = `${this.settingService.setting.BASE_API_URL}/maintenance/public/${tenantCode}/company/info`;
+        return this.httpClient.get<any>(url);
+    }
 } 

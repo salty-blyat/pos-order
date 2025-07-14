@@ -4,25 +4,20 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-} from "@angular/core";
-import { ServiceType } from "../../pages/home/home.service";
+} from "@angular/core"; 
 
 @Component({
-  selector: "app-service-type-card",
+  selector: "app-card",
   template: `
     <div class="service-type-card" (click)="createRipple($event)">
       <img
         class="service-type-card__img"
-        [src]="
-          serviceType.image
-            ? serviceType.image
-            : './../../../assets/image/noimg.jpg'
-        "
-        [alt]="serviceType.name"
+        [src]="image ? image : './../../../assets/image/noimg.jpg'"
+        [alt]="text"
       />
-      <h3 class="service-type-card__name">{{ serviceType.name }}</h3>
+      <h3 class="service-type-card__name">{{ text }}</h3>
     </div>
-  `, 
+  `,
   styles: [
     `
       .service-type-card {
@@ -48,15 +43,15 @@ import { ServiceType } from "../../pages/home/home.service";
         padding: 8px;
         font-size: 14px;
       }
-
-     
     `,
   ],
   standalone: false,
   encapsulation: ViewEncapsulation.None,
 })
-export class ServiceTypeCardComponent {
-  @Input() serviceType!: ServiceType;
+export class CardComponent {
+  @Input() text!: string;
+  @Input() id!: number;
+  @Input() image!: string;
   @Output() onClick = new EventEmitter<number>();
   createRipple(event: MouseEvent) {
     const button = event.currentTarget as HTMLElement;
@@ -75,6 +70,6 @@ export class ServiceTypeCardComponent {
     setTimeout(() => {
       ripple.remove();
     }, 600); // matches the animation duration
-     this.onClick.emit(this.serviceType.id);
+    this.onClick.emit(this.id);
   }
 }

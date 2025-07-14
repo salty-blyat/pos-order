@@ -6,8 +6,8 @@ import { VerifyUserComponent } from "./pages/verify-user/verify-user.component";
 import { ServiceComponent } from "./pages/service/service.component";
 import { RouteGuardService } from "./helpers/route-guard.service";
 import { ServiceOperationComponent } from "./pages/service/service-operation.component";
-import { HistoryComponent } from "./pages/history/history.component";
 import { HistoryDetailComponent } from "./pages/history/history-detail.component";
+import { HistoryComponent } from "./pages/history/history.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/verify-user" },

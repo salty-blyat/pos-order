@@ -17,7 +17,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button'; import { NzDividerModule 
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzResultModule } from 'ng-zorro-antd/result';
-import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzMessageModule } from 'ng-zorro-antd/message'; import { NzTimelineModule } from 'ng-zorro-antd/timeline';
 const icons = [
   MenuFoldOutline,
   FileSearchOutline,
@@ -37,7 +37,7 @@ const icons = [
     NzSpinModule,
     NzSelectModule, NzDividerModule,
     NzFormModule,
-    NzInputModule, NzButtonModule, NzMessageModule, NzBadgeModule
+    NzInputModule, NzButtonModule, NzTimelineModule, NzMessageModule, NzBadgeModule
 
   ],
 })

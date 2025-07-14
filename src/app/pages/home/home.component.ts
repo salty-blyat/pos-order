@@ -38,7 +38,7 @@ import { TranslateService } from "@ngx-translate/core";
       <div style="position: relative;height:50vh;"> 
         <app-loading></app-loading> 
       </div>
-    } @else if(lists().length === 0){ 
+    } @else if( !isLoading() && lists().length === 0){ 
     <app-no-result-found></app-no-result-found>
     } @else if(!isLoading() && lists().length > 0){
     <div nz-row [nzGutter]="[8, 8]">
@@ -50,10 +50,12 @@ import { TranslateService } from "@ngx-translate/core";
         nzXL="6"
         *ngFor="let data of lists()"
       >
-        <app-service-type-card
+        <app-card
+        [text]="data.name  || ''"
+        [id]="data.id || 0"  
+        [image]="data.image || ''"
           (onClick)="onClick($event)"
-          [serviceType]="data"
-        ></app-service-type-card>
+         ></app-card>
       </div>
     </div>
 

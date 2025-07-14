@@ -5,17 +5,7 @@
 @mixin scrollbar-thumb-styles($color) {
     background: $color;
     border-radius: #{$scrollbar-border-radius};
-} 
-ion-grid{
-    padding: 0 !important;
-}
-ion-item {
-    --padding-start: 0;
-}
-ion-thumbnail {
-    margin: 0 !important;
-    padding: 0 !important;  
-}
+}  
   .ripple {
       position: absolute;
       border-radius: 50%;
@@ -31,19 +21,7 @@ ion-thumbnail {
           transform: scale(4);
           opacity: 0;
       }
-  }
-:root {
-    --ion-color-primary: #0054e9;--ion-color-danger: #ef4444;
-    // --ion-color-secondary: #0cd1e8;
-    // --ion-color-tertiary: #7044ff;
-
-    // --ion-color-success: #10dc60;
-    // --ion-color-warning: #ffce00;
-    // --ion-color-danger: #f04141;
-    // --ion-color-dark: #222428;
-    // --ion-color-medium: #989aa2;
-    // --ion-color-light: #f4f5f8;
-}
+  } 
 
 
 @font-face {
@@ -78,5 +56,5 @@ ion-thumbnail {
 body {
     margin: 0;
     font-family: Kantumruy, "Helvetica Neue", sans-serif;
-    background-color: #eeeeee;  
+    background-color: #f0f6ff;  
 }

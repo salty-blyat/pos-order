@@ -13,7 +13,7 @@ import { Component } from "@angular/core";
       </h5>
       <h5>
         {{
-            "RowNotFound" | translate 
+            "No Data Found" | translate 
         }}
       </h5>
     </div>

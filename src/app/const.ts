@@ -4,8 +4,8 @@ export const APP_STORAGE_KEY = {
   Authorized: "authorized",
   RefreshToken: "RefreshToken",
   Language: "hotel-lang",
-  Tenant: "hotel-tenant",
-  App: "hotel-appinfo",
+  Tenant: "hotel-portal-tenant",
+  App: "hotel-portal",
 };
 
 export const BRANCH_STORAGE_KEY = "branchStorageKey";

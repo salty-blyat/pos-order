@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, signal } from "@angular/core";
+import { Component, Inject, input, OnDestroy, OnInit, signal } from "@angular/core";
 import { SessionStorageService } from "../services/sessionStorage.service";
 import { Subscription } from "rxjs";
 import { PAGE_SIZE_OPTION } from "../../const";
@@ -31,9 +31,10 @@ export class BaseListComponent<T extends SharedDomain>
   refreshSub: Subscription = new Subscription();
   isLoading = signal<boolean>(false);
   pageSizeOption = signal<number[]>(PAGE_SIZE_OPTION);
+  loadMoreOption = input<boolean>(false);
   lists = signal<T[]>([]);
   param = signal<QueryParam>({
-    pageSize:
+    pageSize: 
       this.sessionStorageService.getCurrentPageSizeOption(
         this.pageSizeOptionKey()
       ) ?? 25,

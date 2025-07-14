@@ -6,6 +6,7 @@ import {
   ViewEncapsulation,
 } from "@angular/core";
 import { Request, RequestStatus } from "../../pages/request/request.service";
+import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "app-history-tile",
   template: `
@@ -29,24 +30,7 @@ import { Request, RequestStatus } from "../../pages/request/request.service";
       </div>
 
       <div class="view-icon" nz-flex nzGap="small">
-        <span
-          [ngStyle]="{
-            backgroundColor: getBadgeBgColor(request?.status),
-            color: getBadgeTextColor(request?.status)
-          }"
-          class="badge"
-          >@if(request?.status == requestStatus.Pending){
-          <nz-icon nzType="history" nzTheme="outline" />
-          }@else if(request?.status == requestStatus.InProgress){
-          <nz-icon nzType="history" nzTheme="outline" />
-          }@else if(request?.status == requestStatus.Done){
-          <nz-icon nzType="history" nzTheme="outline" />
-          }@else if(request?.status == requestStatus.Cancel){
-          <nz-icon nzType="history" nzTheme="outline" />
-          }
-
-          {{ requestStatus[request?.status || 1] }}
-        </span>
+        <app-status-badge [statusText]="translateService.currentLang == 'en' ? request?.statusNameEn! : request?.statusNameKh!"  [status]="request?.status ?? requestStatus.Pending"></app-status-badge> 
         <nz-icon nzType="right" nzTheme="outline" />
       </div>
     </div>
@@ -98,6 +82,7 @@ import { Request, RequestStatus } from "../../pages/request/request.service";
   standalone: false,
 })
 export class HistoryTileComponent {
+  constructor(public translateService: TranslateService){}
   @Input() request: Request | null = null;
   @Output() onClick = new EventEmitter<number>();
   readonly requestStatus = RequestStatus;
@@ -105,30 +90,30 @@ export class HistoryTileComponent {
   getBadgeBgColor(status: number | undefined): string {
     switch (status) {
       case 1:
-        return "#d9d9d9"; // Pending
+        return "#d9d9d9";
       case 2:
-        return "#1890ff"; // In Progress
+        return "#1890ff";
       case 3:
-        return "#52c41a"; // Done
+        return "#52c41a";
       case 4:
-        return "#f5222d"; // Cancel
+        return "#f5222d";
       default:
-        return "#d9d9d9"; // Fallback
+        return "#d9d9d9";
     }
   }
 
   getBadgeTextColor(status: number | undefined): string {
     switch (status) {
       case 1:
-        return "#000000"; // Pending
+        return "#000000";
       case 2:
-        return "#ffffff"; // In Progress
+        return "#ffffff";
       case 3:
-        return "#ffffff"; // Done
+        return "#ffffff";
       case 4:
-        return "#ffffff"; // Cancel
+        return "#ffffff";
       default:
-        return "#000000"; // Fallback
+        return "#000000";
     }
   }
 

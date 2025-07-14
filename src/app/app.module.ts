@@ -41,15 +41,17 @@ import { RowNumberPipe } from "./utils/pipes/row-number.pipe";
 import { TimePipe } from "./utils/pipes/time.pipe";
 import { LanguageInputComponent } from "./utils/components/language-input.component";
 import { VerifyUserComponent } from "./pages/verify-user/verify-user.component";
-import { ServiceTypeCardComponent } from "./utils/components/service-type-card.component";
 import { ServiceComponent } from "./pages/service/service.component";
 import { ServiceTileComponent } from "./utils/components/service-tile.component";
 import { LoadingComponent } from "./utils/components/loading.component";
 import { NoResultFoundComponent } from "./utils/components/no-result-found.component";
 import { ServiceOperationComponent } from "./pages/service/service-operation.component";
-import { HistoryComponent } from "./pages/history/history.component";
 import { SuccessPopupComponent } from "./utils/components/success-popup.component";
 import { HistoryDetailComponent } from "./pages/history/history-detail.component";
+import { StatusPipe } from "./utils/pipes/status-name.pipe";
+import { StatusBadgeComponent } from "./pages/history/status-badge.component";
+import { CardComponent } from "./utils/components/card.component";
+import { HistoryComponent } from "./pages/history/history.component";
 import { HistoryTileComponent } from "./utils/components/history-tile.component";
 
 self.MonacoEnvironment = {
@@ -92,7 +94,6 @@ export class CustomTranslate implements TranslateLoader {
     PageComponent,
     HomeComponent,
     RedirectComponent,
-    ServiceTypeCardComponent,
     LanguageInputComponent,
     CustomDateTimePipe,
     LoadingComponent,
@@ -100,11 +101,14 @@ export class CustomTranslate implements TranslateLoader {
     RowNumberPipe, TimePipe,
     ServiceTileComponent, ServiceComponent,
     NoResultFoundComponent,
-    HistoryComponent,
     ServiceOperationComponent,
     HistoryDetailComponent,
-    HistoryTileComponent,
-    SuccessPopupComponent
+    SuccessPopupComponent,
+    StatusBadgeComponent,
+    StatusPipe,
+    CardComponent,
+    HistoryComponent,
+    HistoryTileComponent
   ],
   bootstrap: [AppComponent],
   imports: [

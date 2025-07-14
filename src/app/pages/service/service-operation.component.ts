@@ -6,7 +6,7 @@ import { ServiceUiService } from "./service-ui-service.service";
 import { Service, ServiceService } from "./service.service";
 import { Subscription } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { RequestService } from "../request/request.service";
+import { RequestService, RequestStatus } from "../request/request.service";
 
 @Component({
   selector: "app-service-operation",
@@ -127,8 +127,7 @@ import { RequestService } from "../request/request.service";
         font-weight: bold;
       }
       .service-op-img {
-        width: 100%;
-        height: 200px;
+        width: 100%; 
         border-radius: 8px;
         object-fit: cover;
       }
@@ -199,18 +198,17 @@ export class ServiceOperationComponent implements OnInit {
     });
   }
   initControl(): void {
-    const pending = 1;
     this.frm = this.fb.group({
       quantity: [0],
       note: [null],
-      status: [pending],
+      status: [RequestStatus.Pending],
       requestTime: [new Date()],
       serviceTypeId: [this.service?.serviceTypeId || 0],
       serviceItemId: [0],
       guestId: [null],
       roomId: [null],
       stayId: [null],
-    }); 
+    });
   }
 
   onSubmit(e?: any) {
@@ -224,8 +222,6 @@ export class ServiceOperationComponent implements OnInit {
       stayId: stayId,
       serviceItemId: serviceItemId,
     });
-    console.log(this.frm.getRawValue());
-
 
     if (this.frm.valid && !this.isLoading) {
       this.isLoading = true;

@@ -4,10 +4,10 @@ services:
     image: dkr.sgx.bz/hotel-portal
     restart: always
     ports:
-      - "60346:80"
+      - "60555:80"
     environment:
-      - "LANG_URL=https://core.sgx.bz/files/langs/hotel-portal"
-      - "BASE_API_URL=https://latest.sgx.bz/hotel-portal/api"
+      - "LANG_URL=https://core.sgx.bz/files/langs/hotel"
+      - "BASE_API_URL=https://latest.sgx.bz/hotel/api"
       - "AUTH_API_URL=https://core.sgx.bz/api"
       - "AUTH_UI_URL=https://core.sgx.bz"
       - "APP_NAME=Hotel Portal"

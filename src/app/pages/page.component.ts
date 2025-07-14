@@ -7,6 +7,7 @@ import { AppVersionService } from "../utils/services/app-version.service";
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { LANGUAGES } from "../const";
 import { TranslateService } from "@ngx-translate/core";
+import { SessionStorageService } from "../utils/services/sessionStorage.service";
 
 @Component({
   selector: "app-page",
@@ -21,7 +22,7 @@ import { TranslateService } from "@ngx-translate/core";
           nzAlign="center"
         >
           <img class="logo" [src]="companyLogo" [alt]="companyName" />
-          <span class="restaurant-name">{{ companyName }}</span>
+          <span class="restaurant-name">{{ translateService.currentLang === 'km' ? companyName : companyNameEn }}</span>
         </div>
         <div style="height: auto !important;">
           <button style='margin-right: 8px;' nz-button nzType="text" (click)="goToHistory()"><nz-icon nzType="history" nzTheme="outline" /></button>
@@ -86,6 +87,7 @@ import { TranslateService } from "@ngx-translate/core";
       .content {
         padding: 12px 8px 48px 8px;
         min-height: calc(100vh - 90px);
+        background-color:#f0f6ff;
       }
       nz-header {
         position: sticky;
@@ -120,9 +122,9 @@ import { TranslateService } from "@ngx-translate/core";
 export class PageComponent implements OnInit {
   isLoading = false;
   openMap: any;
-  companyName: string = "Hotel Portal";
-  companyLogo: string =
-    "https://core.sgx.bz/files/evo/inv/25/05/8c6d84950cc142048369da1f848a6d47.png";
+  companyName: string = this.sessionStorageService.getValue("companyName") || "";
+  companyLogo: string = this.sessionStorageService.getValue("companyLogo") || "";
+  companyNameEn: string = this.sessionStorageService.getValue("companyNameEn") || "";
   languages = LANGUAGES;
   constructor(
     public router: Router,
@@ -130,14 +132,13 @@ export class PageComponent implements OnInit {
     public authService: AuthService,
     public languageService: LanguageService,
     private settingService: SettingService,
-    private localStorageService: LocalStorageService,
+    private sessionStorageService: SessionStorageService,
     public appVersionService: AppVersionService
   ) { }
   appName = this.authService.app?.appName;
 
   ngOnInit(): void {
-    // this.authService.updateClientInfo();
-
+    // this.authService.updateClientInfo(); 
     // if (this.authService.clientInfo.changePasswordRequired) {
     //   this.router.navigate([`/user-change-password`]).then();
     // }
