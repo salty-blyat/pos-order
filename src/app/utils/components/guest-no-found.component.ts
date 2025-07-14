@@ -1,9 +1,10 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+ 
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
+import { Component } from "@angular/core";
 @Component({
-  selector: "app-success-popup",
+  selector: "app-guest-no-found",
   template: `
     <nz-result
       nzStatus="success"

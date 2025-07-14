@@ -1,47 +1,76 @@
-import { Component, NgZone, OnInit, Renderer2, ViewEncapsulation } from "@angular/core";
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { VerifyService } from "./verify.service";
+import { Guest, RequestService } from "../request/request.service";
+import { NzMessageService } from "ng-zorro-antd/message";
+import { NotificationService } from "../service/notification.service";
 @Component({
   selector: "app-verify-user",
   template: `
     <div style="margin-top: 20%;">
-      <h1 class="welcome-banner">Welcome to {{ CompanyName }}</h1> 
+      <h1 class="welcome-banner">
+        {{ "Welcome to" | translate }} {{ CompanyName }}
+      </h1>
 
-    <form class="verify-form" nz-form [formGroup]="frm" [style.height.%]="100">
-      <div class="verify-card" style="line-height: 1;">
-        <h2>Guest Verification</h2>
-        <span
-          >Please enter the last 3 digit of your phone number to proceed.</span
-        >
-        <h3 style="text-align: center; margin-top:24px;">Your Phone Number</h3>
-        <h1 style="text-align: center;">012 344 XXX</h1>
-        <div nz-flex nzJustify="center"> 
-          <nz-form-item>
-            <nz-form-control>
-              <input type="text" nz-input formControlName="phone" type="tel" placeholder="Enter last 3 digits" style="text-align: center;" >
-            </nz-form-control>
-          </nz-form-item>
+      <form
+        class="verify-form"
+        nz-form
+        [formGroup]="frm"
+        [style.height.%]="100"
+      >
+        @if(isLoading){
+        <div class="verify-card" style="position: relative;height: 370px; ">
+          <app-loading></app-loading>
         </div>
-        <button
-          [disabled]="!frm.valid"
-          nz-button
-          style="width: 100%;"
-          nzType="primary"
-          (click)="onSubmit($event)"
-        >
-          Confirm
-        </button>
-      </div>
-    </form>  
-
-</div>
+        } @else if(!isLoading && !phoneNumber){
+        <div class="verify-card" style="margin:auto;padding:64px 0px;">
+          <app-no-result-found></app-no-result-found>
+        </div>
+        }@else if (!isLoading && phoneNumber){
+        <div class="verify-card" style="line-height: 1;">
+          <h2>{{ "Guest Verification" | translate }}</h2>
+          <span>{{
+            "Please enter the last 3 digit of your phone number to proceed."
+              | translate
+          }}</span>
+          <h3 style="text-align: center; margin-top:24px;">
+            {{ "Your Phone Number" | translate }}
+          </h3>
+          <h1 style="text-align: center;">{{ phoneNumber }}</h1>
+          <div nz-flex nzJustify="center">
+            <nz-form-item>
+              <nz-form-control>
+                <input
+                  type="text"
+                  nz-input
+                  formControlName="lastThreeDigits"
+                  type="tel"
+                  placeholder="Enter last 3 digits"
+                  style="text-align: center;"
+                />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+          <button
+            [disabled]="!frm.valid"
+            [nzLoading]="isLoading"
+            nz-button
+            style="width: 100%;"
+            nzType="primary"
+            (click)="onSubmit($event)"
+          >
+            {{ "Confirm" | translate }}
+          </button>
+        </div>
+        }
+      </form>
+    </div>
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
   styles: [
-    ` 
+    `
       .verify-card {
         background-color: white;
         border-radius: 8px;
@@ -67,38 +96,96 @@ import { VerifyService } from "./verify.service";
   standalone: false,
 })
 export class VerifyUserComponent implements OnInit {
-  constructor(private fb: FormBuilder, private router: Router, private service: VerifyService, private activatedRoute: ActivatedRoute, private sessionService: SessionStorageService) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private service: RequestService,
+    private activatedRoute: ActivatedRoute,
+    private sessionService: SessionStorageService,
+    private notificationService: NotificationService
+  ) { }
   frm!: FormGroup;
   isLoading = false;
+  guestPhone: string = "";
   CompanyName = "Hotel Paradise";
   routeRefresh!: Subscription;
+
   ngOnInit(): void {
+    if (this.isLoading) return;
+    this.isLoading = true;
     this.initControl();
-    this.routeRefresh = this.activatedRoute.paramMap.subscribe((params) => {
-      const uuid = params.get("uuid");
-      this.service.verify(uuid!).subscribe((res) => {
-        const guestId = res.guestId;
-        const roomId = res.roomId;
-        const stayId = res.stayId;
-        this.sessionService.setValue({ key: "guestId", value: guestId });
-        this.sessionService.setValue({ key: "roomId", value: roomId });
-        this.sessionService.setValue({ key: "stayId", value: stayId });
-      })
-    });
+    setTimeout(() => {
+      this.routeRefresh = this.activatedRoute.paramMap.subscribe({
+        next: (params) => {
+          const uuid = params.get("uuid");
+          // const tenantCode = params.get("tenantCode");
+          this.service.getGuest(uuid!).subscribe((res: Guest) => {
+            const stayId = res.stayId;
+            const roomId = res.roomId;
+            const roomNo = res.roomNo;
+            const guestId = res.guestId;
+            const guestName = res.guestName;
+            const guestPhone = res.guestPhone;
+            this.guestPhone = guestPhone ?? "";
+
+            this.sessionService.setValue({ key: "guestId", value: guestId });
+            this.sessionService.setValue({ key: "roomId", value: roomId });
+            this.sessionService.setValue({ key: "stayId", value: stayId });
+            this.sessionService.setValue({ key: "roomNo", value: roomNo });
+            this.sessionService.setValue({
+              key: "guestName",
+              value: guestName,
+            });
+            this.sessionService.setValue({
+              key: "guestPhone",
+              value: guestPhone,
+            });
+          });
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading = false;
+        },
+      });
+    }, 50);
   }
+
   initControl(): void {
     this.frm = this.fb.group({
-      phone: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      lastThreeDigits: [
+        null,
+        [Validators.required, Validators.minLength(3), Validators.maxLength(3)],
+      ],
+      stayId: [null],
     });
   }
 
+  get phoneNumber() {
+    const phone = this.guestPhone ?? "";
+    const formatted = phone.replace(/(\d{3})(\d{3})(\d{1,3})/, "$1 $2 $3XXX");
+    return formatted;
+  }
   onSubmit(e?: any) {
+    this.frm.patchValue({ stayId: this.sessionService.getValue("stayId") });
     if (this.frm.valid && !this.isLoading) {
       this.isLoading = true;
-      if (this.frm?.get('phone')?.value == '111') {
-        this.router.navigate(['/home']);
-      }
-      this.isLoading = false;
+      this.service.verifyPhone(this.frm.getRawValue()).subscribe({
+        next: (res) => {
+          if (res.isValid) {
+            this.router.navigate(["/home"]);
+          } else {
+            this.notificationService.customErrorNotification(
+              "Invalid phone number"
+            );
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading = false;
+        },
+      });
     }
   }
 }

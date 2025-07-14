@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Service } from "../../pages/service/service.service";
 
 @Component({
-  selector: "app-service-list",
+  selector: "app-service-tile",
   template: `
     <div class="service-list" nz-flex nzGap="small" (click)="createRipple($event)">
       <img class="service-image" [src]="imageUrl" alt="" />
@@ -33,7 +33,7 @@ import { Service } from "../../pages/service/service.service";
   ],
   standalone: false,
 })
-export class ServiceListComponent {
+export class ServiceTileComponent {
   @Input() service: Service | null = null;
   @Output() onClick = new EventEmitter<number>();
   get imageUrl(): string {

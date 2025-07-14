@@ -43,12 +43,15 @@ import { LanguageInputComponent } from "./utils/components/language-input.compon
 import { VerifyUserComponent } from "./pages/verify-user/verify-user.component";
 import { ServiceTypeCardComponent } from "./utils/components/service-type-card.component";
 import { ServiceComponent } from "./pages/service/service.component";
-import { ServiceListComponent } from "./utils/components/service-list.component";
+import { ServiceTileComponent } from "./utils/components/service-tile.component";
 import { LoadingComponent } from "./utils/components/loading.component";
 import { NoResultFoundComponent } from "./utils/components/no-result-found.component";
 import { ServiceOperationComponent } from "./pages/service/service-operation.component";
 import { HistoryComponent } from "./pages/history/history.component";
 import { SuccessPopupComponent } from "./utils/components/success-popup.component";
+import { HistoryDetailComponent } from "./pages/history/history-detail.component";
+import { HistoryTileComponent } from "./utils/components/history-tile.component";
+
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
     return `assets/vs/base/worker/workerMain.js`;
@@ -95,10 +98,12 @@ export class CustomTranslate implements TranslateLoader {
     LoadingComponent,
     VerifyUserComponent,
     RowNumberPipe, TimePipe,
-    ServiceListComponent, ServiceComponent,
+    ServiceTileComponent, ServiceComponent,
     NoResultFoundComponent,
     HistoryComponent,
     ServiceOperationComponent,
+    HistoryDetailComponent,
+    HistoryTileComponent,
     SuccessPopupComponent
   ],
   bootstrap: [AppComponent],

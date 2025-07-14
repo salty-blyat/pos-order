@@ -22,83 +22,85 @@ import { RequestService } from "../request/request.service";
       class="service-op"
       nz-flex
       nzGap="middle"
-      [ngStyle]="{ height: isLoading ? 'calc(100vh - 300px)' : '100%' }"
+      [ngStyle]="{ height: isLoading ? '80vh' : '100%' }"
       nzVertical
       nz-form
       [formGroup]="frm"
     >
-      <ng-container *ngIf="isLoading">
-        <app-loading></app-loading>
-      </ng-container>
-      <ng-container *ngIf="!isLoading">
-        <h3 class="service-op-title">
-          {{ service?.name || "" }}
-        </h3>
-        <div>
-          <img
-            class="service-op-img"
-            [src]="
-              service?.image
-                ? service.image
-                : './../../../assets/image/noimg.jpg'
-            "
-            [alt]="service?.name"
-          />
+      @if(isLoading){
+           <app-loading></app-loading>
+       } @else if(!service && !isLoading){ 
+        <div style='margin:auto'>
+          <app-no-result-found></app-no-result-found>
         </div>
-        <div *ngIf="service?.description" class="service-op-des">
-          <h4>{{ "Description" | translate }}</h4>
-          <p>{{ service?.description || "" }}</p>
-        </div>
-        <nz-form-item *ngIf="service?.trackQty">
-          <nz-form-label>{{ "Qty" | translate }}</nz-form-label>
-          <nz-form-control>
-            <div nz-flex nzGap="small" nzAlign="center">
-              <button
-                nz-button
-                nzSize="large"
-                [disabled]="this.frm.get('qty')?.value <= 1"
-                (click)="
-                  this.frm.get('qty')?.setValue(this.frm.get('qty')?.value - 1)
-                "
-              >
-                -
-              </button>
-              <input
-                nz-input
-                formControlName="qty"
-                nzSize="large"
-                readonly
-                class="qty-size text-center"
-              />
-              <button
-                nz-button
-                nzSize="large"
-                (click)="
-                  this.frm.get('qty')?.setValue(this.frm.get('qty')?.value + 1)
-                "
-              >
-                +
-              </button>
-            </div>
-          </nz-form-control>
-        </nz-form-item>
+      } @else if (!isLoading && service){
+      <h3 class="service-op-title">
+        {{ service?.name || "" }}
+      </h3>
+      <div>
+        <img
+          class="service-op-img"
+          [src]="
+            service?.image ? service.image : './../../../assets/image/noimg.jpg'
+          "
+          [alt]="service?.name"
+        />
+      </div>
+      <div *ngIf="service?.description" class="service-op-des">
+        <h4>{{ "Description" | translate }}</h4>
+        <p>{{ service?.description || "" }}</p>
+      </div>
+      <nz-form-item *ngIf="service?.trackQty">
+        <nz-form-label>{{ "Quantity" | translate }}</nz-form-label>
+        <nz-form-control>
+          <div nz-flex nzGap="small" nzAlign="center">
+            <button
+              nz-button
+              nzSize="large"
+              [disabled]="this.frm.get('quantity')?.value <= 1"
+              (click)="
+                this.frm.get('quantity')?.setValue(this.frm.get('quantity')?.value - 1)
+              "
+            >
+              -
+            </button>
+            <input
+              nz-input
+              formControlName="quantity"
+              nzSize="large"
+              readonly
+              class="qty-size text-center"
+            />
+            <button
+              nz-button
+              nzSize="large"
+              [disabled]="this.frm.get('quantity')?.value >= this.service?.maxQty!"
+              (click)="
+                this.frm.get('quantity')?.setValue(this.frm.get('quantity')?.value + 1)
+              "
+            >
+              +
+            </button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
 
-        <nz-form-item>
-          <nz-form-label>{{ "Note" | translate }}</nz-form-label>
-          <nz-form-control>
-            <textarea nz-input rows="3" formControlName="note"></textarea>
-          </nz-form-control>
-        </nz-form-item>
-        <button
-          [disabled]="!frm?.valid"
-          nz-button
-          style="width: 100%;"
-          nzType="primary"
-          (click)="onSubmit($event)"
-        >
-          {{ "Request" | translate }}
-        </button>
-      </ng-container>
+      <nz-form-item>
+        <nz-form-label>{{ "Note" | translate }}</nz-form-label>
+        <nz-form-control>
+          <textarea nz-input rows="3" formControlName="note"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <button
+        [disabled]="!frm?.valid"
+        nz-button
+        style="width: 100%;"
+        nzType="primary"
+        (click)="onSubmit($event)"
+      >
+        {{ "Request" | translate }}
+      </button>
+      }
     </form>
   `,
   styleUrls: ["../../../assets/scss/list.style.scss"],
@@ -168,52 +170,75 @@ export class ServiceOperationComponent implements OnInit {
     this.location.back();
   }
   decreseQty() {
-    this.frm.get("qty")?.setValue(this.frm.get("qty")?.value - 1);
+    this.frm.get("quantity")?.setValue(this.frm.get("quantity")?.value - 1);
   }
   increaseQty() {
-    this.frm.get("qty")?.setValue(this.frm.get("qty")?.value + 1);
+    this.frm.get("quantity")?.setValue(this.frm.get("quantity")?.value + 1);
   }
 
   ngOnInit(): void {
+    this.initControl();
     this.routeRefresh = this.activatedRoute.paramMap.subscribe((params) => {
       this.serviceRefresh = this.serviceService
         .find(Number(params.get("id")))
         .subscribe((res) => {
           this.service = res;
+          if (this.service?.trackQty) {
+            this.frm.get("quantity")?.setValue(1);
+            this.frm
+              .get("quantity")
+              ?.addValidators([
+                Validators.required,
+                Validators.min(1),
+                Validators.max(this.service?.maxQty || 1),
+              ]);
+          } else {
+            this.frm.get("quantity")?.setValue(0);
+          }
         });
     });
-    this.initControl();
   }
   initControl(): void {
     const pending = 1;
     this.frm = this.fb.group({
-      qty: [0],
+      quantity: [0],
       note: [null],
       status: [pending],
       requestTime: [new Date()],
       serviceTypeId: [this.service?.serviceTypeId || 0],
-      serviceItemId: [this.service?.id || 0],
-      //  stayId: [this.sessionStorageService.getValue("stayId") || 0],
-      // guestId: [this.sessionStorageService.getValue("guestId") || 0],
-      // roomId: [this.sessionStorageService.getValue("roomId") || 0],
-      guestId: [8],
-      roomId: [226],
-      stayId: [308],
-
-    });
+      serviceItemId: [0],
+      guestId: [null],
+      roomId: [null],
+      stayId: [null],
+    }); 
   }
 
   onSubmit(e?: any) {
+    const guestId = this.sessionStorageService.getValue("guestId");
+    const roomId = this.sessionStorageService.getValue("roomId");
+    const stayId = this.sessionStorageService.getValue("stayId");
+    const serviceItemId = this.service?.id || 0;
+    this.frm.patchValue({
+      guestId: guestId,
+      roomId: roomId,
+      stayId: stayId,
+      serviceItemId: serviceItemId,
+    });
+    console.log(this.frm.getRawValue());
+
+
     if (this.frm.valid && !this.isLoading) {
       this.isLoading = true;
-
-      this.requestService.add(this.frm.value).subscribe((res) => {
-        console.log('res', res);
-
-        this.uiService.showSuccess();
-        this.isLoading = false;
+      this.requestService.addData(this.frm.value).subscribe({
+        next: (res) => {
+          this.uiService.showSuccess();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading = false;
+        },
       });
-
     }
   }
   ngOnDestroy(): void {

@@ -3,7 +3,7 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse
 import { Observable } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { AuthService } from './auth.service'; 
+import { AuthService } from './auth.service';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingService } from '../app-setting';
@@ -21,7 +21,7 @@ export class TokenInterceptor implements HttpInterceptor {
     private authService: AuthService,
     private router: Router,
     private settingService: SettingService
-  ) {}
+  ) { }
   public jwtHelper: JwtHelperService = new JwtHelperService();
   intercept(
     request: HttpRequest<any>,

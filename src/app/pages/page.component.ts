@@ -24,6 +24,7 @@ import { TranslateService } from "@ngx-translate/core";
           <span class="restaurant-name">{{ companyName }}</span>
         </div>
         <div style="height: auto !important;">
+          <button style='margin-right: 8px;' nz-button nzType="text" (click)="goToHistory()"><nz-icon nzType="history" nzTheme="outline" /></button>
           <span
             nzTrigger="click"
             nz-dropdown
@@ -136,9 +137,14 @@ export class PageComponent implements OnInit {
 
   ngOnInit(): void {
     // this.authService.updateClientInfo();
+
     // if (this.authService.clientInfo.changePasswordRequired) {
     //   this.router.navigate([`/user-change-password`]).then();
     // }
+  }
+
+  goToHistory() {
+    this.router.navigate(["history"]).then();
   }
 
   logout() {

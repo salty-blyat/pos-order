@@ -6,7 +6,7 @@ import {
   FormOutline,
   MenuFoldOutline,
   MenuUnfoldOutline,
-} from '@ant-design/icons-angular/icons';
+} from '@ant-design/icons-angular/icons'; import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzFormModule } from 'ng-zorro-antd/form'; import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
@@ -17,6 +17,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button'; import { NzDividerModule 
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 const icons = [
   MenuFoldOutline,
   FileSearchOutline,
@@ -36,7 +37,7 @@ const icons = [
     NzSpinModule,
     NzSelectModule, NzDividerModule,
     NzFormModule,
-    NzInputModule, NzButtonModule
+    NzInputModule, NzButtonModule, NzMessageModule, NzBadgeModule
 
   ],
 })

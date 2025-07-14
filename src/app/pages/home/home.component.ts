@@ -8,17 +8,22 @@ import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "app-home",
   template: `
-    <div class="card-container" nz-row [nzGutter]="[8, 8]">
-      <div nz-col xs="24" sm="12">
+    <div class="card-container" *ngIf="!isLoading() && guestName" nz-row [nzGutter]="[8, 8]">
+      <div  nz-col xs="24" sm="12">
         <div nz-flex nzGap="small" nzAlign="center">
-          <div class="avatar">SJ</div>
-          <strong style="font-size: 16px;">Welcome back, Sarah Johnson</strong>
+          <div class="avatar">{{ avartar }}</div> 
+          ✨
+          <strong style="font-size: 16px;"
+            >{{ "Welcome back" | translate }}, {{ guestName }}</strong
+          >
           ✨
         </div>
       </div>
 
       <div nz-col xs="24" sm="12" class="room-details">
-        <div class="room-number">Room 301 - Deluxe Suite</div>
+        <!-- NOTE: should i call to /stay/id  or should we include it in the 
+         confirm endpoint or should we put it inside the guest endpoint -->
+        <div class="room-number">{{ roomNo }} - Deluxe Suite</div>
         <div class="stay-info">
           <span class="nights">3 Nights</span><br />
           <span class="date-range">Dec 15, 2024 - Dec 18, 2024</span>
@@ -27,13 +32,13 @@ import { TranslateService } from "@ngx-translate/core";
     </div>
 
     <div class="header-home">
-      <h2>How can we assist you today?</h2>
+      <h2>{{ "How can we assist you today" | translate }}?</h2>
     </div>
     @if(isLoading()){
-    <app-loading></app-loading>
-
-    } @else if(lists().length === 0){
-
+      <div style="position: relative;height:50vh;"> 
+        <app-loading></app-loading> 
+      </div>
+    } @else if(lists().length === 0){ 
     <app-no-result-found></app-no-result-found>
     } @else if(!isLoading() && lists().length > 0){
     <div nz-row [nzGutter]="[8, 8]">
@@ -60,7 +65,9 @@ import { TranslateService } from "@ngx-translate/core";
       .header-home {
         margin-bottom: 8px;
         padding: 32px 0 0 0;
+        text-wrap: balance;
         h2 {
+          font-size: 18px;
           font-weight: bold;
         }
       }
@@ -125,12 +132,14 @@ export class HomeComponent extends BaseListComponent<ServiceType> {
     private authService: AuthService,
     public router: Router
   ) {
-    super(
-      service,
-      sessionStorageService,
-      "service-type-list",
-    );
+    super(service, sessionStorageService, "service-type-list");
   }
+
+  guestName: string = this.sessionStorageService.getValue("guestName") ?? "";
+  roomNo: string = this.sessionStorageService.getValue("roomNo") ?? "";
+  avartar: string =
+    this.guestName.trim().split(" ")[1].charAt(0).toUpperCase() +
+    this.guestName.trim().split(" ")[1].charAt(1).toUpperCase();
   onClick(id: number) {
     setTimeout(() => {
       this.router.navigate([`/service/${id}`]);

@@ -7,6 +7,7 @@ import { ServiceComponent } from "./pages/service/service.component";
 import { RouteGuardService } from "./helpers/route-guard.service";
 import { ServiceOperationComponent } from "./pages/service/service-operation.component";
 import { HistoryComponent } from "./pages/history/history.component";
+import { HistoryDetailComponent } from "./pages/history/history-detail.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/verify-user" },
@@ -15,6 +16,10 @@ const routes: Routes = [
     component: PageComponent,
     // canActivate: [RouteGuardService],
     children: [
+      {
+        path: "verify-user/:tenantCode/:uuid",
+        component: VerifyUserComponent,
+      },
       {
         path: "home",
         component: HomeComponent,
@@ -28,23 +33,19 @@ const routes: Routes = [
         component: ServiceOperationComponent,
       },
       {
-        path: "verify-user/:uuid",
-        component: VerifyUserComponent,
-      },
-      {
         path: "history",
         component: HistoryComponent,
+      },
+      {
+        path: "history/:id",
+        component: HistoryDetailComponent,
       }
 
     ]
   },
-  // {
-  //   path: "redirect/:requestId",
-  //   component: RedirectComponent,
-  // },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule { } 
