@@ -11,6 +11,7 @@ import { Request, RequestStatus } from "../../pages/request/request.service";
     template: `
     <span
       [ngStyle]="{
+
         backgroundColor: getBadgeBgColor(status),
         color: getBadgeTextColor(status)
       }"
@@ -36,6 +37,7 @@ import { Request, RequestStatus } from "../../pages/request/request.service";
         border-radius: 8px;
         color: white;
         font-size: 11px;
+        text-wrap: nowrap;
       }
     `,
     ],

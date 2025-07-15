@@ -41,7 +41,13 @@ import { TranslateService } from "@ngx-translate/core";
     `
       .history-info {
         height: fit-content;
-        margin: auto 0;
+        margin: auto 0; 
+        h3{
+          font-size:14px;
+      }
+      h5{
+        font-size:11px;
+      }
       }
       .badge {
         padding: 2px 8px;
@@ -82,7 +88,7 @@ import { TranslateService } from "@ngx-translate/core";
   standalone: false,
 })
 export class HistoryTileComponent {
-  constructor(public translateService: TranslateService){}
+  constructor(public translateService: TranslateService) { }
   @Input() request: Request | null = null;
   @Output() onClick = new EventEmitter<number>();
   readonly requestStatus = RequestStatus;

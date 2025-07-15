@@ -3,24 +3,23 @@ import { AuthService } from './auth.service';
 import { APP_STORAGE_KEY } from '../const';
 import { CanActivate, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
+import { SessionStorageService } from '../utils/services/sessionStorage.service';
 @Injectable({ providedIn: 'root' })
 export class RouteGuardService implements CanActivate {
   constructor(
     public router: Router,
-    private settingService: SettingService,
-    private authService: AuthService
-  ) {}
+    private sessionService: SessionStorageService
+  ) { }
   canActivate(): boolean {
-    const token = this.authService.getStorageValue<any>(
-      APP_STORAGE_KEY.Authorized
-    )?.token;
-    if (!token) {
-      this.authService.removeStorageValue(APP_STORAGE_KEY.Authorized);
-      window.location.replace(
-        `${this.settingService.setting.AUTH_UI_URL}/auth/login`
-      );
+    const isVerified = this.sessionService.getValue<boolean>('isVerified');
+
+    console.log('isVerified:', isVerified);
+
+    if (isVerified !== true) {
+      this.router.navigate(['/not-found']);
       return false;
     }
+
     return true;
   }
 }

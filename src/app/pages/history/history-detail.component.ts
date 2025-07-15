@@ -19,44 +19,52 @@ import { TranslateService } from "@ngx-translate/core";
         ><span style="font-size: 16px;">{{ "Back" | translate }}</span>
       </button>
     </div>
-    <div nz-row [nzGutter]="[16, 16]">
-      <div nz-col nzXs="24" nzSm="24" nzMd="12">
+    <div nz-row [nzGutter]="[16, 16]" >
+      <div nz-col nzXs="24" nzSm="24" [nzMd]="model?.requestLogs?.length! > 0 ? 12 : 24">
         <div nz-flex nzVertical class="req-detail-card" nzGap="middle">
-          <div class="header-history">
-            <h3>
-              <nz-icon nzType="info-circle" nzTheme="outline" />{{
-                "Request Information " | translate
-              }}
-            </h3>
-          </div>
-
-          <div class="history-service">
-            <h4>{{ "Service" | translate }}</h4>
-            <p>
-              {{ model?.serviceItemName || "model?.serviceItemName" }}
-            </p>
-          </div>
-          <div nz-row style="padding: 0 16px;" nzGutter="16">
-            <div nz-col nzSpan="12" *ngIf="model?.quantity! > 0">
-              <span>{{ "Quantity" | translate }}</span> <br />
-              <span
-                style="text-align:center; font-size:16px; font-weight: bold;"
-                >{{ model?.quantity || "model?.quantity" }}</span
-              >
+          @if(!isLoading && model){
+            <div class="header-history">
+              <h3>
+                <nz-icon nzType="info-circle" nzTheme="outline" />{{
+                  "Request Information " | translate
+                }}
+              </h3>
             </div>
 
-            <div nz-col nzSpan="12">
-              <span>{{ "Status" | translate }}</span> <br />
-              <app-status-badge
-              [statusText]="translateService.currentLang == 'en' ? model?.statusNameEn! : model?.statusNameKh!"
-                [status]="model?.status ?? requestStatus.Pending"
-              ></app-status-badge>
+            <div class="history-service">
+              <h4>{{ "Service" | translate }}</h4>
+              <p>
+                {{ model?.serviceItemName || "model?.serviceItemName" }}
+              </p>
             </div>
-          </div>
-          <div class="request-time">
-            <h4>{{ "Requested At" | translate }}</h4>
-            <p>{{ model?.requestTime | customDateTime }}</p>
-          </div>
+            <div nz-row style="padding: 0 16px;" nzGutter="16">
+              <div nz-col nzSpan="12" *ngIf="model?.quantity! > 0">
+                <span>{{ "Quantity" | translate }}</span> <br />
+                <span
+                  style="text-align:center; font-size:16px; font-weight: bold;"
+                  >{{ model?.quantity || "model?.quantity" }}</span
+                >
+              </div>
+
+              <div nz-col nzSpan="12">
+                <span>{{ "Status" | translate }}</span> <br />
+                <app-status-badge
+                [statusText]="translateService.currentLang == 'en' ? model?.statusNameEn! : model?.statusNameKh!"
+                  [status]="model?.status ?? requestStatus.Pending"
+                ></app-status-badge>
+              </div>
+            </div>
+            <div class="request-time">
+              <h4>{{ "Requested At" | translate }}</h4>
+              <p>{{ model?.requestTime | customDateTime }}</p>
+            </div> 
+          }
+          @else if(isLoading) {
+               <app-loading></app-loading>
+           } @else if(!isLoading && !model){
+            <app-no-result-found></app-no-result-found>
+          }
+            
         </div>
       </div>
 
@@ -106,6 +114,7 @@ import { TranslateService } from "@ngx-translate/core";
       }
       .req-detail-card {
         border-radius: 8px;
+        position: relative;
         background-color: white;
         padding: 16px;
       }

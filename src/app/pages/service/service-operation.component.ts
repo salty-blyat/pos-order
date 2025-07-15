@@ -128,6 +128,7 @@ import { RequestService, RequestStatus } from "../request/request.service";
       }
       .service-op-img {
         width: 100%; 
+        max-height:400px;
         border-radius: 8px;
         object-fit: cover;
       }

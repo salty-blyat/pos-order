@@ -1,4 +1,4 @@
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { AuthService } from "../helpers/auth.service";
 import { LanguageService } from "../utils/services/language.service";
 import { SettingService } from "../app-setting";
@@ -8,6 +8,7 @@ import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { LANGUAGES } from "../const";
 import { TranslateService } from "@ngx-translate/core";
 import { SessionStorageService } from "../utils/services/sessionStorage.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-page",
@@ -15,7 +16,7 @@ import { SessionStorageService } from "../utils/services/sessionStorage.service"
     <nz-layout>
       <nz-header nzTheme="light">
         <div
-          (click)="router.navigate(['/home'])"
+          (click)="goHome()"
           class="brand"
           nz-flex
           nzGap="small"
@@ -25,7 +26,7 @@ import { SessionStorageService } from "../utils/services/sessionStorage.service"
           <span class="restaurant-name">{{ translateService.currentLang === 'km' ? companyName : companyNameEn }}</span>
         </div>
         <div style="height: auto !important;">
-          <button style='margin-right: 8px;' nz-button nzType="text" (click)="goToHistory()"><nz-icon nzType="history" nzTheme="outline" /></button>
+          <button style='margin-right: 8px;' nz-button nzType="text" (click)="goToHistory()"><nz-icon nzType="history" nzTheme="outline" />{{"History" | translate}}</button>
           <span
             nzTrigger="click"
             nz-dropdown
@@ -95,7 +96,7 @@ import { SessionStorageService } from "../utils/services/sessionStorage.service"
         top: 0;
         z-index: 10;
         padding: 8px !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
       }
       .logo {
         height: 42px;
@@ -122,28 +123,41 @@ import { SessionStorageService } from "../utils/services/sessionStorage.service"
 export class PageComponent implements OnInit {
   isLoading = false;
   openMap: any;
-  companyName: string = this.sessionStorageService.getValue("companyName") || "";
-  companyLogo: string = this.sessionStorageService.getValue("companyLogo") || "";
-  companyNameEn: string = this.sessionStorageService.getValue("companyNameEn") || "";
+  companyName: string = "";
+  companyLogo: string = "";
+  companyNameEn: string = "";
   languages = LANGUAGES;
   constructor(
     public router: Router,
     public translateService: TranslateService,
     public authService: AuthService,
     public languageService: LanguageService,
+    public activatedRoute: ActivatedRoute,
     private settingService: SettingService,
-    private sessionStorageService: SessionStorageService,
+    private sessionService: SessionStorageService,
     public appVersionService: AppVersionService
   ) { }
   appName = this.authService.app?.appName;
-
+  routeRefresher = new Subscription;
   ngOnInit(): void {
-    // this.authService.updateClientInfo(); 
-    // if (this.authService.clientInfo.changePasswordRequired) {
-    //   this.router.navigate([`/user-change-password`]).then();
-    // }
+    if (this.sessionService.getValue("companyName")) {
+      this.companyName = this.sessionService.getValue("companyName") || "";
+      this.companyLogo = this.sessionService.getValue("companyLogo") || "";
+      this.companyNameEn = this.sessionService.getValue("companyNameEn") || "";
+    }
+    this.authService.companyInfo$.subscribe((info) => {
+      if (info) {
+        this.companyName = info.CompanyName;
+        this.companyLogo = info.CompanyLogo;
+        this.companyNameEn = info.CompanyNameEn;
+      }
+    });
   }
 
+  goHome() {
+    // if user no verify dont allow to go home
+    this.router.navigate(['/home'])
+  }
   goToHistory() {
     this.router.navigate(["history"]).then();
   }
@@ -166,5 +180,8 @@ export class PageComponent implements OnInit {
       `${this.settingService.setting.AUTH_UI_URL}/appcenter/user-view`,
       "app-center"
     );
+  }
+  ngOnDestroy(): void {
+    this.routeRefresher?.unsubscribe();
   }
 }

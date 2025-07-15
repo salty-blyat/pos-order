@@ -8,9 +8,10 @@ import { RouteGuardService } from "./helpers/route-guard.service";
 import { ServiceOperationComponent } from "./pages/service/service-operation.component";
 import { HistoryDetailComponent } from "./pages/history/history-detail.component";
 import { HistoryComponent } from "./pages/history/history.component";
+import { NotFoundPageComponent } from "./pages/not-found/not-found.component";
 
 const routes: Routes = [
-  { path: "", pathMatch: "full", redirectTo: "/verify-user" },
+  { path: "", pathMatch: "full", redirectTo: "/not-found" },
   {
     path: "",
     component: PageComponent,
@@ -40,9 +41,12 @@ const routes: Routes = [
         path: "history/:id",
         component: HistoryDetailComponent,
       }
-
     ]
   },
+  {
+    path: "**",
+    component: NotFoundPageComponent,
+  }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -7,7 +7,7 @@ import { Service } from "../../pages/service/service.service";
     <div class="service-list" nz-flex nzGap="small" (click)="createRipple($event)">
       <img class="service-image" [src]="imageUrl" alt="" />
       <div   >
-        <h3>{{ service?.name }}</h3> <br>
+        <h3>{{ service?.name }}</h3> 
         <p *ngIf="service?.description">{{ service?.description }}</p>
       </div>
     </div>
@@ -19,6 +19,7 @@ import { Service } from "../../pages/service/service.service";
      border-radius:8px;
      padding:8px;
      overflow:hidden;
+       height: 100px;
      position:relative;
      cursor:pointer;
      margin-bottom: 12px;
@@ -26,8 +27,10 @@ import { Service } from "../../pages/service/service.service";
 
     }
       .service-image {
-        width: 70px;
-        border-radius: 8px;
+      width: 70px;
+  border-radius: 8px;
+  height: 100%;
+  object-fit: cover;
       }
     `,
   ],

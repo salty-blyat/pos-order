@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APP_STORAGE_KEY } from '../const';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { SettingService } from '../app-setting';
 import { LanguageService } from '../utils/services/language.service';
 import { Title } from '@angular/platform-browser';
+import { RequestService } from '../pages/request/request.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { SessionStorageService } from '../utils/services/sessionStorage.service';
 
 export interface ClientInfo {
   id?: number;
@@ -48,11 +51,16 @@ export class AuthService {
     private httpClient: HttpClient,
     private settingService: SettingService,
     private languageService: LanguageService,
-    private titleService: Title
-  ) {}
+    private sessionService: SessionStorageService
+  ) { }
 
   clientInfo: ClientInfo = this.getStorageValue(APP_STORAGE_KEY.Authorized);
+  private companyInfoSubject = new BehaviorSubject<any>(null);
+  companyInfo$ = this.companyInfoSubject.asObservable();
 
+  setCompanyInfo(data: any) {
+    this.companyInfoSubject.next(data);
+  }
   get url() {
     return this.settingService.setting.AUTH_API_URL;
   }
@@ -64,20 +72,48 @@ export class AuthService {
     return this.getStorageValue(APP_STORAGE_KEY.App);
   }
 
-  updateClientInfo() {
-    this.getUserInfo().subscribe((result) => {
-      const authorized: ClientInfo = this.getStorageValue(
-        APP_STORAGE_KEY.Authorized
-      );
-      this.clientInfo = result!;
-      this.clientInfo.token = authorized.token;
-      this.clientInfo.permissions = authorized.permissions;
-      this.setStorageValue({
-        key: APP_STORAGE_KEY.Authorized,
-        value: this.clientInfo,
-      });
+  updateClientInfo(tenantCode: string): Observable<any> {
+    this.setAppInfo(tenantCode);
+    return this.getCompanyInfo(tenantCode).pipe(
+      tap((res) => {
+        const CompanyName = res.find((item: any) => item.key === "CompanyName")?.value || '';
+        const CompanyLogo = res.find((item: any) => item.key === "CompanyLogo")?.value || '';
+        const CompanyNameEn = res.find((item: any) => item.key === "CompanyNameEn")?.value || '';
+
+        const companyInfo = { CompanyName, CompanyLogo, CompanyNameEn };
+
+        this.sessionService.setValue({ key: "companyName", value: CompanyName });
+        this.sessionService.setValue({ key: "companyLogo", value: CompanyLogo });
+        this.sessionService.setValue({ key: "companyNameEn", value: CompanyNameEn });
+
+        this.setCompanyInfo(companyInfo);
+      })
+    ) 
+  }
+
+  setAppInfo(tenantCode: string) {
+    const tenant: Tenant = {
+      name: "",
+      note: "",
+      code: tenantCode!,
+      logo: "",
+      tenantData: "",
+    }
+
+    const app: App = {
+      appCode: "hotel-portal"
+    }
+    this.setStorageValue({
+      key: APP_STORAGE_KEY.App,
+      value: app,
+    });
+
+    this.setStorageValue({
+      key: APP_STORAGE_KEY.Tenant,
+      value: tenant,
     });
   }
+
   getStorageValue<T>(key: string): T {
     return JSON.parse(<string>localStorage.getItem(key?.toLowerCase()));
   }
@@ -95,7 +131,10 @@ export class AuthService {
   removeStorageValue(key: any): void {
     localStorage.removeItem(key?.toLowerCase());
   }
-
+  getCompanyInfo(tenantCode: string): Observable<any> {
+    const url = `${this.settingService.setting.BASE_API_URL}/maintenance/public/${tenantCode}/company/info`;
+    return this.httpClient.get<any>(url);
+  }
   redirectLogin(model: any) {
     return this.httpClient
       .post(`${this.url}/auth/redirect-login`, model, {
@@ -155,6 +194,7 @@ export class AuthService {
         })
       );
   }
+
   getUserInfo() {
     return this.httpClient.get(`${this.url}/auth/info`).pipe(
       map((result) => {

@@ -10,10 +10,10 @@ export enum RequestStatus {
     Cancel = 4
 }
 export interface Guest {
-    stayId?: number;
-    roomId?: number;
     roomNo?: string;
-    guestId?: number;
+    totalNight?: number;
+    checkInDate?: string;
+    checkOutDate?: string;
     guestName?: string;
     guestPhone?: string;
 }
@@ -136,8 +136,5 @@ export class RequestService extends BaseApiService<Request> {
             `${this.getUrl()}/public/${id}`
         );
     }
-    getCompanyInfo(tenantCode: string): Observable<any> {
-        const url = `${this.settingService.setting.BASE_API_URL}/maintenance/public/${tenantCode}/company/info`;
-        return this.httpClient.get<any>(url);
-    }
+
 } 
