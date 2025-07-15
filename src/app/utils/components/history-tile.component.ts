@@ -11,7 +11,7 @@ import { TranslateService } from "@ngx-translate/core";
   selector: "app-history-tile",
   template: `
     <div
-      class="history-list"
+      class="history-list shadow"
       nz-flex
       nzGap="middle"
       (click)="createRipple($event)"
@@ -30,7 +30,7 @@ import { TranslateService } from "@ngx-translate/core";
       </div>
 
       <div class="view-icon" nz-flex nzGap="small">
-        <app-status-badge [statusText]="translateService.currentLang == 'en' ? request?.statusNameEn! : request?.statusNameKh!"  [status]="request?.status ?? requestStatus.Pending"></app-status-badge> 
+        <app-status-badge [img]="request?.statusImage!" [statusText]="translateService.currentLang == 'en' ? request?.statusNameEn! : request?.statusNameKh!"  [status]="request?.status ?? requestStatus.Pending"></app-status-badge> 
         <nz-icon nzType="right" nzTheme="outline" />
       </div>
     </div>
@@ -75,8 +75,7 @@ import { TranslateService } from "@ngx-translate/core";
         position: relative;
         overflow: hidden;
         padding: 8px;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-        img {
+         img {
           width: 80px;
           height: 80px;
           border-radius: 8px;

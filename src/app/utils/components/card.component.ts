@@ -4,12 +4,12 @@ import {
   Input,
   Output,
   ViewEncapsulation,
-} from "@angular/core"; 
+} from "@angular/core";
 
 @Component({
   selector: "app-card",
   template: `
-    <div class="service-type-card" (click)="createRipple($event)">
+    <div class="service-type-card shadow" (click)="createRipple($event)">
       <img
         class="service-type-card__img"
         [src]="image ? image : './../../../assets/image/noimg.jpg'"
@@ -22,8 +22,7 @@ import {
     `
       .service-type-card {
         user-select: none;
-        background-color: white;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        background-color: white; 
         border-radius: 8px;
         cursor: pointer;
         overflow: hidden;

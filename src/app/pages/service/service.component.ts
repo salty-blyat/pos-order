@@ -1,9 +1,9 @@
-import { Component, signal, ViewEncapsulation } from "@angular/core";
+import { Component, signal, ViewEncapsulation, WritableSignal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Service, ServiceService } from "./service.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { Filter } from "../../utils/services/base-api.service";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-service",
@@ -19,7 +19,7 @@ import { Filter } from "../../utils/services/base-api.service";
         ><span style="font-size: 16px;"> {{ "Back" | translate }}</span>
       </button>
 
-      <nz-radio-group [(ngModel)]="useList">
+     <nz-radio-group [ngModel]="useList" (ngModelChange)="toggleList($event)">
         <label nz-radio-button [nzValue]="true">
           <i nz-icon nzType="unordered-list" nzTheme="outline"></i>
         </label>
@@ -72,7 +72,11 @@ export class ServiceComponent extends BaseListComponent<Service> {
     super(service, sessionStorageService, "service-type-list");
   }
 
-  useList: boolean = true;
+  useList: boolean = this.sessionStorageService.getValue('useList') ?? true;
+  toggleList(value: boolean) {
+    this.useList = value;
+    this.sessionStorageService.setValue({ key: 'useList', value: value });
+  }
 
   onClick(id: number) {
     setTimeout(() => {
@@ -80,6 +84,12 @@ export class ServiceComponent extends BaseListComponent<Service> {
     }, 100);
   }
   serviceId = signal<number>(0);
+  override param: WritableSignal<QueryParam> = signal({
+    pageIndex: 1,
+    pageSize: 99999,
+    sorts: "",
+    filters: "",
+  });
   protected override getCustomFilters(): Filter[] {
     const filters: Filter[] = [
       { field: "search", operator: "contains", value: this.searchText() },
@@ -98,5 +108,6 @@ export class ServiceComponent extends BaseListComponent<Service> {
       this.serviceId.set(Number(params.get("id")));
     });
     this.search();
+
   }
 }

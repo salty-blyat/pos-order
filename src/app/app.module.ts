@@ -55,6 +55,7 @@ import { HistoryComponent } from "./pages/history/history.component";
 import { HistoryTileComponent } from "./utils/components/history-tile.component";
 import { NotFoundPageComponent } from "./pages/not-found/not-found.component";
 import { CustomDatePipe } from "./utils/pipes/custom-date.pipe";
+import { ThankYouComponent } from "./utils/components/thankyou.component";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -111,7 +112,8 @@ export class CustomTranslate implements TranslateLoader {
     CardComponent,
     HistoryComponent,
     HistoryTileComponent,
-    NotFoundPageComponent, CustomDatePipe
+    NotFoundPageComponent, CustomDatePipe,
+    ThankYouComponent
   ],
   bootstrap: [AppComponent],
   imports: [

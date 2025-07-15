@@ -182,6 +182,8 @@ export class ServiceOperationComponent implements OnInit {
       this.serviceRefresh = this.serviceService
         .find(Number(params.get("id")))
         .subscribe((res) => {
+          console.log(res);
+
           this.service = res;
           if (this.service?.trackQty) {
             this.frm.get("quantity")?.setValue(1);
@@ -204,8 +206,8 @@ export class ServiceOperationComponent implements OnInit {
       note: [null],
       status: [RequestStatus.Pending],
       requestTime: [new Date()],
-      serviceTypeId: [this.service?.serviceTypeId || 0],
-      serviceItemId: [0],
+      serviceTypeId: [null],
+      serviceItemId: [null],
       guestId: [null],
       roomId: [null],
       stayId: [null],
@@ -217,11 +219,13 @@ export class ServiceOperationComponent implements OnInit {
     const roomId = this.sessionStorageService.getValue("roomId");
     const stayId = this.sessionStorageService.getValue("stayId");
     const serviceItemId = this.service?.id || 0;
+    const serviceTypeId = this.service?.serviceTypeId || 0;
     this.frm.patchValue({
       guestId: guestId,
       roomId: roomId,
       stayId: stayId,
       serviceItemId: serviceItemId,
+      serviceTypeId: serviceTypeId,
     });
 
     if (this.frm.valid && !this.isLoading) {

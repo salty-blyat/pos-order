@@ -9,12 +9,13 @@ import { LANGUAGES } from "../const";
 import { TranslateService } from "@ngx-translate/core";
 import { SessionStorageService } from "../utils/services/sessionStorage.service";
 import { Subscription } from "rxjs";
+import { NzModalService } from "ng-zorro-antd/modal";
 
 @Component({
   selector: "app-page",
   template: `
     <nz-layout>
-      <nz-header nzTheme="light">
+      <nz-header nzTheme="light" class="shadow">
         <div
           (click)="goHome()"
           class="brand"
@@ -23,10 +24,11 @@ import { Subscription } from "rxjs";
           nzAlign="center"
         >
           <img class="logo" [src]="companyLogo" [alt]="companyName" />
-          <span class="restaurant-name">{{ translateService.currentLang === 'km' ? companyName : companyNameEn }}</span>
+          <span class="restaurant-name">{{
+            translateService.currentLang === "km" ? companyName : companyNameEn
+          }}</span>
         </div>
-        <div style="height: auto !important;">
-          <button style='margin-right: 8px;' nz-button nzType="text" (click)="goToHistory()"><nz-icon nzType="history" nzTheme="outline" />{{"History" | translate}}</button>
+        <div nz-flex nzGap="small" nzAlign="center" style="height: auto !important;">
           <span
             nzTrigger="click"
             nz-dropdown
@@ -65,6 +67,31 @@ import { Subscription } from "rxjs";
               </ul>
             </nz-dropdown-menu>
           </span>
+          <button
+            style=" cursor: pointer; "
+            nz-dropdown
+            nzTrigger="click"
+            [nzDropdownMenu]="userMenu"
+            nz-button 
+          >
+            <nz-icon nzType="more" nzTheme="outline" />
+          </button>
+          <nz-dropdown-menu #userMenu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="goToHistory()">
+                <nz-icon
+                  nzType="history"
+                  nzTheme="outline"
+                  style="margin-right: 8px;"
+                />{{ "History" | translate }}
+              </li>
+              <li nz-menu-item (click)="confirmCheckout()"><nz-icon
+                  nzType="logout"
+                  nzTheme="outline"
+                  style="margin-right: 8px;"
+                /> {{"Logout" | translate}}</li>
+            </ul>
+          </nz-dropdown-menu>
         </div>
       </nz-header>
       <nz-content class="content">
@@ -76,7 +103,7 @@ import { Subscription } from "rxjs";
   styles: [
     `
       .brand {
-        user-select:none;
+        user-select: none;
         cursor: pointer;
         transition: opacity 0.3s ease;
       }
@@ -88,7 +115,7 @@ import { Subscription } from "rxjs";
       .content {
         padding: 12px 8px 48px 8px;
         min-height: calc(100vh - 90px);
-        background-color:#f0f6ff;
+        background-color: #f0f6ff;
       }
       nz-header {
         position: sticky;
@@ -96,7 +123,6 @@ import { Subscription } from "rxjs";
         top: 0;
         z-index: 10;
         padding: 8px !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
       }
       .logo {
         height: 42px;
@@ -132,13 +158,13 @@ export class PageComponent implements OnInit {
     public translateService: TranslateService,
     public authService: AuthService,
     public languageService: LanguageService,
-    public activatedRoute: ActivatedRoute,
+    public activatedRoute: ActivatedRoute, private modal: NzModalService,
     private settingService: SettingService,
     private sessionService: SessionStorageService,
     public appVersionService: AppVersionService
   ) { }
   appName = this.authService.app?.appName;
-  routeRefresher = new Subscription;
+  routeRefresher = new Subscription();
   ngOnInit(): void {
     if (this.sessionService.getValue("companyName")) {
       this.companyName = this.sessionService.getValue("companyName") || "";
@@ -153,12 +179,34 @@ export class PageComponent implements OnInit {
       }
     });
   }
+  confirmCheckout(): void {
+    this.modal.confirm({
+      nzTitle: this.translateService.instant('Are you sure you want to logout?'),
+      nzOkText: this.translateService.instant('Yes'),
+      nzCancelText: this.translateService.instant('Cancel'),
+      nzOnOk: () => {
+        this.checkout();
+      }
+    });
+  }
+
+  checkout() {
+    this.sessionService.removeValue("isVerified");
+    this.sessionService.removeValue("roomNo");
+    this.sessionService.removeValue("checkInDate");
+    this.sessionService.removeValue("checkOutDate");
+    this.sessionService.removeValue("totalNight");
+    this.sessionService.removeValue("guestName");
+    this.sessionService.removeValue("guestPhone");
+    this.router.navigate(["/"]).then();
+  }
 
   goHome() {
     // if user no verify dont allow to go home
-    this.router.navigate(['/home'])
+    this.router.navigate(["/home"]);
   }
   goToHistory() {
+    console.log("goToHistory");
     this.router.navigate(["history"]).then();
   }
 

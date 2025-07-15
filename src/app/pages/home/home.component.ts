@@ -1,21 +1,22 @@
-import { Component, signal, ViewEncapsulation } from "@angular/core";
+import { Component, signal, ViewEncapsulation, WritableSignal } from "@angular/core";
 import { HomeService, ServiceType } from "./home.service";
 import { Router } from "@angular/router";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { AuthService } from "../../helpers/auth.service";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { TranslateService } from "@ngx-translate/core";
+import { QueryParam } from "../../utils/services/base-api.service";
 @Component({
   selector: "app-home",
   template: `
     <div
       nz-flex
       nzJustify="space-between"
-      class="card-container"
+      class="card-container shadow"
       *ngIf="!isLoading() && guestName"
     >
       <div nz-flex nzVertical style="height:100%;">
-        <span style="font-size:12px ; color: grey;">
+        <span style="font-size:11px ; color: grey;">
           {{ "Welcome back" | translate }}
         </span>
         <strong style="font-size: 16px;"> {{ guestName }}</strong>
@@ -42,7 +43,7 @@ import { TranslateService } from "@ngx-translate/core";
     <app-no-result-found></app-no-result-found>
     } @else if(!isLoading() && lists().length > 0){
     <div class="header-home">
-      <h2>{{ "How can we assist you today?" | translate }}</h2>
+      <h2>{{ ("How can we assist you today" | translate )+ "?"}}</h2>
     </div>
     <div nz-row [nzGutter]="[8, 8]">
       <div
@@ -81,18 +82,15 @@ import { TranslateService } from "@ngx-translate/core";
         color: #2e7d32;
         font-weight: 600;
       }
-      .card-container {
-        width: 100%;
+      .card-container { 
+        // max-width:370px;
         user-select: none;
         background-color: white;
         margin-left: 0 !important;
         padding: 18px 12px;
-        border-radius: 8px;
-        box-shadow: 0 0px 6px rgba(0, 0, 0, 0.2);
+        border-radius: 8px; 
         font-family: "Segoe UI", sans-serif;
-        position: relative;
-        // margin: 24px 8px 8px 8px !important;
-        border-top: 3px solid #9c27b0;
+        position: relative; 
       }
 
       .avatar {
@@ -122,7 +120,12 @@ export class HomeComponent extends BaseListComponent<ServiceType> {
   ) {
     super(service, sessionStorageService, "service-type-list");
   }
-
+  override param: WritableSignal<QueryParam> = signal({
+    pageIndex: 1,
+    pageSize: 99999,
+    sorts: "",
+    filters: "",
+  });
   guestName: string = this.sessionStorageService.getValue("guestName") ?? "";
   roomNo: string = this.sessionStorageService.getValue("roomNo") ?? "";
   checkInDate: string =

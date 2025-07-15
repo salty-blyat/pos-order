@@ -4,24 +4,22 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Router
-} from '@angular/router'; 
+} from '@angular/router';
 import { AuthService } from '../../helpers/auth.service';
+import { SessionStorageService } from '../../utils/services/sessionStorage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private sessionService: SessionStorageService) { }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    const permissions: number[] = route.data['permission'] || [];
 
-    const isAuthorized = permissions.some(permission =>
-      this.authService.isAuthorized(permission)
-    );
+    const isAuthorized = this.sessionService.getValue("isVerified");
 
     if (!isAuthorized) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/not-found']);
       return false;
     }
 

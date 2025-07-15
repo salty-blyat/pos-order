@@ -1,25 +1,26 @@
 import { Component, ViewEncapsulation } from "@angular/core";
 
 @Component({
-  selector: "app-not-found-page",
+  selector: "app-thankyou",
+  standalone: false,
+  encapsulation: ViewEncapsulation.None,
   template: `
-    <div class="not-found-wrapper">
-      <div class="card">
-        <div class="card-header">
-          <h1 class="card-title">Room Not Found</h1>
-          <p class="card-description">We apologize for the inconvenience.</p>
-        </div>
-        <div class="card-content">
-          <p>
-            We cannot find the room you're staying in. Please contact our staff at the lobby for more information.
-          </p>
-          <!-- <button nz-button nzType="primary" nzDanger routerLink="/">Go to Homepage</button> -->
-        </div>
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title">Thank You!</h1>
+        <p class="card-description">For using our hotel service.</p>
+      </div>
+      <div class="card-content">
+        <p>
+          We appreciate your trust in us and hope you had a seamless experience.
+          We look forward to serving you again soon!
+        </p>
+        <button nz-button nzType="primary" nzDanger routerLink="/">Go to Homepage</button>
       </div>
     </div>
   `,
   styles: [`
-    .not-found-wrapper {
+    :host {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -46,7 +47,7 @@ import { Component, ViewEncapsulation } from "@angular/core";
       font-size: 1.875rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
-      color: #ef4444;
+      color: #1f2937;
     }
 
     .card-description {
@@ -66,8 +67,10 @@ import { Component, ViewEncapsulation } from "@angular/core";
       color: #374151;
       line-height: 1.5;
     }
-  `],
-  encapsulation: ViewEncapsulation.None,
-  standalone: false,
+
+    button[nz-button]:hover {
+      background-color: #2563eb !important;
+    }
+  `]
 })
-export class NotFoundPageComponent { }
+export class ThankYouComponent { }

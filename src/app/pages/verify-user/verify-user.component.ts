@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { Guest, RequestService } from "../request/request.service";
+import { Guest, RequestService, VerifiedInfo } from "../request/request.service";
 import { NotificationService } from "../service/notification.service";
 import { App, AuthService, Tenant } from "../../helpers/auth.service";
 import { APP_STORAGE_KEY } from "../../const";
@@ -78,8 +78,8 @@ import { APP_STORAGE_KEY } from "../../const";
       .verify-card {
         background-color: white;
         border-radius: 8px;
-        width: 100%;
-        // min-width: 370px;
+        width: 100%; 
+        max-width: 370px;
         padding: 20px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
@@ -137,7 +137,8 @@ export class VerifyUserComponent implements OnInit {
             this.CompanyLogo = this.sessionService.getValue("companyLogo") || "";
             this.CompanyNameEn = this.sessionService.getValue("companyNameEn") || "";
 
-            this.service.getGuest(this.uuid).subscribe((res: Guest) => {
+            this.service.getGuest(this.uuid).subscribe({
+              next: (res: Guest) => {
               this.guestPhone = res.guestPhone ?? "";
               this.sessionService.setValue({ key: "roomNo", value: res.roomNo });
               this.sessionService.setValue({ key: "checkInDate", value: res.checkInDate });
@@ -146,7 +147,13 @@ export class VerifyUserComponent implements OnInit {
               this.sessionService.setValue({ key: "guestName", value: res.guestName });
               this.sessionService.setValue({ key: "guestPhone", value: this.guestPhone });
               this.isLoading = false;
-            });
+            },
+            error: (err) => {
+              console.error(err);
+              this.router.navigate(["/not-found"]);
+              this.isLoading = false;
+            }
+          });
           },
           error: (err) => {
             console.error(err);
@@ -188,20 +195,18 @@ export class VerifyUserComponent implements OnInit {
 
     return `${prefix ? prefix + ' ' : ''}${formatted} ___`;
   }
-
-
-
   onSubmit(e?: any) {
     this.frm.patchValue({ roomUid: this.uuid });
     if (this.frm.valid && !this.isLoading) {
       this.isLoading = true;
       this.service.verifyPhone(this.frm.getRawValue()).subscribe({
-        next: (res) => {
+        next: (res: VerifiedInfo) => {
           if (res.isValid) {
-
-            
+            this.sessionService.setValue({ key: "isVerified", value: res.isValid });
+            this.sessionService.setValue({ key: "guestId", value: res.guestId });
+            this.sessionService.setValue({ key: "stayId", value: res.stayId });
+            this.sessionService.setValue({ key: "roomId", value: res.roomId });
             this.router.navigate(["/home"]);
-            this.sessionService.setValue({ key: "isVerified", value: true });
           } else {
             this.notificationService.customErrorNotification(
               "Invalid phone number"

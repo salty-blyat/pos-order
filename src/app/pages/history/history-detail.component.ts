@@ -19,56 +19,69 @@ import { TranslateService } from "@ngx-translate/core";
         ><span style="font-size: 16px;">{{ "Back" | translate }}</span>
       </button>
     </div>
-    <div nz-row [nzGutter]="[16, 16]" >
-      <div nz-col nzXs="24" nzSm="24" [nzMd]="model?.requestLogs?.length! > 0 ? 12 : 24">
+    <div nz-row [nzGutter]="[16, 16]">
+      <div
+        nz-col
+        nzXs="24"
+        nzSm="24"
+        [nzMd]="model?.requestLogs?.length! > 0 ? 12 : 24"
+      >
         <div nz-flex nzVertical class="req-detail-card" nzGap="middle">
           @if(!isLoading && model){
-            <div class="header-history">
-              <h3>
-                <nz-icon nzType="info-circle" nzTheme="outline" />{{
-                  "Request Information " | translate
-                }}
-              </h3>
+          <div class="header-history">
+            <h3>
+              <nz-icon nzType="info-circle" nzTheme="outline" />{{
+                "Request Information " | translate
+              }}
+            </h3>
+          </div>
+          <div class="history-service">
+            <h4>{{ "Service" | translate }}</h4>
+            <p>
+              {{ model?.serviceItemName || "model?.serviceItemName" }}
+            </p>
+          </div>
+          <div nz-row style="padding: 0 16px;" nzGutter="16">
+            <div nz-col nzSpan="12" *ngIf="model?.quantity! > 0">
+              <span>{{ "Quantity" | translate }}</span> <br />
+              <span
+                style="text-align:center; font-size:16px; font-weight: bold;"
+                >{{ model?.quantity || "model?.quantity" }}</span
+              >
             </div>
 
-            <div class="history-service">
-              <h4>{{ "Service" | translate }}</h4>
-              <p>
-                {{ model?.serviceItemName || "model?.serviceItemName" }}
-              </p>
+            <div nz-col nzSpan="12">
+              <span>{{ "Status" | translate }}</span> <br />
+              <app-status-badge
+                [img]="model?.statusImage!"
+                [statusText]="
+                  translateService.currentLang == 'en'
+                    ? model?.statusNameEn!
+                    : model?.statusNameKh!
+                "
+                [status]="model?.status ?? requestStatus.Pending"
+              ></app-status-badge>
             </div>
-            <div nz-row style="padding: 0 16px;" nzGutter="16">
-              <div nz-col nzSpan="12" *ngIf="model?.quantity! > 0">
-                <span>{{ "Quantity" | translate }}</span> <br />
-                <span
-                  style="text-align:center; font-size:16px; font-weight: bold;"
-                  >{{ model?.quantity || "model?.quantity" }}</span
-                >
-              </div>
-
-              <div nz-col nzSpan="12">
-                <span>{{ "Status" | translate }}</span> <br />
-                <app-status-badge
-                [statusText]="translateService.currentLang == 'en' ? model?.statusNameEn! : model?.statusNameKh!"
-                  [status]="model?.status ?? requestStatus.Pending"
-                ></app-status-badge>
-              </div>
-            </div>
-            <div class="request-time">
-              <h4>{{ "Requested At" | translate }}</h4>
-              <p>{{ model?.requestTime | customDateTime }}</p>
-            </div> 
+          </div>
+          <div class="request-time">
+            <h4>{{ "Requested At" | translate }}</h4>
+            <p>{{ model?.requestTime | customDateTime }}</p>
+          </div>
+          } @else if(isLoading) {
+          <app-loading></app-loading>
+          } @else if(!isLoading && !model){
+          <app-no-result-found></app-no-result-found>
           }
-          @else if(isLoading) {
-               <app-loading></app-loading>
-           } @else if(!isLoading && !model){
-            <app-no-result-found></app-no-result-found>
-          }
-            
         </div>
       </div>
 
-      <div nz-col nzXs="24" nzSm="24" nzMd="12" *ngIf="model?.requestLogs?.length! > 0">
+      <div
+        nz-col
+        nzXs="24"
+        nzSm="24"
+        nzMd="12"
+        *ngIf="model?.requestLogs?.length! > 0"
+      >
         <div nz-flex nzVertical class="req-detail-card" nzGap="middle">
           <div class="header-history">
             <h3>
@@ -77,22 +90,33 @@ import { TranslateService } from "@ngx-translate/core";
               }}
             </h3>
           </div>
-          <nz-timeline >
-            <nz-timeline-item *ngFor="let item of model?.requestLogs" [nzColor]="getBadgeBgColor(item.status)">
+          <nz-timeline>
+            <nz-timeline-item
+              *ngFor="let item of model?.requestLogs"
+              [nzColor]="getBadgeBgColor(item.status)"
+            >
               <div nz-flex nzJustify="space-between">
                 <h4>
-                  {{item.staffName}}
+                  @if(item.staffName && item.staffName != ""){
+                  {{ item.staffName }}
+                  } @else {
+                  {{
+                    translateService.currentLang == "en"
+                      ? item.statusNameEn
+                      : item.statusNameKh
+                  }}
+                  }
                 </h4>
-                <span style='color:grey;'>
-                  {{item.createdDate | customDateTime}} 
+                <span style="color:grey;">
+                  {{ item.createdDate | customDateTime }}
                 </span>
               </div>
-              <span>{{ translateService.currentLang == 'en' ?  
-              item.statusNameEn : 
-              item.statusNameKh
+              <span *ngIf="item.staffName && item.staffName != ''">{{
+                translateService.currentLang == "en"
+                  ? item.statusNameEn
+                  : item.statusNameKh
               }}</span>
-              </nz-timeline-item
-            >  
+            </nz-timeline-item>
           </nz-timeline>
         </div>
       </div>
@@ -129,7 +153,7 @@ import { TranslateService } from "@ngx-translate/core";
         }
         p {
           margin: 0px;
-          font-size: 18px; 
+          font-size: 18px;
         }
       }
 
@@ -173,8 +197,6 @@ export class HistoryDetailComponent implements OnInit {
         next: (res) => {
           this.isLoading = false;
           this.model = res;
-          console.log(this.model);
-
         },
         error: (err) => {
           console.error(err);
@@ -193,17 +215,16 @@ export class HistoryDetailComponent implements OnInit {
 
   getBadgeBgColor(status: number | undefined): string {
     switch (status) {
-      case 1:
-        return "#d9d9d9";
-      case 2:
-        return "#1890ff";
-      case 3:
-        return "#52c41a";
-      case 4:
-        return "#f5222d";
+      case RequestStatus.Pending:
+        return "#EEB600";
+      case RequestStatus.InProgress:
+        return "#009DDA";
+      case RequestStatus.Done:
+        return "#00B609";
+      case RequestStatus.Cancel:
+        return "#F90000B3";
       default:
-        return "#d9d9d9";
+        return "#000000";
     }
   }
-
 }

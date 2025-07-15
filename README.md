@@ -1,3 +1,3 @@
-# pos-order
+# hotel-portal
 
-Basic POS Order
+Basic Hotel Portal

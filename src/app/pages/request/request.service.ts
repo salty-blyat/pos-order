@@ -32,9 +32,15 @@ export interface RequestDetail {
     id?: number;
     attachments?: Attachment[];
     requestLogs?: RequestLog[];
-
+    statusImage?: string;
     serviceItemName?: string;
     serviceItemImage?: string;
+}
+export interface VerifiedInfo {
+    guestId?: number;
+    stayId?: number;
+    roomId?: number;
+    isValid?: boolean;
 }
 
 export interface RequestLog {
@@ -71,7 +77,7 @@ export interface Request {
     createdBy?: string;
     statusNameEn?: string;
     statusNameKh?: string;
-    serviceName?: string;
+    serviceName?: string; statusImage?: string;
     serviceItemImage?: string;
 }
 
@@ -128,7 +134,7 @@ export class RequestService extends BaseApiService<Request> {
         return this.httpClient.get<Guest>(`${this.getUrl()}/room/${uuid}/guest`);
     }
 
-    verifyPhone(model: any): Observable<any> {
+    verifyPhone(model: any): Observable<VerifiedInfo> {
         return this.httpClient.post<any>(`${this.getUrl()}/guest/confirm`, model);
     }
     override find(id: number): Observable<RequestDetail> {

@@ -10,7 +10,10 @@ export class ServiceUiService {
     showSuccess(): void {
         this.modalService.create({
             nzContent: SuccessPopupComponent,
-            nzFooter: null, 
+            nzFooter: null,
+            nzStyle: {
+                top: " 15%"
+            },
             nzClosable: true,
             nzWidth: '400px',
             nzMaskClosable: false,

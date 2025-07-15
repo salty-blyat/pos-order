@@ -31,13 +31,10 @@ export class BaseListComponent<T extends SharedDomain>
   refreshSub: Subscription = new Subscription();
   isLoading = signal<boolean>(false);
   pageSizeOption = signal<number[]>(PAGE_SIZE_OPTION);
-  loadMoreOption = input<boolean>(false);
+  loadMoreOption = signal<boolean>(false);
   lists = signal<T[]>([]);
   param = signal<QueryParam>({
-    pageSize: 
-      this.sessionStorageService.getCurrentPageSizeOption(
-        this.pageSizeOptionKey()
-      ) ?? 25,
+    pageSize: this.loadMoreOption() ? 25 : 999999,
     pageIndex: 1,
     sorts: "",
     filters: "",
@@ -58,9 +55,17 @@ export class BaseListComponent<T extends SharedDomain>
       this.param().filters = this.buildFilters();
       this.service.search(this.param()).subscribe({
         next: (result: { results: T[]; param: QueryParam }) => {
-          this.lists.set(result.results);
           this.param.set(result.param);
-          this.isLoading.set(false);
+          if (this.loadMoreOption()) {
+            this.lists.update((value) => [
+              ...value,
+              ...result.results,
+            ]);
+            this.isLoading.set(false);
+          } else {
+            this.lists.set(result.results);
+            this.isLoading.set(false);
+          }
         },
         error: () => {
           this.isLoading.set(false);
@@ -84,22 +89,17 @@ export class BaseListComponent<T extends SharedDomain>
       this.pageSizeOptionKey()
     );
     this.search();
+  } 
+
+  searchMore() {
+    console.log('this.param() ' + this.param().pageIndex);
+    console.log('this.param().pageCount ' + this.param().pageCount!);
+
+    if (this.param().pageIndex! < this.param().pageCount!) {
+      this.param().pageIndex! += 1;
+      this.search();
+    }
   }
-
-  // saveOrdering() {
-  //   this.isLoading.set(true);
-  //   let newLists: Floor[] = [];
-
-  //   this.lists().forEach((item: T | any, i) => {
-  //     item.ordering = i + 1;
-  //     newLists.push(item);
-  //   });
-  //   this.service.updateOrdering(newLists).subscribe(() => {
-  //     this.isLoading.set(false);
-  //     this.draged.set(false);
-  //     this.notificationService?.successNotification("Successfully Saved");
-  //   });
-  // }
   ngOnDestroy(): void {
     if (this.refreshSub) {
       this.refreshSub?.unsubscribe();

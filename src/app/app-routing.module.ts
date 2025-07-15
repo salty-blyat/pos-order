@@ -9,18 +9,29 @@ import { ServiceOperationComponent } from "./pages/service/service-operation.com
 import { HistoryDetailComponent } from "./pages/history/history-detail.component";
 import { HistoryComponent } from "./pages/history/history.component";
 import { NotFoundPageComponent } from "./pages/not-found/not-found.component";
+import { ThankYouComponent } from "./utils/components/thankyou.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/not-found" },
   {
     path: "",
     component: PageComponent,
-    // canActivate: [RouteGuardService],
     children: [
       {
         path: "verify-user/:tenantCode/:uuid",
         component: VerifyUserComponent,
       },
+    ],
+  },
+  {
+    path: "thank-you",
+    component: ThankYouComponent,
+  },
+  {
+    path: "",
+    component: PageComponent,
+    canActivate: [RouteGuardService],
+    children: [
       {
         path: "home",
         component: HomeComponent,
@@ -40,16 +51,16 @@ const routes: Routes = [
       {
         path: "history/:id",
         component: HistoryDetailComponent,
-      }
-    ]
+      },
+    ],
   },
   {
     path: "**",
     component: NotFoundPageComponent,
-  }
+  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { } 
+export class AppRoutingModule {} 

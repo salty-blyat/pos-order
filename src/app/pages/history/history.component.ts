@@ -1,11 +1,16 @@
-import { Component, REQUEST, ViewEncapsulation } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {
+  Component,
+  HostListener,
+  signal,
+  ViewEncapsulation,
+  WritableSignal,
+} from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { Request, RequestService } from "../request/request.service";
 import { BaseListComponent } from "../../utils/components/base-list.component";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
-import { Filter } from "../../utils/services/base-api.service";
+import { Filter, QueryParam } from "../../utils/services/base-api.service";
 
 @Component({
   selector: "app-history",
@@ -16,23 +21,28 @@ import { Filter } from "../../utils/services/base-api.service";
         ><span style="font-size: 16px;">{{ "Back" | translate }}</span>
       </button>
     </div>
-    <div class="header-history">
-      <h3>
-        {{ "Your Requests" | translate }}
-      </h3>
-      <div nz-flex nzVertical nzGap="middle">
-        @if(isLoading()){
+    <div class="header-history" style="position:relative; " >
+      <div   nz-flex nzAlign='end' style="position:sticky; top:56px; z-index:1;padding-bottom: 8px; background-color:#f0f6ff;height: 45px;">
+        <h3 >
+          {{ "Your Requests" | translate }}
+        </h3>
+      </div>
+   
+      <div nz-flex nzVertical nzGap="middle"> 
+        <ng-container *ngIf="isLoading()">
         <app-loading></app-loading>
-        } @else if (!isLoading() && lists().length==0){
-        <app-no-result-found></app-no-result-found> 
-        } @else if (!isLoading() && lists().length>0){
-        <div *ngFor="let data of lists()">
+        </ng-container>
+        <ng-container *ngIf="!isLoading() && lists().length == 0">
+        <app-no-result-found></app-no-result-found>
+        </ng-container>
+        <ng-container *ngIf="lists().length > 0">
+        <div *ngFor="let data of lists() ">
           <app-history-tile
             [request]="data"
             (onClick)="onClick(data.id || 0)"
           ></app-history-tile>
         </div>
-        }
+        </ng-container>
       </div>
     </div>
   `,
@@ -43,8 +53,10 @@ import { Filter } from "../../utils/services/base-api.service";
       .header-history {
         margin-bottom: 8px;
         text-wrap: balance;
+        position:relative;
         h3 {
           font-weight: bold;
+          margin-bottom:0;
         }
       }
       .history-list {
@@ -73,6 +85,43 @@ export class HistoryComponent extends BaseListComponent<Request> {
   ) {
     super(service, sessionStorageService, "history-list");
   }
+  @HostListener("window:scroll", [])
+  onWindowScroll() {
+    const scrollTop =
+      window.pageYOffset ||
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      0;
+    const windowHeight =
+      "innerHeight" in window
+        ? window.innerHeight
+        : document.documentElement.offsetHeight;
+    const body = document.body;
+    const html = document.documentElement;
+    const docHeight = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight
+    );
+
+    if (scrollTop + windowHeight + 50 >= docHeight) {
+      this.onBottomReached();
+    }
+  }
+
+  onBottomReached() {
+    this.loadMoreOption.set(true)
+    this.searchMore();
+  }
+
+  override param: WritableSignal<QueryParam> = signal({
+    pageIndex: 1,
+    pageSize: 25,
+    sorts: "-requestTime",
+    filters: "",
+  });
 
   protected override getCustomFilters(): Filter[] {
     const filter: Filter[] = [];
@@ -89,6 +138,8 @@ export class HistoryComponent extends BaseListComponent<Request> {
     if (this.sessionStorageService.getValue("guestId")) {
       this.search();
     }
+    // this.loadMoreOption.set(true)
+    // this.searchMore();
   }
   onClick(id: number) {
     setTimeout(() => {

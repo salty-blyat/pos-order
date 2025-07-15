@@ -4,33 +4,42 @@ import { Service } from "../../pages/service/service.service";
 @Component({
   selector: "app-service-tile",
   template: `
-    <div class="service-list" nz-flex nzGap="small" (click)="createRipple($event)">
+    <div
+      class="service-list shadow"
+      nz-flex
+      nzGap="small"
+      (click)="createRipple($event)"
+    >
       <img class="service-image" [src]="imageUrl" alt="" />
-      <div   >
-        <h3>{{ service?.name }}</h3> 
+      <div class="service-info-tile">
+        <h3>{{ service?.name }}</h3>
         <p *ngIf="service?.description">{{ service?.description }}</p>
       </div>
     </div>
   `,
   styles: [
     `
-    .service-list {
-     background-color:white;
-     border-radius:8px;
-     padding:8px;
-     overflow:hidden;
-       height: 100px;
-     position:relative;
-     cursor:pointer;
-     margin-bottom: 12px;
-     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  
-
-    }
+      .service-list {
+        background-color: white;
+        border-radius: 8px;
+        padding: 8px;
+        overflow: hidden;
+        height: 100px;
+        position: relative;
+        cursor: pointer;
+        margin-bottom: 12px;
+      }
+      .service-info-tile {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
       .service-image {
-      width: 70px;
-  border-radius: 8px;
-  height: 100%;
-  object-fit: cover;
+        width: 80px;
+        border-radius: 8px;
+        height: 100%;
+        object-fit: cover;
       }
     `,
   ],
