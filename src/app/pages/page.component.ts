@@ -85,9 +85,9 @@ import { NzModalService } from "ng-zorro-antd/modal";
                   style="margin-right: 8px;"
                 />{{ "History" | translate }}
               </li>
-              <li nz-menu-item (click)="confirmCheckout()"><nz-icon
+              <li nz-menu-item (click)="confirmCheckout()" nzDanger><nz-icon
                   nzType="logout"
-                  nzTheme="outline"
+                  nzTheme="outline"  
                   style="margin-right: 8px;"
                 /> {{"Logout" | translate}}</li>
             </ul>
@@ -179,16 +179,18 @@ export class PageComponent implements OnInit {
       }
     });
   }
+
+
   confirmCheckout(): void {
     this.modal.confirm({
       nzTitle: this.translateService.instant('Are you sure you want to logout?'),
-      nzOkText: this.translateService.instant('Yes'),
+      nzCentered: true,
+      nzOkText: this.translateService.instant('Logout'),
       nzCancelText: this.translateService.instant('Cancel'),
-      nzOnOk: () => {
-        this.checkout();
-      }
+      nzOnOk: () => this.checkout()
     });
   }
+
 
   checkout() {
     this.sessionService.removeValue("isVerified");

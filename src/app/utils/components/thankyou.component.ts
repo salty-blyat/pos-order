@@ -1,26 +1,28 @@
-import { Component, ViewEncapsulation } from "@angular/core";
+import { Component, ViewEncapsulation } from "@angular/core"; 
 
 @Component({
   selector: "app-thankyou",
   standalone: false,
   encapsulation: ViewEncapsulation.None,
   template: `
-    <div class="card">
-      <div class="card-header">
-        <h1 class="card-title">Thank You!</h1>
-        <p class="card-description">For using our hotel service.</p>
-      </div>
-      <div class="card-content">
-        <p>
-          We appreciate your trust in us and hope you had a seamless experience.
-          We look forward to serving you again soon!
-        </p>
-        <button nz-button nzType="primary" nzDanger routerLink="/">Go to Homepage</button>
+    <div class="thankyou-wrapper">
+      <div class="card">
+        <div class="card-header">
+          <h1 class="card-title">{{"Thank You!" | translate}}</h1>
+          <p class="card-description">{{"For using our hotel service." | translate}}</p>
+        </div>
+        <div class="card-content">
+          <p>
+            {{"We appreciate your trust in us and hope you had a seamless experience." | translate}}
+            {{"We look forward to serving you again soon!" | translate}}
+          </p>
+          <button nz-button nzType="primary"   routerLink="/">{{"Go to Homepage" | translate}}</button>
+        </div>
       </div>
     </div>
   `,
   styles: [`
-    :host {
+    .thankyou-wrapper {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -67,10 +69,8 @@ import { Component, ViewEncapsulation } from "@angular/core";
       color: #374151;
       line-height: 1.5;
     }
-
-    button[nz-button]:hover {
-      background-color: #2563eb !important;
-    }
+ 
   `]
 })
-export class ThankYouComponent { }
+export class ThankYouComponent {  
+}

@@ -6,12 +6,12 @@ import { Component, ViewEncapsulation } from "@angular/core";
     <div class="not-found-wrapper">
       <div class="card">
         <div class="card-header">
-          <h1 class="card-title">Room Not Found</h1>
-          <p class="card-description">We apologize for the inconvenience.</p>
+          <h1 class="card-title">{{"Room Not Found" | translate}}</h1>
+          <p class="card-description">{{"We apologize for the inconvenience." | translate}}</p>
         </div>
         <div class="card-content">
           <p>
-            We cannot find the room you're staying in. Please contact our staff at the lobby for more information.
+            {{"We cannot find the room you're staying in. Please contact our staff at the lobby for more information." | translate}}
           </p>
           <!-- <button nz-button nzType="primary" nzDanger routerLink="/">Go to Homepage</button> -->
         </div>

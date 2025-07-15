@@ -22,7 +22,7 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
       </button>
     </div>
     <div class="header-history" style="position:relative; " >
-      <div   nz-flex nzAlign='end' style="position:sticky; top:56px; z-index:1;padding-bottom: 8px; background-color:#f0f6ff;height: 45px;">
+      <div   nz-flex nzAlign='end' style="position:sticky; top:56px; z-index:5;padding-bottom: 8px; background-color:#f0f6ff;height: 45px;">
         <h3 >
           {{ "Your Requests" | translate }}
         </h3>

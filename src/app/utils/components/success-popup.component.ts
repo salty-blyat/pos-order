@@ -2,17 +2,18 @@ import { Component, ViewEncapsulation } from "@angular/core";
 import { NzModalRef } from "ng-zorro-antd/modal";
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "app-success-popup",
   template: `
     <nz-result
       nzStatus="success"
-      nzTitle="Your Request has been sent successfully!"
-      nzSubTitle="Our staff will fullfil your request as soon as possible. Are there anything else we could help you?"
+      nzTitle="{{ 'Your Request has been sent successfully!' | translate }}"
+      nzSubTitle="{{ 'Our staff will fullfil your request as soon as possible. Are there anything else we could help you?' | translate }}"
     >
       <div nz-result-extra>
-        <button nz-button   (click)="goBack()">Back</button>
-        <button nz-button nzType="primary" (click)="goToHistory()">View Requests</button>
+        <button nz-button   (click)="goBack()">{{ 'Back' | translate }}</button>
+        <button nz-button nzType="primary" (click)="goToHistory()">{{ 'View Requests' | translate }}</button>
       </div>
     </nz-result>
   `,
@@ -37,7 +38,7 @@ import { Router } from "@angular/router";
   ],
 })
 export class SuccessPopupComponent {
-  constructor(public ref: NzModalRef<any>, private location: Location, private router: Router) {
+  constructor(public ref: NzModalRef<any>, private location: Location, private router: Router, private translateService: TranslateService) {
   }
   goBack() {
     this.ref.triggerOk().then();

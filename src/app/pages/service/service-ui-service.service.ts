@@ -11,9 +11,7 @@ export class ServiceUiService {
         this.modalService.create({
             nzContent: SuccessPopupComponent,
             nzFooter: null,
-            nzStyle: {
-                top: " 15%"
-            },
+            nzCentered: true,
             nzClosable: true,
             nzWidth: '400px',
             nzMaskClosable: false,

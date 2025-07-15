@@ -50,7 +50,7 @@ export class AuthService {
   constructor(
     private httpClient: HttpClient,
     private settingService: SettingService,
-    private languageService: LanguageService,
+    private languageService: LanguageService, private titleService: Title,
     private sessionService: SessionStorageService
   ) { }
 
@@ -85,10 +85,12 @@ export class AuthService {
         this.sessionService.setValue({ key: "companyName", value: CompanyName });
         this.sessionService.setValue({ key: "companyLogo", value: CompanyLogo });
         this.sessionService.setValue({ key: "companyNameEn", value: CompanyNameEn });
-
+        this.titleService.setTitle(`Hotel Portal | ${tenantCode}`);
+        let favIcon: HTMLLinkElement | any = document.querySelector('#favIcon');
+        favIcon.href = CompanyLogo;
         this.setCompanyInfo(companyInfo);
       })
-    ) 
+    )
   }
 
   setAppInfo(tenantCode: string) {
@@ -266,7 +268,7 @@ export class AuthService {
   }
   updateTitleTab() {
     this.languageService.initialLanguage();
-    // this.titleService.setTitle(`${this.app?.appName} | ${this.tenant.name}`);
+    this.titleService.setTitle(`${this.app?.appName} | ${this.tenant.name}`);
     let favIcon: HTMLLinkElement | any = document.querySelector('#favIcon');
     favIcon.href = this.app?.iconUrl;
   }
