@@ -26,7 +26,7 @@ import { TranslateService } from "@ngx-translate/core";
           <div class="header-history">
             <h3>
               <nz-icon nzType="info-circle" nzTheme="outline" />{{
-                "Request Information " | translate
+                "Request Information" | translate
               }}
             </h3>
           </div>
@@ -47,13 +47,13 @@ import { TranslateService } from "@ngx-translate/core";
 
             <div nz-col nzSpan="12">
               <span style="margin-bottom:2px;">{{ "Status" | translate }}</span> <br />
-              <app-status-badge
+              <app-status-badge  
                 [img]="model?.statusImage!"
                 [statusText]="
                   translateService.currentLang == 'en'
                     ? model?.statusNameEn!
                     : model?.statusNameKh!
-                "d
+                " 
                 [status]="model?.status ?? requestStatus.Pending"
               ></app-status-badge>
             </div>
@@ -75,7 +75,7 @@ import { TranslateService } from "@ngx-translate/core";
           <div class="header-history">
             <h3>
               <nz-icon nzType="clock-circle" nzTheme="outline" />{{
-                "Request Timeline " | translate
+                "Request Timeline" | translate
               }}
             </h3>
           </div>
@@ -105,11 +105,13 @@ import { TranslateService } from "@ngx-translate/core";
                 <span style="color: #b4b4b4;padding-left: 5px;">{{ item.createdDate | prettyDate:'yyyy-MM-dd h:mm a': translateService.currentLang    }}</span>
               
               </div>  
-              <p>{{"Created Date" | translate}}: {{ item.createdDate | customDateTime}}</p> 
+
+              <p>{{"Request Time" | translate}}: {{ item.createdDate | customDateTime}}</p> 
+              <p *ngIf='item.note'>{{"Note" | translate}}: {{ item.note}}</p>
               <!-- Template for custom dot icon -->
               <ng-template #statusIconTpl>
                 <img
-                  style="border-radius: 4px; width: 20px; height: auto;"
+                  style="border-radius: 4px; width: 20px; height: auto; margin-bottom: 4px;"
                   [src]="item.statusImage"
                   [alt]="item.statusNameEn"
                 />

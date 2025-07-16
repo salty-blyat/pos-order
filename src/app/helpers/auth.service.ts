@@ -79,7 +79,7 @@ export class AuthService {
   }
 
   updateClientInfo(tenantCode: string): Observable<any> {
-    this.setAppInfo(tenantCode);
+
     return this.getCompanyInfo(tenantCode).pipe(
       tap((res) => {
         const CompanyName = res.find((item: any) => item.key === "CompanyName")?.value || '';
@@ -91,32 +91,33 @@ export class AuthService {
         this.sessionService.setValue({ key: "companyName", value: CompanyName });
         this.sessionService.setValue({ key: "companyLogo", value: CompanyLogo });
         this.sessionService.setValue({ key: "companyNameEn", value: CompanyNameEn });
-        this.titleService.setTitle(`Hotel Portal | ${tenantCode}`);
-        let favIcon: HTMLLinkElement | any = document.querySelector('#favIcon');
-        favIcon.href = CompanyLogo;
+
+        this.setAppInfo(tenantCode, CompanyLogo, CompanyName);
         this.setCompanyInfo(companyInfo);
+        this.updateTitleTab();
       })
     )
   }
   updateGuestInfo(uuid: string): Observable<any> {
     return this.requestService.getGuest(uuid).pipe(
-      tap((res: Guest) => { 
+      tap((res: Guest) => {
         this.setGuestInfo(res);
       })
     )
   }
-
-  setAppInfo(tenantCode: string) {
+  setAppInfo(tenantCode: string, iconUrl: string, CompanyName: string) {
     const tenant: Tenant = {
-      name: "",
+      name: tenantCode,
       note: "",
-      code: tenantCode!,
+      code: tenantCode,
       logo: "",
       tenantData: "",
     }
 
     const app: App = {
-      appCode: "hotel-portal"
+      appCode: "Hotel Portal",
+      iconUrl: iconUrl || this.sessionService.getValue("companyLogo") || "",
+      appName: CompanyName || this.sessionService.getValue("companyName") || "",
     }
     this.setStorageValue({
       key: APP_STORAGE_KEY.App,
@@ -128,6 +129,7 @@ export class AuthService {
       value: tenant,
     });
   }
+
 
   getStorageValue<T>(key: string): T {
     return JSON.parse(<string>localStorage.getItem(key?.toLowerCase()));
@@ -280,7 +282,7 @@ export class AuthService {
     return this.getAuthorizedPermissions().includes(key);
   }
   updateTitleTab() {
-    this.languageService.initialLanguage();
+    // this.languageService.initialLanguage();
     this.titleService.setTitle(`${this.app?.appName} | ${this.tenant.name}`);
     let favIcon: HTMLLinkElement | any = document.querySelector('#favIcon');
     favIcon.href = this.app?.iconUrl;

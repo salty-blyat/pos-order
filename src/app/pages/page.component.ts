@@ -9,6 +9,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { SessionStorageService } from "../utils/services/sessionStorage.service";
 import { Subscription } from "rxjs";
 import { NzModalService } from "ng-zorro-antd/modal";
+import { Title } from "@angular/platform-browser";
 
 @Component({
   selector: "app-page",
@@ -37,7 +38,12 @@ import { NzModalService } from "ng-zorro-antd/modal";
           nzAlign="center"
           style="height: auto !important;"
         >
-        <span style="padding: 0 8px; ">{{ guestName }} - {{ roomNumber }}</span>
+      <div class="guest-info" nz-flex nzVertical justify="end">
+  <span class="guest-name" *ngIf="isVerified">{{ guestName }}</span>
+  <span class="room-number unverified" *ngIf="!isVerified">{{ roomNumber }}</span>
+  <span class="room-number verified" *ngIf="isVerified">{{ roomNumber }}</span>
+</div>
+
           <span
             nzTrigger="click"
             nz-dropdown
@@ -115,6 +121,31 @@ import { NzModalService } from "ng-zorro-antd/modal";
   styleUrls: ["../../assets/scss/layout.style.scss"],
   styles: [
     `
+    .guest-info {
+  line-height: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; 
+}
+
+.guest-name {
+  font-size: 14px;
+  text-align: right;
+  margin-top: 4px;
+}
+
+.room-number {
+  text-align: right;
+}
+
+.room-number.unverified {
+  font-size: 14px;
+}
+
+.room-number.verified {
+  font-size: 10px;
+}
+
       .brand {
         user-select: none;
         cursor: pointer;
@@ -179,9 +210,9 @@ export class PageComponent implements OnInit {
     private modal: NzModalService,
     private settingService: SettingService,
     private sessionService: SessionStorageService,
+    private titleService: Title,
     public appVersionService: AppVersionService
   ) { }
-
 
   ngOnInit(): void {
     if (this.sessionService.getValue("companyName")) {
@@ -206,6 +237,9 @@ export class PageComponent implements OnInit {
         this.roomNumber = info.roomNo;
       }
     });
+    // this.titleService.setTitle(`${this.companyName || this.sessionService.getValue("companyName")}`);
+    // let favIcon: HTMLLinkElement | any = document.querySelector('#favIcon');
+    // favIcon.href = this.companyLogo || this.sessionService.getValue("companyLogo");
   }
 
   confirmCheckout(): void {
@@ -240,7 +274,6 @@ export class PageComponent implements OnInit {
     this.router.navigate(["/home"]);
   }
   goToHistory() {
-    console.log("goToHistory");
     this.router.navigate(["history"]).then();
   }
 

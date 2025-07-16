@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from "@angular/core"; 
+import { Component, ViewEncapsulation } from "@angular/core";
 
 @Component({
   selector: "app-thankyou",
@@ -9,14 +9,14 @@ import { Component, ViewEncapsulation } from "@angular/core";
       <div class="card">
         <div class="card-header">
           <h1 class="card-title">{{"Thank You!" | translate}}</h1>
-          <p class="card-description">{{"For using our hotel service." | translate}}</p>
+          <p class="card-description">{{"For using our hotel service" | translate}}</p>
         </div>
         <div class="card-content">
           <p>
             {{"We appreciate your trust in us and hope you had a seamless experience." | translate}}
             {{"We look forward to serving you again soon!" | translate}}
           </p>
-          <button nz-button nzType="primary"   routerLink="/">{{"Go to Homepage" | translate}}</button>
+          <!-- <button nz-button nzType="primary"   routerLink="/">{{"Go to Homepage" | translate}}</button> -->
         </div>
       </div>
     </div>
@@ -72,5 +72,5 @@ import { Component, ViewEncapsulation } from "@angular/core";
  
   `]
 })
-export class ThankYouComponent {  
+export class ThankYouComponent {
 }

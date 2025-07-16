@@ -182,8 +182,6 @@ export class ServiceOperationComponent implements OnInit {
       this.serviceRefresh = this.serviceService
         .find(Number(params.get("id")))
         .subscribe((res) => {
-          console.log(res);
-
           this.service = res;
           if (this.service?.trackQty) {
             this.frm.get("quantity")?.setValue(1);

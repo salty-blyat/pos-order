@@ -1,14 +1,14 @@
 import {
-    Component,
-    EventEmitter,
-    Input,
-    Output,
-    ViewEncapsulation,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation,
 } from "@angular/core";
 import { Request, RequestStatus } from "../../pages/request/request.service";
 @Component({
-    selector: "app-status-badge",
-    template: `
+  selector: "app-status-badge",
+  template: `
     <span
     nz-flex
     nzGap="small"
@@ -18,28 +18,28 @@ import { Request, RequestStatus } from "../../pages/request/request.service";
       {{ statusText }}
     </span>
   `,
-    styleUrls: ["../../../assets/scss/list.style.scss"],
-    encapsulation: ViewEncapsulation.None,
-    styles: [
-        `
+  styleUrls: ["../../../assets/scss/list.style.scss"],
+  encapsulation: ViewEncapsulation.None,
+  styles: [
+    `
       .badge {
         width: fit-content;
         color: black;
-        font-size: 11px;
+        font-size: 12px;
         text-wrap: nowrap;
         img{
             border-radius: 4px;width: 16px; height:auto;
         }
       }
     `,
-    ],
-    standalone: false,
+  ],
+  standalone: false,
 })
 export class StatusBadgeComponent {
-    @Input() status: RequestStatus = RequestStatus.Pending;
-    @Input() img: string = './../../../assets/image/noimg.jpg';
-    @Input() statusText: string = '';
+  @Input() status: RequestStatus = RequestStatus.Pending;
+  @Input() img: string = './../../../assets/image/noimg.jpg';
+  @Input() statusText: string = '';
 
-    readonly requestStatus = RequestStatus;
+  readonly requestStatus = RequestStatus;
 
 }

@@ -92,9 +92,6 @@ export class BaseListComponent<T extends SharedDomain>
   } 
 
   searchMore() {
-    console.log('this.param() ' + this.param().pageIndex);
-    console.log('this.param().pageCount ' + this.param().pageCount!);
-
     if (this.param().pageIndex! < this.param().pageCount!) {
       this.param().pageIndex! += 1;
       this.search();
