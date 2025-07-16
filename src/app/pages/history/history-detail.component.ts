@@ -20,13 +20,8 @@ import { TranslateService } from "@ngx-translate/core";
       </button>
     </div>
     <div nz-row [nzGutter]="[16, 16]">
-      <div
-        nz-col
-        nzXs="24"
-        nzSm="24"
-        [nzMd]="model?.requestLogs?.length! > 0 ? 12 : 24"
-      >
-        <div nz-flex nzVertical class="req-detail-card" nzGap="middle">
+      <div nz-col nzXs="24" nzSm="24">
+        <div nz-flex nzVertical class="req-detail-card" nzGap="small">
           @if(!isLoading && model){
           <div class="header-history">
             <h3>
@@ -51,20 +46,20 @@ import { TranslateService } from "@ngx-translate/core";
             </div>
 
             <div nz-col nzSpan="12">
-              <span>{{ "Status" | translate }}</span> <br />
+              <span style="margin-bottom:2px;">{{ "Status" | translate }}</span> <br />
               <app-status-badge
                 [img]="model?.statusImage!"
                 [statusText]="
                   translateService.currentLang == 'en'
                     ? model?.statusNameEn!
                     : model?.statusNameKh!
-                "
+                "d
                 [status]="model?.status ?? requestStatus.Pending"
               ></app-status-badge>
             </div>
           </div>
           <div class="request-time">
-            <h4>{{ "Requested At" | translate }}</h4>
+            <h4>{{ "Requested at" | translate }}</h4>
             <p>{{ model?.requestTime | customDateTime }}</p>
           </div>
           } @else if(isLoading) {
@@ -75,14 +70,8 @@ import { TranslateService } from "@ngx-translate/core";
         </div>
       </div>
 
-      <div
-        nz-col
-        nzXs="24"
-        nzSm="24"
-        nzMd="12"
-        *ngIf="model?.requestLogs?.length! > 0"
-      >
-        <div nz-flex nzVertical class="req-detail-card" nzGap="middle">
+      <div nz-col nzXs="24" nzSm="24" *ngIf="model?.requestLogs?.length! > 0">
+        <div nz-flex nzVertical class="req-detail-card" nzGap="small">
           <div class="header-history">
             <h3>
               <nz-icon nzType="clock-circle" nzTheme="outline" />{{
@@ -90,32 +79,41 @@ import { TranslateService } from "@ngx-translate/core";
               }}
             </h3>
           </div>
-          <nz-timeline>
+          <nz-timeline class='timeline'>
             <nz-timeline-item
               *ngFor="let item of model?.requestLogs"
-              [nzColor]="getBadgeBgColor(item.status)"
+              [nzDot]="statusIconTpl"
             >
-              <div nz-flex nzJustify="space-between">
-                <h4>
-                  @if(item.staffName && item.staffName != ""){
-                  {{ item.staffName }}
-                  } @else {
-                  {{
-                    translateService.currentLang == "en"
-                      ? item.statusNameEn
-                      : item.statusNameKh
-                  }}
-                  }
+              <div nz-flex nzGap="small">
+                <h4 style="font-weight: bold;">
+                  <ng-container
+                    *ngIf="
+                      item.staffName && item.staffName !== '';
+                      else noStaffName
+                    "
+                  >
+                  {{"Responsible Staff" | translate}}:  {{ item.staffName }}
+                  </ng-container>
+                  <ng-template #noStaffName>
+                    {{
+                      translateService.currentLang === "en"
+                        ? item.statusNameEn
+                        : item.statusNameKh
+                    }}
+                  </ng-template>
                 </h4>
-                <span style="color:grey;">
-                  {{ item.createdDate | customDateTime }}
-                </span>
-              </div>
-              <span *ngIf="item.staffName && item.staffName != ''">{{
-                translateService.currentLang == "en"
-                  ? item.statusNameEn
-                  : item.statusNameKh
-              }}</span>
+                <span style="color: #b4b4b4;padding-left: 5px;">{{ item.createdDate | prettyDate:'yyyy-MM-dd h:mm a': translateService.currentLang    }}</span>
+              
+              </div>  
+              <p>{{"Created Date" | translate}}: {{ item.createdDate | customDateTime}}</p> 
+              <!-- Template for custom dot icon -->
+              <ng-template #statusIconTpl>
+                <img
+                  style="border-radius: 4px; width: 20px; height: auto;"
+                  [src]="item.statusImage"
+                  [alt]="item.statusNameEn"
+                />
+              </ng-template>
             </nz-timeline-item>
           </nz-timeline>
         </div>
@@ -126,10 +124,13 @@ import { TranslateService } from "@ngx-translate/core";
   encapsulation: ViewEncapsulation.None,
   styles: [
     `
+    .timeline{
+      margin-left: 12px;
+    }
       .header-history {
         h3 {
-          nz-icon {
-            margin-right: 8px;
+          nz-icon { 
+            margin-right: 12px;
           }
           font-weight: bold;
           font-size: 18px;
@@ -211,20 +212,5 @@ export class HistoryDetailComponent implements OnInit {
   ngOnDestroy(): void {
     this.routeRefresher?.unsubscribe();
     this.requestRefresher?.unsubscribe();
-  }
-
-  getBadgeBgColor(status: number | undefined): string {
-    switch (status) {
-      case RequestStatus.Pending:
-        return "#EEB600";
-      case RequestStatus.InProgress:
-        return "#009DDA";
-      case RequestStatus.Done:
-        return "#00B609";
-      case RequestStatus.Cancel:
-        return "#F90000B3";
-      default:
-        return "#000000";
-    }
   }
 }

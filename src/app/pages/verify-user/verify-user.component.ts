@@ -7,6 +7,7 @@ import { Guest, RequestService, VerifiedInfo } from "../request/request.service"
 import { NotificationService } from "../service/notification.service";
 import { App, AuthService, Tenant } from "../../helpers/auth.service";
 import { APP_STORAGE_KEY } from "../../const";
+import { TranslateService } from "@ngx-translate/core";
 @Component({
   selector: "app-verify-user",
   template: `
@@ -27,12 +28,12 @@ import { APP_STORAGE_KEY } from "../../const";
           </div>
           }@else if (!isLoading && phoneNumber){  -->
           <h1 class="welcome-banner">
-            {{ "Welcome to" | translate }} {{ CompanyName }}
+            {{ ("Welcome to" | translate) + "" + (this.translateService.currentLang == "km" ? this.CompanyName :this.CompanyNameEn ) }}
           </h1> 
           <div class="verify-card" style="line-height: 1;">
             <h2>{{ "Guest Verification" | translate }}</h2>
-            <span>{{
-              "Please enter the last 3 digit of your phone number to proceed"
+            <span style="line-height:1.5;">{{
+              "Please enter the last 3 digit of your phone number to proceed."
                 | translate
             }}</span>
             <h3 style="text-align: center; margin-top:24px;">
@@ -47,7 +48,7 @@ import { APP_STORAGE_KEY } from "../../const";
                     nz-input
                     formControlName="lastThreeDigits"
                     type="tel"
-                    placeholder="Enter last 3 digits"
+                    [placeholder]="'Enter last 3 digits' | translate"
                     style="text-align: center;" nzSize="large"
                   />
                 </nz-form-control>
@@ -109,7 +110,8 @@ export class VerifyUserComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private sessionService: SessionStorageService,
     private authService: AuthService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    public translateService: TranslateService
   ) { }
   frm!: FormGroup;
   isLoading = false;
@@ -136,38 +138,37 @@ export class VerifyUserComponent implements OnInit {
             this.CompanyName = this.sessionService.getValue("companyName") || "";
             this.CompanyLogo = this.sessionService.getValue("companyLogo") || "";
             this.CompanyNameEn = this.sessionService.getValue("companyNameEn") || "";
-
-            this.service.getGuest(this.uuid).subscribe({
-              next: (res: Guest) => {
-              this.guestPhone = res.guestPhone ?? "";
-              this.sessionService.setValue({ key: "roomNo", value: res.roomNo });
-              this.sessionService.setValue({ key: "checkInDate", value: res.checkInDate });
-              this.sessionService.setValue({ key: "checkOutDate", value: res.checkOutDate });
-              this.sessionService.setValue({ key: "totalNight", value: res.totalNight });
-              this.sessionService.setValue({ key: "guestName", value: res.guestName });
-              this.sessionService.setValue({ key: "guestPhone", value: this.guestPhone });
-              this.isLoading = false;
-            },
-            error: (err) => {
-              console.error(err);
-              this.router.navigate(["/not-found"]);
-              this.isLoading = false;
-            }
-          });
           },
           error: (err) => {
             console.error(err);
-            this.router.navigate(["/not-found"]);
             this.isLoading = false;
           }
         });
+        this.authService.updateGuestInfo(this.uuid).subscribe({
+          next: (res: Guest) => {
+            this.guestPhone = res.guestPhone ?? "";
+            this.sessionService.setValue({ key: "roomNo", value: res.roomNo });
+            this.sessionService.setValue({ key: "checkInDate", value: res.checkInDate });
+            this.sessionService.setValue({ key: "checkOutDate", value: res.checkOutDate });
+            this.sessionService.setValue({ key: "totalNight", value: res.totalNight });
+            this.sessionService.setValue({ key: "guestName", value: res.guestName });
+            this.sessionService.setValue({ key: "guestPhone", value: this.guestPhone });
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error(err);
+            this.isLoading = false;
+          }
+        });
+
       },
       error: (err) => {
         console.error(err);
         this.router.navigate(["/not-found"]);
         this.isLoading = false;
-      },
+      }
     });
+
   }
 
 
@@ -195,6 +196,7 @@ export class VerifyUserComponent implements OnInit {
 
     return `${prefix ? prefix + ' ' : ''}${formatted} ___`;
   }
+  
   onSubmit(e?: any) {
     this.frm.patchValue({ roomUid: this.uuid });
     if (this.frm.valid && !this.isLoading) {

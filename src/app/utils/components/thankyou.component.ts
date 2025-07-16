@@ -53,7 +53,7 @@ import { Component, ViewEncapsulation } from "@angular/core";
     }
 
     .card-description {
-      font-size: 1.125rem;
+      font-size: 1.125rem;margin-bottom: 0px;
       color: #4b5563;
     }
 

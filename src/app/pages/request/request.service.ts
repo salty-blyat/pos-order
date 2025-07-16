@@ -54,6 +54,7 @@ export interface RequestLog {
     note?: string;
     createdBy?: string;
     createdDate?: string;
+    statusImage?: string;
 }
 
 export interface Request {

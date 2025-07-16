@@ -5,7 +5,7 @@ import { map, tap } from 'rxjs/operators';
 import { SettingService } from '../app-setting';
 import { LanguageService } from '../utils/services/language.service';
 import { Title } from '@angular/platform-browser';
-import { RequestService } from '../pages/request/request.service';
+import { Guest, RequestService } from '../pages/request/request.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SessionStorageService } from '../utils/services/sessionStorage.service';
 
@@ -49,6 +49,7 @@ export class AuthService {
 
   constructor(
     private httpClient: HttpClient,
+    private requestService: RequestService,
     private settingService: SettingService,
     private languageService: LanguageService, private titleService: Title,
     private sessionService: SessionStorageService
@@ -56,10 +57,15 @@ export class AuthService {
 
   clientInfo: ClientInfo = this.getStorageValue(APP_STORAGE_KEY.Authorized);
   private companyInfoSubject = new BehaviorSubject<any>(null);
+  private guestInfoSubject = new BehaviorSubject<any>(null);
   companyInfo$ = this.companyInfoSubject.asObservable();
+  guestInfo$ = this.guestInfoSubject.asObservable();
 
   setCompanyInfo(data: any) {
     this.companyInfoSubject.next(data);
+  }
+  setGuestInfo(data: any) {
+    this.guestInfoSubject.next(data);
   }
   get url() {
     return this.settingService.setting.AUTH_API_URL;
@@ -89,6 +95,13 @@ export class AuthService {
         let favIcon: HTMLLinkElement | any = document.querySelector('#favIcon');
         favIcon.href = CompanyLogo;
         this.setCompanyInfo(companyInfo);
+      })
+    )
+  }
+  updateGuestInfo(uuid: string): Observable<any> {
+    return this.requestService.getGuest(uuid).pipe(
+      tap((res: Guest) => { 
+        this.setGuestInfo(res);
       })
     )
   }

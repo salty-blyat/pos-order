@@ -30,7 +30,7 @@ import { TranslateService } from "@ngx-translate/core";
       </div>
 
       <div class="view-icon" nz-flex nzGap="small">
-        <app-status-badge [img]="request?.statusImage!" [statusText]="translateService.currentLang == 'en' ? request?.statusNameEn! : request?.statusNameKh!"  [status]="request?.status ?? requestStatus.Pending"></app-status-badge> 
+        <app-status-badge [img]="request?.statusImage!" [statusText]="translateService.currentLang == 'km' ? request?.statusNameKh! : request?.statusNameEn!"  [status]="request?.status ?? requestStatus.Pending"></app-status-badge> 
         <nz-icon nzType="right" nzTheme="outline" />
       </div>
     </div>

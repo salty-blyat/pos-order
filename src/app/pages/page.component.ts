@@ -2,7 +2,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AuthService } from "../helpers/auth.service";
 import { LanguageService } from "../utils/services/language.service";
 import { SettingService } from "../app-setting";
-import { LocalStorageService } from "../utils/services/localStorage.service";
 import { AppVersionService } from "../utils/services/app-version.service";
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { LANGUAGES } from "../const";
@@ -24,11 +23,21 @@ import { NzModalService } from "ng-zorro-antd/modal";
           nzAlign="center"
         >
           <img class="logo" [src]="companyLogo" [alt]="companyName" />
-          <span class="restaurant-name">{{
-            translateService.currentLang === "km" ? companyName : companyNameEn
-          }}</span>
+          <span class="restaurant-name">
+            {{
+              translateService.currentLang === "km"
+                ? companyName
+                : companyNameEn
+            }}
+          </span>
         </div>
-        <div nz-flex nzGap="small" nzAlign="center" style="height: auto !important;">
+        <div
+          nz-flex
+          nzGap="small"
+          nzAlign="center"
+          style="height: auto !important;"
+        >
+        <span style="padding: 0 8px; ">{{ guestName }} - {{ roomNumber }}</span>
           <span
             nzTrigger="click"
             nz-dropdown
@@ -68,11 +77,12 @@ import { NzModalService } from "ng-zorro-antd/modal";
             </nz-dropdown-menu>
           </span>
           <button
+            *ngIf="isVerified"
             style=" cursor: pointer; "
             nz-dropdown
             nzTrigger="click"
             [nzDropdownMenu]="userMenu"
-            nz-button 
+            nz-button
           >
             <nz-icon nzType="more" nzTheme="outline" />
           </button>
@@ -85,11 +95,14 @@ import { NzModalService } from "ng-zorro-antd/modal";
                   style="margin-right: 8px;"
                 />{{ "History" | translate }}
               </li>
-              <li nz-menu-item (click)="confirmCheckout()" nzDanger><nz-icon
+              <li nz-menu-item (click)="confirmCheckout()" nzDanger>
+                <nz-icon
                   nzType="logout"
-                  nzTheme="outline"  
+                  nzTheme="outline"
                   style="margin-right: 8px;"
-                /> {{"Logout" | translate}}</li>
+                />
+                {{ "Logout" | translate }}
+              </li>
             </ul>
           </nz-dropdown-menu>
         </div>
@@ -153,23 +166,32 @@ export class PageComponent implements OnInit {
   companyLogo: string = "";
   companyNameEn: string = "";
   languages = LANGUAGES;
+  guestName = "";
+  roomNumber = "";
+  appName = this.authService.app?.appName;
+  routeRefresher = new Subscription();
   constructor(
     public router: Router,
     public translateService: TranslateService,
     public authService: AuthService,
     public languageService: LanguageService,
-    public activatedRoute: ActivatedRoute, private modal: NzModalService,
+    public activatedRoute: ActivatedRoute,
+    private modal: NzModalService,
     private settingService: SettingService,
     private sessionService: SessionStorageService,
     public appVersionService: AppVersionService
   ) { }
-  appName = this.authService.app?.appName;
-  routeRefresher = new Subscription();
+
+
   ngOnInit(): void {
     if (this.sessionService.getValue("companyName")) {
       this.companyName = this.sessionService.getValue("companyName") || "";
       this.companyLogo = this.sessionService.getValue("companyLogo") || "";
       this.companyNameEn = this.sessionService.getValue("companyNameEn") || "";
+    }
+    if (this.sessionService.getValue("roomNo")) {
+      this.roomNumber = this.sessionService.getValue("roomNo") || "";
+      this.guestName = this.sessionService.getValue("guestName") || "";
     }
     this.authService.companyInfo$.subscribe((info) => {
       if (info) {
@@ -178,19 +200,29 @@ export class PageComponent implements OnInit {
         this.companyNameEn = info.CompanyNameEn;
       }
     });
-  }
-
-
-  confirmCheckout(): void {
-    this.modal.confirm({
-      nzTitle: this.translateService.instant('Are you sure you want to logout?'),
-      nzCentered: true,
-      nzOkText: this.translateService.instant('Logout'),
-      nzCancelText: this.translateService.instant('Cancel'),
-      nzOnOk: () => this.checkout()
+    this.authService.guestInfo$.subscribe((info) => {
+      if (info) {
+        this.guestName = info.guestName;
+        this.roomNumber = info.roomNo;
+      }
     });
   }
 
+  confirmCheckout(): void {
+    this.modal.confirm({
+      nzTitle: this.translateService.instant(
+        "Are you sure you want to logout?"
+      ),
+      nzCentered: true,
+      nzOkText: this.translateService.instant("Logout"),
+      nzCancelText: this.translateService.instant("Cancel"),
+      nzOnOk: () => this.checkout(),
+    });
+  }
+
+  get isVerified() {
+    return this.sessionService.getValue("isVerified") || false;
+  }
 
   checkout() {
     this.sessionService.removeValue("isVerified");
@@ -200,7 +232,7 @@ export class PageComponent implements OnInit {
     this.sessionService.removeValue("totalNight");
     this.sessionService.removeValue("guestName");
     this.sessionService.removeValue("guestPhone");
-    this.router.navigate(["/"]).then();
+    this.router.navigate(["/thank-you"]).then();
   }
 
   goHome() {
