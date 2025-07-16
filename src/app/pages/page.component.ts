@@ -24,7 +24,7 @@ import { Title } from "@angular/platform-browser";
           nzAlign="center"
         >
           <img class="logo" [src]="companyLogo" [alt]="companyName" />
-          <span class="restaurant-name">
+          <span class="company-name">
             {{
               translateService.currentLang === "km"
                 ? companyName
@@ -171,8 +171,9 @@ import { Title } from "@angular/platform-browser";
       .logo {
         height: 42px;
       }
-      .restaurant-name {
+      .company-name {
         font-size: 18px;
+        margin-bottom: 4px;
         line-height: 1;
       }
       .img-head {
@@ -210,16 +211,18 @@ export class PageComponent implements OnInit {
     private modal: NzModalService,
     private settingService: SettingService,
     private sessionService: SessionStorageService,
-    private titleService: Title,
     public appVersionService: AppVersionService
   ) { }
 
   ngOnInit(): void {
     if (this.sessionService.getValue("companyName")) {
+      console.log(this.companyName, this.companyLogo, this.companyNameEn);
       this.companyName = this.sessionService.getValue("companyName") || "";
       this.companyLogo = this.sessionService.getValue("companyLogo") || "";
       this.companyNameEn = this.sessionService.getValue("companyNameEn") || "";
     }
+
+
     if (this.sessionService.getValue("roomNo")) {
       this.roomNumber = this.sessionService.getValue("roomNo") || "";
       this.guestName = this.sessionService.getValue("guestName") || "";
@@ -237,9 +240,7 @@ export class PageComponent implements OnInit {
         this.roomNumber = info.roomNo;
       }
     });
-    // this.titleService.setTitle(`${this.companyName || this.sessionService.getValue("companyName")}`);
-    // let favIcon: HTMLLinkElement | any = document.querySelector('#favIcon');
-    // favIcon.href = this.companyLogo || this.sessionService.getValue("companyLogo");
+    console.log(this.sessionService.getValue("companyName"));
   }
 
   confirmCheckout(): void {

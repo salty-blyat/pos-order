@@ -88,13 +88,15 @@ export class AuthService {
 
         const companyInfo = { CompanyName, CompanyLogo, CompanyNameEn };
 
-        this.sessionService.setValue({ key: "companyName", value: CompanyName });
-        this.sessionService.setValue({ key: "companyLogo", value: CompanyLogo });
-        this.sessionService.setValue({ key: "companyNameEn", value: CompanyNameEn });
-
+        console.log(this.sessionService.getValue("companyName"));
+        
+        
         this.setAppInfo(tenantCode, CompanyLogo, CompanyName);
         this.setCompanyInfo(companyInfo);
         this.updateTitleTab();
+        this.sessionService.setValue({ key: "companyName", value: CompanyName });
+        this.sessionService.setValue({ key: "companyLogo", value: CompanyLogo });
+        this.sessionService.setValue({ key: "companyNameEn", value: CompanyNameEn });
       })
     )
   }

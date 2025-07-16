@@ -9,11 +9,8 @@ import { Request, RequestStatus } from "../../pages/request/request.service";
 @Component({
   selector: "app-status-badge",
   template: `
-    <span
-    nz-flex
-    nzGap="small"
-    class="badge"
-    nzAlign="center" > 
+    <span 
+    class="badge"  > 
       <img [src]="img" [alt]="statusText" /> 
       {{ statusText }}
     </span>
@@ -23,12 +20,15 @@ import { Request, RequestStatus } from "../../pages/request/request.service";
   styles: [
     `
       .badge {
+        display:flex;
+        align-items: center;
         width: fit-content;
         color: black;
+        gap:4px;
         font-size: 12px;
         text-wrap: nowrap;
         img{
-            border-radius: 4px;width: 16px; height:auto;
+            border-radius: 4px;width: 16px; height:auto; margin-bottom:1px;
         }
       }
     `,
