@@ -3,6 +3,13 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 
+export interface Error {
+  error: {
+    message: string;
+    type: string;
+    stack: string;
+  };
+}
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   constructor(

@@ -24,7 +24,7 @@ export interface RequestDetail {
     statusNameEn?: string;
     statusNameKh?: string;
     roomId?: number;
-    stayId?: number;
+    reservationId?: number;
     serviceItemId?: number;
     quantity?: number;
     status?: number;
@@ -38,7 +38,7 @@ export interface RequestDetail {
 }
 export interface VerifiedInfo {
     guestId?: number;
-    stayId?: number;
+    reservationId?: number;
     roomId?: number;
     isValid?: boolean;
 }
@@ -62,7 +62,7 @@ export interface Request {
     requestTime?: string;
     guestId?: number;
     roomId?: number;
-    stayId?: number;
+    reservationId?: number;
     serviceItemId?: number;
     quantity?: number;
     status?: number;
@@ -88,7 +88,7 @@ export interface RequestPOST {
     requestTime?: string;
     guestId?: number;
     roomId?: number;
-    stayId?: number;
+    reservationId?: number;
     serviceItemId?: number;
     quantity?: number;
     status?: number;
@@ -96,11 +96,14 @@ export interface RequestPOST {
     attachments?: Attachment[];
 }
 export interface Attachment {
-    uid?: string;
-    url?: string;
     name?: string;
     type?: string;
     createdDate?: string;
+
+
+    
+    uid?: string;
+    url?: string;
     createdBy?: string;
 }
 

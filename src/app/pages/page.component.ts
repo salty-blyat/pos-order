@@ -8,8 +8,7 @@ import { LANGUAGES } from "../const";
 import { TranslateService } from "@ngx-translate/core";
 import { SessionStorageService } from "../utils/services/sessionStorage.service";
 import { Subscription } from "rxjs";
-import { NzModalService } from "ng-zorro-antd/modal";
-import { Title } from "@angular/platform-browser";
+import { NzModalService } from "ng-zorro-antd/modal"; 
 
 @Component({
   selector: "app-page",
@@ -202,21 +201,20 @@ export class PageComponent implements OnInit {
   roomNumber = "";
   appName = this.authService.app?.appName;
   routeRefresher = new Subscription();
+  isVerified = this.authService.isVerified || false;
   constructor(
     public router: Router,
     public translateService: TranslateService,
     public authService: AuthService,
     public languageService: LanguageService,
     public activatedRoute: ActivatedRoute,
-    private modal: NzModalService,
-    private settingService: SettingService,
+    private modal: NzModalService, 
     private sessionService: SessionStorageService,
     public appVersionService: AppVersionService
   ) { }
 
   ngOnInit(): void {
     if (this.sessionService.getValue("companyName")) {
-      console.log(this.companyName, this.companyLogo, this.companyNameEn);
       this.companyName = this.sessionService.getValue("companyName") || "";
       this.companyLogo = this.sessionService.getValue("companyLogo") || "";
       this.companyNameEn = this.sessionService.getValue("companyNameEn") || "";
@@ -240,7 +238,6 @@ export class PageComponent implements OnInit {
         this.roomNumber = info.roomNo;
       }
     });
-    console.log(this.sessionService.getValue("companyName"));
   }
 
   confirmCheckout(): void {
@@ -255,48 +252,19 @@ export class PageComponent implements OnInit {
     });
   }
 
-  get isVerified() {
-    return this.sessionService.getValue("isVerified") || false;
-  }
-
   checkout() {
-    this.sessionService.removeValue("isVerified");
-    this.sessionService.removeValue("roomNo");
-    this.sessionService.removeValue("checkInDate");
-    this.sessionService.removeValue("checkOutDate");
-    this.sessionService.removeValue("totalNight");
-    this.sessionService.removeValue("guestName");
-    this.sessionService.removeValue("guestPhone");
+    this.authService.checkout();
     this.router.navigate(["/thank-you"]).then();
   }
 
   goHome() {
-    // if user no verify dont allow to go home
+    if (!this.authService.isVerified) return;
     this.router.navigate(["/home"]);
   }
   goToHistory() {
     this.router.navigate(["history"]).then();
-  }
-
-  logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(["auth/login"]).then();
-    });
-  }
-
-  redirectToMainUrl() {
-    window.open(
-      `${this.settingService.setting.AUTH_UI_URL}/appcenter`,
-      "app-center"
-    );
-  }
-
-  redirectToViewProfileUrl() {
-    window.open(
-      `${this.settingService.setting.AUTH_UI_URL}/appcenter/user-view`,
-      "app-center"
-    );
-  }
+  }  
+ 
   ngOnDestroy(): void {
     this.routeRefresher?.unsubscribe();
   }

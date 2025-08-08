@@ -1,4 +1,9 @@
-import { Component, signal, ViewEncapsulation, WritableSignal } from "@angular/core";
+import {
+  Component,
+  signal,
+  ViewEncapsulation,
+  WritableSignal,
+} from "@angular/core";
 import { HomeService, ServiceType } from "./home.service";
 import { Router } from "@angular/router";
 import { BaseListComponent } from "../../utils/components/base-list.component";
@@ -43,7 +48,7 @@ import { QueryParam } from "../../utils/services/base-api.service";
     <app-no-result-found></app-no-result-found>
     } @else if(!isLoading() && lists().length > 0){
     <div class="header-home">
-      <h2>{{ ("How can we assist you today" | translate )+ "?"}}</h2>
+      <h2>{{ ("How can we assist you today" | translate) + "?" }}</h2>
     </div>
     <div nz-row [nzGutter]="[8, 8]">
       <div
@@ -82,15 +87,15 @@ import { QueryParam } from "../../utils/services/base-api.service";
         color: #2e7d32;
         font-weight: 600;
       }
-      .card-container { 
+      .card-container {
         // max-width:370px;
         user-select: none;
         background-color: white;
         margin-left: 0 !important;
         padding: 18px 12px;
-        border-radius: 8px; 
+        border-radius: 8px;
         font-family: "Segoe UI", sans-serif;
-        position: relative; 
+        position: relative;
       }
 
       .avatar {
@@ -133,9 +138,7 @@ export class HomeComponent extends BaseListComponent<ServiceType> {
   checkOutDate: string =
     this.sessionStorageService.getValue("checkOutDate") ?? "";
   totalNight: string = this.sessionStorageService.getValue("totalNight") ?? "";
-  avartar: string =
-    this.guestName.trim().split(" ")[1].charAt(0).toUpperCase() +
-    this.guestName.trim().split(" ")[1].charAt(1).toUpperCase();
+     
   onClick(id: number) {
     setTimeout(() => {
       this.router.navigate([`/service/${id}`]);

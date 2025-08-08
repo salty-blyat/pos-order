@@ -64,6 +64,7 @@ import { Filter, QueryParam } from "../../utils/services/base-api.service";
         background-color: white;
         border-radius: 8px;
         padding: 8px;
+        
         img {
           width: 80px;
           height: 80px;

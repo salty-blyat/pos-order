@@ -9,7 +9,7 @@ import { ServiceOperationComponent } from "./pages/service/service-operation.com
 import { HistoryDetailComponent } from "./pages/history/history-detail.component";
 import { HistoryComponent } from "./pages/history/history.component";
 import { NotFoundPageComponent } from "./pages/not-found/not-found.component";
-import { ThankYouComponent } from "./utils/components/thankyou.component";
+import { ThankYouComponent } from "./pages/thank-you/thank-you.component";
 
 const routes: Routes = [
   { path: "", pathMatch: "full", redirectTo: "/not-found" },
@@ -63,4 +63,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {} 
+export class AppRoutingModule { } 

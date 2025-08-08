@@ -9,6 +9,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { Subscription } from "rxjs";
 import { TranslateService } from "@ngx-translate/core";
+import { NzUploadFile } from "ng-zorro-antd/upload";
 
 @Component({
   selector: "app-history-detail",
@@ -36,7 +37,7 @@ import { TranslateService } from "@ngx-translate/core";
               {{ model?.serviceItemName || "model?.serviceItemName" }}
             </p>
           </div>
-          <div nz-row style="padding: 0 16px;" nzGutter="16">
+          <div nz-row  nzGutter="16" class='quantity-container'>
             <div nz-col nzSpan="12" *ngIf="model?.quantity! > 0">
               <span>{{ "Quantity" | translate }}</span> <br />
               <span
@@ -46,21 +47,33 @@ import { TranslateService } from "@ngx-translate/core";
             </div>
 
             <div nz-col nzSpan="12">
-              <span style="margin-bottom:2px;">{{ "Status" | translate }}</span> <br />
-              <app-status-badge  
+              <span style="margin-bottom:2px;">{{ "Status" | translate }}</span>
+              <br />
+              <app-status-badge
                 [img]="model?.statusImage!"
                 [statusText]="
                   translateService.currentLang == 'en'
                     ? model?.statusNameEn!
                     : model?.statusNameKh!
-                " 
+                "
                 [status]="model?.status ?? requestStatus.Pending"
               ></app-status-badge>
             </div>
           </div>
-          <div class="request-time">
-            <h4>{{ "Requested at" | translate }}</h4>
-            <p>{{ model?.requestTime | customDateTime }}</p>
+          <div class="request-time" nz-row>
+            <div nz-col nzSpan="12">
+              <h4>{{ "Requested at" | translate }}</h4>
+              <p>{{ model?.requestTime | customDateTime }}</p>
+            </div>
+            <div *ngIf="model?.attachments?.length! > 0" nz-col nzSpan="12">
+              <h4>{{ "Attachment" | translate }}</h4>
+              <nz-upload
+                [(nzFileList)]="fileList"
+                [nzShowUploadList]="nzShowButtonView"
+                [nzShowButton]="false"
+              >
+              </nz-upload>
+            </div>
           </div>
           } @else if(isLoading) {
           <app-loading></app-loading>
@@ -79,7 +92,7 @@ import { TranslateService } from "@ngx-translate/core";
               }}
             </h3>
           </div>
-          <nz-timeline class='timeline'>
+          <nz-timeline class="timeline">
             <nz-timeline-item
               *ngFor="let item of model?.requestLogs"
               [nzDot]="statusIconTpl"
@@ -92,7 +105,7 @@ import { TranslateService } from "@ngx-translate/core";
                       else noStaffName
                     "
                   >
-                  {{"Responsible Staff" | translate}}:  {{ item.staffName }}
+                    {{ "Responsible Staff" | translate }}: {{ item.staffName }}
                   </ng-container>
                   <ng-template #noStaffName>
                     {{
@@ -102,12 +115,19 @@ import { TranslateService } from "@ngx-translate/core";
                     }}
                   </ng-template>
                 </h4>
-                <span style="color: #b4b4b4;padding-left: 5px;">{{ item.createdDate | prettyDate:'yyyy-MM-dd h:mm a': translateService.currentLang    }}</span>
-              
-              </div>  
+                <span style="color: #b4b4b4;padding-left: 5px;">{{
+                  item.createdDate
+                    | prettyDate
+                      : "yyyy-MM-dd h:mm a"
+                      : translateService.currentLang
+                }}</span>
+              </div>
 
-              <p>{{"Request Time" | translate}}: {{ item.createdDate | customDateTime}}</p> 
-              <p *ngIf='item.note'>{{"Note" | translate}}: {{ item.note}}</p>
+              <p>
+                {{ "Request Time" | translate }}:
+                {{ item.createdDate | customDateTime }}
+              </p>
+              <p *ngIf="item.note">{{ "Note" | translate }}: {{ item.note }}</p>
               <!-- Template for custom dot icon -->
               <ng-template #statusIconTpl>
                 <img
@@ -126,18 +146,24 @@ import { TranslateService } from "@ngx-translate/core";
   encapsulation: ViewEncapsulation.None,
   styles: [
     `
-    .timeline{
-      margin-left: 12px;
+    .quantity-container{
+      padding: 0 16px;
     }
+      .timeline {
+        margin-left: 12px;
+      }
       .header-history {
         h3 {
-          nz-icon { 
+          nz-icon {
             margin-right: 12px;
           }
           font-weight: bold;
           font-size: 18px;
           margin-left: 8px;
         }
+      }
+      .badge{
+        font-size:16px;
       }
       .req-detail-card {
         border-radius: 8px;
@@ -153,19 +179,24 @@ import { TranslateService } from "@ngx-translate/core";
         h4 {
           font-weight: bold;
           color: grey;
+          margin-bottom: 0px;
         }
         p {
           margin: 0px;
-          font-size: 18px;
+          font-size: 16px;
         }
       }
-
+      .ant-upload-list-item {
+        margin-top: 0px;
+        font-size: 16px;
+      }
       .history-service {
         border: 1px solid rgb(219 234 254);
         padding: 16px;
         border-radius: 8px;
         background-color: #f0f6ff;
         h4 {
+          margin-bottom: 0px;
           font-weight: bold;
           color: grey;
         }
@@ -191,7 +222,13 @@ export class HistoryDetailComponent implements OnInit {
   refresher = new Subscription();
   routeRefresher = new Subscription();
   requestRefresher = new Subscription();
+  nzShowButtonView = {
+    showPreviewIcon: true,
+    showRemoveIcon: false,
+    showDownloadIcon: false,
+  };
   readonly requestStatus = RequestStatus;
+  fileList: NzUploadFile[] = [];
   model!: RequestDetail;
   ngOnInit(): void {
     this.routeRefresher = this.activatedRoute.params.subscribe((params) => {
@@ -200,6 +237,15 @@ export class HistoryDetailComponent implements OnInit {
         next: (res) => {
           this.isLoading = false;
           this.model = res;
+          this.fileList =
+            this.model.attachments?.map(
+              (file) =>
+                <NzUploadFile>{
+                  name: file.name,
+                  url: file.url,
+                  uid: file.uid,
+                }
+            ) ?? [];
         },
         error: (err) => {
           console.error(err);

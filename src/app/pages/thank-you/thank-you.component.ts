@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from "@angular/core";
 
 @Component({
-  selector: "app-thankyou",
+  selector: "app-thank-you",
   standalone: false,
   encapsulation: ViewEncapsulation.None,
   template: `

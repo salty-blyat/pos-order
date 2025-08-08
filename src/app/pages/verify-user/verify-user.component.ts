@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { Guest, RequestService, VerifiedInfo } from "../request/request.service";
-import { NotificationService } from "../service/notification.service";
+import { Error, NotificationService } from "../service/notification.service";
 import { App, AuthService, Tenant } from "../../helpers/auth.service";
 import { APP_STORAGE_KEY } from "../../const";
 import { TranslateService } from "@ngx-translate/core";
@@ -44,7 +44,7 @@ import { TranslateService } from "@ngx-translate/core";
               <nz-form-item>
                 <nz-form-control>
                   <input
-                    type="text"
+                    type="text" nzn
                     nz-input
                     formControlName="lastThreeDigits"
                     type="tel"
@@ -139,8 +139,9 @@ export class VerifyUserComponent implements OnInit {
             this.CompanyLogo = this.sessionService.getValue("companyLogo") || "";
             this.CompanyNameEn = this.sessionService.getValue("companyNameEn") || "";
           },
-          error: (err) => {
+          error: (err: Error) => {
             console.error(err);
+            this.notificationService.customErrorNotification(err.error.message); 
             this.isLoading = false;
           }
         });
@@ -155,12 +156,14 @@ export class VerifyUserComponent implements OnInit {
             this.sessionService.setValue({ key: "guestPhone", value: this.guestPhone });
             this.isLoading = false;
           },
-          error: (err) => {
-            console.error(err);
+          error: (err: Error) => {
+            console.error(err.error.message);
+
+            this.notificationService.customErrorNotification(err.error.message);
+            // this.router.navigate(["/not-found"]);
             this.isLoading = false;
           }
-        });
-
+        }); 
       },
       error: (err) => {
         console.error(err);
@@ -196,7 +199,7 @@ export class VerifyUserComponent implements OnInit {
 
     return `${prefix ? prefix + ' ' : ''}${formatted} ___`;
   }
-  
+
   onSubmit(e?: any) {
     this.frm.patchValue({ roomUid: this.uuid });
     if (this.frm.valid && !this.isLoading) {
@@ -204,9 +207,9 @@ export class VerifyUserComponent implements OnInit {
       this.service.verifyPhone(this.frm.getRawValue()).subscribe({
         next: (res: VerifiedInfo) => {
           if (res.isValid) {
-            this.sessionService.setValue({ key: "isVerified", value: res.isValid });
+            this.sessionService.setValue({ key: `isVerified-${res.guestId}-${res.reservationId}-${res.roomId}`, value: res.isValid });
             this.sessionService.setValue({ key: "guestId", value: res.guestId });
-            this.sessionService.setValue({ key: "stayId", value: res.stayId });
+            this.sessionService.setValue({ key: "reservationId", value: res.reservationId });
             this.sessionService.setValue({ key: "roomId", value: res.roomId });
             this.router.navigate(["/home"]);
           } else {

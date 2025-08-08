@@ -18,7 +18,8 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzMessageModule } from 'ng-zorro-antd/message'; import { NzTimelineModule } from 'ng-zorro-antd/timeline';
- 
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
 const icons = [
   MenuFoldOutline,
   FileSearchOutline,
@@ -30,8 +31,9 @@ const icons = [
   imports: [NzIconModule],
   providers: [{ provide: NZ_ICONS, useValue: icons }],
   exports: [NzIconModule,
+    NzUploadModule,
     NzLayoutModule,
-    NzDropDownModule,
+    NzDropDownModule, NzInputNumberModule,
     NzGridModule, NzRadioModule, NzModalModule, NzResultModule,
     NzAffixModule,
     NzFormModule,

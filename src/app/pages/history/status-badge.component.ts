@@ -24,8 +24,7 @@ import { Request, RequestStatus } from "../../pages/request/request.service";
         align-items: center;
         width: fit-content;
         color: black;
-        gap:4px;
-        font-size: 12px;
+        gap:4px;font-size: 14px;
         text-wrap: nowrap;
         img{
             border-radius: 4px;width: 16px; height:auto; margin-bottom:1px;

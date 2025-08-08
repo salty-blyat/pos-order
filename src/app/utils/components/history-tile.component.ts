@@ -30,7 +30,15 @@ import { TranslateService } from "@ngx-translate/core";
       </div>
 
       <div class="view-icon" nz-flex nzGap="small">
-        <app-status-badge [img]="request?.statusImage!" [statusText]="translateService.currentLang == 'km' ? request?.statusNameKh! : request?.statusNameEn!"  [status]="request?.status ?? requestStatus.Pending"></app-status-badge> 
+        <app-status-badge
+          [img]="request?.statusImage!"
+          [statusText]="
+            translateService.currentLang == 'km'
+              ? request?.statusNameKh!
+              : request?.statusNameEn!
+          "
+          [status]="request?.status ?? requestStatus.Pending"
+        ></app-status-badge>
         <nz-icon nzType="right" nzTheme="outline" />
       </div>
     </div>
@@ -41,13 +49,15 @@ import { TranslateService } from "@ngx-translate/core";
     `
       .history-info {
         height: fit-content;
-        margin: auto 0; 
-        h3{
-          font-size:14px;
-      }
-      h5{
-        font-size:11px;
-      }
+        margin: auto 0;
+        h3 {
+          font-size: 14px;
+          margin-bottom: 0px;
+        }
+        h5 {
+          margin-bottom: 0px;
+          font-size: 11px;
+        }
       }
       .badge {
         padding: 2px 8px;
@@ -67,15 +77,15 @@ import { TranslateService } from "@ngx-translate/core";
         }
       }
       .history-list {
-        cursor:pointer;
+        cursor: pointer;
         width: 100%;
-        user-select:none; 
+        user-select: none;
         background-color: white;
         border-radius: 8px;
         position: relative;
         overflow: hidden;
         padding: 8px;
-         img {
+        img {
           width: 80px;
           height: 80px;
           border-radius: 8px;
@@ -87,7 +97,7 @@ import { TranslateService } from "@ngx-translate/core";
   standalone: false,
 })
 export class HistoryTileComponent {
-  constructor(public translateService: TranslateService) { }
+  constructor(public translateService: TranslateService) {}
   @Input() request: Request | null = null;
   @Output() onClick = new EventEmitter<number>();
   readonly requestStatus = RequestStatus;

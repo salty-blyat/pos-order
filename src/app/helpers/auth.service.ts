@@ -86,10 +86,7 @@ export class AuthService {
         const CompanyLogo = res.find((item: any) => item.key === "CompanyLogo")?.value || '';
         const CompanyNameEn = res.find((item: any) => item.key === "CompanyNameEn")?.value || '';
 
-        const companyInfo = { CompanyName, CompanyLogo, CompanyNameEn };
-
-        console.log(this.sessionService.getValue("companyName"));
-        
+        const companyInfo = { CompanyName, CompanyLogo, CompanyNameEn };        
         
         this.setAppInfo(tenantCode, CompanyLogo, CompanyName);
         this.setCompanyInfo(companyInfo);
@@ -275,7 +272,30 @@ export class AuthService {
   getAuthorizedPermissions(): number[] {
     return this.clientInfo.permissions || [];
   }
-
+  get isVerified() {
+    const guestId = this.sessionService.getValue("guestId");
+    const reservationId = this.sessionService.getValue("reservationId");
+    const roomId = this.sessionService.getValue("roomId");
+    const isVerified = this.sessionService.getValue(
+      `isVerified-${guestId}-${reservationId}-${roomId}`
+    );
+    return isVerified || false;
+  }
+  checkout() {
+    const guestId = this.sessionService.getValue("guestId");
+    const reservationId = this.sessionService.getValue("reservationId");
+    const roomId = this.sessionService.getValue("roomId");
+    this.sessionService.removeValue(`isVerified-${guestId}-${reservationId}-${roomId}`);
+    this.sessionService.removeValue("guestId");
+    this.sessionService.removeValue("reservationId");
+    this.sessionService.removeValue("roomId");
+    this.sessionService.removeValue("roomNo");
+    this.sessionService.removeValue("checkInDate");
+    this.sessionService.removeValue("checkOutDate");
+    this.sessionService.removeValue("totalNight");
+    this.sessionService.removeValue("guestName");
+    this.sessionService.removeValue("guestPhone"); 
+  }
 
   isAuthorized(key: number): boolean {
     if (!key) {

@@ -7,6 +7,8 @@ import { Service, ServiceService } from "./service.service";
 import { Subscription } from "rxjs";
 import { SessionStorageService } from "../../utils/services/sessionStorage.service";
 import { RequestService, RequestStatus } from "../request/request.service";
+import { SettingService } from "../../app-setting";
+import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
 
 @Component({
   selector: "app-service-operation",
@@ -84,7 +86,21 @@ import { RequestService, RequestStatus } from "../request/request.service";
           </div>
         </nz-form-control>
       </nz-form-item>
-
+      <nz-form-item>
+              <nz-form-label>{{ "Attachment" | translate }}</nz-form-label>
+              <nz-form-control>
+                <nz-upload
+                  [nzAction]="uploadUrl"
+                  [(nzFileList)]="fileList"
+                  [nzShowUploadList]="  nzShowIconList  "
+                  (nzChange)="handleUpload($event)"
+                >
+                  <button nz-button type="button">
+                    <i nz-icon nzType="upload"></i> Upload
+                  </button>
+                </nz-upload>
+              </nz-form-control>
+            </nz-form-item>
       <nz-form-item>
         <nz-form-label>{{ "Note" | translate }}</nz-form-label>
         <nz-form-control>
@@ -157,6 +173,7 @@ export class ServiceOperationComponent implements OnInit {
     private uiService: ServiceUiService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
+    private settingService: SettingService,
     private serviceService: ServiceService,
     private requestService: RequestService,
     private router: Router,
@@ -165,7 +182,13 @@ export class ServiceOperationComponent implements OnInit {
   routeRefresh!: Subscription;
   serviceRefresh!: Subscription;
   service!: Service;
-
+  fileList: NzUploadFile[] = [];
+  uploadUrl = `${this.settingService.setting.AUTH_API_URL}/upload/file`;
+  nzShowIconList = {
+    showPreviewIcon: true,
+    showRemoveIcon: true,
+    showDownloadIcon: false,
+  };
   goBack() {
     this.location.back();
   }
@@ -198,6 +221,7 @@ export class ServiceOperationComponent implements OnInit {
         });
     });
   }
+
   initControl(): void {
     this.frm = this.fb.group({
       quantity: [0],
@@ -208,22 +232,29 @@ export class ServiceOperationComponent implements OnInit {
       serviceItemId: [null],
       guestId: [null],
       roomId: [null],
-      stayId: [null],
+      reservationId: [null],
     });
   }
 
   onSubmit(e?: any) {
     const guestId = this.sessionStorageService.getValue("guestId");
     const roomId = this.sessionStorageService.getValue("roomId");
-    const stayId = this.sessionStorageService.getValue("stayId");
+    const reservationId = this.sessionStorageService.getValue("reservationId");
     const serviceItemId = this.service?.id || 0;
     const serviceTypeId = this.service?.serviceTypeId || 0;
+    let attachments = this.fileList.map((f) => ({
+      uid: f.uid,
+      url: f.url,
+      name: f.name,
+      type: f.type,
+    }));
     this.frm.patchValue({
       guestId: guestId,
       roomId: roomId,
-      stayId: stayId,
+      reservationId: reservationId,
       serviceItemId: serviceItemId,
       serviceTypeId: serviceTypeId,
+      attachments: attachments,
     });
 
     if (this.frm.valid && !this.isLoading) {
@@ -240,6 +271,27 @@ export class ServiceOperationComponent implements OnInit {
       });
     }
   }
+
+  handleUpload(info: NzUploadChangeParam): void {
+    let fileList = [...info.fileList];
+
+    // 1. Limit 5 number of uploaded files
+    fileList = fileList.slice(-10);
+
+    // 2. Read from response and show file link
+    fileList = fileList.map((file) => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url;
+        if (file.response.name) {
+          file.name = file.response.name;
+        }
+      }
+      return file;
+    });
+    this.fileList = fileList;
+  }
+
   ngOnDestroy(): void {
     this.routeRefresh?.unsubscribe();
     this.serviceRefresh?.unsubscribe();

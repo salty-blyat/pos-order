@@ -19,8 +19,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgZorroAntdModule } from "./ng-zorro-antd.module";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { PageComponent } from "./pages/page.component";
-import { Observable } from "rxjs";
-import { TokenInterceptor } from "./helpers/token.interceptor";
+import { Observable } from "rxjs"; 
 import { SettingHttpService, SettingService } from "./app-setting";
 
 import { ScrollingModule } from "@angular/cdk/scrolling";
@@ -55,7 +54,7 @@ import { HistoryComponent } from "./pages/history/history.component";
 import { HistoryTileComponent } from "./utils/components/history-tile.component";
 import { NotFoundPageComponent } from "./pages/not-found/not-found.component";
 import { CustomDatePipe } from "./utils/pipes/custom-date.pipe";
-import { ThankYouComponent } from "./utils/components/thankyou.component"; 
+import { ThankYouComponent } from "./pages/thank-you/thank-you.component";
 import { PrettyDate } from "./utils/pipes/pretty-date.pipe";
 
 self.MonacoEnvironment = {
@@ -113,7 +112,7 @@ export class CustomTranslate implements TranslateLoader {
     CardComponent,
     HistoryComponent,
     HistoryTileComponent,
-    NotFoundPageComponent, CustomDatePipe,PrettyDate,
+    NotFoundPageComponent, CustomDatePipe, PrettyDate,
     ThankYouComponent
   ],
   bootstrap: [AppComponent],
@@ -159,8 +158,7 @@ export class CustomTranslate implements TranslateLoader {
         }
       },
       deps: [LOCALE_ID],
-    },
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    }, 
     {
       provide: APP_INITIALIZER,
       useFactory: app_Init,
