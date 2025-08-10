@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { SettingService } from '../app-setting';
+import { SessionStorageService } from '../utils/services/sessionStorage.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -39,7 +40,6 @@ export class TokenInterceptor implements HttpInterceptor {
         },
       });
     }
-    
 
     if (this.authService.app) {
       request = request.clone({

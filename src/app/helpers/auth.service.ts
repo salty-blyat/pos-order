@@ -149,8 +149,9 @@ export class AuthService {
     localStorage.removeItem(key?.toLowerCase());
   }
   getCompanyInfo(tenantCode: string): Observable<any> {
+    console.log(tenantCode);
     const url = `${this.settingService.setting.BASE_API_URL}/maintenance/public/${tenantCode}/company/info`;
-    return this.httpClient.get<any>(url,{headers: { disableErrorNotification: 'yes', "Tenant-Code": tenantCode }});
+    return this.httpClient.get<any>(url);
   }
   redirectLogin(model: any) {
     return this.httpClient

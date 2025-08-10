@@ -132,20 +132,22 @@ export class VerifyUserComponent implements OnInit {
       next: (params) => {
         this.uuid = params.get("uuid")!;
         const tenantCode = params.get("tenantCode")!; 
-
+           this.authService.setStorageValue({
+             key: APP_STORAGE_KEY.Tenant,
+             value: {
+               name: tenantCode,
+               note: "",
+               code: tenantCode,
+               logo: "",
+               tenantData: "",
+             },
+           });
         this.authService.updateClientInfo(tenantCode).subscribe({
           next: () => {
             this.CompanyName = this.sessionService.getValue("companyName") || "";
             this.CompanyLogo = this.sessionService.getValue("companyLogo") || "";
             this.CompanyNameEn = this.sessionService.getValue("companyNameEn") || "";
-          },
-          error: (err: Error) => {
-            console.error(err); 
-            this.notificationService.customErrorNotification(err.error.message); 
-            this.isLoading = false;
-          }
-        });
-        this.authService.updateGuestInfo(this.uuid).subscribe({
+              this.authService.updateGuestInfo(this.uuid).subscribe({
           next: (res: Guest) => {
             this.guestPhone = res.guestPhone ?? "";
             this.sessionService.setValue({ key: "roomNo", value: res.roomNo });
@@ -164,6 +166,14 @@ export class VerifyUserComponent implements OnInit {
             this.isLoading = false;
           }
         }); 
+          },
+          error: (err: Error) => {
+            console.error(err); 
+            this.notificationService.customErrorNotification(err.error.message); 
+            this.isLoading = false;
+          }
+        });
+      
       },
       error: (err) => {
         console.error(err);
@@ -171,9 +181,7 @@ export class VerifyUserComponent implements OnInit {
         this.isLoading = false;
       }
     });
-
   }
-
 
   initControl(): void {
     this.frm = this.fb.group({
