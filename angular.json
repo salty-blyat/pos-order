@@ -44,7 +44,6 @@
               "src/styles.scss",
               "node_modules/highlight.js/styles/default.css"
             ],
-            "scripts": [],
             "baseHref": "/hotel-portal/"
           },
           "configurations": {
@@ -98,15 +97,7 @@
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              {
-                "glob": "**/*",
-                "input": "node_modules/ionicons/dist/fonts",
-                "output": "assets/fonts"
-              }
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
             "scripts": []
           }

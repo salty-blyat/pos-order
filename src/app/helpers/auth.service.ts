@@ -112,6 +112,7 @@ export class AuthService {
       logo: "",
       tenantData: "",
     }
+    console.log(tenant);
 
     const app: App = {
       appCode: "Hotel Portal",
@@ -149,7 +150,7 @@ export class AuthService {
   }
   getCompanyInfo(tenantCode: string): Observable<any> {
     const url = `${this.settingService.setting.BASE_API_URL}/maintenance/public/${tenantCode}/company/info`;
-    return this.httpClient.get<any>(url);
+    return this.httpClient.get<any>(url,{headers: { disableErrorNotification: 'yes', "Tenant-Code": tenantCode }});
   }
   redirectLogin(model: any) {
     return this.httpClient

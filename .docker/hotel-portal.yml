@@ -1,7 +1,7 @@
 version: "3.2"
 services:
   ui-ctn:
-    image: dkr.sgx.bz/hotel-portal
+    image: dkr.sgx.bz/hotel-portal:latest
     restart: always
     ports:
       - "60555:80"

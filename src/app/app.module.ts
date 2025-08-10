@@ -56,6 +56,7 @@ import { NotFoundPageComponent } from "./pages/not-found/not-found.component";
 import { CustomDatePipe } from "./utils/pipes/custom-date.pipe";
 import { ThankYouComponent } from "./pages/thank-you/thank-you.component";
 import { PrettyDate } from "./utils/pipes/pretty-date.pipe";
+import { TokenInterceptor } from "./helpers/token.interceptor";
 
 self.MonacoEnvironment = {
   getWorkerUrl: function () {
@@ -101,8 +102,10 @@ export class CustomTranslate implements TranslateLoader {
     CustomDateTimePipe,
     LoadingComponent,
     VerifyUserComponent,
-    RowNumberPipe, TimePipe,
-    ServiceTileComponent, ServiceComponent,
+    RowNumberPipe,
+    TimePipe,
+    ServiceTileComponent,
+    ServiceComponent,
     NoResultFoundComponent,
     ServiceOperationComponent,
     HistoryDetailComponent,
@@ -112,8 +115,10 @@ export class CustomTranslate implements TranslateLoader {
     CardComponent,
     HistoryComponent,
     HistoryTileComponent,
-    NotFoundPageComponent, CustomDatePipe, PrettyDate,
-    ThankYouComponent
+    NotFoundPageComponent,
+    CustomDatePipe,
+    PrettyDate,
+    ThankYouComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -138,7 +143,7 @@ export class CustomTranslate implements TranslateLoader {
     TranslateModule,
     ReactiveFormsModule,
     NzCodeEditorModule,
-    NzLayoutComponent
+    NzLayoutComponent,
   ],
   providers: [
     {
@@ -158,7 +163,7 @@ export class CustomTranslate implements TranslateLoader {
         }
       },
       deps: [LOCALE_ID],
-    }, 
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: app_Init,
@@ -171,7 +176,8 @@ export class CustomTranslate implements TranslateLoader {
       deps: [AppVersionService],
       multi: true,
     },
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     provideHttpClient(withInterceptorsFromDi()),
   ],
 })
-export class AppModule { }
+export class AppModule {}

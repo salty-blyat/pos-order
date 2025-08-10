@@ -131,7 +131,7 @@ export class VerifyUserComponent implements OnInit {
     this.routeRefresh = this.activatedRoute.paramMap.subscribe({
       next: (params) => {
         this.uuid = params.get("uuid")!;
-        const tenantCode = params.get("tenantCode")!;
+        const tenantCode = params.get("tenantCode")!; 
 
         this.authService.updateClientInfo(tenantCode).subscribe({
           next: () => {
@@ -140,7 +140,7 @@ export class VerifyUserComponent implements OnInit {
             this.CompanyNameEn = this.sessionService.getValue("companyNameEn") || "";
           },
           error: (err: Error) => {
-            console.error(err);
+            console.error(err); 
             this.notificationService.customErrorNotification(err.error.message); 
             this.isLoading = false;
           }

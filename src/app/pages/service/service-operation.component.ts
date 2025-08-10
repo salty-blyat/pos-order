@@ -30,11 +30,11 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
       [formGroup]="frm"
     >
       @if(isLoading){
-           <app-loading></app-loading>
-       } @else if(!service && !isLoading){ 
-        <div style='margin:auto'>
-          <app-no-result-found></app-no-result-found>
-        </div>
+      <app-loading></app-loading>
+      } @else if(!service && !isLoading){
+      <div style="margin:auto">
+        <app-no-result-found></app-no-result-found>
+      </div>
       } @else if (!isLoading && service){
       <h3 class="service-op-title">
         {{ service?.name || "" }}
@@ -61,7 +61,9 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
               nzSize="large"
               [disabled]="this.frm.get('quantity')?.value <= 1"
               (click)="
-                this.frm.get('quantity')?.setValue(this.frm.get('quantity')?.value - 1)
+                this.frm
+                  .get('quantity')
+                  ?.setValue(this.frm.get('quantity')?.value - 1)
               "
             >
               -
@@ -76,9 +78,13 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
             <button
               nz-button
               nzSize="large"
-              [disabled]="this.frm.get('quantity')?.value >= this.service?.maxQty!"
+              [disabled]="
+                this.frm.get('quantity')?.value >= this.service?.maxQty!
+              "
               (click)="
-                this.frm.get('quantity')?.setValue(this.frm.get('quantity')?.value + 1)
+                this.frm
+                  .get('quantity')
+                  ?.setValue(this.frm.get('quantity')?.value + 1)
               "
             >
               +
@@ -86,7 +92,7 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
           </div>
         </nz-form-control>
       </nz-form-item>
-      <nz-form-item>
+      <!-- <nz-form-item>
               <nz-form-label>{{ "Attachment" | translate }}</nz-form-label>
               <nz-form-control>
                 <nz-upload
@@ -100,7 +106,7 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
                   </button>
                 </nz-upload>
               </nz-form-control>
-            </nz-form-item>
+            </nz-form-item> -->
       <nz-form-item>
         <nz-form-label>{{ "Note" | translate }}</nz-form-label>
         <nz-form-control>
@@ -143,8 +149,8 @@ import { NzUploadChangeParam, NzUploadFile } from "ng-zorro-antd/upload";
         font-weight: bold;
       }
       .service-op-img {
-        width: 100%; 
-        max-height:400px;
+        width: 100%;
+        max-height: 400px;
         border-radius: 8px;
         object-fit: cover;
       }
@@ -178,7 +184,7 @@ export class ServiceOperationComponent implements OnInit {
     private requestService: RequestService,
     private router: Router,
     private sessionStorageService: SessionStorageService
-  ) { }
+  ) {}
   routeRefresh!: Subscription;
   serviceRefresh!: Subscription;
   service!: Service;
